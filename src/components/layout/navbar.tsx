@@ -2,10 +2,12 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { cn } from "../../lib/utils"
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { data: session, status } = useSession()
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -35,12 +37,36 @@ export function Navbar() {
                 {item.name}
               </Link>
             ))}
-            <Link
-              href="/login"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
-            >
-              Login
-            </Link>
+            
+            {/* Auth Section */}
+            {status === 'loading' ? (
+              <div className="px-4 py-2 text-white/60">Loading...</div>
+            ) : session ? (
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/admin"
+                  className="text-white/80 hover:text-white transition-colors duration-200 font-medium"
+                >
+                  Admin
+                </Link>
+                <div className="flex items-center space-x-2">
+                  <span className="text-white/80 text-sm">Hi, {session.user?.name || session.user?.email}</span>
+                  <button
+                    onClick={() => signOut()}
+                    className="bg-red-600/80 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg transition-all duration-200 font-medium text-sm"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -68,13 +94,39 @@ export function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href="/login"
-                className="block px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </Link>
+              
+              {/* Mobile Auth Section */}
+              {session ? (
+                <>
+                  <Link
+                    href="/admin"
+                    className="block px-3 py-2 text-white/80 hover:text-white transition-colors duration-200"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                  <div className="px-3 py-2 text-white/60 text-sm">
+                    {session.user?.name || session.user?.email}
+                  </div>
+                  <button
+                    onClick={() => {
+                      signOut()
+                      setIsMenuOpen(false)
+                    }}
+                    className="block w-full text-left px-3 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="block px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         )}
