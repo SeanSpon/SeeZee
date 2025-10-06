@@ -3,129 +3,122 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
-import { cn } from "../../lib/utils"
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { data: session, status } = useSession()
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Services', href: '/services' },
-    { name: 'Work', href: '/work' },
-    { name: 'About', href: '/about' },
+    { name: 'Services', href: '#services' },
+    { name: 'Portfolio', href: '#portfolio' },
+    { name: 'Testimonials', href: '#testimonials' },
+    { name: 'About', href: '#about' },
     { name: 'Contact', href: '/contact' },
   ]
 
   return (
-    <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-black/20 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="fixed top-0 w-full z-50 glass-card">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            SeeZee
+          <Link href="/" className="text-2xl font-bold gradient-text">
+            SeeZee Studio
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-white/80 hover:text-white transition-colors duration-200 font-medium"
+                className="hover:text-blue-400 transition-colors"
               >
                 {item.name}
               </Link>
             ))}
-            
-            {/* Auth Section */}
+          </div>
+
+          {/* Auth Buttons */}
+          <div className="flex space-x-3">
             {status === 'loading' ? (
               <div className="px-4 py-2 text-white/60">Loading...</div>
             ) : session ? (
-              <div className="flex items-center space-x-4">
+              <>
                 <Link
                   href="/admin"
-                  className="text-white/80 hover:text-white transition-colors duration-200 font-medium"
+                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
                 >
-                  Admin
+                  Dashboard
                 </Link>
-                <div className="flex items-center space-x-2">
-                  <span className="text-white/80 text-sm">Hi, {session.user?.name || session.user?.email}</span>
-                  <button
-                    onClick={() => signOut()}
-                    className="bg-red-600/80 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg transition-all duration-200 font-medium text-sm"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
+                <button
+                  onClick={() => signOut()}
+                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
+                >
+                  Sign Out
+                </button>
+              </>
             ) : (
-              <Link
-                href="/login"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
-              >
-                Login
-              </Link>
+              <>
+                <Link
+                  href="/login"
+                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/admin"
+                  className="glow-button px-6 py-2 rounded-lg text-white font-medium"
+                >
+                  Dashboard
+                </Link>
+              </>
             )}
           </div>
 
           {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white p-2"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-            </svg>
-          </button>
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white hover:text-blue-400 transition-colors"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-black/40 backdrop-blur-md rounded-lg mt-2 border border-white/10">
+          <div className="md:hidden mt-4 pb-4">
+            <div className="flex flex-col space-y-2">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 text-white/80 hover:text-white transition-colors duration-200"
+                  className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              
-              {/* Mobile Auth Section */}
-              {session ? (
+              {!session && (
                 <>
                   <Link
-                    href="/admin"
-                    className="block px-3 py-2 text-white/80 hover:text-white transition-colors duration-200"
+                    href="/login"
+                    className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Admin
+                    Sign In
                   </Link>
-                  <div className="px-3 py-2 text-white/60 text-sm">
-                    {session.user?.name || session.user?.email}
-                  </div>
-                  <button
-                    onClick={() => {
-                      signOut()
-                      setIsMenuOpen(false)
-                    }}
-                    className="block w-full text-left px-3 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium"
+                  <Link
+                    href="/admin"
+                    className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Logout
-                  </button>
+                    Dashboard
+                  </Link>
                 </>
-              ) : (
-                <Link
-                  href="/login"
-                  className="block px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium text-center"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Link>
               )}
             </div>
           </div>

@@ -4,12 +4,13 @@ import '../styles/globals.css'
 import { Navbar } from '../components/layout/navbar'
 import { Footer } from '../components/layout/footer'
 import { Providers } from './providers'
+import { ClientAnimations } from '../components/ui/client-animations'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SeeZee - Digital Excellence Delivered',
-  description: 'We craft exceptional digital experiences that drive growth, engage users, and deliver measurable results for your business.',
+  title: 'SeeZee Studio - Modern Web Development | Next.js, Tailwind, Full-Stack Solutions',
+  description: 'SeeZee Studio is a small dev studio led by Sean & Zach, specializing in modern full-stack web applications with Next.js, Tailwind, Prisma, PostgreSQL, and Vercel deployment.',
 }
 
 export default function RootLayout({
@@ -24,6 +25,7 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <ClientAnimations />
         </Providers>
       </body>
     </html>
