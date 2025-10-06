@@ -1,9 +1,10 @@
 import { prisma } from "../../../../server/db/prisma";
 import { GlassCard } from "../../../../components/ui/glass-card";
 import { Badge } from "../../../../components/ui/badge";
+import type { Lead } from "@prisma/client";
 
 export default async function AdminLeadsPage() {
-  let leads;
+  let leads: Lead[] = [];
   try {
     leads = await prisma.lead.findMany({ 
       orderBy: { createdAt: "desc" },
