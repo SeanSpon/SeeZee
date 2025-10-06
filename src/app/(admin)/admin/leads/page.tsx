@@ -1,6 +1,6 @@
 import { prisma } from "../../../../server/db/prisma";
 import { GlassCard } from "../../../../components/ui/glass-card";
-import { Badge } from "../../../../components/ui/badge";
+import { Badge } from "../../../../components/ui/Badge";
 import type { Lead } from "@prisma/client";
 
 export default async function AdminLeadsPage() {
