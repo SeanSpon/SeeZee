@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
+import { Navbar } from '../components/layout/navbar'
+import { Footer } from '../components/layout/footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SeeZee - Professional Services',
-  description: 'Professional services and solutions',
+  title: 'SeeZee - Digital Excellence Delivered',
+  description: 'We craft exceptional digital experiences that drive growth, engage users, and deliver measurable results for your business.',
 }
 
 export default function RootLayout({
@@ -16,7 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
+      </body>
     </html>
   )
 }
