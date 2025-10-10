@@ -1,7 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react";
 
-export function UserMenu({ user }: { user?: { name?: string; email?: string; image?: string } }) {
+export function UserMenu({ user }: { user?: { name?: string | null; email?: string | null; image?: string | null } }) {
   if (!user) return null;
 
   return (
