@@ -1,4 +1,3 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../lib/auth";
+import { auth } from "@/auth";
 
-export const getSession = () => getServerSession(authOptions);
+export const getSession = () => auth();

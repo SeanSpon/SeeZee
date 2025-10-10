@@ -1,19 +1,67 @@
-import { getSession } from "../../../server/auth/session";
-import { AdminDashboard } from "../../../components/admin/admin-dashboard";
+import DashboardStatsCards from "@/components/admin/dashboard-stats";
 
-export default async function AdminPage() {
-  const session = await getSession();
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-  if (!session) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
-          <p className="text-gray-300">Please sign in to access the admin dashboard.</p>
+export default async function AdminOverviewPage() {
+  return (
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <DashboardStatsCards />
+      
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Performance Chart */}
+        <div className="lg:col-span-2 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6">
+          <h3 className="text-lg font-semibold mb-6">Performance Overview</h3>
+          <div className="bg-slate-900/60 rounded-2xl p-6">
+            <svg viewBox="0 0 400 200" className="w-full h-48">
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{stopColor:"#2563EB", stopOpacity:1}} />
+                  <stop offset="100%" style={{stopColor:"#9333EA", stopOpacity:1}} />
+                </linearGradient>
+              </defs>
+              <polyline fill="none" stroke="url(#chartGradient)" strokeWidth="3" points="0,150 50,120 100,100 150,80 200,90 250,60 300,40 350,30 400,20"/>
+              <circle cx="400" cy="20" r="4" fill="#9333EA"/>
+            </svg>
+          </div>
+        </div>
+        
+        {/* Recent Activity */}
+        <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6">
+          <h3 className="text-lg font-semibold mb-6">Recent Activity</h3>
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold">ZR</div>
+              <div className="flex-1">
+                <p className="text-sm">Zach completed the homepage design for TechCorp</p>
+                <p className="text-xs text-slate-400">2 hours ago</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold">$</div>
+              <div className="flex-1">
+                <p className="text-sm">Invoice #INV-2024-001 was paid</p>
+                <p className="text-xs text-slate-400">4 hours ago</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold">SM</div>
+              <div className="flex-1">
+                <p className="text-sm">Sean started a new project for StartupXYZ</p>
+                <p className="text-xs text-slate-400">6 hours ago</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold">📧</div>
+              <div className="flex-1">
+                <p className="text-sm">New client inquiry received</p>
+                <p className="text-xs text-slate-400">8 hours ago</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    );
-  }
-
-  return <AdminDashboard />;
+    </div>
+  );
 }

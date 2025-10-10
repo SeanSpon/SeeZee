@@ -10,6 +10,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enumerations
+enum UserRole {
+  ADMIN
+  STAFF
+  CLIENT
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  CONVERTED
+  LOST
+}
+
+enum ProjectStatus {
+  PENDING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+enum FileType {
+  IMAGE
+  DOCUMENT
+  VIDEO
+  OTHER
+}
+
+enum VirusScanStatus {
+  PENDING
+  CLEAN
+  INFECTED
+  ERROR
+}
+
 // NextAuth.js Models
 model Account {
   id                String  @id @default(cuid())
@@ -47,12 +113,17 @@ model User {
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  role          String    @default("USER")
+  password      String?
+  role          UserRole  @default(CLIENT)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts Account[]
-  sessions Session[]
+  accounts      Account[]
+  sessions      Session[]
+  organizations OrganizationMember[]
+  assignedProjects Project[] @relation("ProjectAssignee")
+  notifications Notification[]
+  signatures    Signature[]
 
   @@map("users")
 }
@@ -66,42 +137,328 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-model Lead {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  company   String?
-  message   String
-  status    String   @default("NEW")
-  createdAt DateTime @default(now())
+// Business Models
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  email       String?
+  phone       String?
+  website     String?
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  country     String?  @default("US")
+  taxId       String?
+  billingEmail String?
   
-  projects  Project[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     OrganizationMember[]
+  projects    Project[]
+  invoices    Invoice[]
+  leads       Lead[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrgRole  @default(MEMBER)
+  joinedAt       DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@map("organization_members")
+}
+
+model Lead {
+  id             String     @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  company        String?
+  message        String?
+  source         String?    @default("website")
+  status         LeadStatus @default(NEW)
+  
+  // Service details from checkout
+  serviceType    String?
+  timeline       String?
+  budget         String?
+  requirements   Json?
+  
+  organizationId String?
+  convertedAt    DateTime?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  project        Project?
 
   @@map("leads")
 }
 
-model Service {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String
-  basePrice   Decimal
-  active      Boolean  @default(true)
+model Project {
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  status         ProjectStatus @default(PENDING)
+  startDate      DateTime?
+  endDate        DateTime?
+  budget         Decimal?
+  
+  organizationId String
+  assigneeId     String?
+  leadId         String?       @unique
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  assignee       User?        @relation("ProjectAssignee", fields: [assigneeId], references: [id])
+  lead           Lead?        @relation(fields: [leadId], references: [id])
+  
+  milestones     ProjectMilestone[]
+  invoices       Invoice[]
+  files          File[]
+
+  @@map("projects")
+}
+
+model ProjectMilestone {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  
+  projectId   String
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("services")
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_milestones")
 }
 
-model Project {
-  id        String   @id @default(cuid())
-  title     String
-  status    String   @default("PLANNING")
-  leadId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Invoice {
+  id             String        @id @default(cuid())
+  number         String        @unique
+  title          String
+  description    String?
+  amount         Decimal
+  tax            Decimal?      @default(0)
+  total          Decimal
+  currency       String        @default("USD")
+  status         InvoiceStatus @default(DRAFT)
   
-  lead      Lead     @relation(fields: [leadId], references: [id])
+  dueDate        DateTime
+  sentAt         DateTime?
+  paidAt         DateTime?
+  
+  organizationId String
+  projectId      String?
+  
+  stripeInvoiceId String?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  @@map("projects")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  project        Project?     @relation(fields: [projectId], references: [id])
+  
+  items          InvoiceItem[]
+  payments       Payment[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Int     @default(1)
+  rate        Decimal
+  amount      Decimal
+  
+  invoiceId   String
+  
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Decimal
+  currency        String        @default("USD")
+  status          PaymentStatus @default(PENDING)
+  method          String?       // "stripe", "bank_transfer", etc.
+  
+  stripePaymentId String?
+  stripeChargeId  String?
+  
+  invoiceId       String
+  
+  processedAt     DateTime?
+  createdAt       DateTime @default(now())
+
+  invoice         Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("payments")
+}
+
+model PricingRule {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  
+  // Service configuration
+  serviceType String   // "website", "ecommerce", "webapp", etc.
+  basePrice   Decimal
+  
+  // Timeline multipliers
+  rushMultiplier    Decimal? @default(1.5)  // < 4 weeks
+  standardMultiplier Decimal? @default(1.0)  // 4-12 weeks
+  extendedMultiplier Decimal? @default(0.9)  // > 12 weeks
+  
+  // Feature pricing (JSON object)
+  features    Json?    // { "cms": 500, "ecommerce": 1500, "auth": 300 }
+  
+  validFrom   DateTime @default(now())
+  validTo     DateTime?
+  active      Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  quotes      Quote[]
+
+  @@map("pricing_rules")
+}
+
+model Quote {
+  id            String  @id @default(cuid())
+  
+  // Service details
+  serviceType   String
+  timeline      String
+  features      Json?
+  requirements  Json?
+  
+  // Pricing breakdown
+  basePrice     Decimal
+  featurePrice  Decimal @default(0)
+  timelineMultiplier Decimal @default(1.0)
+  subtotal      Decimal
+  tax           Decimal @default(0)
+  total         Decimal
+  
+  // Customer info
+  customerName  String?
+  customerEmail String?
+  
+  pricingRuleId String
+  
+  // Conversion tracking
+  convertedToLead Boolean @default(false)
+  convertedAt     DateTime?
+  
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  pricingRule   PricingRule @relation(fields: [pricingRuleId], references: [id])
+
+  @@map("quotes")
+}
+
+model File {
+  id              String           @id @default(cuid())
+  name            String
+  originalName    String
+  mimeType        String
+  size            Int
+  type            FileType
+  url             String
+  
+  virusScanStatus VirusScanStatus  @default(PENDING)
+  scanResult      String?
+  
+  projectId       String?
+  uploadedById    String?
+  
+  createdAt       DateTime @default(now())
+
+  project         Project? @relation(fields: [projectId], references: [id])
+
+  @@map("files")
+}
+
+model Signature {
+  id          String   @id @default(cuid())
+  documentId  String   // Reference to document being signed
+  signerName  String
+  signerEmail String
+  signedAt    DateTime @default(now())
+  
+  // Signature data (base64 image or metadata)
+  signatureData String
+  ipAddress     String?
+  userAgent     String?
+  
+  userId      String?
+  
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("signatures")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  
+  userId    String
+  
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventId   String   @unique  // Stripe event ID for idempotency
+  type      String
+  data      Json
+  processed Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
+
+  @@map("webhook_events")
+}
+
+// Legacy models for backward compatibility
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  content   String
+  status    String   @default("UNREAD")
+  createdAt DateTime @default(now())
+
+  @@map("messages")
 }

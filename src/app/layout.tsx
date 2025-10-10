@@ -5,6 +5,7 @@ import { Navbar } from '../components/layout/navbar'
 import { Footer } from '../components/layout/footer'
 import { Providers } from './providers'
 import { ClientAnimations } from '../components/ui/client-animations'
+import DebugHUD from '../components/ui/debug-hud'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <ClientAnimations />
+          <DebugHUD />
         </Providers>
       </body>
     </html>

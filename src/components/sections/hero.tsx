@@ -1,62 +1,82 @@
-import { GlowButton } from "../ui/glow-button"
+"use client"
+import Link from "next/link"
 
 export function Hero() {
+  const scrollToContact = () => {
+    window.location.href = '/contact';
+  };
+
+  const scrollToServices = () => {
+    window.location.href = '/services';
+  };
+
   return (
-    <section className="min-h-screen hero-bg flex items-center justify-center relative overflow-hidden pt-24">
-      {/* Particle Background */}
-      <div className="absolute inset-0" id="particles"></div>
-      
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl floating-animation"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl floating-animation" style={{ animationDelay: '-3s' }}></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        {/* Status Badge */}
-        <div className="inline-flex items-center glass-card px-4 py-2 rounded-full mb-8 fade-in">
-          <div className="w-2 h-2 bg-green-400 rounded-full pulse-dot mr-2"></div>
-          <span className="text-sm">Available for new projects</span>
-        </div>
-        
-        {/* Main Heading */}
-        <h1 className="text-6xl md:text-8xl font-bold mb-6 fade-in">
-          <span className="gradient-text">Fast. Modern.</span><br />
-          <span className="text-white">Delivered.</span>
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto fade-in">
-          SeeZee Studio builds custom full-stack web applications with Next.js, Tailwind, and modern tech. 
-          Real projects for real clients, delivered fast.
-        </p>
-        
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 fade-in">
-          <GlowButton size="lg" className="min-w-[200px]">
-            Start Your Project
-          </GlowButton>
-          <GlowButton variant="secondary" size="lg" className="min-w-[200px]">
-            See Live Projects
-          </GlowButton>
-        </div>
-        
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto fade-in">
-          <div className="glass-card p-6 rounded-xl hover:bg-white/20 transition-all">
-            <div className="text-3xl font-bold gradient-text mb-2">Real</div>
-            <div className="text-gray-300">Client Projects</div>
+    <section className="pt-20 pb-16">
+      <div className="container-custom">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Main Content */}
+          <div>
+            <h1 className="heading-display mb-4">
+              Websites, apps, and databases that ship fast and look sharp.
+            </h1>
+            <p className="text-dim text-lg mb-8 leading-relaxed">
+              SeeZee Studio builds clean, reliable software for small teams and big ideas.
+              Straight to value, no baggage.
+            </p>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <button onClick={scrollToContact} className="btn-primary">
+                Get a quote
+              </button>
+              <button onClick={scrollToServices} className="btn-ghost">
+                View services
+              </button>
+            </div>
+            
+            {/* Tech Stack Chips */}
+            <div className="flex flex-wrap gap-2">
+              <span className="chip">Next.js / React</span>
+              <span className="chip">Postgres / Prisma</span>
+              <span className="chip">Flutter / Kotlin</span>
+              <span className="chip">Integrations & APIs</span>
+            </div>
           </div>
-          <div className="glass-card p-6 rounded-xl hover:bg-white/20 transition-all">
-            <div className="text-3xl font-bold gradient-text mb-2">Fast</div>
-            <div className="text-gray-300">Delivery</div>
-          </div>
-          <div className="glass-card p-6 rounded-xl hover:bg-white/20 transition-all">
-            <div className="text-3xl font-bold gradient-text mb-2">Modern</div>
-            <div className="text-gray-300">Tech Stack</div>
-          </div>
-          <div className="glass-card p-6 rounded-xl hover:bg-white/20 transition-all">
-            <div className="text-3xl font-bold gradient-text mb-2">100%</div>
-            <div className="text-gray-300">Satisfaction</div>
+          
+          {/* Side Panel */}
+          <div className="glass-panel">
+            <h3 className="font-semibold mb-4">Recent wins</h3>
+            <div className="separator"></div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-dim text-sm">E‑commerce launch</div>
+                  <div className="font-bold">+37% conversion</div>
+                </div>
+                <span className="pill">Case study</span>
+              </div>
+              
+              <div className="separator"></div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-dim text-sm">Dashboard rebuild</div>
+                  <div className="font-bold">‑48% load time</div>
+                </div>
+                <span className="pill">Performance</span>
+              </div>
+              
+              <div className="separator"></div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-dim text-sm">Mobile app launch</div>
+                  <div className="font-bold">4.8★ rating</div>
+                </div>
+                <span className="pill">Flutter</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

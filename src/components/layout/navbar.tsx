@@ -9,29 +9,29 @@ export function Navbar() {
   const { data: session, status } = useSession()
 
   const navigation = [
-    { name: 'Services', href: '#services' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'About', href: '#about' },
+    { name: 'Home', href: '/' },
+    { name: 'Services', href: '/services' },
+    { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ]
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass-card">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+    <header className="nav-sticky">
+      <div className="container-custom">
+        <nav className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold gradient-text">
-            SeeZee Studio
+          <Link href="/" className="flex items-center gap-3 font-bold text-lg">
+            <div className="logo-gradient"></div>
+            <span>SeeZee Studio</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center gap-2">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="hover:text-blue-400 transition-colors"
+                className="nav-link"
               >
                 {item.name}
               </Link>
@@ -39,39 +39,32 @@ export function Navbar() {
           </div>
 
           {/* Auth Buttons */}
-          <div className="flex space-x-3">
+          <div className="hidden md:flex items-center gap-3">
             {status === 'loading' ? (
-              <div className="px-4 py-2 text-white/60">Loading...</div>
+              <div className="text-dim">Loading...</div>
             ) : session ? (
               <>
-                <Link
-                  href="/admin"
-                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
-                >
+                {session.user?.role === 'ADMIN' || session.user?.role === 'STAFF' ? (
+                  <Link href="/admin/dashboard/overview" className="btn-ghost">
+                    Admin
+                  </Link>
+                ) : (
+                  <Link href="/dashboard/overview" className="btn-ghost">
+                    Dashboard
+                  </Link>
+                )}
+                <div className="flex items-center gap-2">
+                  <span className="text-dim text-sm">{session.user?.name}</span>
+                  <span className="pill text-xs">{session.user?.role}</span>
+                </div>
+                <button onClick={() => signOut()} className="btn-subtle">
                   Sign Out
                 </button>
               </>
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="glass-card px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition-all"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/admin"
-                  className="glow-button px-6 py-2 rounded-lg text-white font-medium"
-                >
-                  Dashboard
-                </Link>
-              </>
+              <Link href="/login" className="btn-primary">
+                Sign in with Google
+              </Link>
             )}
           </div>
 
@@ -79,51 +72,74 @@ export function Navbar() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-blue-400 transition-colors"
+              className="btn-subtle p-2"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
-        </div>
+        </nav>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4">
-            <div className="flex flex-col space-y-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              {!session && (
-                <>
+          <div className="md:hidden py-4">
+            <div className="glass-panel">
+              <div className="flex flex-col gap-2">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="nav-link block"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                <div className="separator"></div>
+                {session ? (
+                  <>
+                    {(session.user?.role === 'ADMIN' || session.user?.role === 'STAFF') ? (
+                      <Link
+                        href="/admin/dashboard/overview"
+                        className="nav-link block"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Admin
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/dashboard/overview"
+                        className="nav-link block"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setIsMenuOpen(false);
+                      }}
+                      className="text-left nav-link"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
                   <Link
                     href="/login"
-                    className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
+                    className="nav-link block"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign In
                   </Link>
-                  <Link
-                    href="/admin"
-                    className="px-3 py-2 text-white hover:text-blue-400 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
-    </nav>
+    </header>
   )
 }
