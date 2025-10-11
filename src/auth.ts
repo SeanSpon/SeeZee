@@ -7,13 +7,8 @@ import type { Adapter } from "next-auth/adapters";
 // Validate environment variables
 const GOOGLE_ID = process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_SECRET = process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET;
-
-if (!process.env.AUTH_SECRET && !process.env.NEXTAUTH_SECRET) {
-  throw new Error("AUTH_SECRET or NEXTAUTH_SECRET must be set");
-}
-if (!GOOGLE_ID || !GOOGLE_SECRET) {
-  throw new Error("Google OAuth credentials missing: Set AUTH_GOOGLE_ID/SECRET or GOOGLE_CLIENT_ID/SECRET");
-}
+if (!process.env.AUTH_SECRET) throw new Error("AUTH_SECRET missing");
+if (!GOOGLE_ID || !GOOGLE_SECRET) throw new Error("Google OAuth envs missing");
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
