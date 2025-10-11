@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     });
 
     // If this is a CLIENT user, create a Lead record
-    if (updatedUser.accountType === "CLIENT") {
+    if (updatedUser.role === "CLIENT") {
       await prisma.lead.create({
         data: {
           name: name,

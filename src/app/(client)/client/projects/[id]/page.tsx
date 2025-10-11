@@ -12,8 +12,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const { id } = await params;
   const session = await auth();
 
-  if (!session?.user || session.user.accountType !== "CLIENT") {
+  if (!session?.user) {
     redirect("/login");
+  }
+
+  // Only allow CLIENT role
+  if (session.user.role !== "CLIENT") {
+    redirect("/admin");
   }
 
   // Fetch project with ownership check via Lead

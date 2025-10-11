@@ -8,8 +8,13 @@ import InvoiceTable from "./components/InvoiceTable";
 export default async function ClientOverviewPage() {
   const session = await auth();
 
-  if (!session?.user || session.user.accountType !== "CLIENT") {
+  if (!session?.user) {
     redirect("/login");
+  }
+
+  // Redirect non-CLIENT users to admin
+  if (session.user.role !== "CLIENT") {
+    redirect("/admin");
   }
 
   // Fetch real client data

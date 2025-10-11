@@ -31,7 +31,7 @@ export async function updateLeadStatus(leadId: string, status: LeadStatus) {
     });
 
     revalidatePath("/admin/leads");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/overview");
 
     return {
       success: true,
@@ -68,7 +68,7 @@ export async function deleteLead(leadId: string) {
     });
 
     revalidatePath("/admin/leads");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/overview");
 
     return {
       success: true,

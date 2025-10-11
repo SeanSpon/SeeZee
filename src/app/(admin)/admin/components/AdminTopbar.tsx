@@ -8,7 +8,7 @@ export default function AdminTopbar() {
     <header className="fixed inset-x-0 top-0 z-40">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 backdrop-blur-2xl px-4 py-3">
-          <Link href="/admin/dashboard" className="font-semibold tracking-wide">SEEZEE</Link>
+          <Link href="/admin/overview" className="font-semibold tracking-wide">SEEZEE</Link>
           <nav className="hidden gap-6 md:flex text-sm text-white/80">
             {ADMIN_ROUTES.map((route) => (
               <Link key={route.href} href={route.href} className="hover:text-white">

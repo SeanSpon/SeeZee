@@ -31,7 +31,7 @@ export async function updateProjectStatus(projectId: string, status: ProjectStat
     });
 
     revalidatePath("/admin/projects");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/overview");
 
     return {
       success: true,

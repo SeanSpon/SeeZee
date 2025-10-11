@@ -12,12 +12,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { accountType } = body;
+    const { role } = body;
 
     // Only allow CLIENT selection here (STAFF upgrade happens via verify-code)
-    if (accountType !== "CLIENT") {
+    if (role !== "CLIENT") {
       return NextResponse.json(
-        { error: "Only CLIENT account type can be set directly. Use verify-code endpoint for STAFF." },
+        { error: "Only CLIENT role can be set directly. Use verify-code endpoint for STAFF roles." },
         { status: 400 }
       );
     }
@@ -26,20 +26,18 @@ export async function POST(req: NextRequest) {
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
       data: {
-        accountType: "CLIENT",
         role: "CLIENT",
       },
     });
 
     return NextResponse.json({
       success: true,
-      accountType: updatedUser.accountType,
       role: updatedUser.role,
     });
   } catch (error) {
-    console.error("Error setting account type:", error);
+    console.error("Error setting role:", error);
     return NextResponse.json(
-      { error: "Failed to set account type" },
+      { error: "Failed to set role" },
       { status: 500 }
     );
   }

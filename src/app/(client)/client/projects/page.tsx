@@ -7,8 +7,13 @@ import { FolderKanban, Clock, CheckCircle2 } from "lucide-react";
 export default async function ClientProjectsPage() {
   const session = await auth();
 
-  if (!session?.user || session.user.accountType !== "CLIENT") {
+  if (!session?.user) {
     redirect("/login");
+  }
+
+  // Only allow CLIENT role
+  if (session.user.role !== "CLIENT") {
+    redirect("/admin");
   }
 
   // Fetch client's projects via Lead relationship

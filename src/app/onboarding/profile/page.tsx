@@ -33,7 +33,7 @@ export default function OnboardingProfilePage() {
         });
         
         // Redirect based on account type with hard navigation
-        const targetUrl = (session?.user as any)?.accountType === "CLIENT" ? "/client" : "/admin";
+        const targetUrl = (session?.user as any)?.role === "CLIENT" ? "/client" : "/admin";
         window.location.href = targetUrl;
       } else {
         alert("Failed to save profile. Please try again.");

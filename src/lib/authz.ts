@@ -36,7 +36,7 @@ export async function requireAdmin() {
 }
 
 /**
- * Require staff member (any non-CLIENT role), throw if not authorized
+ * Require staff member (non-CLIENT role), throw if not authorized
  * @throws Error if user is not staff
  * @returns The authenticated staff session
  */
@@ -44,8 +44,8 @@ export async function requireStaff() {
   const session = await requireUser();
   const user = session.user as any;
   
-  // Check if user is staff
-  if (user.accountType !== "STAFF") {
+  // Check if user is staff (not CLIENT)
+  if (user.role === "CLIENT") {
     throw new Error("Forbidden: Staff access required");
   }
   

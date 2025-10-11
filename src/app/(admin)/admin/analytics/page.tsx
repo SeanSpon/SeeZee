@@ -83,7 +83,7 @@ export default async function AnalyticsPage() {
   
   // CEO-only access
   if (session?.user?.email !== "seanspm1007@gmail.com") {
-    redirect("/admin/dashboard");
+    redirect("/admin/overview");
   }
 
   const analytics = await getAnalytics();

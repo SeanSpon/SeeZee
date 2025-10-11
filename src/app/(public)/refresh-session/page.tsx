@@ -28,8 +28,8 @@ export default async function RefreshSessionPage() {
           </div>
 
           <div className="bg-slate-900/50 border border-white/10 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Account Type</div>
-            <div className="text-white font-medium">{session.user.accountType}</div>
+            <div className="text-sm text-slate-400 mb-1">Role</div>
+            <div className="text-white font-medium">{session.user.role}</div>
           </div>
 
           <div className="bg-slate-900/50 border border-white/10 rounded-lg p-4">

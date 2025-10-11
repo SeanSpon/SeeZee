@@ -99,7 +99,6 @@ export async function POST(request: Request) {
       prisma.user.update({
         where: { email: session.user.email },
         data: {
-          accountType: "STAFF",
           role: invite.role,
           invitedById: invite.createdById,
         },

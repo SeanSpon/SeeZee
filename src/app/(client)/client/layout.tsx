@@ -14,9 +14,10 @@ export default async function ClientDashboardLayout({
     redirect("/login?returnUrl=/client");
   }
 
-  // Redirect STAFF users (CEO, ADMIN, etc.) to admin dashboard
-  if (session.user.accountType === "STAFF") {
-    redirect("/admin");
+  // Redirect STAFF/ADMIN/CEO users to admin dashboard
+  const isStaffRole = ["CEO", "ADMIN", "DESIGNER", "DEV", "OUTREACH", "INTERN", "STAFF"].includes(session.user.role);
+  if (isStaffRole) {
+    redirect("/admin/overview");
   }
 
   return (

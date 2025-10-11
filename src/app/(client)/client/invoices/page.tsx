@@ -5,8 +5,13 @@ import { prisma } from "@/lib/prisma";
 export default async function ClientInvoicesPage() {
   const session = await auth();
 
-  if (!session?.user || session.user.accountType !== "CLIENT") {
+  if (!session?.user) {
     redirect("/login");
+  }
+
+  // Only allow CLIENT role
+  if (session.user.role !== "CLIENT") {
+    redirect("/admin");
   }
 
   // Fetch client's invoices via project's lead relationship

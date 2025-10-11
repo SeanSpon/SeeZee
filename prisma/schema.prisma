@@ -22,10 +22,7 @@ enum UserRole {
   CLIENT
 }
 
-enum AccountType {
-  CLIENT
-  STAFF
-}
+// AccountType REMOVED - role is now the single source of truth
 
 enum OrgRole {
   OWNER
@@ -173,8 +170,7 @@ model User {
   emailVerified DateTime?    @map("email_verified")
   image         String?
   password      String?
-  role          UserRole     @default(STAFF)
-  accountType   AccountType  @default(STAFF)
+  role          UserRole     @default(CLIENT)
   
   // Onboarding & compliance
   tosAcceptedAt DateTime?

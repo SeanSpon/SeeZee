@@ -40,14 +40,13 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   events: {
     // Fires after PrismaAdapter creates user on first sign-in
     async createUser({ user }) {
-      // CEO whitelist - auto-upgrade to CEO/STAFF with completed onboarding
+      // CEO whitelist - auto-upgrade to CEO with completed onboarding
       const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com"];
       if (CEO_EMAILS.includes(user.email!)) {
         await prisma.user.update({
           where: { id: user.id },
           data: {
             role: "CEO",
-            accountType: "STAFF",
             tosAcceptedAt: new Date(),
             profileDoneAt: new Date(),
           },
@@ -57,11 +56,10 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       }
 
       // Default new sign-ins to CLIENT
-      // Note: STAFF users are upgraded via 6-digit invitation codes in the onboarding flow
+      // Note: STAFF/ADMIN users are upgraded via 6-digit invitation codes or admin panel
       await prisma.user.update({
         where: { id: user.id },
         data: {
-          accountType: "CLIENT",
           role: "CLIENT",
         },
       });
@@ -77,7 +75,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
 
     async session({ session, token }) {
-      // IMPORTANT: Always fetch fresh role/accountType from database
+      // IMPORTANT: Always fetch fresh role from database
       // This ensures manual role changes in DB are immediately reflected
       try {
         const dbUser = await prisma.user.findUnique({
@@ -85,7 +83,6 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
           select: {
             id: true,
             role: true,
-            accountType: true,
             tosAcceptedAt: true,
             profileDoneAt: true,
           },
@@ -94,14 +91,12 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         if (dbUser) {
           session.user.id = dbUser.id;
           session.user.role = dbUser.role;
-          session.user.accountType = dbUser.accountType;
           session.user.tosAcceptedAt = dbUser.tosAcceptedAt;
           session.user.profileDoneAt = dbUser.profileDoneAt;
         } else {
           // Fallback to token values if DB query fails
           session.user.id = token.sub!;
-          session.user.role = token.role as any;
-          session.user.accountType = token.accountType as any;
+          session.user.role = (token.role as any) || "CLIENT";
           session.user.tosAcceptedAt = token.tosAcceptedAt as any;
           session.user.profileDoneAt = token.profileDoneAt as any;
         }
@@ -109,8 +104,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         console.error("Failed to fetch user in session callback:", error);
         // Fallback to token values
         session.user.id = token.sub!;
-        session.user.role = token.role as any;
-        session.user.accountType = token.accountType as any;
+        session.user.role = (token.role as any) || "CLIENT";
         session.user.tosAcceptedAt = token.tosAcceptedAt as any;
         session.user.profileDoneAt = token.profileDoneAt as any;
       }
@@ -123,14 +117,13 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       // This ensures role changes in DB are picked up on next sign-in
       if (user || trigger === "update") {
         try {
-          // Always fetch latest user data from database to catch role/accountType changes
+          // Always fetch latest user data from database to catch role changes
           const email = user?.email || token.email;
           const dbUser = await prisma.user.findUnique({
             where: { email: email as string },
             select: {
               id: true,
               role: true,
-              accountType: true,
               tosAcceptedAt: true,
               profileDoneAt: true,
             },
@@ -138,27 +131,23 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
           
           if (dbUser) {
             token.role = dbUser.role;
-            token.accountType = dbUser.accountType;
             token.tosAcceptedAt = dbUser.tosAcceptedAt?.toISOString();
             token.profileDoneAt = dbUser.profileDoneAt?.toISOString();
-            console.log(`🔄 JWT refreshed for ${email}: role=${dbUser.role}, accountType=${dbUser.accountType}`);
+            console.log(`🔄 JWT refreshed for ${email}: role=${dbUser.role}`);
           } else {
             // Fallback for new users
             token.role = "CLIENT";
-            token.accountType = "CLIENT";
           }
         } catch (error) {
           console.error("Failed to fetch user in JWT callback:", error);
           // Fallback values
           token.role = "CLIENT";
-          token.accountType = "CLIENT";
         }
       }
 
       // Handle explicit session updates from onboarding pages
       if (trigger === "update" && updateSession) {
         token.role = updateSession.role || token.role;
-        token.accountType = updateSession.accountType || token.accountType;
         token.tosAcceptedAt = updateSession.tosAcceptedAt || token.tosAcceptedAt;
         token.profileDoneAt = updateSession.profileDoneAt || token.profileDoneAt;
         token.name = updateSession.name || token.name;

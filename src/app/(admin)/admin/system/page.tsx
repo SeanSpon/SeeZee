@@ -9,7 +9,7 @@ export default async function SystemPage() {
   const session = await auth();
   
   if (session?.user?.email !== "seanspm1007@gmail.com") {
-    redirect("/admin/dashboard");
+    redirect("/admin/overview");
   }
 
   // Mock system stats - you can replace with real metrics

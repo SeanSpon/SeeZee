@@ -7,7 +7,7 @@ export type AdminRoute = {
 };
 
 export const ADMIN_ROUTES: AdminRoute[] = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
+  { href: "/admin/overview", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/admin/feed",      label: "Feed",      icon: "MessageSquare" },
   { href: "/admin/leads",     label: "Leads",     icon: "Users" },
   { href: "/admin/projects",  label: "Projects",  icon: "FolderOpen" },

@@ -41,7 +41,7 @@ export default async function FinancesPage() {
   const session = await auth();
   
   if (session?.user?.email !== "seanspm1007@gmail.com") {
-    redirect("/admin/dashboard");
+    redirect("/admin/overview");
   }
 
   const { invoices, payments } = await getFinances();
