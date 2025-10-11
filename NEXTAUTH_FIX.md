@@ -18,12 +18,12 @@ Value: https://see-fhi6ouvvd-seanspons-projects.vercel.app
 
 ### 3. GOOGLE_CLIENT_ID
 ```
-Value: 659797017979-sipunrpq0tlabjqthklic4kvoi81rfe7.apps.googleusercontent.com
+Value: YOUR_GOOGLE_CLIENT_ID (from Google Cloud Console)
 ```
 
 ### 4. GOOGLE_CLIENT_SECRET
 ```
-Value: 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
+Value: YOUR_GOOGLE_CLIENT_SECRET (from Google Cloud Console)
 ```
 
 ### 5. DATABASE_URL

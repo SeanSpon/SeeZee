@@ -43,8 +43,8 @@ AUTH_URL="http://localhost:3000"
 AUTH_SECRET="b9e3c4ecaff234c426e6ace42663b8f1317b7fa2287f2f91d95807f378d36125"
 
 # Google OAuth - Auth.js v5 naming
-AUTH_GOOGLE_ID="659797017979-sipunrpq0tlabjqthklic4kvoi81rfe7.apps.googleusercontent.com"
-AUTH_GOOGLE_SECRET="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"
+AUTH_GOOGLE_ID="YOUR_GOOGLE_CLIENT_ID"
+AUTH_GOOGLE_SECRET="YOUR_GOOGLE_CLIENT_SECRET"
 
 # App Configuration  
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
