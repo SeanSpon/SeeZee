@@ -2,7 +2,7 @@ import { GlowButton } from "../ui/glow-button"
 
 export function Portfolio() {
   return (
-    <section id="portfolio" className="py-20 bg-slate-800/50">
+    <section id="portfolio" className="py-20 bg-transparent backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16 fade-in">
           <h2 className="text-5xl font-bold gradient-text mb-6">Live Projects</h2>
@@ -12,7 +12,7 @@ export function Portfolio() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in">
+          <div className="rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
             <div className="h-48 bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center">
               <div className="text-white text-lg font-medium">Red Head Printing</div>
             </div>
@@ -29,7 +29,7 @@ export function Portfolio() {
             </div>
           </div>
           
-          <div className="glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in">
+          <div className="rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
             <div className="h-48 bg-gradient-to-br from-blue-500 to-red-600 flex items-center justify-center">
               <div className="text-white text-lg font-medium">Big Red Bus</div>
             </div>
@@ -46,7 +46,7 @@ export function Portfolio() {
             </div>
           </div>
           
-          <div className="glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in">
+          <div className="rounded-xl overflow-hidden hover:scale-105 transition-transform fade-in bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
             <div className="h-48 bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
               <div className="text-white text-lg font-medium">SeeZee Admin</div>
             </div>

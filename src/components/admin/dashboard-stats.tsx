@@ -34,49 +34,13 @@ export default function DashboardStatsCards() {
   useEffect(() => {
     if (status === "authenticated") {
       fetch('/api/dashboard/stats')
-        .then(res => {
-          if (!res.ok) {
-            throw new Error('Failed to fetch stats');
-          }
-          return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
-          // Provide fallback structure if API returns incomplete data
-          const safeStats = {
-            projects: {
-              total: data?.projects?.total || 0,
-              active: data?.projects?.active || 0,
-              completionRate: data?.projects?.completionRate || 0,
-            },
-            invoices: {
-              total: data?.invoices?.total || 0,
-              paid: data?.invoices?.paid || 0,
-              paidRate: data?.invoices?.paidRate || 0,
-            },
-            revenue: {
-              total: data?.revenue?.total || 0,
-              formatted: data?.revenue?.formatted || "$0",
-            },
-            leads: {
-              total: data?.leads?.total || 0,
-            },
-            activity: {
-              recentMessages: data?.activity?.recentMessages || 0,
-            },
-          };
-          setStats(safeStats);
+          setStats(data);
           setLoading(false);
         })
         .catch(error => {
           console.error('Error fetching stats:', error);
-          // Set fallback stats on error
-          setStats({
-            projects: { total: 0, active: 0, completionRate: 0 },
-            invoices: { total: 0, paid: 0, paidRate: 0 },
-            revenue: { total: 0, formatted: "$0" },
-            leads: { total: 0 },
-            activity: { recentMessages: 0 },
-          });
           setLoading(false);
         });
     } else if (status === "unauthenticated") {
@@ -131,9 +95,9 @@ export default function DashboardStatsCards() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </div>
-          <span className="text-blue-400 text-sm">{stats?.activity?.recentMessages || 0} today</span>
+          <span className="text-blue-400 text-sm">{stats.activity.recentMessages} today</span>
         </div>
-        <h3 className="text-2xl font-bold mb-1 text-white">{stats?.activity?.recentMessages || 0}</h3>
+        <h3 className="text-2xl font-bold mb-1 text-white">{stats.activity.recentMessages}</h3>
         <p className="text-slate-400">Recent Messages</p>
       </div>
       
@@ -147,7 +111,7 @@ export default function DashboardStatsCards() {
           </div>
           <span className="text-green-400 text-sm">Active</span>
         </div>
-        <h3 className="text-2xl font-bold mb-1 text-white">{stats?.leads?.total || 0}</h3>
+        <h3 className="text-2xl font-bold mb-1 text-white">{stats.leads.total}</h3>
         <p className="text-slate-400">Total Leads</p>
       </div>
       

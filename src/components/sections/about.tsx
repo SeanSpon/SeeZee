@@ -1,6 +1,6 @@
 export function About() {
   return (
-    <section id="about" className="py-20 bg-slate-900">
+    <section id="about" className="py-20 bg-transparent backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16 fade-in">
           <h2 className="text-5xl font-bold gradient-text mb-6">Meet the Team</h2>
@@ -10,7 +10,7 @@ export function About() {
         </div>
         
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-          <div className="glass-card p-8 rounded-2xl fade-in">
+          <div className="p-8 rounded-2xl fade-in bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
             <div className="flex items-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
                 S
@@ -25,7 +25,7 @@ export function About() {
             </p>
           </div>
           
-          <div className="glass-card p-8 rounded-2xl fade-in">
+          <div className="p-8 rounded-2xl fade-in bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
             <div className="flex items-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
                 Z
@@ -44,7 +44,7 @@ export function About() {
         <div className="text-center mb-12 fade-in">
           <h3 className="text-3xl font-bold mb-8">Our Journey</h3>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="glass-card p-6 rounded-xl">
+            <div className="p-6 rounded-xl bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
               <div className="w-16 h-16 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🏆</span>
               </div>
@@ -54,7 +54,7 @@ export function About() {
               </p>
             </div>
             
-            <div className="glass-card p-6 rounded-xl">
+            <div className="p-6 rounded-xl bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
               <div className="w-16 h-16 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🚀</span>
               </div>
@@ -64,7 +64,7 @@ export function About() {
               </p>
             </div>
             
-            <div className="glass-card p-6 rounded-xl">
+            <div className="p-6 rounded-xl bg-white/8 backdrop-blur-xl shadow-[0_0_40px_rgba(124,92,255,0.05)]">
               <div className="w-16 h-16 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">⚡</span>
               </div>

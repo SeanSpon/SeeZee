@@ -12,9 +12,19 @@ datasource db {
 
 // Enumerations
 enum UserRole {
+  CEO
   ADMIN
+  DESIGNER
+  DEV
+  OUTREACH
+  INTERN
   STAFF
   CLIENT
+}
+
+enum AccountType {
+  CLIENT
+  STAFF
 }
 
 enum OrgRole {
@@ -76,6 +86,26 @@ enum VirusScanStatus {
   ERROR
 }
 
+enum ChannelType {
+  GENERAL
+  PROJECT
+  SUPPORT
+  DEVELOPMENT
+  CUSTOM
+}
+
+enum TodoStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 // NextAuth.js Models
 model Account {
   id                String  @id @default(cuid())
@@ -108,22 +138,48 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String    @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String       @unique
+  emailVerified DateTime?    @map("email_verified")
   image         String?
   password      String?
-  role          UserRole  @default(CLIENT)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role          UserRole     @default(STAFF)
+  accountType   AccountType  @default(STAFF)
+  
+  // Onboarding & compliance
+  tosAcceptedAt DateTime?
+  tosVersion    String?
+  profileDoneAt DateTime?
+  
+  // Profile fields
+  phone         String?
+  company       String?
+  
+  // 2FA
+  twofaEnabled  Boolean      @default(false)
+  twofaSecret   String?
+  
+  // Invitation tracking
+  invitedById   String?
+  invitedBy     User?        @relation("Inviter", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitees      User[]       @relation("Inviter")
+  
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  organizations OrganizationMember[]
-  assignedProjects Project[] @relation("ProjectAssignee")
-  notifications Notification[]
-  signatures    Signature[]
+  accounts           Account[]
+  sessions           Session[]
+  organizations      OrganizationMember[]
+  assignedProjects   Project[] @relation("ProjectAssignee")
+  notifications      Notification[]
+  signatures         Signature[]
+  messages           ChatMessage[]
+  channelMemberships ChannelMember[]
+  assignedTodos      Todo[] @relation("TodoAssignee")
+  createdTodos       Todo[] @relation("TodoCreator")
+  systemLogs         SystemLog[]
+  createdInviteCodes StaffInviteCode[] @relation("InviteCodeCreator")
 
   @@map("users")
 }
@@ -450,6 +506,115 @@ model WebhookEvent {
   @@map("webhook_events")
 }
 
+// Team Communication Models
+model Channel {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  type        ChannelType @default(GENERAL)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages    ChatMessage[]
+  members     ChannelMember[]
+
+  @@map("channels")
+}
+
+model ChannelMember {
+  id        String   @id @default(cuid())
+  channelId String
+  userId    String
+  joinedAt  DateTime @default(now())
+
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@map("channel_members")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  channelId String
+  authorId  String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author    User    @relation(fields: [authorId], references: [id])
+
+  @@map("chat_messages")
+}
+
+// Task Management Models
+model Todo {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  status      TodoStatus   @default(TODO)
+  priority    TodoPriority @default(MEDIUM)
+  
+  assignedToId String?
+  createdById  String
+  
+  dueDate     DateTime?
+  completedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignedTo  User? @relation("TodoAssignee", fields: [assignedToId], references: [id])
+  createdBy   User  @relation("TodoCreator", fields: [createdById], references: [id])
+
+  @@map("todos")
+}
+
+// System Audit Log
+model SystemLog {
+  id         String   @id @default(cuid())
+  action     String   // "ROLE_CHANGE", "STATUS_UPDATE", "CREATE", "DELETE", etc.
+  entityType String   // "User", "Lead", "Project", "Todo", etc.
+  entityId   String
+  
+  userId     String   // Who performed the action
+  
+  metadata   Json?    // Additional context (old value, new value, etc.)
+  
+  createdAt  DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("system_logs")
+}
+
+// 6-digit code invitation system for staff signup
+model StaffInviteCode {
+  id           String    @id @default(cuid())
+  email        String
+  role         UserRole  // The role to grant when code is redeemed
+  codeHash     String    // Bcrypt hash of 6-digit code
+  
+  createdById  String
+  createdBy    User      @relation("InviteCodeCreator", fields: [createdById], references: [id])
+  
+  expiresAt    DateTime
+  redeemedAt   DateTime?
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(5)
+  
+  createdAt    DateTime  @default(now())
+
+  @@index([email])
+  @@map("staff_invite_codes")
+}
+
 // Legacy models for backward compatibility
 model Message {
   id        String   @id @default(cuid())
@@ -461,4 +626,18 @@ model Message {
   createdAt DateTime @default(now())
 
   @@map("messages")
+}
+
+model ProjectRequest {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  projectType String
+  goal        String
+  timeline    String
+  budget      String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+
+  @@map("project_requests")
 }

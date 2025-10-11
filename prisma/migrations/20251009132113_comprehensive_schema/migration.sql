@@ -38,7 +38,7 @@ ADD COLUMN     "project_type" TEXT,
 ADD COLUMN     "qualified_at" TIMESTAMP(3),
 ADD COLUMN     "source" TEXT,
 ADD COLUMN     "timeline" TEXT,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
 
 -- CreateTable
 CREATE TABLE "organizations" (

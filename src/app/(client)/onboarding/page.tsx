@@ -81,7 +81,7 @@ export default function ClientOnboardingPage() {
               Access your project dashboard, view progress updates, and communicate with our team
             </p>
             <Link
-              href="/dashboard"
+              href="/client/dashboard"
               className="inline-flex items-center px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
             >
               Access Dashboard →

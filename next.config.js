@@ -1,14 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
+    domains: [],
+  },
+  async redirects() {
+    return [
       {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-        port: '',
-        pathname: '/**',
+        source: '/admin',
+        destination: '/admin/dashboard',
+        permanent: false,
       },
-    ],
+    ]
   },
 }
 

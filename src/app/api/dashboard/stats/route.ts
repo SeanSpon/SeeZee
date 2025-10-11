@@ -1,27 +1,44 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { requireStaffOrAdminAPI } from "@/lib/server-guards";
+import { prisma } from "@/server/db/prisma";
 
 export async function GET() {
-  // Check authentication
-  const session = await auth();
+  // Check authentication and authorization
+  const authResult = await requireStaffOrAdminAPI();
   
-  if (!session?.user) {
+  if (authResult.error) {
     return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
+      { error: authResult.error },
+      { status: authResult.status }
     );
   }
 
   try {
-    // Mock stats data since we're using JWT sessions without database
+    // With simplified schema, we'll show simplified stats
+    const [
+      leadsTotal,
+      messagesTotal,
+      recentMessagesCount
+    ] = await Promise.all([
+      prisma.lead.count(),
+      prisma.message.count(),
+      prisma.message.count({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Last 24 hours
+          }
+        }
+      })
+    ]);
+
     const stats = {
       projects: {
-        total: 0,
+        total: 0, // Removed from simplified schema
         active: 0,
         completionRate: 0
       },
       invoices: {
-        total: 0,
+        total: 0, // Removed from simplified schema
         paid: 0,
         paidRate: 0
       },
@@ -30,10 +47,10 @@ export async function GET() {
         formatted: "$0"
       },
       leads: {
-        total: 0
+        total: leadsTotal
       },
       activity: {
-        recentMessages: 0
+        recentMessages: recentMessagesCount
       }
     };
 

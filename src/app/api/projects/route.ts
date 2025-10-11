@@ -1,11 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  // TODO: Implement projects retrieval logic
-  return NextResponse.json({ message: "Projects endpoint - coming soon" }, { status: 501 });
-}
-
-export async function POST(request: NextRequest) {
-  // TODO: Implement project creation logic
-  return NextResponse.json({ message: "Create project endpoint - coming soon" }, { status: 501 });
+export async function GET() {
+  try {
+    const projects = await prisma.projectRequest.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({ projects });
+  } catch (error) {
+    console.error("Failed to fetch projects:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch projects" },
+      { status: 500 }
+    );
+  }
 }

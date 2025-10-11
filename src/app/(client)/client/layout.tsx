@@ -1,0 +1,55 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import ClientSidebar from "./components/ClientSidebar";
+
+export default async function ClientDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+
+  // Redirect if not authenticated
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  // Redirect if not a CLIENT
+  if (session.user.accountType !== "CLIENT") {
+    redirect("/admin/dashboard");
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="flex">
+        {/* Sidebar */}
+        <ClientSidebar user={session.user} />
+
+        {/* Main Content */}
+        <div className="flex-1 lg:pl-64">
+          {/* Top Bar */}
+          <div className="sticky top-0 z-40 backdrop-blur-xl bg-slate-900/50 border-b border-white/5">
+            <div className="px-6 py-4 flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-white">Client Portal</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Welcome back, {session.user.name}
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <img
+                  src={session.user.image || "/default-avatar.png"}
+                  alt={session.user.name || "User"}
+                  className="w-10 h-10 rounded-full border-2 border-cyan-500/30"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Page Content */}
+          <main className="p-6">{children}</main>
+        </div>
+      </div>
+    </div>
+  );
+}
