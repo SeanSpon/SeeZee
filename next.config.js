@@ -9,6 +9,14 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Redirect www to apex
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.see-zee.com' }],
+        destination: 'https://see-zee.com/:path*',
+        permanent: true,
+      },
+      // Admin dashboard redirect
       {
         source: '/admin',
         destination: '/admin/analytics',
