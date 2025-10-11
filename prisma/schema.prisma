@@ -42,6 +42,35 @@ enum LeadStatus {
   LOST
 }
 
+enum RequestStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWING
+  NEEDS_INFO
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum BudgetTier {
+  UNKNOWN
+  MICRO
+  SMALL
+  MEDIUM
+  LARGE
+  ENTERPRISE
+}
+
+enum ServiceType {
+  WEB_APP
+  WEBSITE
+  ECOMMERCE
+  AI_DATA
+  MOBILE
+  BRANDING
+  OTHER
+}
+
 enum ProjectStatus {
   PENDING
   ACTIVE
@@ -180,6 +209,7 @@ model User {
   createdTodos       Todo[] @relation("TodoCreator")
   systemLogs         SystemLog[]
   createdInviteCodes StaffInviteCode[] @relation("InviteCodeCreator")
+  projectRequests    ProjectRequest[]
 
   @@map("users")
 }
@@ -576,6 +606,8 @@ model Todo {
 // System Audit Log
 model SystemLog {
   id         String   @id @default(cuid())
+  area       String?  // "ProjectRequest", "User", "Lead", etc. (optional for backward compat)
+  refId      String?  // FK value as text (optional for backward compat)
   action     String   // "ROLE_CHANGE", "STATUS_UPDATE", "CREATE", "DELETE", etc.
   entityType String   // "User", "Lead", "Project", "Todo", etc.
   entityId   String
@@ -583,6 +615,8 @@ model SystemLog {
   userId     String   // Who performed the action
   
   metadata   Json?    // Additional context (old value, new value, etc.)
+  meta       Json?    // Alias for metadata
+  message    String?  // Human-readable log message
   
   createdAt  DateTime @default(now())
 
@@ -591,6 +625,7 @@ model SystemLog {
   @@index([entityType, entityId])
   @@index([userId])
   @@index([createdAt])
+  @@index([area, refId])
   @@map("system_logs")
 }
 
@@ -628,16 +663,33 @@ model Message {
   @@map("messages")
 }
 
+// Unified Project Request Pipeline
 model ProjectRequest {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  projectType String
-  goal        String
-  timeline    String
-  budget      String
-  status      String   @default("pending")
-  createdAt   DateTime @default(now())
+  id           String        @id @default(cuid())
+  user         User?         @relation(fields: [userId], references: [id])
+  userId       String?
+  
+  // New required fields (migrating from old schema)
+  contactEmail String        @default("") // Will be populated from old 'email' field
+  title        String        @default("") // Will be populated from old 'projectType' or 'name'
+  description  String        @default("") @db.Text // Will be populated from old 'goal' field
+  
+  // Legacy fields (keep for backward compatibility during migration)
+  name         String?       // OLD: Will be deprecated
+  email        String?       // OLD: Migrated to contactEmail
+  projectType  String?       // OLD: Migrated to title/services
+  goal         String?       // OLD: Migrated to description
+  
+  // New fields
+  company      String?
+  services     ServiceType[] // multi-select
+  budget       BudgetTier    @default(UNKNOWN)
+  timeline     String?       // e.g. "< 1 mo", "1-3 mo"
+  resourcesUrl String?       // Notion/Drive link
+  status       RequestStatus @default(DRAFT)
+  notes        String?       @db.Text // internal admin notes
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 
   @@map("project_requests")
 }
