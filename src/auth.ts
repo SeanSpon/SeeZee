@@ -77,25 +77,56 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
 
     async session({ session, token }) {
-      // Populate session from JWT token (Edge-safe, no DB query)
-      if (token && session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).role = token.role;
-        (session.user as any).accountType = token.accountType;
-        (session.user as any).tosAcceptedAt = token.tosAcceptedAt;
-        (session.user as any).profileDoneAt = token.profileDoneAt;
+      // IMPORTANT: Always fetch fresh role/accountType from database
+      // This ensures manual role changes in DB are immediately reflected
+      try {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user.email! },
+          select: {
+            id: true,
+            role: true,
+            accountType: true,
+            tosAcceptedAt: true,
+            profileDoneAt: true,
+          },
+        });
+
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          session.user.role = dbUser.role;
+          session.user.accountType = dbUser.accountType;
+          session.user.tosAcceptedAt = dbUser.tosAcceptedAt;
+          session.user.profileDoneAt = dbUser.profileDoneAt;
+        } else {
+          // Fallback to token values if DB query fails
+          session.user.id = token.sub!;
+          session.user.role = token.role as any;
+          session.user.accountType = token.accountType as any;
+          session.user.tosAcceptedAt = token.tosAcceptedAt as any;
+          session.user.profileDoneAt = token.profileDoneAt as any;
+        }
+      } catch (error) {
+        console.error("Failed to fetch user in session callback:", error);
+        // Fallback to token values
+        session.user.id = token.sub!;
+        session.user.role = token.role as any;
+        session.user.accountType = token.accountType as any;
+        session.user.tosAcceptedAt = token.tosAcceptedAt as any;
+        session.user.profileDoneAt = token.profileDoneAt as any;
       }
+
       return session;
     },
 
     async jwt({ token, user, trigger, session: updateSession }) {
-      // Initial sign in - fetch user data and add to token
-      // This runs in Node.js context (not Edge), so Prisma is available
-      if (user) {
+      // Initial sign in OR trigger refresh - fetch fresh user data from database
+      // This ensures role changes in DB are picked up on next sign-in
+      if (user || trigger === "update") {
         try {
-          // Fetch complete user data from database to populate JWT
+          // Always fetch latest user data from database to catch role/accountType changes
+          const email = user?.email || token.email;
           const dbUser = await prisma.user.findUnique({
-            where: { email: user.email! },
+            where: { email: email as string },
             select: {
               id: true,
               role: true,
@@ -110,6 +141,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
             token.accountType = dbUser.accountType;
             token.tosAcceptedAt = dbUser.tosAcceptedAt?.toISOString();
             token.profileDoneAt = dbUser.profileDoneAt?.toISOString();
+            console.log(`🔄 JWT refreshed for ${email}: role=${dbUser.role}, accountType=${dbUser.accountType}`);
           } else {
             // Fallback for new users
             token.role = "CLIENT";
@@ -123,7 +155,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         }
       }
 
-      // Handle session updates from onboarding pages
+      // Handle explicit session updates from onboarding pages
       if (trigger === "update" && updateSession) {
         token.role = updateSession.role || token.role;
         token.accountType = updateSession.accountType || token.accountType;

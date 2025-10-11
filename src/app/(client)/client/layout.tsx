@@ -11,12 +11,12 @@ export default async function ClientDashboardLayout({
 
   // Redirect if not authenticated
   if (!session?.user) {
-    redirect("/login");
+    redirect("/login?returnUrl=/client");
   }
 
-  // Redirect if not a CLIENT
-  if (session.user.accountType !== "CLIENT") {
-    redirect("/admin/dashboard");
+  // Redirect STAFF users (CEO, ADMIN, etc.) to admin dashboard
+  if (session.user.accountType === "STAFF") {
+    redirect("/admin");
   }
 
   return (
