@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.see-zee.com" }],
+      "destination": "https://see-zee.com/$1",
+      "permanent": true
+    }
+  ]
+}

@@ -1,103 +1,50 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+// src/middleware.ts
+import { NextResponse, type NextRequest } from "next/server";
 
-// CEO email for role-based access control
-const CEO_EMAIL = "seanspm1007@gmail.com";
+const PUBLIC_PATHS = new Set([
+  "/", "/start", "/privacy", "/terms", "/login",
+  "/favicon.ico", "/robots.txt", "/sitemap.xml",
+  "/about", "/services", "/contact", "/register",
+  "/register/client", "/register/staff", "/verify-request"
+]);
 
-// Routes that require CEO access
-const CEO_ONLY_ROUTES = [
-  "/admin/team",
-  "/admin/analytics",
-  "/admin/finances",
-];
+export function middleware(req: NextRequest) {
+  const { nextUrl: url, headers, method } = req;
 
-export default auth((req) => {
-  const { pathname } = req.nextUrl;
-  const user = req.auth?.user;
+  // 0) Never interfere with preflight or Next.js data fetches
+  if (method === "OPTIONS") return NextResponse.next();
+  if (url.searchParams.has("_rsc")) return NextResponse.next();
+  if (headers.get("next-router-prefetch") === "1") return NextResponse.next();
 
-  // Public routes - allow access
-  const publicRoutes = [
-    "/",
-    "/login",
-    "/register",
-    "/register/client",
-    "/register/staff",
-    "/verify-request",
-    "/about",
-    "/services",
-    "/contact",
-  ];
-  
-  if (publicRoutes.includes(pathname) || pathname.startsWith("/api/auth")) {
+  // 1) Let Next.js serve assets/data without auth redirects
+  const p = url.pathname;
+  if (
+    p.startsWith("/_next") ||
+    p.startsWith("/assets") ||
+    p.startsWith("/images") ||
+    p.startsWith("/fonts") ||
+    p.startsWith("/og") ||
+    p.startsWith("/api/auth")
+  ) {
     return NextResponse.next();
   }
 
-  // Require authentication for all other routes
-  if (!user) {
-    const url = new URL("/login", req.url);
-    url.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(url);
+  // 2) Public routes should never bounce to /login
+  if (PUBLIC_PATHS.has(p)) return NextResponse.next();
+
+  // 3) Protected routes - let server components handle auth() checks
+  // Don't redirect here; SSR will handle redirects based on auth state
+  if (p.startsWith("/admin") || p.startsWith("/client") || p.startsWith("/onboarding")) {
+    return NextResponse.next();
   }
 
-  // Check if user needs to complete onboarding
-  const needsTos = !user.tosAcceptedAt;
-  const needsProfile = user.tosAcceptedAt && !user.profileDoneAt; // Only need profile if TOS is done
-  const isOnboardingRoute = pathname.startsWith("/onboarding");
-
-  // Only redirect to onboarding if actually needed
-  if (!isOnboardingRoute && (needsTos || needsProfile)) {
-    // First step: accept ToS
-    if (needsTos) {
-      return NextResponse.redirect(new URL("/onboarding/tos", req.url));
-    }
-    // Second step: complete profile (only if TOS is done)
-    if (needsProfile) {
-      return NextResponse.redirect(new URL("/onboarding/profile", req.url));
-    }
-  }
-
-  // Prevent going back to onboarding if already completed
-  if (isOnboardingRoute && user.tosAcceptedAt && user.profileDoneAt) {
-    // Redirect to appropriate dashboard based on account type
-    const redirectUrl = user.accountType === "STAFF" ? "/admin" : "/client";
-    return NextResponse.redirect(new URL(redirectUrl, req.url));
-  }
-
-  // Admin route protection - STAFF only
-  if (pathname.startsWith("/admin")) {
-    // If accountType is undefined, assume they need to re-authenticate
-    if (!user.accountType) {
-      return NextResponse.redirect(new URL("/api/auth/signout?callbackUrl=/login", req.url));
-    }
-    
-    if (user.accountType !== "STAFF") {
-      return NextResponse.redirect(new URL("/client", req.url));
-    }
-
-    // CEO-only routes
-    const isCeoRoute = CEO_ONLY_ROUTES.some((route) => pathname.startsWith(route));
-    if (isCeoRoute && user.email !== CEO_EMAIL) {
-      return NextResponse.redirect(new URL("/admin", req.url));
-    }
-  }
-
-  // Client portal protection - CLIENT only
-  if (pathname.startsWith("/client")) {
-    // If accountType is undefined, assume they need to re-authenticate
-    if (!user.accountType) {
-      return NextResponse.redirect(new URL("/api/auth/signout?callbackUrl=/login", req.url));
-    }
-    
-    if (user.accountType !== "CLIENT") {
-      return NextResponse.redirect(new URL("/admin", req.url));
-    }
-  }
-
+  // 4) Default allow
   return NextResponse.next();
-});
+}
 
+// Only run middleware where it matters; exclude static and auth by default
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|assets|images|fonts|og).*)",
-  ],
+    "/((?!_next/|assets/|images/|fonts/|og/|favicon.ico|robots.txt|sitemap.xml|api/auth/).*)"
+  ]
 };
