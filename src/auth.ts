@@ -4,9 +4,34 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import type { Adapter } from "next-auth/adapters";
 
+const APEX = "https://see-zee.com";
+
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma) as Adapter,
+  trustHost: true,
+  session: { strategy: "jwt" },
+
+  // Make cookies valid across apex + www
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        domain: ".see-zee.com",
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true
+      }
+    }
+  },
+
+  pages: { 
+    signIn: "/login", 
+    error: "/login",
+    verifyRequest: "/verify",
+  },
+
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -14,14 +39,6 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-
-  session: { strategy: "jwt" },
-  trustHost: true,
-  pages: { 
-    signIn: "/login", 
-    error: "/login",
-    verifyRequest: "/verify",
-  },
   
   events: {
     // Fires after PrismaAdapter creates user on first sign-in
@@ -122,12 +139,15 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
 
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return baseUrl + url;
-      try { 
-        const u = new URL(url); 
-        if (u.origin === baseUrl) return url; 
+      // Always redirect to apex
+      if (url.startsWith("/")) return `${APEX}${url}`;
+      try {
+        const u = new URL(url);
+        if (u.origin === baseUrl || u.origin.endsWith("see-zee.com")) {
+          return `${APEX}${u.pathname}${u.search}`;
+        }
       } catch {}
-      return baseUrl;
+      return APEX;
     },
   },
   
