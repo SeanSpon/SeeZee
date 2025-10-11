@@ -4,27 +4,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import type { Adapter } from "next-auth/adapters";
 
-const APEX = "https://see-zee.com";
-
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma) as Adapter,
   trustHost: true,
   session: { strategy: "jwt" },
-
-  // Make cookies valid across apex + www
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        domain: ".see-zee.com",
-        path: "/",
-        httpOnly: true,
-        sameSite: "lax",
-        secure: true
-      }
-    }
-  },
 
   pages: { 
     signIn: "/login", 
@@ -139,15 +123,16 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
 
     async redirect({ url, baseUrl }) {
-      // Always redirect to apex
-      if (url.startsWith("/")) return `${APEX}${url}`;
+      // Handle relative URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Handle absolute URLs
       try {
-        const u = new URL(url);
-        if (u.origin === baseUrl || u.origin.endsWith("see-zee.com")) {
-          return `${APEX}${u.pathname}${u.search}`;
-        }
+        const parsedUrl = new URL(url);
+        // Allow redirects within the same origin
+        if (parsedUrl.origin === baseUrl) return url;
       } catch {}
-      return APEX;
+      // Default to baseUrl for any other case
+      return baseUrl;
     },
   },
   
