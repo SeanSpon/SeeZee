@@ -2,10 +2,10 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 
-export default function RegisterStaffPage() {
+function RegisterStaffContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [invitation, setInvitation] = useState<any>(null);
@@ -157,4 +157,12 @@ export default function RegisterStaffPage() {
       </div>
     </div>
   );
+}
+
+export default function RegisterStaffPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center"><div className="text-white">Loading...</div></div>}>
+      <RegisterStaffContent />
+    </Suspense>
+  )
 }

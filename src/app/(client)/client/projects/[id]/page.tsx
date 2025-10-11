@@ -2,13 +2,14 @@ import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Timeline from "../components/Timeline";
+import Timeline from "@/app/(client)/client/components/Timeline";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {
+  const { id } = await params;
   const session = await auth();
 
   if (!session?.user || session.user.accountType !== "CLIENT") {
@@ -18,7 +19,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   // Fetch project with ownership check via Lead
   const project = await prisma.project.findFirst({
     where: {
-      id: params.id,
+      id: id,
       lead: {
         email: session.user.email!,
       },

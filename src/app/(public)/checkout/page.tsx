@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Section } from "@/components/ui/section";
 import { Globe, LayoutDashboard, Workflow } from "lucide-react";
@@ -15,7 +15,7 @@ type WizardData = {
 
 const steps = ["Service", "Timeline", "Budget", "Contact", "Review", "Pay"];
 
-export default function Page() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const initialService = (searchParams.get("serviceType") as WizardData["serviceType"]) || undefined;
 
@@ -408,4 +408,12 @@ function PaymentStep({ data, onBack }: { data: WizardData; onBack: () => void })
       </div>
     </section>
   );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center"><div className="text-white">Loading...</div></div>}>
+      <CheckoutContent />
+    </Suspense>
+  )
 }

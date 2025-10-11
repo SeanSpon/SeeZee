@@ -11,14 +11,24 @@ interface RoleEditorProps {
   isCEO: boolean;
 }
 
-const roleLabels: Record<UserRole, string> = {
+const roleLabels: Partial<Record<UserRole, string>> = {
+  CEO: "CEO",
   ADMIN: "Admin",
+  DESIGNER: "Designer",
+  DEV: "Developer",
+  OUTREACH: "Outreach",
+  INTERN: "Intern",
   STAFF: "Staff",
   CLIENT: "Client",
 };
 
-const roleColors: Record<UserRole, string> = {
+const roleColors: Partial<Record<UserRole, string>> = {
+  CEO: "bg-amber-500/20 text-amber-300 border-amber-500/30",
   ADMIN: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+  DESIGNER: "bg-pink-500/20 text-pink-300 border-pink-500/30",
+  DEV: "bg-green-500/20 text-green-300 border-green-500/30",
+  OUTREACH: "bg-orange-500/20 text-orange-300 border-orange-500/30",
+  INTERN: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
   STAFF: "bg-blue-500/20 text-blue-300 border-blue-500/30",
   CLIENT: "bg-slate-500/20 text-slate-300 border-slate-500/30",
 };
@@ -70,8 +80,8 @@ export default function RoleEditor({ userId, currentRole, userName, isCEO }: Rol
   // CEO users can't edit roles
   if (!isCEO) {
     return (
-      <span className={`px-3 py-1 rounded-lg text-xs font-semibold border ${roleColors[role]}`}>
-        {roleLabels[role]}
+      <span className={`px-3 py-1 rounded-lg text-xs font-semibold border ${roleColors[role] || 'bg-slate-500/20 text-slate-300 border-slate-500/30'}`}>
+        {roleLabels[role] || role}
       </span>
     );
   }
@@ -87,7 +97,7 @@ export default function RoleEditor({ userId, currentRole, userName, isCEO }: Rol
           bg-white/5 backdrop-blur-xl cursor-pointer
           hover:bg-white/10 transition-all
           disabled:opacity-50 disabled:cursor-not-allowed
-          ${roleColors[role]}
+          ${roleColors[role] || 'bg-slate-500/20 text-slate-300 border-slate-500/30'}
         `}
       >
         {Object.entries(roleLabels).map(([value, label]) => (

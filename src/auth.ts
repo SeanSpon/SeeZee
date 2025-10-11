@@ -3,10 +3,11 @@ import Google from "next-auth/providers/google";
 // import Email from "next-auth/providers/email"; // Temporarily disabled - causes Edge Runtime issues
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import type { Adapter } from "next-auth/adapters";
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -55,44 +56,16 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         return;
       }
 
-      // Check if this email has a valid, unredeemed invitation → Worker (STAFF)
-      const invitation = await prisma.invitation.findFirst({
-        where: {
-          email: user.email!,
-          redeemedAt: null,
-          expiresAt: { gt: new Date() },
+      // Default new sign-ins to CLIENT
+      // Note: STAFF users are upgraded via 6-digit invitation codes in the onboarding flow
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          accountType: "CLIENT",
+          role: "CLIENT",
         },
-        select: { id: true, role: true, createdById: true },
       });
-
-      if (invitation) {
-        // User was invited as Worker - set STAFF account type and invited role
-        await prisma.$transaction([
-          prisma.user.update({
-            where: { id: user.id },
-            data: {
-              accountType: "STAFF",
-              role: invitation.role,
-              invitedById: invitation.createdById,
-            },
-          }),
-          prisma.invitation.update({
-            where: { id: invitation.id },
-            data: { redeemedAt: new Date() },
-          }),
-        ]);
-        console.log(`✅ Worker account created for ${user.email} with role ${invitation.role}`);
-      } else {
-        // Default new sign-ins to CLIENT (no invitation)
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            accountType: "CLIENT",
-            role: "CLIENT",
-          },
-        });
-        console.log(`✅ CLIENT account created for ${user.email}`);
-      }
+      console.log(`✅ CLIENT account created for ${user.email}`);
     },
   },
   
