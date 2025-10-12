@@ -79,16 +79,12 @@ export async function createRequest(formData: FormData) {
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return {
-        error: "Validation failed",
-        details: error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", "),
-      };
+      const errorMsg = encodeURIComponent(error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", "));
+      redirect(`/start?error=${errorMsg}`);
     }
     
     console.error("Failed to create project request:", error);
-    return {
-      error: "Failed to create request. Please try again.",
-    };
+    redirect("/start?error=Failed+to+create+request");
   }
 }
 
