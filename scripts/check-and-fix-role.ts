@@ -12,7 +12,6 @@ async function main() {
       email: true,
       name: true,
       role: true,
-      accountType: true,
       createdAt: true,
     },
   });
@@ -32,7 +31,6 @@ async function main() {
       where: { email },
       data: {
         role: "CEO",
-        accountType: "STAFF",
       },
     });
     console.log("✅ Updated successfully!");
