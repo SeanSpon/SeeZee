@@ -79,6 +79,19 @@ export async function isStaff(): Promise<boolean> {
 }
 
 /**
+ * Check if current user is CEO (non-throwing)
+ * @returns true if user is CEO, false otherwise
+ */
+export async function isCEO(): Promise<boolean> {
+  try {
+    const session = await requireUser();
+    return (session.user as any).role === "CEO";
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Redirect to login if not authenticated
  * Use in server components/actions
  */

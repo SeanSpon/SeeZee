@@ -17,11 +17,16 @@ export function Navbar() {
     ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']
   )
 
-  // Helper function to check if user is admin
-  const isAdmin = (email?: string | null) => {
-    if (!email) return false
-    const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',') || ['seanspm1007@gmail.com']
-    return adminEmails.includes(email)
+  // Helper function to check if user is staff (any role except CLIENT)
+  const isStaff = (role?: string | null) => {
+    if (!role) return false
+    return role !== 'CLIENT'
+  }
+  
+  // Get display role name
+  const getRoleName = (role?: string | null) => {
+    if (!role) return 'Client'
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()
   }
 
   const navigation = [
@@ -77,14 +82,14 @@ export function Navbar() {
                 <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-xs font-medium text-gray-300">
-                    {isAdmin(session.user?.email) ? 'Admin' : 'Client'}
+                    {getRoleName(session.user?.role)}
                   </span>
                 </div>
                 
                 {/* Navigation Links */}
-                {isAdmin(session.user?.email) ? (
+                {isStaff(session.user?.role) ? (
                   <Link 
-                    href="/admin" 
+                    href="/admin/overview" 
                     className="flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium text-purple-300 hover:text-white hover:bg-purple-500/20 border border-purple-500/30 transition-all duration-200"
                   >
                     <Settings className="h-4 w-4" />
@@ -169,13 +174,13 @@ export function Navbar() {
                 <div className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium text-gray-300">
-                    Signed in as {isAdmin(session.user?.email) ? 'Admin' : 'Client'}
+                    {getRoleName(session.user?.role)}
                   </span>
                 </div>
                 
-                {isAdmin(session.user?.email) ? (
+                {isStaff(session.user?.role) ? (
                   <Link
-                    href="/admin"
+                    href="/admin/overview"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-purple-300 hover:text-white hover:bg-purple-500/20 border border-purple-500/30 transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >

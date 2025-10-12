@@ -40,7 +40,8 @@ async function getFinances() {
 export default async function FinancesPage() {
   const session = await auth();
   
-  if (session?.user?.email !== "seanspm1007@gmail.com") {
+  // CEO-only access
+  if (session?.user?.role !== "CEO") {
     redirect("/admin/overview");
   }
 

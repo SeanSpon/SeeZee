@@ -20,7 +20,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   
-  const isCEO = session?.user?.email === "seanspm1007@gmail.com";
+  const isCEO = session?.user?.role === "CEO";
 
   return (
     <aside className="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-slate-900/50 backdrop-blur-xl border-r border-white/10 p-6 z-40 overflow-y-auto pb-20">

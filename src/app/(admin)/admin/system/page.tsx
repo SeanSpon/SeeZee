@@ -8,7 +8,8 @@ export const revalidate = 0;
 export default async function SystemPage() {
   const session = await auth();
   
-  if (session?.user?.email !== "seanspm1007@gmail.com") {
+  // CEO-only access
+  if (session?.user?.role !== "CEO") {
     redirect("/admin/overview");
   }
 
