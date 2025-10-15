@@ -5,7 +5,7 @@ import { CinematicBackground, GlowingText, FadeIn, MeltedCard } from "../motion"
 
 export function Hero() {
   const scrollToContact = () => {
-    window.location.href = '/contact';
+    window.location.href = '/start';
   };
 
   const scrollToServices = () => {

@@ -16,6 +16,9 @@
   --warning: #F59E0B;
   --danger: #EF4444;
   
+  /* Navbar height */
+  --nav-h: 64px;
+  
   /* Radii */
   --r-xs: 8px;
   --r-md: 14px;
@@ -24,10 +27,17 @@
   
   /* Shadows */
   --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 45px rgba(0, 0, 0, 0.45);
   
   /* Spacing */
   --pad: clamp(16px, 2.5vw, 24px);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nav-h: 72px;
+  }
 }
 
 * {
@@ -91,6 +101,68 @@ body::after {
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-md);
   padding: 16px;
+}
+
+/* SeeZee UI v4.5 - Enhanced Glass Morphism (Transparent, Outline Only) */
+.glass-container {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: none;
+  transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-container:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.glass-container-static {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+/* Glass card for features, pricing, etc. */
+.glass-feature-card {
+  background: transparent;
+  backdrop-filter: blur(8px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: none;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.glass-feature-card:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+  transform: translateY(-4px);
+}
+
+/* Glass section for questionnaire steps */
+.glass-section {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: none;
+  padding: 32px;
+}
+
+/* Glass modal/panel for dashboards */
+.glass-modal {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow: none;
 }
 
 /* Container */
@@ -510,10 +582,12 @@ body::after {
 }
 
 @keyframes particle-float {
-  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  5% { opacity: 0.3; }
   10% { opacity: 1; }
   90% { opacity: 1; }
-  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  95% { opacity: 0.3; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
 }
 
 @keyframes fade-in {
@@ -557,3 +631,74 @@ body::after {
 .scrollbar-track-transparent::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ===== SeeZee Layout Vars ===== */
+:root{
+  --h-nav: 64px;        /* main site navbar height */
+  --sidebar-w: 16rem;   /* admin sidebar width (256px) */
+}
+
+/* App background: clean slate/navy gradient */
+body{
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  background-attachment: fixed;
+  color: #E6EEF8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Reusable glass card (matches Start a Project) */
+.seezee-glass{
+  background: rgba(18,25,37,0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(35,48,64,0.6);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25) inset, 0 8px 30px rgba(0,0,0,0.25);
+}
+
+/* Layering: keep things honest */
+.bg-layer{ position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+.nav-layer{ position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: var(--h-nav); }
+.sidebar-layer{ 
+  width: var(--sidebar-w); 
+  height: 100%;
+  overflow-y: auto; 
+  flex-shrink: 0;
+}
+.main-layer{
+  position: relative; z-index: 10;
+  padding-top: calc(var(--h-nav) + 16px);
+  padding-bottom: 80px;
+  min-height: calc(100vh - var(--h-nav));
+}
+
+/* When a page has NO admin bar, add this class to body or wrapper */
+.no-admin .main-layer{ 
+  padding-top: calc(var(--h-nav) + 16px); 
+  min-height: calc(100vh - var(--h-nav)); 
+}
+
+/* Content area shift so it doesn't hide under the sidebar */
+.admin-main {
+  margin-left: var(--sidebar-w);
+  transition: margin 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .admin-main {
+    margin-left: 0;
+  }
+}
+
+.main-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Footer always visible and not overlapped */
+footer{ position: relative; z-index: 10; }
+
+/* Optional: chart canvas color fix on dark backgrounds */
+.recharts-default-tooltip{ backdrop-filter: blur(8px); }
+

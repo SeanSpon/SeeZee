@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import PageShell from "@/components/PageShell";
 
 export default async function RefreshSessionPage() {
   const session = await auth();
@@ -10,8 +11,9 @@ export default async function RefreshSessionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+    <PageShell>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
         <h1 className="text-3xl font-bold text-white mb-6">
           Session Information
         </h1>
@@ -72,6 +74,7 @@ export default async function RefreshSessionPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PageShell>
   );
 }

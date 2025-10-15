@@ -1,0 +1,300 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useQwizStore } from '@/lib/qwiz/store';
+import { initQuestionnaire, updateQuestionnaire } from '@/lib/qwiz/actions';
+import { ServiceSelector } from '@/components/qwiz/ServiceSelector';
+import { FeatureGrid } from '@/components/qwiz/FeatureGrid';
+import { MaintenanceUpsell } from '@/components/qwiz/MaintenanceUpsell';
+import { PriceCounter } from '@/components/qwiz/PriceCounter';
+import { StepNav } from '@/components/qwiz/StepNav';
+import { QuestionnaireForm } from '@/components/qwiz/QuestionnaireForm';
+import { ContactForm } from '@/components/qwiz/ContactForm';
+import { formatPrice } from '@/lib/qwiz/pricing';
+import { SERVICES, FEATURES } from '@/lib/qwiz/config';
+
+export default function StartPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const {
+    step,
+    setStep,
+    qid,
+    setQid,
+    service,
+    features,
+    totals,
+    questionnaire,
+    contact,
+    setStatus,
+  } = useQwizStore();
+
+  const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Initialize from URL or create new
+  useEffect(() => {
+    setMounted(true);
+    const qidFromUrl = searchParams.get('q');
+    
+    if (qidFromUrl && !qid) {
+      setQid(qidFromUrl);
+    } else if (!qid) {
+      initQuestionnaire().then(({ id }) => {
+        setQid(id);
+        router.replace(`/start?q=${id}`);
+      });
+    }
+  }, [qid, searchParams, setQid, router]);
+
+  // Sync to server on changes
+  useEffect(() => {
+    if (!qid || !mounted) return;
+
+    const syncData = {
+      selectedService: service || undefined,
+      selectedFeatures: features,
+      totals: totals || undefined,
+      questionnaire,
+      contact: contact || undefined,
+    };
+
+    updateQuestionnaire(qid, syncData);
+  }, [qid, service, features, totals, questionnaire, contact, mounted]);
+
+  const handleNext = async () => {
+    if (step < 6) {
+      setStep((step + 1) as any);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Submit
+      setLoading(true);
+      try {
+        const mode = process.env.NEXT_PUBLIC_QWIZ_MODE || 'quote';
+        
+        if (mode === 'checkout') {
+          // Redirect to Stripe checkout
+          const response = await fetch('/api/checkout/create-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ qid }),
+          });
+          
+          const { url } = await response.json();
+          window.location.href = url;
+        } else {
+          // Submit as quote/lead
+          await fetch('/api/leads/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ qid }),
+          });
+          
+          setStatus('submitted');
+          router.push('/start/success');
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        setStatus('error');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 1) {
+      setStep((step - 1) as any);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Validation for next button
+  const canProceed = () => {
+    switch (step) {
+      case 1:
+        // Must select a service (but not standalone maintenance)
+        return !!service && service !== 'maintenance';
+      case 2:
+        return true; // Features are optional
+      case 3:
+        return true; // Maintenance is optional
+      case 4:
+        // Check required questions
+        return !!(
+          questionnaire.goals?.length &&
+          questionnaire.targetAudience?.length &&
+          questionnaire.timeline &&
+          questionnaire.contentReady !== undefined
+        );
+      case 5:
+        return !!(contact?.name && contact?.email);
+      case 6:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pb-32">
+      {/* Progress bar */}
+      <div className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-2">
+            {[1, 2, 3, 4, 5, 6].map((s) => (
+              <div
+                key={s}
+                className={`flex-1 h-2 rounded-full transition-all ${
+                  s <= step ? 'bg-cyan-500' : 'bg-white/10'
+                }`}
+              />
+            ))}
+          </div>
+          <div className="mt-2 text-sm text-white/60 text-center">
+            Step {step} of 6
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {step === 1 && <ServiceSelector />}
+            
+            {step === 2 && (
+              <div className="space-y-8">
+                <FeatureGrid />
+                {service && features.length === 0 && (
+                  <div className="text-center text-white/60 text-sm">
+                    No features selected - you can add them later or skip this step
+                  </div>
+                )}
+              </div>
+            )}
+
+            {step === 3 && <MaintenanceUpsell />}
+
+            {step === 4 && <QuestionnaireForm />}
+
+            {step === 5 && <ContactForm />}
+
+            {step === 6 && totals && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-white mb-2">
+                    Review Your Quote
+                  </h2>
+                  <p className="text-white/60">Everything look good?</p>
+                </div>
+
+                {/* Service */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold text-white mb-4">Service</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="text-3xl">{service && SERVICES[service].icon}</div>
+                    <div>
+                      <div className="text-white font-medium">
+                        {service && SERVICES[service].label}
+                      </div>
+                      <div className="text-cyan-400 text-sm">
+                        {formatPrice(totals.base)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                {features.length > 0 && (
+                  <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">
+                      Selected Features ({features.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {features.map((feat) => {
+                        const feature = FEATURES.find((f) => f.id === feat.id);
+                        if (!feature) return null;
+                        
+                        return (
+                          <div key={feat.id} className="flex items-center gap-2">
+                            <span>{feature.icon}</span>
+                            <span className="text-white text-sm">{feature.label}</span>
+                            <span className="text-cyan-400 text-xs ml-auto">
+                              {formatPrice(feature.price)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Contact */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold text-white mb-4">Contact Information</h3>
+                  <div className="space-y-2 text-white/80">
+                    <div><span className="text-white/60">Name:</span> {contact?.name}</div>
+                    <div><span className="text-white/60">Email:</span> {contact?.email}</div>
+                    {contact?.phone && <div><span className="text-white/60">Phone:</span> {contact.phone}</div>}
+                    {contact?.company && <div><span className="text-white/60">Company:</span> {contact.company}</div>}
+                  </div>
+                </div>
+
+                {/* Total */}
+                <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-8">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <div className="text-white/60 text-sm mb-1">Total Project Cost</div>
+                      <div className="text-4xl font-bold text-white">
+                        {formatPrice(totals.total)}
+                      </div>
+                      {totals.recurring && (
+                        <div className="text-cyan-400 mt-2">
+                          + {formatPrice(totals.monthly)}/month
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white/60 text-sm mb-1">Deposit to Start</div>
+                      <div className="text-2xl font-bold text-cyan-400">
+                        {formatPrice(totals.deposit)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <StepNav
+              onNext={handleNext}
+              onBack={handleBack}
+              nextLabel={
+                step === 5
+                  ? (process.env.NEXT_PUBLIC_QWIZ_MODE === 'checkout' ? 'Proceed to Checkout' : 'Submit Quote Request')
+                  : step === 4
+                  ? 'Review Quote'
+                  : 'Continue'
+              }
+              nextDisabled={!canProceed()}
+              loading={loading}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Price counter (sticky on all steps except 5) */}
+      {step !== 5 && <PriceCounter />}
+    </div>
+  );
+}
+

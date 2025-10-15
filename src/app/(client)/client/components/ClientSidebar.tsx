@@ -1,18 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  FolderKanban,
-  TrendingUp,
-  MessageSquare,
-  Github,
-  FileText,
-  FileCheck,
-  Settings,
-  HelpCircle,
-} from "lucide-react";
+import { CLIENT_LINKS } from "@/features/client/navLinks";
+import { SidebarLink } from "@/features/client/SidebarLink";
 
 interface ClientSidebarProps {
   user: {
@@ -22,27 +12,12 @@ interface ClientSidebarProps {
   };
 }
 
-const navItems = [
-  { href: "/client", icon: LayoutDashboard, label: "Overview" },
-  { href: "/client/projects", icon: FolderKanban, label: "Projects" },
-  { href: "/client/progress", icon: TrendingUp, label: "Progress" },
-  { href: "/client/messages", icon: MessageSquare, label: "Messages" },
-  { href: "/client/github", icon: Github, label: "GitHub Activity" },
-  { href: "/client/invoices", icon: FileText, label: "Invoices" },
-  { href: "/client/files", icon: FileCheck, label: "Files & Assets" },
-  { href: "/client/requests", icon: FileCheck, label: "Requests" },
-  { href: "/client/settings", icon: Settings, label: "Settings" },
-  { href: "/client/support", icon: HelpCircle, label: "Support" },
-];
-
 export default function ClientSidebar({ user }: ClientSidebarProps) {
-  const pathname = usePathname();
-
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 w-64 bg-slate-900/80 backdrop-blur-xl border-r border-white/5 hidden lg:block">
+    <aside className="fixed left-0 z-30 w-64 bg-black/20 backdrop-blur-xl border-r border-white/10 hidden lg:block" style={{ top: 'var(--nav-h)', bottom: 0 }}>
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="p-6 border-b border-white/5">
+        <div className="p-6 border-b border-white/10">
           <Link href="/client" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
               <span className="text-white font-bold text-xl">S</span>
@@ -53,32 +28,13 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-lg transition-all
-                  ${
-                    isActive
-                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                      : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }
-                `}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
+          {CLIENT_LINKS.map((link) => (
+            <SidebarLink key={link.href} {...link} />
+          ))}
         </nav>
 
         {/* User Info */}
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5">
             <img
               src={user.image || "/default-avatar.png"}

@@ -21,15 +21,15 @@ export default async function ClientDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="flex">
+    <div className="min-h-screen">
+      <div className="flex pt-[var(--nav-h)]">
         {/* Sidebar */}
         <ClientSidebar user={session.user} />
 
         {/* Main Content */}
         <div className="flex-1 lg:pl-64">
           {/* Top Bar */}
-          <div className="sticky top-0 z-40 backdrop-blur-xl bg-slate-900/50 border-b border-white/5">
+          <div className="sticky top-[var(--nav-h)] z-40 backdrop-blur-xl bg-black/30 border-b border-white/10">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-white">Client Portal</h1>

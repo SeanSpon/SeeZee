@@ -1,201 +1,397 @@
-import { createRequest } from "./actions";
-import { auth } from "@/auth";
+'use client';
 
-const SERVICE_OPTIONS = [
-  { value: "WEB_APP", label: "Web Application" },
-  { value: "WEBSITE", label: "Website" },
-  { value: "ECOMMERCE", label: "E-Commerce" },
-  { value: "AI_DATA", label: "AI & Data" },
-  { value: "MOBILE", label: "Mobile App" },
-  { value: "BRANDING", label: "Branding" },
-  { value: "OTHER", label: "Other" },
-] as const;
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useQwizStore } from '@/lib/qwiz/store';
+import { initQuestionnaire, updateQuestionnaire } from '@/lib/qwiz/actions';
+import { PackageSelector } from '@/components/qwiz/PackageSelector';
+import { QuestionnaireForm } from '@/components/qwiz/QuestionnaireForm';
+import { ContactForm } from '@/components/qwiz/ContactForm';
+import { PriceCounter } from '@/components/qwiz/PriceCounter';
+import { formatPrice } from '@/lib/qwiz/pricing';
+import { getPackage, getFeature, MAINTENANCE } from '@/lib/qwiz/packages';
+import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import PageShell from '@/components/PageShell';
 
-const BUDGET_OPTIONS = [
-  { value: "UNKNOWN", label: "Not sure yet" },
-  { value: "MICRO", label: "$1,000 - $5,000" },
-  { value: "SMALL", label: "$5,000 - $15,000" },
-  { value: "MEDIUM", label: "$15,000 - $50,000" },
-  { value: "LARGE", label: "$50,000 - $150,000" },
-  { value: "ENTERPRISE", label: "$150,000+" },
-] as const;
+export default function StartPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const {
+    step,
+    setStep,
+    qid,
+    setQid,
+    package: selectedPackage,
+    features,
+    totals,
+    questionnaire,
+    contact,
+    setStatus,
+  } = useQwizStore();
 
-export default async function StartProject() {
-  const session = await auth();
+  const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Initialize from URL or create new
+  useEffect(() => {
+    setMounted(true);
+    const qidFromUrl = searchParams.get('q');
+    
+    if (qidFromUrl && !qid) {
+      setQid(qidFromUrl);
+    } else if (!qid) {
+      initQuestionnaire().then(({ id }) => {
+        setQid(id);
+        router.replace(`/start?q=${id}`);
+      });
+    }
+  }, [qid, searchParams, setQid, router]);
+
+  // Sync to server on changes
+  useEffect(() => {
+    if (!qid || !mounted) return;
+
+    const syncData = {
+      package: selectedPackage || undefined,
+      selectedFeatures: features,
+      totals: totals || undefined,
+      questionnaire,
+      contact: contact || undefined,
+    };
+
+    updateQuestionnaire(qid, syncData);
+  }, [qid, selectedPackage, features, totals, questionnaire, contact, mounted]);
+
+  const handleNext = async () => {
+    if (step < 4) {
+      setStep((step + 1) as any);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Submit
+      setLoading(true);
+      try {
+        const mode = process.env.NEXT_PUBLIC_QWIZ_MODE || 'quote';
+        
+        if (mode === 'checkout') {
+          // Redirect to Stripe checkout
+          const response = await fetch('/api/checkout/create-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ qid }),
+          });
+          
+          const { url } = await response.json();
+          window.location.href = url;
+        } else {
+          // Submit as quote/lead
+          await fetch('/api/leads/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ qid }),
+          });
+          
+          setStatus('submitted');
+          router.push('/start/success');
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        setStatus('error');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 0) {
+      setStep((step - 1) as any);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Validation for next button
+  const canProceed = () => {
+    switch (step) {
+      case 0:
+        return !!selectedPackage;
+      case 1:
+        // Check required questions
+        return !!(
+          questionnaire.goals?.length &&
+          questionnaire.targetAudience?.length &&
+          questionnaire.timeline &&
+          questionnaire.contentReady !== undefined
+        );
+      case 2:
+        return !!(contact?.name && contact?.email);
+      case 3:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const getNextLabel = () => {
+    switch (step) {
+      case 0:
+        return 'Continue to Questions';
+      case 1:
+        return 'Continue to Contact';
+      case 2:
+        return 'Review Quote';
+      case 3:
+        return process.env.NEXT_PUBLIC_QWIZ_MODE === 'checkout'
+          ? 'Proceed to Checkout'
+          : 'Submit Quote Request';
+      default:
+        return 'Continue';
+    }
+  };
+
+  if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Start Your Project
-          </h1>
-          <p className="text-xl text-gray-300">
-            Tell us about your vision and we'll bring it to life
-          </p>
-        </div>
-
-        {/* Form */}
-        <form
-          action={createRequest}
-          className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 sm:p-10 shadow-2xl border border-white/20"
-        >
-          <div className="space-y-6">
-            {/* Project Title */}
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-200 mb-2">
-                Project Title *
-              </label>
-              <input
-                type="text"
-                name="title"
-                id="title"
-                required
-                placeholder="e.g., E-commerce platform for artisan goods"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+    <PageShell>
+      {/* Sticky progress bar - translucent with blur */}
+      <header className="sticky top-0 z-30 backdrop-blur-xl bg-black/20 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-2">
+            {[0, 1, 2, 3].map((s) => (
+              <div
+                key={s}
+                className={`flex-1 h-2 rounded-full transition-all ${
+                  s <= step
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500'
+                    : 'bg-gray-800'
+                }`}
               />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-2">
-                Project Description *
-              </label>
-              <textarea
-                name="description"
-                id="description"
-                required
-                rows={5}
-                placeholder="Describe your project goals, target audience, key features..."
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-              />
-            </div>
-
-            {/* Contact Email */}
-            <div>
-              <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-200 mb-2">
-                Email Address *
-              </label>
-              <input
-                type="email"
-                name="contactEmail"
-                id="contactEmail"
-                required
-                defaultValue={session?.user?.email || ""}
-                placeholder="you@company.com"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Company */}
-            <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-200 mb-2">
-                Company Name (Optional)
-              </label>
-              <input
-                type="text"
-                name="company"
-                id="company"
-                placeholder="Your company"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Services */}
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-3">
-                Services Needed * (Select all that apply)
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {SERVICE_OPTIONS.map((service) => (
-                  <label
-                    key={service.value}
-                    className="flex items-center space-x-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3 cursor-pointer hover:bg-white/10 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      name="services"
-                      value={service.value}
-                      className="w-4 h-4 text-purple-600 bg-white/10 border-white/30 rounded focus:ring-purple-500 focus:ring-2"
-                    />
-                    <span className="text-gray-200">{service.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Budget */}
-            <div>
-              <label htmlFor="budget" className="block text-sm font-medium text-gray-200 mb-2">
-                Budget Range
-              </label>
-              <select
-                name="budget"
-                id="budget"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                {BUDGET_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value} className="bg-gray-900">
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Timeline */}
-            <div>
-              <label htmlFor="timeline" className="block text-sm font-medium text-gray-200 mb-2">
-                Desired Timeline
-              </label>
-              <input
-                type="text"
-                name="timeline"
-                id="timeline"
-                placeholder="e.g., 2-3 months, ASAP, Q1 2026"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Resources URL */}
-            <div>
-              <label htmlFor="resourcesUrl" className="block text-sm font-medium text-gray-200 mb-2">
-                Reference Materials (Optional)
-              </label>
-              <input
-                type="url"
-                name="resourcesUrl"
-                id="resourcesUrl"
-                placeholder="https://notion.so/... or Google Drive link"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-              <p className="mt-1 text-sm text-gray-400">
-                Link to any design mocks, docs, or inspiration
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                Submit Project Request
-              </button>
-            </div>
-
-            <p className="text-center text-sm text-gray-400">
-              * Required fields
-            </p>
+            ))}
           </div>
-        </form>
-
-        {/* Trust Indicators */}
-        <div className="mt-8 text-center text-gray-400 text-sm">
-          <p>🔒 Your information is secure and confidential</p>
-          <p className="mt-2">We typically respond within 24 hours</p>
+          <div className="mt-2 text-sm text-gray-400 text-center">
+            {step === 0 && 'Choose Your Package'}
+            {step === 1 && 'Answer Questions'}
+            {step === 2 && 'Contact Information'}
+            {step === 3 && 'Review & Submit'}
+          </div>
         </div>
-      </div>
-    </div>
+      </header>
+
+      {/* Main content section - floating glass container */}
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)] p-8"
+          >
+            {/* Step 0: Package Selection */}
+            {step === 0 && <PackageSelector />}
+
+            {/* Step 1: Questionnaire */}
+            {step === 1 && <QuestionnaireForm />}
+
+            {/* Step 2: Contact Form */}
+            {step === 2 && <ContactForm />}
+
+            {/* Step 3: Review */}
+            {step === 3 && selectedPackage && totals && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    Review Your Quote
+                  </h2>
+                  <p className="text-gray-400">Everything look good?</p>
+                </div>
+
+                {/* Package Summary */}
+                <div className="bg-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <span className="text-3xl">{getPackage(selectedPackage).icon}</span>
+                    {getPackage(selectedPackage).title} Package
+                  </h3>
+                  <p className="text-gray-400 mb-4">{getPackage(selectedPackage).description}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-2">Base Package</div>
+                      <div className="text-2xl font-bold text-blue-400">
+                        {formatPrice(totals.packageBase)}
+                      </div>
+                    </div>
+                    {totals.addons > 0 && (
+                      <div>
+                        <div className="text-sm text-gray-500 mb-2">Add-ons</div>
+                        <div className="text-2xl font-bold text-purple-400">
+                          + {formatPrice(totals.addons)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Included Features */}
+                <div className="bg-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-4">
+                    Included Features ({getPackage(selectedPackage).baseIncludedFeatures.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {getPackage(selectedPackage).baseIncludedFeatures.map((featureId) => {
+                      const feature = getFeature(featureId);
+                      if (!feature) return null;
+                      
+                      return (
+                        <div key={featureId} className="flex items-center gap-2 text-sm">
+                          <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
+                          <span>{feature.icon}</span>
+                          <span className="text-gray-300">{feature.title}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Additional Features */}
+                {totals.addons > 0 && (
+                  <div className="bg-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                    <h3 className="text-lg font-semibold mb-4">
+                      Additional Features
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {features
+                        .filter((fId) => !getPackage(selectedPackage).baseIncludedFeatures.includes(fId))
+                        .map((featureId) => {
+                          const feature = getFeature(featureId);
+                          if (!feature) return null;
+                          
+                          return (
+                            <div key={featureId} className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span>{feature.icon}</span>
+                                <span className="text-sm text-gray-300">{feature.title}</span>
+                              </div>
+                              <span className="text-blue-400 text-sm">
+                                {formatPrice(feature.price)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Maintenance */}
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                    {MAINTENANCE.title}
+                    <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
+                      Required
+                    </span>
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-4">{MAINTENANCE.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-400">Monthly</div>
+                    <div className="text-xl font-bold text-green-400">
+                      {formatPrice(MAINTENANCE.monthlyPrice)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact */}
+                <div className="bg-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <div className="text-gray-500">Name</div>
+                      <div className="font-medium">{contact?.name}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-500">Email</div>
+                      <div className="font-medium">{contact?.email}</div>
+                    </div>
+                    {contact?.phone && (
+                      <div>
+                        <div className="text-gray-500">Phone</div>
+                        <div className="font-medium">{contact.phone}</div>
+                      </div>
+                    )}
+                    {contact?.company && (
+                      <div>
+                        <div className="text-gray-500">Company</div>
+                        <div className="font-medium">{contact.company}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Total */}
+                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-8">
+                  <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div>
+                      <div className="text-gray-400 text-sm mb-1">Total Project Cost</div>
+                      <div className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        {formatPrice(totals.total)}
+                      </div>
+                      <div className="text-green-400 mt-2 flex items-center gap-2">
+                        <span className="text-sm">+</span>
+                        <span className="text-xl font-semibold">{formatPrice(totals.monthly)}/month</span>
+                      </div>
+                    </div>
+                    <div className="text-center md:text-right">
+                      <div className="text-gray-400 text-sm mb-1">Deposit to Start</div>
+                      <div className="text-3xl font-bold text-green-400">
+                        {formatPrice(totals.deposit)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">25% or $250 minimum</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            {step !== 0 && (
+              <div className="flex items-center justify-between mt-8 pt-8 border-t border-gray-800">
+                <button
+                  onClick={handleBack}
+                  disabled={loading}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 transition-all disabled:opacity-50"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Back
+                </button>
+
+                <button
+                  onClick={handleNext}
+                  disabled={!canProceed() || loading}
+                  className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      {getNextLabel()}
+                      <ArrowRight className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </section>
+
+      {/* Gap before footer */}
+      <div className="mt-12 mb-20" />
+
+      {/* Price counter (sticky on steps 0-2) */}
+      <PriceCounter />
+    </PageShell>
   );
 }

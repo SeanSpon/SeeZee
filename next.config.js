@@ -16,12 +16,7 @@ const nextConfig = {
         destination: 'https://see-zee.com/:path*',
         permanent: true,
       },
-      // Admin dashboard redirect
-      {
-        source: '/admin',
-        destination: '/admin/analytics',
-        permanent: false,
-      },
+      // Removed admin dashboard redirect - now goes to main dashboard page
     ]
   },
 }

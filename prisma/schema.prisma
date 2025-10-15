@@ -69,9 +69,10 @@ enum ServiceType {
 }
 
 enum ProjectStatus {
-  PENDING
-  ACTIVE
-  ON_HOLD
+  LEAD
+  PAID
+  IN_PROGRESS
+  REVIEW
   COMPLETED
   CANCELLED
 }
@@ -130,6 +131,35 @@ enum TodoPriority {
   LOW
   MEDIUM
   HIGH
+}
+
+enum ActivityType {
+  LEAD_CREATED
+  LEAD_UPDATED
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  TASK_COMPLETED
+  USER_JOINED
+  INVOICE_PAID
+  MAINTENANCE_DUE
+  SYSTEM_ALERT
+}
+
+enum MaintenanceStatus {
+  ACTIVE
+  UPCOMING
+  OVERDUE
+  COMPLETED
+  CANCELLED
+}
+
+enum LinkCategory {
+  DESIGN
+  DEVELOPMENT
+  MARKETING
+  TOOLS
+  DOCUMENTATION
+  OTHER
 }
 
 // NextAuth.js Models
@@ -275,6 +305,7 @@ model Lead {
   timeline       String?
   budget         String?
   requirements   Json?
+  metadata       Json?      // Additional questionnaire data
   
   organizationId String?
   convertedAt    DateTime?
@@ -289,28 +320,34 @@ model Lead {
 }
 
 model Project {
-  id             String        @id @default(cuid())
-  name           String
-  description    String?
-  status         ProjectStatus @default(PENDING)
-  startDate      DateTime?
-  endDate        DateTime?
-  budget         Decimal?
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  status          ProjectStatus @default(LEAD)
+  startDate       DateTime?
+  endDate         DateTime?
+  budget          Decimal?
   
-  organizationId String
-  assigneeId     String?
-  leadId         String?       @unique
+  organizationId  String
+  assigneeId      String?
+  leadId          String?       @unique
+  questionnaireId String?       @unique
+  stripeCustomerId String?
   
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  assignee       User?        @relation("ProjectAssignee", fields: [assigneeId], references: [id])
-  lead           Lead?        @relation(fields: [leadId], references: [id])
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  assignee        User?        @relation("ProjectAssignee", fields: [assigneeId], references: [id])
+  lead            Lead?        @relation(fields: [leadId], references: [id])
+  questionnaire   Questionnaire? @relation(fields: [questionnaireId], references: [id])
   
-  milestones     ProjectMilestone[]
-  invoices       Invoice[]
-  files          File[]
+  milestones      ProjectMilestone[]
+  invoices        Invoice[]
+  files           File[]
+  requests        Request[]
+  subscriptions   Subscription[]
+  maintenanceSchedules MaintenanceSchedule[]
 
   @@map("projects")
 }
@@ -659,6 +696,55 @@ model Message {
   @@map("messages")
 }
 
+// Questionnaire for project onboarding
+model Questionnaire {
+  id           String   @id @default(cuid())
+  userEmail    String
+  data         Json     // All questionnaire fields as JSON
+  estimate     Int?     // Computed project estimate in cents
+  deposit      Int?     // Required deposit in cents (25% or $250 min)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  project      Project?
+
+  @@map("questionnaires")
+}
+
+// Stripe subscriptions for maintenance
+model Subscription {
+  id               String   @id @default(cuid())
+  projectId        String
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  stripeId         String   @unique
+  priceId          String
+  status           String   // active, canceled, past_due
+  currentPeriodEnd DateTime?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("subscriptions")
+}
+
+// Client requests for maintenance/changes
+model Request {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title     String
+  details   String   @db.Text
+  state     String   @default("new") // new, in_progress, blocked, done
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("requests")
+}
+
 // Unified Project Request Pipeline
 model ProjectRequest {
   id           String        @id @default(cuid())
@@ -688,4 +774,144 @@ model ProjectRequest {
   updatedAt    DateTime      @default(now()) @updatedAt
 
   @@map("project_requests")
+}
+
+// Activity Feed for admin dashboard
+model Activity {
+  id         String       @id @default(cuid())
+  type       ActivityType
+  title      String
+  description String?
+  metadata   Json?        // Additional data specific to activity type
+  
+  userId     String?      // User who triggered the activity
+  entityType String?      // "Lead", "Project", "Task", etc.
+  entityId   String?      // ID of the related entity
+  
+  read       Boolean      @default(false)
+  readAt     DateTime?
+  
+  createdAt  DateTime     @default(now())
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([read])
+  @@map("activities")
+}
+
+// Maintenance tracking for client sites
+model MaintenanceSchedule {
+  id          String            @id @default(cuid())
+  projectId   String
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?
+  status      MaintenanceStatus @default(UPCOMING)
+  
+  scheduledFor DateTime
+  completedAt  DateTime?
+  
+  assignedToId String?
+  notes        String?          @db.Text
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@map("maintenance_schedules")
+}
+
+// Learning resources for team training
+model LearningResource {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   // "video", "article", "course", "documentation"
+  url         String
+  category    String?  // "frontend", "backend", "design", "business"
+  
+  thumbnailUrl String?
+  duration    Int?     // in minutes
+  difficulty  String?  // "beginner", "intermediate", "advanced"
+  
+  tags        String[] // searchable tags
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([type])
+  @@map("learning_resources")
+}
+
+// Tools directory for team
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  url         String
+  category    String   // "design", "development", "project-management", "communication"
+  
+  logoUrl     String?
+  pricing     String?  // "free", "paid", "freemium"
+  
+  tags        String[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@map("tools")
+}
+
+// Quick links manager
+model Link {
+  id          String       @id @default(cuid())
+  title       String
+  url         String
+  description String?
+  category    LinkCategory @default(OTHER)
+  
+  icon        String?      // emoji or icon name
+  color       String?      // hex color for badge
+  
+  order       Int          @default(0)
+  pinned      Boolean      @default(false)
+  
+  createdById String?
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([category])
+  @@index([pinned])
+  @@index([order])
+  @@map("links")
+}
+
+// Automations/workflows (CEO only)
+model Automation {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  trigger     String   // "lead_created", "invoice_overdue", "project_completed"
+  action      String   // "send_email", "create_task", "update_status"
+  
+  config      Json     // Configuration for trigger and action
+  
+  enabled     Boolean  @default(true)
+  lastRunAt   DateTime?
+  runCount    Int      @default(0)
+  
+  createdById String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled])
+  @@index([trigger])
+  @@map("automations")
 }

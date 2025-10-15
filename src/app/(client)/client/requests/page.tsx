@@ -34,7 +34,7 @@ export default async function ClientRequests() {
           <p className="text-slate-400 mt-1">Track the status of your project submissions</p>
         </div>
         <Link
-          href="/start"
+          href="/questionnaire"
           className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-all"
         >
           + New Request
@@ -47,7 +47,7 @@ export default async function ClientRequests() {
           <h3 className="text-lg font-semibold text-white mb-2">No requests yet</h3>
           <p className="text-slate-400 mb-6">Get started by submitting your first project request</p>
           <Link
-            href="/start"
+            href="/questionnaire"
             className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-all"
           >
             Start a Project
