@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import bcrypt from "bcryptjs";
 
 export const runtime = "nodejs";
 
@@ -19,27 +20,31 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL("/login?error=no_token", req.url));
     }
 
-    // Find the invitation
-    const invitation = await prisma.invitation.findFirst({
+    // Find all invite codes for this email
+    const inviteCodes = await prisma.staffInviteCode.findMany({
       where: {
-        token,
+        email: session.user.email.toLowerCase(),
         redeemedAt: null,
         expiresAt: { gt: new Date() },
       },
     });
 
-    if (!invitation) {
+    if (inviteCodes.length === 0) {
       return NextResponse.redirect(new URL("/login?error=invalid_invitation", req.url));
     }
 
-    // Verify the email matches
-    if (invitation.email.toLowerCase() !== session.user.email.toLowerCase()) {
-      return NextResponse.redirect(
-        new URL(
-          `/join?token=${token}&error=wrong_email&invited=${encodeURIComponent(invitation.email)}`,
-          req.url
-        )
-      );
+    // Find the invitation that matches the provided token
+    let validInvitation = null;
+    for (const invite of inviteCodes) {
+      const isValid = await bcrypt.compare(token, invite.codeHash);
+      if (isValid) {
+        validInvitation = invite;
+        break;
+      }
+    }
+
+    if (!validInvitation) {
+      return NextResponse.redirect(new URL("/login?error=invalid_invitation", req.url));
     }
 
     // Find or create the user
@@ -56,7 +61,7 @@ export async function GET(req: NextRequest) {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        role: invitation.role,
+        role: validInvitation.role,
         // Mark onboarding as complete for staff
         tosAcceptedAt: new Date(),
         profileDoneAt: new Date(),
@@ -64,8 +69,8 @@ export async function GET(req: NextRequest) {
     });
 
     // Mark invitation as redeemed
-    await prisma.invitation.update({
-      where: { id: invitation.id },
+    await prisma.staffInviteCode.update({
+      where: { id: validInvitation.id },
       data: {
         redeemedAt: new Date(),
       },
