@@ -1,0 +1,147 @@
+'use client';
+
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { Service, FeatureId } from './config';
+import type { Totals } from './pricing';
+
+export interface FeatureSelection {
+  id: FeatureId;
+  quantity?: number;
+}
+
+export interface ContactInfo {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  website?: string;
+  rush?: boolean;
+}
+
+export interface QuestionnaireAnswers {
+  goals?: string[];
+  targetAudience?: string[];
+  inspirationUrls?: string;
+  mustHaveFeatures?: string[];
+  timeline?: string;
+  budget?: string;
+  contentReady?: boolean;
+  designPreference?: string[];
+  notes?: string;
+}
+
+export interface QwizState {
+  // Current step (1-6)
+  step: 1 | 2 | 3 | 4 | 5 | 6;
+
+  // Server questionnaire ID
+  qid: string | null;
+
+  // Step 1: Service Selection
+  service: Service | null;
+  
+  // Step 2: Feature Builder
+  features: FeatureSelection[];
+  
+  // Step 3: Maintenance Upsell
+  maintenance: boolean;
+  
+  // Pricing
+  totals: Totals | null;
+
+  // Step 4: Questionnaire
+  questionnaire: QuestionnaireAnswers;
+
+  // Step 5: Contact
+  contact: ContactInfo | null;
+
+  // Submission status
+  status: 'draft' | 'submitting' | 'submitted' | 'checkout' | 'paid' | 'error';
+
+  // Actions
+  setStep: (step: 1 | 2 | 3 | 4 | 5 | 6) => void;
+  setQid: (qid: string) => void;
+  setService: (service: Service | null) => void;
+  toggleFeature: (featureId: FeatureId, quantity?: number) => void;
+  setMaintenance: (value: boolean) => void;
+  setTotals: (totals: Totals) => void;
+  updateQuestionnaire: (answers: Partial<QuestionnaireAnswers>) => void;
+  setContact: (contact: ContactInfo) => void;
+  setStatus: (status: QwizState['status']) => void;
+  reset: () => void;
+}
+
+const initialState = {
+  step: 1 as const,
+  qid: null,
+  service: null,
+  features: [],
+  maintenance: false,
+  totals: null,
+  questionnaire: {},
+  contact: null,
+  status: 'draft' as const,
+};
+
+export const useQwizStore = create<QwizState>()(
+  persist(
+    (set, get) => ({
+      ...initialState,
+
+      setStep: (step) => set({ step }),
+
+      setQid: (qid) => set({ qid }),
+
+      setService: (service) => set({ service }),
+
+      toggleFeature: (featureId, quantity = 1) => {
+        const { features } = get();
+        const existingIndex = features.findIndex((f) => f.id === featureId);
+
+        if (existingIndex >= 0) {
+          // Remove if exists
+          set({
+            features: features.filter((f) => f.id !== featureId),
+          });
+        } else {
+          // Add new
+          set({
+            features: [...features, { id: featureId, quantity }],
+          });
+        }
+      },
+
+      setMaintenance: (value) => set({ maintenance: value }),
+
+      setTotals: (totals) => set({ totals }),
+
+      updateQuestionnaire: (answers) =>
+        set((state) => ({
+          questionnaire: { ...state.questionnaire, ...answers },
+        })),
+
+      setContact: (contact) => set({ contact }),
+
+      setStatus: (status) => set({ status }),
+
+      reset: () => set(initialState),
+    }),
+    {
+      name: 'seezee-qwiz-storage',
+      // Only persist to sessionStorage for tab-specific state
+      storage: {
+        getItem: (name) => {
+          const str = sessionStorage.getItem(name);
+          return str ? JSON.parse(str) : null;
+        },
+        setItem: (name, value) => {
+          sessionStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => {
+          sessionStorage.removeItem(name);
+        },
+      },
+    }
+  )
+);

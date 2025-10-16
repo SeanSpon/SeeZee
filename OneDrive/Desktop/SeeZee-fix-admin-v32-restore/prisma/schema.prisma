@@ -1,0 +1,919 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enumerations
+enum UserRole {
+  CEO
+  ADMIN
+  DESIGNER
+  DEV
+  OUTREACH
+  INTERN
+  STAFF
+  CLIENT
+}
+
+// AccountType REMOVED - role is now the single source of truth
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  CONVERTED
+  LOST
+}
+
+enum RequestStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWING
+  NEEDS_INFO
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum BudgetTier {
+  UNKNOWN
+  MICRO
+  SMALL
+  MEDIUM
+  LARGE
+  ENTERPRISE
+}
+
+enum ServiceType {
+  WEB_APP
+  WEBSITE
+  ECOMMERCE
+  AI_DATA
+  MOBILE
+  BRANDING
+  OTHER
+}
+
+enum ProjectStatus {
+  LEAD
+  PAID
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+enum FileType {
+  IMAGE
+  DOCUMENT
+  VIDEO
+  OTHER
+}
+
+enum VirusScanStatus {
+  PENDING
+  CLEAN
+  INFECTED
+  ERROR
+}
+
+enum ChannelType {
+  GENERAL
+  PROJECT
+  SUPPORT
+  DEVELOPMENT
+  CUSTOM
+}
+
+enum TodoStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ActivityType {
+  LEAD_CREATED
+  LEAD_UPDATED
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  TASK_COMPLETED
+  USER_JOINED
+  INVOICE_PAID
+  MAINTENANCE_DUE
+  SYSTEM_ALERT
+}
+
+enum MaintenanceStatus {
+  ACTIVE
+  UPCOMING
+  OVERDUE
+  COMPLETED
+  CANCELLED
+}
+
+enum LinkCategory {
+  DESIGN
+  DEVELOPMENT
+  MARKETING
+  TOOLS
+  DOCUMENTATION
+  OTHER
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String       @unique
+  emailVerified DateTime?    @map("email_verified")
+  image         String?
+  password      String?
+  role          UserRole     @default(CLIENT)
+  
+  // Onboarding & compliance
+  tosAcceptedAt DateTime?
+  tosVersion    String?
+  profileDoneAt DateTime?
+  
+  // Profile fields
+  phone         String?
+  company       String?
+  
+  // 2FA
+  twofaEnabled  Boolean      @default(false)
+  twofaSecret   String?
+  
+  // Invitation tracking
+  invitedById   String?
+  invitedBy     User?        @relation("Inviter", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitees      User[]       @relation("Inviter")
+  
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  accounts           Account[]
+  sessions           Session[]
+  organizations      OrganizationMember[]
+  assignedProjects   Project[] @relation("ProjectAssignee")
+  notifications      Notification[]
+  signatures         Signature[]
+  messages           ChatMessage[]
+  channelMemberships ChannelMember[]
+  assignedTodos      Todo[] @relation("TodoAssignee")
+  createdTodos       Todo[] @relation("TodoCreator")
+  systemLogs         SystemLog[]
+  createdInviteCodes StaffInviteCode[] @relation("InviteCodeCreator")
+  projectRequests    ProjectRequest[]
+  activities         Activity[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+// Business Models
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  email       String?
+  phone       String?
+  website     String?
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  country     String?  @default("US")
+  taxId       String?
+  billingEmail String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     OrganizationMember[]
+  projects    Project[]
+  invoices    Invoice[]
+  leads       Lead[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrgRole  @default(MEMBER)
+  joinedAt       DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@map("organization_members")
+}
+
+model Lead {
+  id             String     @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  company        String?
+  message        String?
+  source         String?    @default("website")
+  status         LeadStatus @default(NEW)
+  
+  // Service details from checkout
+  serviceType    String?
+  timeline       String?
+  budget         String?
+  requirements   Json?
+  metadata       Json?      // Additional questionnaire data
+  
+  organizationId String?
+  convertedAt    DateTime?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  project        Project?
+
+  @@map("leads")
+}
+
+model Project {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  status          ProjectStatus @default(LEAD)
+  startDate       DateTime?
+  endDate         DateTime?
+  budget          Decimal?
+  
+  organizationId  String
+  assigneeId      String?
+  leadId          String?       @unique
+  questionnaireId String?       @unique
+  stripeCustomerId String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  assignee        User?        @relation("ProjectAssignee", fields: [assigneeId], references: [id])
+  lead            Lead?        @relation(fields: [leadId], references: [id])
+  questionnaire   Questionnaire? @relation(fields: [questionnaireId], references: [id])
+  
+  milestones      ProjectMilestone[]
+  invoices        Invoice[]
+  files           File[]
+  requests        Request[]
+  subscriptions   Subscription[]
+  maintenanceSchedules MaintenanceSchedule[]
+
+  @@map("projects")
+}
+
+model ProjectMilestone {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  
+  projectId   String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_milestones")
+}
+
+model Invoice {
+  id             String        @id @default(cuid())
+  number         String        @unique
+  title          String
+  description    String?
+  amount         Decimal
+  tax            Decimal?      @default(0)
+  total          Decimal
+  currency       String        @default("USD")
+  status         InvoiceStatus @default(DRAFT)
+  
+  dueDate        DateTime
+  sentAt         DateTime?
+  paidAt         DateTime?
+  
+  organizationId String
+  projectId      String?
+  
+  stripeInvoiceId String?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  project        Project?     @relation(fields: [projectId], references: [id])
+  
+  items          InvoiceItem[]
+  payments       Payment[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Int     @default(1)
+  rate        Decimal
+  amount      Decimal
+  
+  invoiceId   String
+  
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Decimal
+  currency        String        @default("USD")
+  status          PaymentStatus @default(PENDING)
+  method          String?       // "stripe", "bank_transfer", etc.
+  
+  stripePaymentId String?
+  stripeChargeId  String?
+  
+  invoiceId       String
+  
+  processedAt     DateTime?
+  createdAt       DateTime @default(now())
+
+  invoice         Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("payments")
+}
+
+model PricingRule {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  
+  // Service configuration
+  serviceType String   // "website", "ecommerce", "webapp", etc.
+  basePrice   Decimal
+  
+  // Timeline multipliers
+  rushMultiplier    Decimal? @default(1.5)  // < 4 weeks
+  standardMultiplier Decimal? @default(1.0)  // 4-12 weeks
+  extendedMultiplier Decimal? @default(0.9)  // > 12 weeks
+  
+  // Feature pricing (JSON object)
+  features    Json?    // { "cms": 500, "ecommerce": 1500, "auth": 300 }
+  
+  validFrom   DateTime @default(now())
+  validTo     DateTime?
+  active      Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  quotes      Quote[]
+
+  @@map("pricing_rules")
+}
+
+model Quote {
+  id            String  @id @default(cuid())
+  
+  // Service details
+  serviceType   String
+  timeline      String
+  features      Json?
+  requirements  Json?
+  
+  // Pricing breakdown
+  basePrice     Decimal
+  featurePrice  Decimal @default(0)
+  timelineMultiplier Decimal @default(1.0)
+  subtotal      Decimal
+  tax           Decimal @default(0)
+  total         Decimal
+  
+  // Customer info
+  customerName  String?
+  customerEmail String?
+  
+  pricingRuleId String
+  
+  // Conversion tracking
+  convertedToLead Boolean @default(false)
+  convertedAt     DateTime?
+  
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  pricingRule   PricingRule @relation(fields: [pricingRuleId], references: [id])
+
+  @@map("quotes")
+}
+
+model File {
+  id              String           @id @default(cuid())
+  name            String
+  originalName    String
+  mimeType        String
+  size            Int
+  type            FileType
+  url             String
+  
+  virusScanStatus VirusScanStatus  @default(PENDING)
+  scanResult      String?
+  
+  projectId       String?
+  uploadedById    String?
+  
+  createdAt       DateTime @default(now())
+
+  project         Project? @relation(fields: [projectId], references: [id])
+
+  @@map("files")
+}
+
+model Signature {
+  id          String   @id @default(cuid())
+  documentId  String   // Reference to document being signed
+  signerName  String
+  signerEmail String
+  signedAt    DateTime @default(now())
+  
+  // Signature data (base64 image or metadata)
+  signatureData String
+  ipAddress     String?
+  userAgent     String?
+  
+  userId      String?
+  
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("signatures")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  
+  userId    String
+  
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventId   String   @unique  // Stripe event ID for idempotency
+  type      String
+  data      Json
+  processed Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
+
+  @@map("webhook_events")
+}
+
+// Team Communication Models
+model Channel {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  type        ChannelType @default(GENERAL)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages    ChatMessage[]
+  members     ChannelMember[]
+
+  @@map("channels")
+}
+
+model ChannelMember {
+  id        String   @id @default(cuid())
+  channelId String
+  userId    String
+  joinedAt  DateTime @default(now())
+
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@map("channel_members")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  channelId String
+  authorId  String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author    User    @relation(fields: [authorId], references: [id])
+
+  @@map("chat_messages")
+}
+
+// Task Management Models
+model Todo {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  status      TodoStatus   @default(TODO)
+  priority    TodoPriority @default(MEDIUM)
+  
+  assignedToId String?
+  createdById  String
+  
+  dueDate     DateTime?
+  completedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignedTo  User? @relation("TodoAssignee", fields: [assignedToId], references: [id])
+  createdBy   User  @relation("TodoCreator", fields: [createdById], references: [id])
+
+  @@map("todos")
+}
+
+// System Audit Log
+model SystemLog {
+  id         String   @id @default(cuid())
+  area       String?  // "ProjectRequest", "User", "Lead", etc. (optional for backward compat)
+  refId      String?  // FK value as text (optional for backward compat)
+  action     String   // "ROLE_CHANGE", "STATUS_UPDATE", "CREATE", "DELETE", etc.
+  entityType String   // "User", "Lead", "Project", "Todo", etc.
+  entityId   String
+  
+  userId     String   // Who performed the action
+  
+  metadata   Json?    // Additional context (old value, new value, etc.)
+  meta       Json?    // Alias for metadata
+  message    String?  // Human-readable log message
+  
+  createdAt  DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([area, refId])
+  @@map("system_logs")
+}
+
+// 6-digit code invitation system for staff signup
+model StaffInviteCode {
+  id           String    @id @default(cuid())
+  email        String
+  role         UserRole  // The role to grant when code is redeemed
+  codeHash     String    // Bcrypt hash of 6-digit code
+  
+  createdById  String
+  createdBy    User      @relation("InviteCodeCreator", fields: [createdById], references: [id])
+  
+  expiresAt    DateTime
+  redeemedAt   DateTime?
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(5)
+  
+  createdAt    DateTime  @default(now())
+
+  @@index([email])
+  @@map("staff_invite_codes")
+}
+
+// Legacy models for backward compatibility
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  content   String
+  status    String   @default("UNREAD")
+  createdAt DateTime @default(now())
+
+  @@map("messages")
+}
+
+// Questionnaire for project onboarding
+model Questionnaire {
+  id           String   @id @default(cuid())
+  userEmail    String
+  data         Json     // All questionnaire fields as JSON
+  estimate     Int?     // Computed project estimate in cents
+  deposit      Int?     // Required deposit in cents (25% or $250 min)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  project      Project?
+
+  @@map("questionnaires")
+}
+
+// Stripe subscriptions for maintenance
+model Subscription {
+  id               String   @id @default(cuid())
+  projectId        String
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  stripeId         String   @unique
+  priceId          String
+  status           String   // active, canceled, past_due
+  currentPeriodEnd DateTime?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("subscriptions")
+}
+
+// Client requests for maintenance/changes
+model Request {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title     String
+  details   String   @db.Text
+  state     String   @default("new") // new, in_progress, blocked, done
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("requests")
+}
+
+// Unified Project Request Pipeline
+model ProjectRequest {
+  id           String        @id @default(cuid())
+  user         User?         @relation(fields: [userId], references: [id])
+  userId       String?
+  
+  // New required fields (migrating from old schema)
+  contactEmail String        @default("") // Will be populated from old 'email' field
+  title        String        @default("") // Will be populated from old 'projectType' or 'name'
+  description  String        @default("") @db.Text // Will be populated from old 'goal' field
+  
+  // Legacy fields (keep for backward compatibility during migration)
+  name         String?       // OLD: Will be deprecated
+  email        String?       // OLD: Migrated to contactEmail
+  projectType  String?       // OLD: Migrated to title/services
+  goal         String?       // OLD: Migrated to description
+  
+  // New fields
+  company      String?
+  services     ServiceType[] // multi-select
+  budget       BudgetTier    @default(UNKNOWN)
+  timeline     String?       // e.g. "< 1 mo", "1-3 mo"
+  resourcesUrl String?       // Notion/Drive link
+  status       RequestStatus @default(DRAFT)
+  notes        String?       @db.Text // internal admin notes
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  @@map("project_requests")
+}
+
+// Activity Feed for admin dashboard
+model Activity {
+  id         String       @id @default(cuid())
+  type       ActivityType
+  title      String
+  description String?
+  metadata   Json?        // Additional data specific to activity type
+  
+  userId     String?      // User who triggered the activity
+  user       User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  entityType String?      // "Lead", "Project", "Task", etc.
+  entityId   String?      // ID of the related entity
+  
+  read       Boolean      @default(false)
+  readAt     DateTime?
+  
+  createdAt  DateTime     @default(now())
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([read])
+  @@map("activities")
+}
+
+// Maintenance tracking for client sites
+model MaintenanceSchedule {
+  id          String            @id @default(cuid())
+  projectId   String
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?
+  status      MaintenanceStatus @default(UPCOMING)
+  
+  scheduledFor DateTime
+  completedAt  DateTime?
+  
+  assignedToId String?
+  notes        String?          @db.Text
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@map("maintenance_schedules")
+}
+
+// Learning resources for team training
+model LearningResource {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   // "video", "article", "course", "documentation"
+  url         String
+  category    String?  // "frontend", "backend", "design", "business"
+  
+  thumbnailUrl String?
+  duration    Int?     // in minutes
+  difficulty  String?  // "beginner", "intermediate", "advanced"
+  
+  tags        String[] // searchable tags
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([type])
+  @@map("learning_resources")
+}
+
+// Tools directory for team
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  url         String
+  category    String   // "design", "development", "project-management", "communication"
+  
+  logoUrl     String?
+  pricing     String?  // "free", "paid", "freemium"
+  
+  tags        String[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@map("tools")
+}
+
+// Quick links manager
+model Link {
+  id          String       @id @default(cuid())
+  title       String
+  url         String
+  description String?
+  category    LinkCategory @default(OTHER)
+  
+  icon        String?      // emoji or icon name
+  color       String?      // hex color for badge
+  
+  order       Int          @default(0)
+  pinned      Boolean      @default(false)
+  
+  createdById String?
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([category])
+  @@index([pinned])
+  @@index([order])
+  @@map("links")
+}
+
+// Automations/workflows (CEO only)
+model Automation {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  trigger     String   // "lead_created", "invoice_overdue", "project_completed"
+  action      String   // "send_email", "create_task", "update_status"
+  
+  config      Json     // Configuration for trigger and action
+  
+  enabled     Boolean  @default(true)
+  lastRunAt   DateTime?
+  runCount    Int      @default(0)
+  
+  createdById String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled])
+  @@index([trigger])
+  @@map("automations")
+}
