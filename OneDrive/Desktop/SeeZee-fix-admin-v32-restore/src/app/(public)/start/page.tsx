@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQwizStore } from '@/lib/qwiz/store';
@@ -11,10 +11,11 @@ import { ContactForm } from '@/components/qwiz/ContactForm';
 import { PriceCounter } from '@/components/qwiz/PriceCounter';
 import { formatPrice } from '@/lib/qwiz/pricing';
 import { getPackage, getFeature, MAINTENANCE } from '@/lib/qwiz/packages';
+import { QUESTIONS } from '@/lib/qwiz/questions';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import PageShell from '@/components/PageShell';
 
-export default function StartPage() {
+function StartPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -64,7 +65,7 @@ export default function StartPage() {
   }, [qid, selectedPackage, features, totals, questionnaire, contact, mounted]);
 
   const handleNext = async () => {
-    if (step < 4) {
+    if (step < 2) {
       setStep((step + 1) as any);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -84,15 +85,26 @@ export default function StartPage() {
           const { url } = await response.json();
           window.location.href = url;
         } else {
-          // Submit as quote/lead
-          await fetch('/api/leads/submit', {
+          // Submit as quote/lead and redirect to client dashboard
+          const response = await fetch('/api/leads/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ qid }),
           });
+
+          if (!response.ok) {
+            throw new Error('Failed to submit quote');
+          }
           
           setStatus('submitted');
-          router.push('/start/success');
+          
+          // Redirect to client dashboard first
+          await router.push('/client');
+          
+          // Reset the store after navigation (small delay)
+          setTimeout(() => {
+            useQwizStore.getState().reset();
+          }, 500);
         }
       } catch (error) {
         console.error('Submit error:', error);
@@ -110,23 +122,40 @@ export default function StartPage() {
     }
   };
 
+  const handleReset = () => {
+    setStep(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.push('/start');
+  };
+
   // Validation for next button
   const canProceed = () => {
     switch (step) {
       case 0:
         return !!selectedPackage;
       case 1:
-        // Check required questions
-        return !!(
-          questionnaire.goals?.length &&
-          questionnaire.targetAudience?.length &&
-          questionnaire.timeline &&
-          questionnaire.contentReady !== undefined
-        );
+        // Check all required questions
+        const requiredQuestions = [
+          'goals',
+          'industry', 
+          'targetAudience',
+          'contentStatus',
+          'timeline',
+          'existingWebsite'
+        ];
+        
+        return requiredQuestions.every((qId) => {
+          const answer = questionnaire[qId as keyof typeof questionnaire];
+          if (qId === 'existingWebsite') {
+            return answer !== undefined;
+          }
+          if (Array.isArray(answer)) {
+            return answer.length > 0;
+          }
+          return !!answer;
+        });
       case 2:
-        return !!(contact?.name && contact?.email);
-      case 3:
-        return true;
+        return true; // Review step always ready
       default:
         return false;
     }
@@ -137,10 +166,8 @@ export default function StartPage() {
       case 0:
         return 'Continue to Questions';
       case 1:
-        return 'Continue to Contact';
-      case 2:
         return 'Review Quote';
-      case 3:
+      case 2:
         return process.env.NEXT_PUBLIC_QWIZ_MODE === 'checkout'
           ? 'Proceed to Checkout'
           : 'Submit Quote Request';
@@ -153,32 +180,8 @@ export default function StartPage() {
 
   return (
     <PageShell>
-      {/* Sticky progress bar - translucent with blur */}
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-black/20 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-2">
-            {[0, 1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`flex-1 h-2 rounded-full transition-all ${
-                  s <= step
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500'
-                    : 'bg-gray-800'
-                }`}
-              />
-            ))}
-          </div>
-          <div className="mt-2 text-sm text-gray-400 text-center">
-            {step === 0 && 'Choose Your Package'}
-            {step === 1 && 'Answer Questions'}
-            {step === 2 && 'Contact Information'}
-            {step === 3 && 'Review & Submit'}
-          </div>
-        </div>
-      </header>
-
-      {/* Main content section - floating glass container */}
-      <section className="max-w-7xl mx-auto px-6 py-12">
+      {/* Main content section - transparent glass container to show background */}
+      <section className="max-w-7xl mx-auto px-6 py-12 min-h-[600px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -186,19 +189,26 @@ export default function StartPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
-            className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)] p-8"
+            className="rounded-2xl border border-white/10 backdrop-blur-sm overflow-hidden"
           >
+            {/* Main content area */}
+            <div className="p-8 min-h-[500px]">
             {/* Step 0: Package Selection */}
-            {step === 0 && <PackageSelector />}
+            {step === 0 && (
+              <div>
+                <PackageSelector />
+              </div>
+            )}
 
             {/* Step 1: Questionnaire */}
-            {step === 1 && <QuestionnaireForm />}
+            {step === 1 && (
+              <div>
+                <QuestionnaireForm />
+              </div>
+            )}
 
-            {/* Step 2: Contact Form */}
-            {step === 2 && <ContactForm />}
-
-            {/* Step 3: Review */}
-            {step === 3 && selectedPackage && totals && (
+            {/* Step 2: Review */}
+            {step === 2 && selectedPackage && totals && (
               <div className="space-y-6">
                 <div className="text-center mb-8">
                   <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -302,28 +312,9 @@ export default function StartPage() {
 
                 {/* Contact */}
                 <div className="bg-transparent backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <div className="text-gray-500">Name</div>
-                      <div className="font-medium">{contact?.name}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-500">Email</div>
-                      <div className="font-medium">{contact?.email}</div>
-                    </div>
-                    {contact?.phone && (
-                      <div>
-                        <div className="text-gray-500">Phone</div>
-                        <div className="font-medium">{contact.phone}</div>
-                      </div>
-                    )}
-                    {contact?.company && (
-                      <div>
-                        <div className="text-gray-500">Company</div>
-                        <div className="font-medium">{contact.company}</div>
-                      </div>
-                    )}
+                  <h3 className="text-lg font-semibold mb-4">Account Information</h3>
+                  <div className="text-sm text-white/60">
+                    This quote will be linked to your account. You can view and manage it in your client dashboard.
                   </div>
                 </div>
 
@@ -352,13 +343,13 @@ export default function StartPage() {
               </div>
             )}
 
-            {/* Navigation Buttons */}
-            {step !== 0 && (
-              <div className="flex items-center justify-between mt-8 pt-8 border-t border-gray-800">
+            {/* Navigation Buttons - Only show for step 2 (step 0 auto-advances, step 1 has internal navigation) */}
+            {step === 2 && (
+              <div className="flex items-center justify-end gap-4 mt-8 pt-8 border-t border-white/10">
                 <button
                   onClick={handleBack}
                   disabled={loading}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all disabled:opacity-50"
                 >
                   <ArrowLeft className="w-5 h-5" />
                   Back
@@ -367,7 +358,7 @@ export default function StartPage() {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed() || loading}
-                  className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                  className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg shadow-blue-500/30"
                 >
                   {loading ? (
                     <>
@@ -383,6 +374,53 @@ export default function StartPage() {
                 </button>
               </div>
             )}
+            </div>
+
+            {/* Progress indicator - slim bar at bottom of panel */}
+            <div className="border-t border-white/10 bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-md">
+              <div className="max-w-3xl mx-auto px-6 py-4">
+                <div className="flex items-center justify-center gap-8">
+                  {[
+                    { num: 1, label: 'Package', icon: '📦' },
+                    { num: 2, label: 'Questions', icon: '❓' },
+                    { num: 3, label: 'Review', icon: '✨' }
+                  ].map((s, idx) => (
+                    <div key={idx} className="flex items-center gap-4 relative">
+                      {/* Connecting line */}
+                      {idx < 2 && (
+                        <div className="absolute left-full top-4 w-16 h-0.5">
+                          <div className={`h-full rounded-full transition-all duration-500 ${
+                            idx < step 
+                              ? 'bg-gradient-to-r from-blue-500 to-purple-500' 
+                              : 'bg-white/10'
+                          }`} />
+                        </div>
+                      )}
+                      
+                      {/* Circle + Label */}
+                      <div className="flex flex-col items-center relative z-10">
+                        <div className={`
+                          w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold mb-2
+                          transition-all duration-300
+                          ${idx <= step 
+                            ? 'bg-gradient-to-br from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/50' 
+                            : 'bg-white/5 text-white/30 border border-white/20'
+                          }
+                        `}>
+                          {idx < step ? '✓' : s.icon}
+                        </div>
+                        <span className={`
+                          text-xs font-medium transition-colors whitespace-nowrap
+                          ${idx <= step ? 'text-white' : 'text-white/30'}
+                        `}>
+                          {s.label}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
         </AnimatePresence>
       </section>
@@ -393,5 +431,19 @@ export default function StartPage() {
       {/* Price counter (sticky on steps 0-2) */}
       <PriceCounter />
     </PageShell>
+  );
+}
+
+export default function StartPage() {
+  return (
+    <Suspense fallback={
+      <PageShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-white/60">Loading...</div>
+        </div>
+      </PageShell>
+    }>
+      <StartPageContent />
+    </Suspense>
   );
 }

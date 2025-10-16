@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
 
 export async function POST(req: NextRequest) {
   try {
+    // Get the authenticated user's session
+    const session = await auth();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized - please sign in' }, { status: 401 });
+    }
+
     const { qid } = await req.json();
 
     if (!qid) {
@@ -19,10 +27,15 @@ export async function POST(req: NextRequest) {
     }
 
     const data = questionnaire.data as any;
-    const { contact, totals, selectedService, selectedFeatures, questionnaire: answers } = data;
+    const { totals, package: selectedPackage, selectedFeatures, questionnaire: answers } = data;
 
-    if (!contact?.email) {
-      return NextResponse.json({ error: 'Missing contact info' }, { status: 400 });
+    // Get user details from database
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Update status to SUBMITTED
@@ -37,30 +50,26 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create lead record
+    // Create lead record linked to the user
     const lead = await prisma.lead.create({
       data: {
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone || '',
-        company: contact.company || '',
-        message: `Service: ${selectedService}\nFeatures: ${selectedFeatures?.length || 0} selected\nBudget: ${answers?.budget || 'Not specified'}\nTimeline: ${answers?.timeline || 'Not specified'}`,
+        name: user.name || 'Unknown',
+        email: user.email!,
+        phone: '', // Can be added to user profile later
+        company: '', // Can be added to user profile later
+        message: `Package: ${selectedPackage}\nFeatures: ${selectedFeatures?.length || 0} selected\nTotal: $${totals?.total || 0}\nTimeline: ${answers?.timeline || 'Not specified'}`,
         source: 'Questionnaire',
         status: 'NEW',
         metadata: {
           qid,
-          service: selectedService,
+          userId: user.id,
+          package: selectedPackage,
           features: selectedFeatures,
           totals,
           questionnaire: answers,
-          rushDelivery: contact.rushDelivery || false,
         },
       },
     });
-
-    // TODO: Send email notifications
-    // - Admin notification with quote details
-    // - Client confirmation with summary
 
     return NextResponse.json({
       success: true,
