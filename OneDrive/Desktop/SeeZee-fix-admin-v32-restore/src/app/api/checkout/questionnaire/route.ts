@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getQuestionnaireWithPricing } from '@/lib/questionnaire';
 import Stripe from 'stripe';
+import { z } from 'zod';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
+});
+
+const QuestionnaireDataSchema = z.object({
+  email: z.string().email().optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  projectTypes: z.array(z.string()).optional(),
+  companyName: z.string().optional(),
+  budget: z.string().optional(),
+  timeline: z.string().optional(),
+  description: z.string().optional(),
+  features: z.array(z.string()).optional(),
+  additionalInfo: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -38,9 +52,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate and parse questionnaire data with Zod
+    const parsedData = QuestionnaireDataSchema.safeParse(data);
+    
+    if (!parsedData.success) {
+      return NextResponse.json(
+        { error: 'Invalid questionnaire data format' },
+        { status: 400 }
+      );
+    }
+
+    const { email = '', name = '', phone = '', projectTypes = [] } = parsedData.data;
+
     // Create or retrieve Stripe customer
     let customer: Stripe.Customer;
-    const email = typeof data.email === 'string' ? data.email : '';
 
     if (email) {
       const existingCustomers = await stripe.customers.list({
@@ -53,8 +78,8 @@ export async function POST(request: NextRequest) {
       } else {
         customer = await stripe.customers.create({
           email,
-          name: data.name as string,
-          phone: data.phone as string,
+          name,
+          phone,
           metadata: {
             questionnaireId,
           },
@@ -77,7 +102,7 @@ export async function POST(request: NextRequest) {
             currency: 'usd',
             product_data: {
               name: 'Project Deposit',
-              description: `Deposit for your ${(data.projectTypes as string[])?.join(', ')} project`,
+              description: `Deposit for your ${projectTypes.join(', ')} project`,
             },
             unit_amount: amount,
           },
