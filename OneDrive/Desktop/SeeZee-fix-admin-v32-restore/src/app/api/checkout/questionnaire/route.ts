@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Create or retrieve Stripe customer
     let customer: Stripe.Customer;
-    const email = data.email as string;
+    const email = typeof data.email === 'string' ? data.email : '';
 
     if (email) {
       const existingCustomers = await stripe.customers.list({
