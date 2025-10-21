@@ -27,14 +27,6 @@ export async function GET(req: NextRequest) {
             type: true,
           },
         },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-          },
-        },
         createdBy: {
           select: {
             id: true,

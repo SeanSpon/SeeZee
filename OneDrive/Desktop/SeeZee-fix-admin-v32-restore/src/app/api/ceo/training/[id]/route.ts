@@ -8,16 +8,17 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const training = await prisma.training.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         createdBy: {
           select: {
@@ -29,14 +30,6 @@ export async function GET(
         },
         assignments: {
           include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
-              },
-            },
             completions: {
               include: {
                 user: {
@@ -76,9 +69,10 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -88,7 +82,7 @@ export async function PUT(
     const { title, type, description, visibility, url, fileKey, tags } = body;
 
     const training = await prisma.training.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(title !== undefined && { title }),
         ...(type !== undefined && { type }),
@@ -126,16 +120,17 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await prisma.training.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });

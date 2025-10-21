@@ -84,7 +84,11 @@ export const POST = withAdminOrCEO(async (req: NextRequest) => {
     }
 
     const tool = await prisma.toolEntry.create({
-      data: parsed.data,
+      data: {
+        ...parsed.data,
+        description: parsed.data.description || "",
+        icon: parsed.data.icon || "",
+      },
     });
 
     return NextResponse.json({ tool }, { status: 201 });

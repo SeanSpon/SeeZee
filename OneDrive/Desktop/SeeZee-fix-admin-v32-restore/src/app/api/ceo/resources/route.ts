@@ -101,6 +101,7 @@ export const POST = withAdminOrCEO(async (req: NextRequest) => {
     const resource = await prisma.resource.create({
       data: {
         ...parsed.data,
+        description: parsed.data.description || "",
         createdById: authSession!.user.id,
       },
       include: {

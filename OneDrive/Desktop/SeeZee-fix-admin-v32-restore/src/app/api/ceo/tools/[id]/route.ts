@@ -7,16 +7,17 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const tool = await prisma.toolEntry.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!tool) {
@@ -38,9 +39,10 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,7 +52,7 @@ export async function PUT(
     const { name, category, url, description, visibility, icon, tags } = body;
 
     const tool = await prisma.toolEntry.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(name !== undefined && { name }),
         ...(category !== undefined && { category }),
@@ -77,16 +79,17 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user || session.user.role !== "CEO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await prisma.toolEntry.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });

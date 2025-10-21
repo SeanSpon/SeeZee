@@ -10,14 +10,15 @@ import { LeadDetailClient } from "@/components/admin/LeadDetailClient";
 export const dynamic = "force-dynamic";
 
 interface LeadDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
+  const { id } = await params;
   const lead = await prisma.lead.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       organization: true,
       project: true,

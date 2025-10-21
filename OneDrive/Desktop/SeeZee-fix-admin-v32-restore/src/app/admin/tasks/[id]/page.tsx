@@ -12,17 +12,18 @@ import { TaskDetailClient } from "@/components/admin/TaskDetailClient";
 export const dynamic = "force-dynamic";
 
 interface TaskDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
+  const { id } = await params;
   const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
 
   // Fetch task with full details
   const task = await db.todo.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       assignedTo: {
         select: {
@@ -106,7 +107,12 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       task={task}
       activities={activities}
       teamMembers={teamMembers}
-      currentUser={user}
+      currentUser={{
+        id: user.id,
+        name: user.name,
+        email: user.email || "",
+        role: user.role,
+      }}
     />
   );
 }

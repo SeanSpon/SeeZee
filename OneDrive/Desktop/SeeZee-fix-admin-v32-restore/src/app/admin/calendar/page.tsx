@@ -96,7 +96,12 @@ export default async function CalendarPage() {
       tasks={tasks}
       maintenanceSchedules={maintenanceSchedules}
       projects={projects}
-      currentUser={user}
+      currentUser={{
+        id: user.id,
+        name: user.name,
+        email: user.email || "",
+        role: user.role,
+      }}
       viewMode={isCEOorAdmin ? "organization" : "personal"}
     />
   );

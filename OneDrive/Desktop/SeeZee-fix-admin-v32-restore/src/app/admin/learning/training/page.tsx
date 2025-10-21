@@ -56,6 +56,12 @@ export default async function TrainingPage() {
 
     return {
       ...trainingData,
+      createdAt: trainingData.createdAt.toISOString(),
+      updatedAt: trainingData.updatedAt.toISOString(),
+      createdBy: {
+        ...trainingData.createdBy,
+        email: trainingData.createdBy.email || "",
+      },
       stats: {
         totalAssigned,
         completed,
