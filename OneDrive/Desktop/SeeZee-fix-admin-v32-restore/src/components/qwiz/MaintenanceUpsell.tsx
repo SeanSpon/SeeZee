@@ -2,12 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { Check, Shield, Zap, HeartHandshake, Wrench } from 'lucide-react';
-import { useQwizStore } from '@/lib/qwiz/store';
 import { SERVICES } from '@/lib/qwiz/config';
 
 export function MaintenanceUpsell() {
-  const { maintenance, setMaintenance } = useQwizStore();
-
   const benefits = [
     {
       icon: Shield,
@@ -104,30 +101,16 @@ export function MaintenanceUpsell() {
           </div>
         </div>
 
-        {/* Selection Buttons */}
-        <div className="grid grid-cols-2 gap-4">
-          <button
-            onClick={() => setMaintenance(true)}
-            className={`py-4 px-6 rounded-xl font-semibold transition-all ${
-              maintenance
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
-                : 'bg-white/10 text-white/60 hover:bg-white/20 border border-white/10'
-            }`}
-          >
-            <div className="text-lg">✅ Yes, Add Maintenance</div>
-            <div className="text-xs opacity-75">Recommended</div>
-          </button>
-          <button
-            onClick={() => setMaintenance(false)}
-            className={`py-4 px-6 rounded-xl font-semibold transition-all ${
-              !maintenance
-                ? 'bg-white/10 text-white border border-white/20'
-                : 'bg-white/5 text-white/40 hover:bg-white/10 border border-white/10'
-            }`}
-          >
-            <div className="text-lg">No Thanks</div>
-            <div className="text-xs opacity-75">Skip for now</div>
-          </button>
+        {/* Info: Maintenance is Required */}
+        <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-6">
+          <div className="text-center">
+            <div className="text-lg font-semibold text-white mb-2">
+              ✅ Maintenance Included
+            </div>
+            <p className="text-white/70 text-sm">
+              All projects include $60/month maintenance to keep your site secure, fast, and running smoothly.
+            </p>
+          </div>
         </div>
       </motion.div>
 

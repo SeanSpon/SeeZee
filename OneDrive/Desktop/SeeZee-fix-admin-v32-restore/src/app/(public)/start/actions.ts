@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { z } from "zod";
 import { redirect } from "next/navigation";
+import { RequestStatus } from "@prisma/client";
 
 // Validation schema for project requests
 const RequestSchema = z.object({
@@ -123,7 +124,7 @@ export async function saveDraft(formData: FormData) {
         services: input.services as any[],
         budget: input.budget as any,
         userId: session.user.id,
-        status: "DRAFT",
+        status: RequestStatus.DRAFT,
       },
     });
 

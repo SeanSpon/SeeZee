@@ -17,11 +17,16 @@ export function Navbar() {
   const pathname = usePathname();
 
   // Determine user context and role
-  const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "CEO" || session?.user?.role === "STAFF";
+  const isCEO = session?.user?.role === "CEO";
+  const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "STAFF";
   const isClient = session?.user?.role === "CLIENT" || !session?.user?.role;
   
   // Determine current context based on pathname
-  const currentContext = pathname?.startsWith("/admin") ? "Admin" : "Client";
+  const currentContext = pathname?.startsWith("/ceo") 
+    ? "CEO" 
+    : pathname?.startsWith("/admin") 
+    ? "Admin" 
+    : "Client";
 
   return (
     <>
@@ -48,6 +53,7 @@ export function Navbar() {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/services">Services</NavLink>
             <NavLink href="/projects">Projects</NavLink>
+            <NavLink href="/about">About</NavLink>
           </nav>
 
           <div className="flex-1" />
@@ -58,8 +64,9 @@ export function Navbar() {
             {session && (
               <ContextPill
                 currentContext={currentContext}
-                hasAdminAccess={isAdmin}
+                hasAdminAccess={isAdmin || isCEO}
                 hasClientAccess={true}
+                hasCEOAccess={isCEO}
               />
             )}
 

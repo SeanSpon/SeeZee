@@ -67,14 +67,6 @@ export function ToolsClient({ tools }: ToolsClientProps) {
                     p-6
                   "
                 >
-                  {!tool.isPublished && (
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">
-                        Draft
-                      </span>
-                    </div>
-                  )}
-                  
                   <div className="text-4xl mb-3">
                     {tool.logoUrl ? (
                       <img src={tool.logoUrl} alt={tool.name} className="w-12 h-12 object-contain" />

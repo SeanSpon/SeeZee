@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * Activity Feed Client Component
+ * Activity Feed Client Component with Real-time Polling
  */
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SectionCard } from "@/components/admin/SectionCard";
-import { markActivityAsRead, markAllActivitiesAsRead } from "@/server/actions";
+import { markActivityAsRead, markAllActivitiesAsRead, getActivityFeed } from "@/server/actions";
 import { formatRelativeTime } from "@/lib/ui";
 import {
   Bell,
@@ -17,6 +17,7 @@ import {
   DollarSign,
   Wrench,
   AlertTriangle,
+  RefreshCw,
 } from "lucide-react";
 
 type Activity = {
@@ -82,6 +83,29 @@ const getActivityColor = (type: string) => {
 export function ActivityFeedClient({ initialActivities }: ActivityFeedClientProps) {
   const [activities, setActivities] = useState(initialActivities);
   const [filter, setFilter] = useState<"all" | "unread">("all");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+
+  // Auto-refresh every 30 seconds
+  const refreshActivities = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const result = await getActivityFeed({ limit: 100 });
+      if (result.success && result.activities) {
+        setActivities(result.activities);
+        setLastRefresh(new Date());
+      }
+    } catch (error) {
+      console.error("Failed to refresh activities:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(refreshActivities, 30000); // 30 seconds
+    return () => clearInterval(interval);
+  }, [refreshActivities]);
 
   const filteredActivities = activities.filter((a) => {
     if (filter === "unread") return !a.read;
@@ -137,19 +161,34 @@ export function ActivityFeedClient({ initialActivities }: ActivityFeedClientProp
           </button>
         </div>
 
-        <button
-          onClick={handleMarkAllAsRead}
-          disabled={!activities.some((a) => !a.read)}
-          className="
-            flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
-            text-slate-400 hover:text-white hover:bg-slate-800/40
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all
-          "
-        >
-          <CheckCheck className="w-4 h-4" />
-          Mark all as read
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={refreshActivities}
+            disabled={isRefreshing}
+            className="
+              flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
+              text-slate-400 hover:text-white hover:bg-slate-800/40
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-all
+            "
+            title="Refresh activities"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={!activities.some((a) => !a.read)}
+            className="
+              flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium
+              text-slate-400 hover:text-white hover:bg-slate-800/40
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-all
+            "
+          >
+            <CheckCheck className="w-4 h-4" />
+            Mark all as read
+          </button>
+        </div>
       </div>
 
       {/* Activities list */}

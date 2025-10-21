@@ -19,6 +19,7 @@ enum UserRole {
   OUTREACH
   INTERN
   STAFF
+  PARTNER
   CLIENT
 }
 
@@ -237,6 +238,12 @@ model User {
   createdInviteCodes StaffInviteCode[] @relation("InviteCodeCreator")
   projectRequests    ProjectRequest[]
   activities         Activity[]
+  
+  // Learning Hub relations
+  trainingsCreated   Training[] @relation("TrainingCreatedBy")
+  resourcesCreated   Resource[] @relation("ResourceCreatedBy")
+  assignmentsCreated Assignment[] @relation("AssignmentCreatedBy")
+  completions        Completion[] @relation("CompletionUser")
 
   @@map("users")
 }
@@ -916,4 +923,150 @@ model Automation {
   @@index([enabled])
   @@index([trigger])
   @@map("automations")
+}
+
+// ============================================
+// CEO LEARNING HUB - Training, Resources, Tools
+// ============================================
+
+enum Visibility {
+  INTERNAL
+  PUBLIC
+  CLIENT
+}
+
+enum AudienceType {
+  USER
+  TEAM
+  ROLE
+}
+
+enum TrainingType {
+  DOC
+  VIDEO
+  QUIZ
+  LINK
+}
+
+enum CompletionStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETE
+}
+
+// Training materials that can be assigned
+model Training {
+  id           String        @id @default(cuid())
+  title        String
+  type         TrainingType
+  description  String        @db.Text
+  visibility   Visibility    @default(INTERNAL)
+  url          String?       // external or UploadThing file URL
+  fileKey      String?       // UploadThing key if stored
+  tags         String[]
+  
+  createdById  String
+  createdBy    User          @relation("TrainingCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  assignments  Assignment[]
+
+  @@index([visibility])
+  @@index([type])
+  @@index([createdById])
+  @@map("trainings")
+}
+
+// Resources (documentation, guides, etc.)
+model Resource {
+  id           String     @id @default(cuid())
+  title        String
+  description  String     @db.Text
+  url          String
+  visibility   Visibility @default(INTERNAL)
+  tags         String[]
+  
+  createdById  String
+  createdBy    User       @relation("ResourceCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([visibility])
+  @@index([createdById])
+  @@map("resources")
+}
+
+// Tools directory (internal/SAAS links)
+model ToolEntry {
+  id           String     @id @default(cuid())
+  name         String
+  category     String
+  url          String
+  description  String     @db.Text
+  ownerTeamId  String?
+  visibility   Visibility @default(INTERNAL)
+  icon         String?    // optional icon key/name
+  tags         String[]
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([visibility])
+  @@index([category])
+  @@map("tool_entries")
+}
+
+// Training assignments to users, teams, or roles
+model Assignment {
+  id             String        @id @default(cuid())
+  trainingId     String
+  training       Training      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  
+  audienceType   AudienceType
+  userId         String?
+  teamId         String?
+  role           UserRole?     // if ROLE-based assignment
+  
+  dueAt          DateTime?
+  
+  createdById    String
+  createdBy      User          @relation("AssignmentCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  
+  createdAt      DateTime      @default(now())
+  
+  completions    Completion[]
+
+  @@index([trainingId])
+  @@index([audienceType])
+  @@index([userId])
+  @@index([teamId])
+  @@index([role])
+  @@index([dueAt])
+  @@map("assignments")
+}
+
+// Completion tracking per user per assignment
+model Completion {
+  id           String           @id @default(cuid())
+  assignmentId String
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  
+  userId       String
+  user         User             @relation("CompletionUser", fields: [userId], references: [id], onDelete: Cascade)
+  
+  status       CompletionStatus @default(NOT_STARTED)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  notes        String?          @db.Text
+  
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([assignmentId, userId])
+  @@index([userId])
+  @@index([status])
+  @@map("completions")
 }

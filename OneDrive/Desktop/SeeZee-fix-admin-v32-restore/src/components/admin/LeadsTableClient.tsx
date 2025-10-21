@@ -77,7 +77,11 @@ export function LeadsTableClient({ leads: initialLeads }: LeadsTableClientProps)
       render: (lead) => (
         <select
           value={lead.status}
-          onChange={(e) => handleStatusChange(lead.id, e.target.value)}
+          onChange={(e) => {
+            e.stopPropagation();
+            handleStatusChange(lead.id, e.target.value);
+          }}
+          onClick={(e) => e.stopPropagation()}
           disabled={updating === lead.id}
           className={`
             px-2 py-1 rounded-full text-xs font-medium border

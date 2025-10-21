@@ -53,6 +53,27 @@ type Lead = {
   createdAt: Date;
 };
 
+type Task = {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  priority: string;
+  dueDate: Date | null;
+  completedAt: Date | null;
+  createdAt: Date;
+  assignedTo: {
+    id: string;
+    name: string | null;
+    email: string | null;
+  } | null;
+  createdBy: {
+    id: string;
+    name: string | null;
+    email: string | null;
+  };
+};
+
 interface DashboardClientProps {
   stats: {
     activeProjects: number;
@@ -63,6 +84,7 @@ interface DashboardClientProps {
   };
   activities: Activity[];
   leads: Lead[];
+  myTasks: Task[];
   taskStats: {
     total: number;
     todo: number;
@@ -89,16 +111,44 @@ const activityIcons: Record<string, { icon: any; color: string }> = {
   SYSTEM_ALERT: { icon: AlertCircle, color: "red" },
 };
 
+const priorityColors: Record<string, string> = {
+  LOW: "bg-slate-500/20 text-slate-400 border-slate-500/30",
+  MEDIUM: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  HIGH: "bg-red-500/20 text-red-400 border-red-500/30",
+};
+
+const statusColors: Record<string, string> = {
+  TODO: "bg-slate-500/20 text-slate-400 border-slate-500/30",
+  IN_PROGRESS: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  DONE: "bg-green-500/20 text-green-400 border-green-500/30",
+};
+
 export function DashboardClient({
   stats,
   activities,
   leads,
+  myTasks,
   taskStats,
   maintenanceStats,
 }: DashboardClientProps) {
   // Calculate alerts
   const newLeadsCount = leads.filter((l) => l.status === "NEW").length;
   const tasksThisWeek = taskStats.todo; // Simplified
+  
+  // Filter and sort tasks for dashboard display
+  const activeTasks = myTasks
+    .filter((t) => t.status !== "DONE")
+    .sort((a, b) => {
+      // Sort by priority (HIGH > MEDIUM > LOW) then by due date
+      const priorityOrder = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+      const priorityDiff = priorityOrder[a.priority as keyof typeof priorityOrder] - priorityOrder[b.priority as keyof typeof priorityOrder];
+      if (priorityDiff !== 0) return priorityDiff;
+      
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+    })
+    .slice(0, 8); // Show top 8 tasks
 
   return (
     <div className="space-y-12 max-w-[1800px]">
@@ -231,13 +281,112 @@ export function DashboardClient({
         </SectionCard>
       </div>
 
-      {/* Activity Feed & Alerts */}
+      {/* My Tasks & Activity Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Activity - 2 cols */}
+        {/* My Tasks - 2 cols */}
         <div className="lg:col-span-2">
           <SectionCard
+            title="My Tasks"
+            description="Tasks assigned to you"
+            action={
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/admin/calendar"
+                  className="text-sm text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  Calendar
+                </Link>
+                <Link
+                  href="/admin/tasks"
+                  className="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
+                >
+                  View All
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+            }
+          >
+            <div className="space-y-3">
+              {activeTasks.length > 0 ? (
+                activeTasks.map((task) => {
+                  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== "DONE";
+                  const dueDate = task.dueDate ? new Date(task.dueDate) : null;
+                  
+                  return (
+                    <Link
+                      key={task.id}
+                      href={`/admin/tasks/${task.id}`}
+                      className="flex items-start gap-4 p-4 rounded-xl bg-slate-900/40 border border-white/5 hover:border-blue-500/30 hover:bg-slate-900/60 transition-all group"
+                    >
+                      {/* Priority Indicator */}
+                      <div className={`w-1 h-full rounded-full flex-shrink-0 ${
+                        task.priority === "HIGH" ? "bg-red-500" :
+                        task.priority === "MEDIUM" ? "bg-yellow-500" :
+                        "bg-slate-500"
+                      }`} />
+                      
+                      {/* Task Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <h4 className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors line-clamp-1">
+                            {task.title}
+                          </h4>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${priorityColors[task.priority]}`}>
+                              {task.priority}
+                            </span>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${statusColors[task.status]}`}>
+                              {task.status === "TODO" ? "To Do" : task.status === "IN_PROGRESS" ? "In Progress" : "Done"}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {task.description && (
+                          <p className="text-xs text-slate-400 mb-2 line-clamp-2">
+                            {task.description}
+                          </p>
+                        )}
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3 text-xs text-slate-500">
+                            {dueDate && (
+                              <span className={`flex items-center gap-1 ${isOverdue ? "text-red-400 font-medium" : ""}`}>
+                                <Clock className="w-3.5 h-3.5" />
+                                {isOverdue ? "Overdue: " : "Due: "}
+                                {dueDate.toLocaleDateString()}
+                              </span>
+                            )}
+                            {task.createdBy && (
+                              <span className="flex items-center gap-1">
+                                <Users className="w-3.5 h-3.5" />
+                                {task.createdBy.name || task.createdBy.email}
+                              </span>
+                            )}
+                          </div>
+                          
+                          <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-400 transition-colors" />
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })
+              ) : (
+                <div className="text-center py-12 text-slate-400">
+                  <CheckCircle className="w-12 h-12 mx-auto mb-3 text-green-500/30" />
+                  <p className="text-sm font-medium text-white mb-1">All caught up!</p>
+                  <p className="text-xs text-slate-500">No active tasks assigned to you</p>
+                </div>
+              )}
+            </div>
+          </SectionCard>
+        </div>
+
+        {/* Recent Activity - 1 col */}
+        <div>
+          <SectionCard
             title="Recent Activity"
-            description="Latest updates across your workspace"
+            description="Latest updates"
             action={
               <Link
                 href="/admin/feed"
@@ -248,29 +397,24 @@ export function DashboardClient({
               </Link>
             }
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               {activities.length > 0 ? (
-                activities.map((activity) => {
+                activities.slice(0, 4).map((activity) => {
                   const iconConfig = activityIcons[activity.type] || activityIcons.SYSTEM_ALERT;
                   const Icon = iconConfig.icon;
                   
                   return (
                     <div
                       key={activity.id}
-                      className="flex items-start gap-5 p-5 rounded-xl bg-slate-900/40 border border-white/5 hover:border-white/10 transition-all"
+                      className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/40 border border-white/5 hover:border-white/10 transition-all"
                     >
-                      <div className={`w-11 h-11 rounded-xl bg-${iconConfig.color}-500/20 text-${iconConfig.color}-400 flex items-center justify-center flex-shrink-0 border border-${iconConfig.color}-500/20`}>
-                        <Icon className="w-4 h-4" />
+                      <div className={`w-8 h-8 rounded-lg bg-${iconConfig.color}-500/20 text-${iconConfig.color}-400 flex items-center justify-center flex-shrink-0 border border-${iconConfig.color}-500/20`}>
+                        <Icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white mb-1">
+                        <p className="text-xs font-medium text-white mb-0.5 line-clamp-1">
                           {activity.title}
                         </p>
-                        {activity.description && (
-                          <p className="text-xs text-slate-400 mb-1.5">
-                            {activity.description}
-                          </p>
-                        )}
                         <p className="text-xs text-slate-500">
                           {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
                         </p>
@@ -280,7 +424,7 @@ export function DashboardClient({
                 })
               ) : (
                 <div className="text-center py-8 text-slate-400">
-                  <p>No recent activity</p>
+                  <p className="text-xs">No recent activity</p>
                 </div>
               )}
             </div>

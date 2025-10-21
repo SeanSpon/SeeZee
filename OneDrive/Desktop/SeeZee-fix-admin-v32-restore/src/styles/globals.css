@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Design tokens from Claude UI spec */
+  /* Design tokens from Claude UI spec - Dark Mode */
   --bg-base: #0B0F14;
-  --bg-elev: #0F141B;
-  --glass: rgba(18, 25, 37, 0.78);
-  --stroke: #233040;
-  --text: #E6EEF8;
-  --text-dim: #98A6B3;
+  --bg-elev: #1a1f2e;
+  --glass: rgba(30, 41, 59, 0.6);
+  --stroke: #334155;
+  --text: #F1F5F9;
+  --text-dim: #CBD5E1;
   --primary: #6EE7FF;
   --accent: #8B5CF6;
   --success: #22C55E;
@@ -34,6 +34,25 @@
   --pad: clamp(16px, 2.5vw, 24px);
 }
 
+/* Light Mode Overrides */
+html.light {
+  --bg-base: #F8FAFC;
+  --bg-elev: #FFFFFF;
+  --glass: rgba(255, 255, 255, 0.85);
+  --stroke: #E2E8F0;
+  --text: #0F172A;
+  --text-dim: #64748B;
+  --primary: #0EA5E9;
+  --accent: #8B5CF6;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 12px 45px rgba(0, 0, 0, 0.16);
+}
+
 @media (min-width: 1024px) {
   :root {
     --nav-h: 72px;
@@ -48,20 +67,27 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: radial-gradient(1200px 800px at 80% -10%, #13202E 0%, #0B0F14 50%), var(--bg-base);
+  background: #000000;
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Subtle grain texture */
+html.light body {
+  background: #F8FAFC;
+}
+
+/* Very subtle grain texture */
 body::after {
   content: '';
   position: fixed;
@@ -70,7 +96,7 @@ body::after {
   right: 0;
   bottom: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.02;
+  opacity: 0.01;
   pointer-events: none;
   z-index: 9998;
   mix-blend-mode: overlay;
@@ -78,46 +104,45 @@ body::after {
 
 /* Glass morphism utilities */
 .glass {
-  background: var(--glass);
+  background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(14px);
-  border: 1px solid var(--stroke);
+  border: 1px solid rgba(71, 85, 105, 0.5);
   border-radius: var(--r-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .glass-card {
-  background: var(--glass);
+  background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(14px);
-  border: 1px solid var(--stroke);
+  border: 1px solid rgba(71, 85, 105, 0.5);
   border-radius: var(--r-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 24px;
 }
 
 .glass-panel {
-  background: var(--glass);
+  background: rgba(30, 41, 59, 0.7);
   backdrop-filter: blur(14px);
-  border: 1px solid var(--stroke);
+  border: 1px solid rgba(71, 85, 105, 0.5);
   border-radius: var(--r-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 16px;
 }
 
-/* SeeZee UI v4.5 - Enhanced Glass Morphism (Transparent, Outline Only) */
+/* SeeZee UI v4.5 - Enhanced Glass Morphism (Better Contrast) */
 .glass-container {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(30, 41, 59, 0.5);
   backdrop-filter: blur(12px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(71, 85, 105, 0.4);
   border-radius: 16px;
-  box-shadow: none;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-container:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(30, 41, 59, 0.65);
+  border-color: rgba(71, 85, 105, 0.6);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
 }
 
 .glass-container-static {
@@ -350,7 +375,7 @@ body::after {
 /* Grid utilities */
 .grid-auto {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 18px;
 }
 
@@ -371,6 +396,7 @@ body::after {
   .grid-3,
   .grid-4 {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
@@ -378,6 +404,10 @@ body::after {
   .grid-3,
   .grid-4 {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .grid-auto {
+    gap: 12px;
   }
 }
 
@@ -667,25 +697,30 @@ body{
   flex-shrink: 0;
 }
 .main-layer{
-  position: relative; z-index: 10;
+  position: relative; 
+  z-index: 10;
   padding-top: calc(var(--h-nav) + 16px);
   padding-bottom: 80px;
-  min-height: calc(100vh - var(--h-nav));
+  min-height: 100vh;
+  flex: 1;
 }
 
 /* When a page has NO admin bar, add this class to body or wrapper */
 .no-admin .main-layer{ 
   padding-top: calc(var(--h-nav) + 16px); 
-  min-height: calc(100vh - var(--h-nav)); 
+  min-height: 100vh;
+  flex: 1;
 }
 
 /* Content area shift so it doesn't hide under the sidebar */
 .admin-main {
   margin-left: var(--sidebar-w);
   transition: margin 0.3s ease;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .admin-main {
     margin-left: 0;
   }
@@ -694,6 +729,14 @@ body{
 .main-inner {
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
+  padding: 0 16px;
+}
+
+@media (max-width: 640px) {
+  .main-inner {
+    padding: 0 12px;
+  }
 }
 
 /* Footer always visible and not overlapped */

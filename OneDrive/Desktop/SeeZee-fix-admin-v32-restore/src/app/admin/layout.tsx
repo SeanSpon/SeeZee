@@ -30,14 +30,14 @@ export default async function AdminLayout({
         {/* Admin layout without topbar */}
         <div className="with-sidebar fixed inset-0 flex flex-col">
           <div className="flex flex-1 overflow-hidden" style={{ marginTop: 'var(--h-nav)' }}>
-            {/* Sidebar pinned below navbar */}
-            <aside className="sidebar-layer hidden md:block fixed left-0" style={{ top: 'var(--h-nav)' }}>
+            {/* Sidebar pinned below navbar - Desktop Only */}
+            <aside className="sidebar-layer hidden md:block fixed left-0 w-64" style={{ top: 'var(--h-nav)', height: 'calc(100vh - var(--h-nav))' }}>
               <Sidebar userRole={user.role} />
             </aside>
 
             {/* Content shifted by sidebar width and pushed below navbar */}
-            <main className="admin-main flex-1 overflow-y-auto">
-              <div className="main-inner px-6 py-8">
+            <main className="admin-main flex-1 overflow-y-auto md:ml-64">
+              <div className="main-inner px-4 sm:px-6 py-6 sm:py-8">
                 {children}
               </div>
             </main>

@@ -8,15 +8,7 @@ import { db } from "@/server/db";
 import { requireRole } from "@/lib/permissions";
 import { revalidateTag } from "next/cache";
 import { tags } from "@/lib/tags";
-
-export type ActivityType =
-  | "LEAD_NEW"
-  | "LEAD_UPDATED"
-  | "TASK_CREATED"
-  | "TASK_COMPLETED"
-  | "PROJECT_CREATED"
-  | "MAINTENANCE_SCHEDULED"
-  | "SYSTEM_ALERT";
+import { ActivityType } from "@prisma/client";
 
 /**
  * List activity feed items
@@ -68,7 +60,7 @@ export async function logActivity(data: {
         description: data.description,
         userId: data.userId,
         metadata: data.metadata ?? {},
-        isRead: false,
+        read: false,
       },
     });
     
@@ -91,7 +83,7 @@ export async function markActivityAsRead(activityId: string) {
   try {
     const activity = await db.activity.update({
       where: { id: activityId },
-      data: { isRead: true },
+      data: { read: true },
     });
     
     tags.activity.forEach(revalidateTag);
@@ -111,8 +103,8 @@ export async function markAllActivitiesAsRead() {
   
   try {
     await db.activity.updateMany({
-      where: { isRead: false },
-      data: { isRead: true },
+      where: { read: false },
+      data: { read: true },
     });
     
     tags.activity.forEach(revalidateTag);
@@ -132,7 +124,7 @@ export async function getUnreadActivityCount() {
   
   try {
     const count = await db.activity.count({
-      where: { isRead: false },
+      where: { read: false },
     });
     
     return { success: true, count };
@@ -171,7 +163,7 @@ export async function createActivity(data: {
       },
     });
 
-    revalidateTag(tags.activity.list);
+    tags.activity.forEach(revalidateTag);
     return { success: true, activity };
   } catch (error) {
     console.error("Failed to create activity:", error);

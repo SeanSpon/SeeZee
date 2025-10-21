@@ -48,7 +48,9 @@ export default async function StepPage({ params }: Props) {
   }
 
   // Get current value
-  const currentValue = draft?.data?.[stepSlug] || '';
+  const currentValue = (draft?.data && typeof draft.data === 'object' && stepSlug in draft.data 
+    ? (draft.data as Record<string, any>)[stepSlug] 
+    : '') || '';
 
   // Navigation
   const prevSlug = stepIndex > 0 ? StepSlugs[stepIndex - 1] : null;

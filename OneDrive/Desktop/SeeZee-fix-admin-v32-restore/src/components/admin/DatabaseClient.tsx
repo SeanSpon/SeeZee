@@ -5,9 +5,10 @@
  * Provides a simple interface to browse database models
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SectionCard } from "@/components/admin/SectionCard";
-import { Database, Table, Eye, Search } from "lucide-react";
+import { Database, Table, Eye, Search, RefreshCw, Loader2 } from "lucide-react";
+import { query, getModelCount } from "@/server/actions/database";
 
 interface DatabaseClientProps {
   models: string[];
@@ -15,6 +16,45 @@ interface DatabaseClientProps {
 
 export function DatabaseClient({ models }: DatabaseClientProps) {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [records, setRecords] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [recordCount, setRecordCount] = useState(0);
+
+  // Fetch records when model is selected
+  useEffect(() => {
+    if (!selectedModel) return;
+
+    const fetchRecords = async () => {
+      setLoading(true);
+      try {
+        const [dataResult, countResult] = await Promise.all([
+          query(selectedModel, 50),
+          getModelCount(selectedModel)
+        ]);
+        
+        if (dataResult.success) {
+          setRecords(dataResult.data || []);
+        }
+        
+        if (countResult.success) {
+          setRecordCount(countResult.count);
+        }
+      } catch (error) {
+        console.error("Failed to fetch records:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecords();
+  }, [selectedModel]);
+
+  const handleRefresh = () => {
+    if (selectedModel) {
+      setSelectedModel(null);
+      setTimeout(() => setSelectedModel(selectedModel), 0);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -31,7 +71,6 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
         <div className="lg:col-span-1">
           <SectionCard
             title="Available Models"
-            icon={Database}
             className="h-fit"
           >
             <div className="space-y-2">
@@ -59,23 +98,76 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
         <div className="lg:col-span-2">
           {selectedModel ? (
             <SectionCard
-              title={`${selectedModel.charAt(0).toUpperCase()}${selectedModel.slice(1)} Model`}
-              icon={Eye}
+              title={`${selectedModel.charAt(0).toUpperCase()}${selectedModel.slice(1)}`}
+              action={
+                <button
+                  onClick={handleRefresh}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  disabled={loading}
+                >
+                  <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                </button>
+              }
             >
-              <div className="text-center py-12">
-                <Database className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-400 mb-4">
-                  Database browser functionality coming soon
-                </p>
-                <p className="text-sm text-gray-500">
-                  This will show records from the {selectedModel} table
-                </p>
-              </div>
+              {loading ? (
+                <div className="text-center py-12">
+                  <Loader2 className="h-12 w-12 text-purple-400 mx-auto mb-4 animate-spin" />
+                  <p className="text-gray-400">Loading records...</p>
+                </div>
+              ) : records.length === 0 ? (
+                <div className="text-center py-12">
+                  <Database className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400">No records found</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    The {selectedModel} table is empty
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm text-gray-400 pb-2 border-b border-white/10">
+                    <span>Showing {records.length} of {recordCount} total records</span>
+                  </div>
+                  
+                  <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                    {records.map((record, idx) => (
+                      <div
+                        key={record.id || idx}
+                        className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors"
+                      >
+                        <div className="grid grid-cols-1 gap-2">
+                          {Object.entries(record).map(([key, value]) => {
+                            // Skip rendering complex objects or null values
+                            if (value === null || typeof value === 'object') {
+                              if (value instanceof Date) {
+                                return (
+                                  <div key={key} className="flex justify-between text-sm">
+                                    <span className="text-gray-400 font-medium">{key}:</span>
+                                    <span className="text-gray-300">{new Date(value).toLocaleString()}</span>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }
+                            
+                            return (
+                              <div key={key} className="flex justify-between text-sm">
+                                <span className="text-gray-400 font-medium">{key}:</span>
+                                <span className="text-gray-300 truncate max-w-md ml-4">
+                                  {typeof value === 'boolean' ? (value ? '✓' : '✗') : String(value)}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </SectionCard>
           ) : (
             <SectionCard
               title="Select a Model"
-              icon={Search}
             >
               <div className="text-center py-12">
                 <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -91,7 +183,6 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
       {/* Info Card */}
       <SectionCard
         title="Database Information"
-        icon={Database}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white/5 p-4 rounded-lg">

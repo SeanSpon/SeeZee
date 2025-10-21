@@ -159,3 +159,203 @@ export async function updateLeadNotes(leadId: string, notes: string) {
     return { success: false, error: "Failed to update lead notes" };
   }
 }
+
+/**
+ * Convert lead to project
+ */
+export async function convertLeadToProject(leadId: string) {
+  const user = await requireRole("STAFF");
+
+  try {
+    const lead = await db.lead.findUnique({
+      where: { id: leadId },
+      include: { organization: true },
+    });
+
+    if (!lead) {
+      return { success: false, error: "Lead not found" };
+    }
+
+    if (lead.status === "CONVERTED") {
+      return { success: false, error: "Lead already converted" };
+    }
+
+    // Create or get organization
+    let orgId = lead.organizationId;
+    if (!orgId && lead.company) {
+      const org = await db.organization.create({
+        data: {
+          name: lead.company,
+          email: lead.email,
+          phone: lead.phone,
+          slug: lead.company.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        },
+      });
+      orgId = org.id;
+    }
+
+    if (!orgId) {
+      return { success: false, error: "No organization associated with lead" };
+    }
+
+    // Create project
+    const project = await db.project.create({
+      data: {
+        name: lead.name || `${lead.company} Project`,
+        description: lead.message || "",
+        status: "LEAD",
+        organizationId: orgId,
+        leadId: leadId,
+        assigneeId: user.id,
+        budget: lead.budget ? parseFloat(lead.budget) : null,
+      },
+    });
+
+    // Update lead status
+    await db.lead.update({
+      where: { id: leadId },
+      data: {
+        status: "CONVERTED",
+        convertedAt: new Date(),
+      },
+    });
+
+    // Create activity log
+    await createActivity({
+      type: "PROJECT_CREATED",
+      title: `Lead converted to project`,
+      description: `${lead.name} → ${project.name}`,
+      userId: user.id,
+      metadata: {
+        leadId,
+        projectId: project.id,
+        leadName: lead.name,
+        projectName: project.name,
+      },
+    });
+
+    revalidatePath("/admin/pipeline");
+    return { success: true, project };
+  } catch (error) {
+    console.error("Failed to convert lead to project:", error);
+    return { success: false, error: "Failed to convert lead to project" };
+  }
+}
+
+/**
+ * Get all projects
+ */
+export async function getProjects() {
+  await requireRole("STAFF");
+
+  try {
+    const projects = await db.project.findMany({
+      include: {
+        organization: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        lead: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { success: true, projects };
+  } catch (error) {
+    console.error("Failed to fetch projects:", error);
+    return { success: false, error: "Failed to fetch projects", projects: [] };
+  }
+}
+
+/**
+ * Create invoice from project
+ */
+export async function createInvoiceFromProject(projectId: string, data: {
+  title: string;
+  description?: string;
+  amount: number;
+  dueDate: Date;
+}) {
+  const user = await requireRole("STAFF");
+
+  try {
+    const project = await db.project.findUnique({
+      where: { id: projectId },
+      include: { organization: true },
+    });
+
+    if (!project) {
+      return { success: false, error: "Project not found" };
+    }
+
+    // Generate invoice number
+    const invoiceCount = await db.invoice.count();
+    const invoiceNumber = `INV-${(invoiceCount + 1).toString().padStart(5, '0')}`;
+
+    const invoice = await db.invoice.create({
+      data: {
+        number: invoiceNumber,
+        title: data.title,
+        description: data.description,
+        amount: data.amount,
+        tax: data.amount * 0.0, // Add tax calculation if needed
+        total: data.amount,
+        status: "DRAFT",
+        dueDate: data.dueDate,
+        organizationId: project.organizationId,
+        projectId: projectId,
+      },
+    });
+
+    // Create activity log
+    await createActivity({
+      type: "INVOICE_PAID",
+      title: `Invoice created for ${project.name}`,
+      description: `${invoiceNumber} - $${data.amount}`,
+      userId: user.id,
+      metadata: {
+        invoiceId: invoice.id,
+        projectId,
+        amount: data.amount,
+      },
+    });
+
+    revalidatePath("/admin/pipeline");
+    return { success: true, invoice };
+  } catch (error) {
+    console.error("Failed to create invoice:", error);
+    return { success: false, error: "Failed to create invoice" };
+  }
+}
+
+/**
+ * Get all invoices
+ */
+export async function getInvoices() {
+  await requireRole("STAFF");
+
+  try {
+    const invoices = await db.invoice.findMany({
+      include: {
+        organization: true,
+        project: true,
+        items: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { success: true, invoices };
+  } catch (error) {
+    console.error("Failed to fetch invoices:", error);
+    return { success: false, error: "Failed to fetch invoices", invoices: [] };
+  }
+}

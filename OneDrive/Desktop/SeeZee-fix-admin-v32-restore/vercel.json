@@ -1,0 +1,25 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?!see-zee\\.com).*"
+        }
+      ],
+      "destination": "https://see-zee.com/:path*",
+      "permanent": true
+    }
+  ],
+  "env": {
+    "NEXTAUTH_URL": "https://see-zee.com",
+    "NEXT_PUBLIC_APP_URL": "https://see-zee.com",
+    "NEXT_PUBLIC_DOMAIN": "see-zee.com"
+  }
+}

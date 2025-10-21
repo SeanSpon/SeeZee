@@ -5,10 +5,14 @@
  * Manages team members and their roles
  */
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Avatar from "@/components/ui/Avatar";
 import { SectionCard } from "@/components/admin/SectionCard";
 import { RoleBadge } from "@/components/admin/RoleBadge";
+import { EditUserModal } from "@/components/admin/EditUserModal";
+import { FilterBar } from "@/components/ui/FilterBar";
+import { deleteUser } from "@/server/actions/team";
 import { 
   Users, 
   Crown, 
@@ -20,7 +24,9 @@ import {
   UserCheck,
   Mail,
   Calendar,
-  MoreHorizontal
+  MoreHorizontal,
+  Edit,
+  Trash2
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -63,12 +69,56 @@ const getRoleColor = (role: string) => {
 };
 
 export function TeamClient({ users }: TeamClientProps) {
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingUser, setEditingUser] = useState<TeamUser | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    }
+    if (openMenuId) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [openMenuId]);
+
+  const handleDelete = async (userId: string) => {
+    if (deleteConfirm !== userId) {
+      setDeleteConfirm(userId);
+      return;
+    }
+
+    const result = await deleteUser(userId);
+    if (result.success) {
+      setDeleteConfirm(null);
+      setOpenMenuId(null);
+      router.refresh();
+    }
+  };
 
   // Filter users by selected role
   const filteredUsers = selectedRole 
     ? users.filter(user => user.role === selectedRole)
     : users;
+
+  // Apply search filter
+  const searchFilteredUsers = filteredUsers.filter(user => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      user.name?.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query) ||
+      user.role.toLowerCase().includes(query)
+    );
+  });
 
   // Get role statistics
   const roleStats = users.reduce((acc, user) => {
@@ -141,18 +191,37 @@ export function TeamClient({ users }: TeamClientProps) {
         ))}
       </div>
 
+      {/* Filter Bar */}
+      <FilterBar
+        searchPlaceholder="Search team members..."
+        onSearchChange={setSearchQuery}
+        filters={[
+          {
+            label: "Role",
+            value: selectedRole || "all",
+            onChange: (value) => setSelectedRole(value === "all" ? null : value),
+            options: [
+              { label: "All Roles", value: "all" },
+              ...roles.map((role) => ({ label: role, value: role })),
+            ],
+          },
+        ]}
+      />
+
       {/* Team Members */}
       <SectionCard
         title={`Team Members ${selectedRole ? `(${selectedRole})` : ""}`}
       >
         <div className="space-y-4">
-          {filteredUsers.length === 0 ? (
+          {searchFilteredUsers.length === 0 ? (
             <div className="text-center py-8">
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-400">No team members found</p>
+              <p className="text-gray-400">
+                {searchQuery ? "No team members match your search" : "No team members found"}
+              </p>
             </div>
           ) : (
-            filteredUsers.map((user) => {
+            searchFilteredUsers.map((user) => {
               const Icon = getRoleIcon(user.role);
               const colorClass = getRoleColor(user.role);
               
@@ -198,10 +267,42 @@ export function TeamClient({ users }: TeamClientProps) {
                         <RoleBadge role={user.role as any} />
                       </div>
 
-                      {/* Actions */}
-                      <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
-                        <MoreHorizontal className="h-4 w-4 text-gray-400" />
-                      </button>
+                      {/* Actions Dropdown */}
+                      <div className="relative" ref={openMenuId === user.id ? menuRef : null}>
+                        <button 
+                          onClick={() => setOpenMenuId(openMenuId === user.id ? null : user.id)}
+                          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                        >
+                          <MoreHorizontal className="h-4 w-4 text-gray-400" />
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {openMenuId === user.id && (
+                          <div className="absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-xl overflow-hidden z-50">
+                            <button
+                              onClick={() => {
+                                setEditingUser(user);
+                                setOpenMenuId(null);
+                              }}
+                              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/10 transition-colors flex items-center gap-2"
+                            >
+                              <Edit className="h-4 w-4" />
+                              Edit User
+                            </button>
+                            <button
+                              onClick={() => handleDelete(user.id)}
+                              className={`w-full px-4 py-2 text-left text-sm transition-colors flex items-center gap-2 ${
+                                deleteConfirm === user.id
+                                  ? "bg-red-500/20 text-red-300"
+                                  : "text-red-400 hover:bg-red-500/10"
+                              }`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              {deleteConfirm === user.id ? "Confirm Delete?" : "Delete User"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -210,6 +311,19 @@ export function TeamClient({ users }: TeamClientProps) {
           )}
         </div>
       </SectionCard>
+
+      {/* Edit User Modal */}
+      {editingUser && (
+        <EditUserModal
+          user={editingUser}
+          isOpen={!!editingUser}
+          onClose={() => setEditingUser(null)}
+          onSuccess={() => {
+            setEditingUser(null);
+            router.refresh();
+          }}
+        />
+      )}
     </div>
   );
 }

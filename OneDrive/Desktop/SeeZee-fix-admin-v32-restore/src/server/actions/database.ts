@@ -12,7 +12,7 @@ import { requireRole } from "@/lib/permissions";
  * List all available database models
  */
 export async function listModels() {
-  await requireRole("ADMIN");
+  await requireRole("ADMIN"); // CEO role is higher than ADMIN, so CEO can access
   
   return {
     success: true,

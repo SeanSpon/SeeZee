@@ -18,7 +18,7 @@ export function FeatureGrid() {
   }, {} as Record<Category, typeof FEATURES[number][]>);
 
   const isSelected = (featureId: string) =>
-    features.some((f) => f.id === featureId);
+    features.includes(featureId);
 
   return (
     <div className="space-y-8">

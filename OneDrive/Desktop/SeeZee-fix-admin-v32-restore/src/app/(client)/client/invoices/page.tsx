@@ -9,10 +9,7 @@ export default async function ClientInvoicesPage() {
     redirect("/login");
   }
 
-  // Only allow CLIENT role
-  if (session.user.role !== "CLIENT") {
-    redirect("/admin");
-  }
+  // Allow all authenticated users to view
 
   // Fetch client's invoices via project's lead relationship
   const invoices = await prisma.invoice.findMany({

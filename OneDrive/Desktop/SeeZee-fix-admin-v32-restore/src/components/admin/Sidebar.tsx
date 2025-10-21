@@ -13,6 +13,7 @@ import {
   Radio,
   GitBranch,
   CheckSquare,
+  Calendar,
   Wrench,
   GraduationCap,
   Link as LinkIcon,
@@ -24,6 +25,7 @@ import {
   FileText,
   Zap,
   Users,
+  Crown,
 } from "lucide-react";
 import { getRoleAccent, isCEO, type Role } from "@/lib/role";
 
@@ -83,6 +85,11 @@ export function Sidebar({ userRole }: SidebarProps) {
           badge: "8",
         },
         {
+          label: "Calendar",
+          href: "/admin/calendar",
+          icon: <Calendar className="w-5 h-5" />,
+        },
+        {
           label: "Maintenance",
           href: "/admin/maintenance",
           icon: <Wrench className="w-5 h-5" />,
@@ -128,38 +135,6 @@ export function Sidebar({ userRole }: SidebarProps) {
           icon: <Database className="w-5 h-5" />,
         },
       ],
-    },
-    {
-      label: "Executive",
-      items: [
-        {
-          label: "Analytics",
-          href: "/admin/executive/analytics",
-          icon: <BarChart3 className="w-4 h-4" />,
-        },
-        {
-          label: "Finances",
-          href: "/admin/executive/finances",
-          icon: <DollarSign className="w-4 h-4" />,
-        },
-        {
-          label: "Systems",
-          href: "/admin/executive/systems",
-          icon: <Settings className="w-4 h-4" />,
-        },
-        {
-          label: "Logs",
-          href: "/admin/executive/systems/logs",
-          icon: <FileText className="w-4 h-4" />,
-        },
-        {
-          label: "Automations",
-          href: "/admin/executive/systems/automations",
-          icon: <Zap className="w-4 h-4" />,
-        },
-      ],
-      collapsible: true,
-      requireCEO: true,
     },
   ];
 

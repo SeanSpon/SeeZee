@@ -16,10 +16,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  // Only allow CLIENT role
-  if (session.user.role !== "CLIENT") {
-    redirect("/admin");
-  }
+  // Allow all authenticated users to view
 
   // Fetch project with ownership check via Lead
   const project = await prisma.project.findFirst({

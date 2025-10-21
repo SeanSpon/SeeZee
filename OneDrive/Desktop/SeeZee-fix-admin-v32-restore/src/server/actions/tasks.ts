@@ -9,36 +9,45 @@ import { requireRole } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
 import { revalidatePath } from "next/cache";
 import { createActivity } from "./activity";
+import { TodoStatus, TodoPriority } from "@prisma/client";
 
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+// Type aliases for backward compatibility
+export type TaskStatus = TodoStatus;
+export type TaskPriority = TodoPriority;
 
 interface CreateTaskParams {
   title: string;
   description?: string;
-  priority?: TaskPriority;
+  priority?: TodoPriority;
   assignedToId?: string;
   dueDate?: Date;
 }
 
 /**
- * Get all tasks
+ * Get all tasks - defaults to current user's tasks unless assignedToId is explicitly set
  */
 export async function getTasks(filter?: {
   status?: TaskStatus;
   assignedToId?: string;
 }) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
 
   try {
     const where: any = {};
 
-    if (filter?.status) {
-      where.status = filter.status;
+    // Default to current user's tasks if no assignedToId filter is provided
+    if (filter?.assignedToId !== undefined) {
+      // Explicit filter (can be null to get unassigned tasks)
+      if (filter.assignedToId !== null) {
+        where.assignedToId = filter.assignedToId;
+      }
+    } else {
+      // Default: show only tasks assigned to current user
+      where.assignedToId = user.id;
     }
 
-    if (filter?.assignedToId) {
-      where.assignedToId = filter.assignedToId;
+    if (filter?.status) {
+      where.status = filter.status;
     }
 
     const tasks = await db.todo.findMany({
@@ -85,7 +94,7 @@ export async function createTask(params: CreateTaskParams) {
       data: {
         title: params.title,
         description: params.description,
-        priority: params.priority || "MEDIUM",
+        priority: params.priority || TodoPriority.MEDIUM,
         assignedToId: params.assignedToId,
         dueDate: params.dueDate,
         createdById: user.id,
@@ -107,8 +116,6 @@ export async function createTask(params: CreateTaskParams) {
       title: "New task created",
       description: params.title,
       userId: user.id,
-      entityType: "Task",
-      entityId: task.id,
     });
 
     revalidatePath("/admin/tasks");
@@ -130,19 +137,17 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
       where: { id: taskId },
       data: {
         status,
-        ...(status === "DONE" && { completedAt: new Date() }),
+        ...(status === TodoStatus.DONE && { completedAt: new Date() }),
       },
     });
 
     // Create activity if task is completed
-    if (status === "DONE") {
+    if (status === TodoStatus.DONE) {
       await createActivity({
         type: "TASK_COMPLETED",
         title: "Task completed",
         description: task.title,
         userId: user.id,
-        entityType: "Task",
-        entityId: taskId,
       });
     }
 
@@ -208,17 +213,21 @@ export async function deleteTask(taskId: string) {
  * Get task statistics
  */
 export async function getTaskStats() {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
 
   try {
+    // Filter tasks assigned to the current user
+    const baseFilter = { assignedToId: user.id };
+
     const [total, todo, inProgress, done, overdue] = await Promise.all([
-      db.todo.count(),
-      db.todo.count({ where: { status: "TODO" } }),
-      db.todo.count({ where: { status: "IN_PROGRESS" } }),
-      db.todo.count({ where: { status: "DONE" } }),
+      db.todo.count({ where: baseFilter }),
+      db.todo.count({ where: { ...baseFilter, status: TodoStatus.TODO } }),
+      db.todo.count({ where: { ...baseFilter, status: TodoStatus.IN_PROGRESS } }),
+      db.todo.count({ where: { ...baseFilter, status: TodoStatus.DONE } }),
       db.todo.count({
         where: {
-          status: { not: "DONE" },
+          ...baseFilter,
+          status: { not: TodoStatus.DONE },
           dueDate: { lt: new Date() },
         },
       }),
@@ -235,5 +244,75 @@ export async function getTaskStats() {
       error: "Failed to fetch task stats",
       stats: { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 },
     };
+  }
+}
+
+/**
+ * Bulk update task status
+ */
+export async function bulkUpdateTaskStatus(taskIds: string[], status: TaskStatus) {
+  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+
+  try {
+    const result = await db.todo.updateMany({
+      where: {
+        id: { in: taskIds },
+      },
+      data: {
+        status,
+        ...(status === TodoStatus.DONE && { completedAt: new Date() }),
+      },
+    });
+
+    revalidatePath("/admin/tasks");
+    return { success: true, count: result.count };
+  } catch (error) {
+    console.error("Failed to bulk update tasks:", error);
+    return { success: false, error: "Failed to bulk update tasks", count: 0 };
+  }
+}
+
+/**
+ * Bulk assign tasks to a user
+ */
+export async function bulkAssignTasks(taskIds: string[], assignedToId: string | null) {
+  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+
+  try {
+    const result = await db.todo.updateMany({
+      where: {
+        id: { in: taskIds },
+      },
+      data: {
+        assignedToId,
+      },
+    });
+
+    revalidatePath("/admin/tasks");
+    return { success: true, count: result.count };
+  } catch (error) {
+    console.error("Failed to bulk assign tasks:", error);
+    return { success: false, error: "Failed to bulk assign tasks", count: 0 };
+  }
+}
+
+/**
+ * Bulk delete tasks
+ */
+export async function bulkDeleteTasks(taskIds: string[]) {
+  await requireRole([ROLE.CEO, ROLE.ADMIN]);
+
+  try {
+    const result = await db.todo.deleteMany({
+      where: {
+        id: { in: taskIds },
+      },
+    });
+
+    revalidatePath("/admin/tasks");
+    return { success: true, count: result.count };
+  } catch (error) {
+    console.error("Failed to bulk delete tasks:", error);
+    return { success: false, error: "Failed to bulk delete tasks", count: 0 };
   }
 }

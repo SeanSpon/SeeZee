@@ -57,8 +57,8 @@ export default async function SummaryPage() {
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
         <h2 className="text-xl font-semibold text-white mb-4">Your Answers</h2>
         <div className="space-y-4">
-          {StepSlugs.map((slug) => {
-            const value = data[slug];
+          {data && StepSlugs.map((slug) => {
+            const value = (data as Record<string, any>)[slug];
             if (!value) return null;
 
             return (

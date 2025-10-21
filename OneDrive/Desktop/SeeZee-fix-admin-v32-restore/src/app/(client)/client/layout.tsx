@@ -1,6 +1,8 @@
+import "@/styles/admin.css";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ClientSidebar from "./components/ClientSidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 export default async function ClientDashboardLayout({
   children,
@@ -9,48 +11,27 @@ export default async function ClientDashboardLayout({
 }) {
   const session = await auth();
 
-  // Redirect if not authenticated
+  // Allow CLIENT, ORG_MEMBER, ADMIN, CEO to view client dashboard
   if (!session?.user) {
     redirect("/login?returnUrl=/client");
   }
 
-  // Redirect STAFF/ADMIN/CEO users to admin dashboard
-  const isStaffRole = ["CEO", "ADMIN", "DESIGNER", "DEV", "OUTREACH", "INTERN", "STAFF"].includes(session.user.role);
-  if (isStaffRole) {
-    redirect("/admin/overview");
-  }
-
   return (
-    <div className="min-h-screen">
-      <div className="flex pt-[var(--nav-h)]">
-        {/* Sidebar */}
-        <ClientSidebar user={session.user} />
+    <div className="with-sidebar fixed inset-0 flex flex-col">
+      <div className="flex flex-1 overflow-hidden" style={{ marginTop: 'var(--h-nav)' }}>
+        {/* Sidebar pinned below navbar */}
+        <aside className="sidebar-layer hidden md:block fixed left-0" style={{ top: 'var(--h-nav)' }}>
+          <ClientSidebar user={session.user} />
+        </aside>
 
-        {/* Main Content */}
-        <div className="flex-1 lg:pl-64">
-          {/* Top Bar */}
-          <div className="sticky top-[var(--nav-h)] z-40 backdrop-blur-xl bg-black/30 border-b border-white/10">
-            <div className="px-6 py-4 flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-white">Client Portal</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Welcome back, {session.user.name}
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <img
-                  src={session.user.image || "/default-avatar.png"}
-                  alt={session.user.name || "User"}
-                  className="w-10 h-10 rounded-full border-2 border-cyan-500/30"
-                />
-              </div>
-            </div>
+        {/* Content shifted by sidebar width and pushed below navbar */}
+        <main className="admin-main flex-1 overflow-y-auto">
+          <div className="main-inner px-6 py-8">
+            {children}
           </div>
-
-          {/* Page Content */}
-          <main className="p-6">{children}</main>
-        </div>
+        </main>
       </div>
+      <Toaster />
     </div>
   );
 }

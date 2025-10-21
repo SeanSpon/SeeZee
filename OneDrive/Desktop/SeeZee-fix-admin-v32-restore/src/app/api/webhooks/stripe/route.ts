@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
+import { Prisma, ProjectStatus, InvoiceStatus, PaymentStatus, LeadStatus } from '@prisma/client'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 })
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -141,7 +145,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         organizationId: organization.id,
         leadId: leadId,
         budget: fullAmount,
-        status: 'PENDING',
+        status: ProjectStatus.PAID,
         milestones: {
           create: [
             {
@@ -173,7 +177,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         amount: depositAmount,
         tax: 0,
         total: depositAmount,
-        status: 'PAID',
+        status: InvoiceStatus.PAID,
         organizationId: organization.id,
         projectId: project.id,
         stripeInvoiceId: session.invoice as string,
@@ -196,7 +200,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       data: {
         amount: depositAmount,
         currency: 'USD',
-        status: 'COMPLETED',
+        status: PaymentStatus.COMPLETED,
         method: 'stripe',
         stripePaymentId: session.payment_intent as string,
         invoiceId: depositInvoice.id,
@@ -215,7 +219,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           amount: remainingAmount,
           tax: 0,
           total: remainingAmount,
-          status: 'DRAFT',
+          status: InvoiceStatus.DRAFT,
           organizationId: organization.id,
           projectId: project.id,
           dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
@@ -235,7 +239,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await prisma.lead.update({
       where: { id: leadId },
       data: {
-        status: 'CONVERTED',
+        status: LeadStatus.CONVERTED,
         convertedAt: new Date(),
         organizationId: organization.id,
       }
@@ -276,7 +280,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
       await prisma.invoice.update({
         where: { id: dbInvoice.id },
         data: {
-          status: 'PAID',
+          status: InvoiceStatus.PAID,
           paidAt: new Date(),
         }
       })
@@ -286,7 +290,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
         data: {
           amount: invoice.amount_paid / 100, // Convert from cents
           currency: invoice.currency.toUpperCase(),
-          status: 'COMPLETED',
+          status: PaymentStatus.COMPLETED,
           method: 'stripe',
           stripePaymentId: invoice.payment_intent as string,
           invoiceId: dbInvoice.id,
@@ -313,7 +317,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     if (dbInvoice) {
       await prisma.invoice.update({
         where: { id: dbInvoice.id },
-        data: { status: 'OVERDUE' }
+        data: { status: InvoiceStatus.OVERDUE }
       })
 
       console.log('Invoice marked as overdue:', dbInvoice.id)

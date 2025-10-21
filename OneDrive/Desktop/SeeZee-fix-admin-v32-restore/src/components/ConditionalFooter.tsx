@@ -9,8 +9,12 @@ import { Footer } from './layout/footer';
 export function ConditionalFooter() {
   const pathname = usePathname();
   
-  // Don't render footer on admin pages
-  if (pathname?.startsWith('/admin')) {
+  // Don't render footer on admin, client, or CEO dashboard pages
+  const isDashboard = pathname?.startsWith('/admin') || 
+                      pathname?.startsWith('/client') || 
+                      pathname?.startsWith('/ceo');
+  
+  if (isDashboard) {
     return null;
   }
   

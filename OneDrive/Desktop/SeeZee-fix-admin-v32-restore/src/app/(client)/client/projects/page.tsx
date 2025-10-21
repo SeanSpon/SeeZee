@@ -11,10 +11,7 @@ export default async function ClientProjectsPage() {
     redirect("/login");
   }
 
-  // Only allow CLIENT role
-  if (session.user.role !== "CLIENT") {
-    redirect("/admin");
-  }
+  // Allow all authenticated users to view
 
   // Fetch client's projects via Lead relationship
   const projects = await prisma.project.findMany({

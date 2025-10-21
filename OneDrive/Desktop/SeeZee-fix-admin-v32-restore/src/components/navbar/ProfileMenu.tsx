@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { User, LayoutDashboard, Shield, CreditCard, Settings, Moon, Sun, Monitor, LogOut } from "lucide-react";
+import { User, LayoutDashboard, Shield, Crown, CreditCard, Settings, Moon, Sun, Monitor, LogOut } from "lucide-react";
 
 interface ProfileMenuProps {
   user?: {
@@ -18,8 +19,10 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark" | "system">("dark");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
-  const isAdmin = user?.role === "ADMIN" || user?.role === "CEO" || user?.role === "STAFF";
+  const isCEO = user?.role === "CEO";
+  const isAdmin = user?.role === "ADMIN" || user?.role === "STAFF" || user?.role === "CEO";
 
   // Format role for display
   const getRoleDisplay = () => {
@@ -133,12 +136,18 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
             {/* Menu Items */}
             <div className="p-2">
               <Link
-                href="/account"
+                href={
+                  pathname?.startsWith("/ceo") 
+                    ? "/ceo/profile" 
+                    : pathname?.startsWith("/admin")
+                    ? "/admin/profile"
+                    : "/client/profile"
+                }
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-white/5 transition-colors"
               >
                 <User className="h-4 w-4 text-slate-400" />
-                Profile
+                My Profile
               </Link>
 
               <Link
@@ -149,6 +158,20 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
                 <LayoutDashboard className="h-4 w-4 text-slate-400" />
                 Client Dashboard
               </Link>
+
+              {isCEO && (
+                <Link
+                  href="/ceo"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-purple-500/10 transition-colors border border-purple-500/20"
+                >
+                  <Crown className="h-4 w-4 text-purple-400" />
+                  <span className="flex items-center gap-2">
+                    CEO Dashboard
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">Executive</span>
+                  </span>
+                </Link>
+              )}
 
               {isAdmin && (
                 <Link

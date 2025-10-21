@@ -67,14 +67,6 @@ export function TrainingClient({ resources }: TrainingClientProps) {
               }
             }}
           >
-            {!resource.isPublished && (
-              <div className="absolute top-4 right-4">
-                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">
-                  Draft
-                </span>
-              </div>
-            )}
-
             <h3 className="text-lg font-semibold text-white mb-2">
               {resource.title}
             </h3>

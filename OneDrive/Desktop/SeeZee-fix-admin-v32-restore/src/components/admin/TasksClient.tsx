@@ -1,14 +1,14 @@
 "use client";
 
 /**
- * Tasks Client Component
+ * Tasks Client Component with Bulk Operations
  */
 
 import { useState } from "react";
 import { SectionCard } from "@/components/admin/SectionCard";
 import { DataTable, type Column } from "@/components/admin/DataTable";
-import { updateTaskStatus, createTask, assignTask } from "@/server/actions";
-import { Plus, CheckSquare, Clock, AlertCircle } from "lucide-react";
+import { updateTaskStatus, createTask, assignTask, bulkUpdateTaskStatus, bulkAssignTasks, bulkDeleteTasks } from "@/server/actions";
+import { Plus, CheckSquare, Clock, AlertCircle, Trash2, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Task = {
@@ -60,6 +60,8 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [filter, setFilter] = useState<"all" | "TODO" | "IN_PROGRESS" | "DONE">("all");
   const [updating, setUpdating] = useState<string | null>(null);
+  const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
   const filteredTasks = tasks.filter((t) => {
     if (filter === "all") return true;
@@ -79,7 +81,57 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
     setUpdating(null);
   };
 
+  const handleBulkStatusUpdate = async (status: string) => {
+    if (selectedTasks.length === 0) return;
+    setBulkActionLoading(true);
+    const result = await bulkUpdateTaskStatus(selectedTasks, status as any);
+    if (result.success) {
+      setSelectedTasks([]);
+      router.refresh();
+    }
+    setBulkActionLoading(false);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedTasks.length === 0) return;
+    if (!confirm(`Delete ${selectedTasks.length} task(s)?`)) return;
+    setBulkActionLoading(true);
+    const result = await bulkDeleteTasks(selectedTasks);
+    if (result.success) {
+      setSelectedTasks([]);
+      router.refresh();
+    }
+    setBulkActionLoading(false);
+  };
+
+  const toggleTaskSelection = (taskId: string) => {
+    setSelectedTasks((prev) =>
+      prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]
+    );
+  };
+
+  const toggleAllTasks = () => {
+    if (selectedTasks.length === filteredTasks.length) {
+      setSelectedTasks([]);
+    } else {
+      setSelectedTasks(filteredTasks.map((t) => t.id));
+    }
+  };
+
   const columns: Column<Task>[] = [
+    {
+      key: "select",
+      label: "",
+      render: (task) => (
+        <input
+          type="checkbox"
+          checked={selectedTasks.includes(task.id)}
+          onChange={() => toggleTaskSelection(task.id)}
+          onClick={(e) => e.stopPropagation()}
+          className="rounded border-white/20 bg-slate-800"
+        />
+      ),
+    },
     {
       key: "title",
       label: "Task",
@@ -226,58 +278,91 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       {/* Filter Buttons */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <button
-            onClick={() => setFilter("all")}
-            className={`
-              px-3 py-1.5 rounded-lg text-sm font-medium transition-all
-              ${
-                filter === "all"
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/40"
-              }
-            `}
-          >
-            All ({tasks.length})
-          </button>
-          <button
-            onClick={() => setFilter("TODO")}
-            className={`
-              px-3 py-1.5 rounded-lg text-sm font-medium transition-all
-              ${
-                filter === "TODO"
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/40"
-              }
-            `}
-          >
-            To Do ({stats.todo})
-          </button>
-          <button
-            onClick={() => setFilter("IN_PROGRESS")}
-            className={`
-              px-3 py-1.5 rounded-lg text-sm font-medium transition-all
-              ${
-                filter === "IN_PROGRESS"
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/40"
-              }
-            `}
-          >
-            In Progress ({stats.inProgress})
-          </button>
-          <button
-            onClick={() => setFilter("DONE")}
-            className={`
-              px-3 py-1.5 rounded-lg text-sm font-medium transition-all
-              ${
-                filter === "DONE"
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/40"
-              }
-            `}
-          >
-            Done ({stats.done})
-          </button>
+          {selectedTasks.length > 0 ? (
+            <>
+              <span className="px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-400 text-sm font-medium">
+                {selectedTasks.length} selected
+              </span>
+              <button
+                onClick={() => handleBulkStatusUpdate("DONE")}
+                disabled={bulkActionLoading}
+                className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 text-sm font-medium transition-all disabled:opacity-50"
+              >
+                <CheckSquare className="w-4 h-4 inline mr-1" />
+                Mark Done
+              </button>
+              <button
+                onClick={() => handleBulkStatusUpdate("IN_PROGRESS")}
+                disabled={bulkActionLoading}
+                className="px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 text-sm font-medium transition-all disabled:opacity-50"
+              >
+                In Progress
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                disabled={bulkActionLoading}
+                className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 text-sm font-medium transition-all disabled:opacity-50"
+              >
+                <Trash2 className="w-4 h-4 inline mr-1" />
+                Delete
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setFilter("all")}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  ${
+                    filter === "all"
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                  }
+                `}
+              >
+                All ({tasks.length})
+              </button>
+              <button
+                onClick={() => setFilter("TODO")}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  ${
+                    filter === "TODO"
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                  }
+                `}
+              >
+                To Do ({stats.todo})
+              </button>
+              <button
+                onClick={() => setFilter("IN_PROGRESS")}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  ${
+                    filter === "IN_PROGRESS"
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                  }
+                `}
+              >
+                In Progress ({stats.inProgress})
+              </button>
+              <button
+                onClick={() => setFilter("DONE")}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  ${
+                    filter === "DONE"
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                  }
+                `}
+              >
+                Done ({stats.done})
+              </button>
+            </>
+          )}
         </div>
 
         <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all">

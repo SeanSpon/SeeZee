@@ -1,17 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { Save } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Save, CheckCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function ClientSettingsPage() {
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (session?.user) {
+      setName(session.user.name || "");
+      // Fetch additional user data
+      fetch("/api/client/profile")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.profile) {
+            setCompany(data.profile.company || "");
+            setPhone(data.profile.phone || "");
+          }
+        });
+    }
+  }, [session]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement API call to update profile
-    console.log({ name, company, phone });
+    setLoading(true);
+    setSuccess(false);
+
+    try {
+      const response = await fetch("/api/client/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, company, phone }),
+      });
+
+      if (response.ok) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,10 +99,20 @@ export default function ClientSettingsPage() {
           </div>
           <button
             type="submit"
-            className="w-full px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all font-medium flex items-center justify-center gap-2"
+            disabled={loading}
+            className="w-full px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Save className="w-4 h-4" />
-            Save Changes
+            {success ? (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                Saved Successfully!
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                {loading ? "Saving..." : "Save Changes"}
+              </>
+            )}
           </button>
         </form>
       </div>

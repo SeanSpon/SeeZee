@@ -11,3 +11,5 @@ export * from "./learning";
 export * from "./links";
 export * from "./database";
 export * from "./team";
+export * from "./ceo";
+

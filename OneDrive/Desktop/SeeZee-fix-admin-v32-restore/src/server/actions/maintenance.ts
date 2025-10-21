@@ -8,8 +8,7 @@ import { db } from "@/server/db";
 import { requireRole } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { logActivity } from "./activity";
-
-export type MaintenanceStatus = "ACTIVE" | "UPCOMING" | "OVERDUE" | "COMPLETED" | "CANCELLED";
+import { MaintenanceStatus } from "@prisma/client";
 
 interface CreateMaintenanceParams {
   projectId: string;
@@ -91,7 +90,7 @@ export async function createMaintenanceSchedule(params: CreateMaintenanceParams)
         description: params.description,
         scheduledFor: params.scheduledFor,
         assignedToId: params.assignedToId,
-        status: new Date() > params.scheduledFor ? "OVERDUE" : "UPCOMING",
+        status: new Date() > params.scheduledFor ? MaintenanceStatus.OVERDUE : MaintenanceStatus.UPCOMING,
       },
       include: {
         project: {
@@ -130,7 +129,7 @@ export async function updateMaintenanceStatus(scheduleId: string, status: Mainte
       where: { id: scheduleId },
       data: {
         status,
-        ...(status === "COMPLETED" && { completedAt: new Date() }),
+        ...(status === MaintenanceStatus.COMPLETED && { completedAt: new Date() }),
       },
     });
 
@@ -151,22 +150,56 @@ export async function getMaintenanceStats() {
   try {
     const [total, upcoming, overdue, completed, active] = await Promise.all([
       db.maintenanceSchedule.count(),
-      db.maintenanceSchedule.count({ where: { status: "UPCOMING" } }),
-      db.maintenanceSchedule.count({ where: { status: "OVERDUE" } }),
-      db.maintenanceSchedule.count({ where: { status: "COMPLETED" } }),
-      db.maintenanceSchedule.count({ where: { status: "ACTIVE" } }),
+      db.maintenanceSchedule.count({ where: { status: MaintenanceStatus.UPCOMING } }),
+      db.maintenanceSchedule.count({ where: { status: MaintenanceStatus.OVERDUE } }),
+      db.maintenanceSchedule.count({ where: { status: MaintenanceStatus.COMPLETED } }),
+      db.maintenanceSchedule.count({ where: { status: MaintenanceStatus.ACTIVE } }),
     ]);
+
+    // Calculate average response time (hours between scheduledFor and completedAt)
+    const completedSchedules = await db.maintenanceSchedule.findMany({
+      where: {
+        status: MaintenanceStatus.COMPLETED,
+        completedAt: { not: null },
+      },
+      select: {
+        scheduledFor: true,
+        completedAt: true,
+      },
+      take: 50, // Last 50 completed tasks
+    });
+
+    let avgResponseTime = "N/A";
+    if (completedSchedules.length > 0) {
+      const totalHours = completedSchedules.reduce((sum, schedule) => {
+        if (schedule.completedAt) {
+          const hours = (schedule.completedAt.getTime() - schedule.scheduledFor.getTime()) / (1000 * 60 * 60);
+          return sum + Math.max(0, hours); // Only count positive values
+        }
+        return sum;
+      }, 0);
+
+      const avgHours = totalHours / completedSchedules.length;
+      
+      if (avgHours < 1) {
+        avgResponseTime = `${Math.round(avgHours * 60)}m`;
+      } else if (avgHours < 24) {
+        avgResponseTime = `${avgHours.toFixed(1)}h`;
+      } else {
+        avgResponseTime = `${(avgHours / 24).toFixed(1)}d`;
+      }
+    }
 
     return {
       success: true,
-      stats: { total, upcoming, overdue, completed, active },
+      stats: { total, upcoming, overdue, completed, active, avgResponseTime },
     };
   } catch (error) {
     console.error("Failed to fetch maintenance stats:", error);
     return {
       success: false,
       error: "Failed to fetch maintenance stats",
-      stats: { total: 0, upcoming: 0, overdue: 0, completed: 0, active: 0 },
+      stats: { total: 0, upcoming: 0, overdue: 0, completed: 0, active: 0, avgResponseTime: "N/A" },
     };
   }
 }
