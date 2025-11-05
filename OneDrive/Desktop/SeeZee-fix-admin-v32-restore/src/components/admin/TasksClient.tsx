@@ -62,6 +62,13 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const [updating, setUpdating] = useState<string | null>(null);
   const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    priority: "MEDIUM",
+    dueDate: "",
+  });
 
   const filteredTasks = tasks.filter((t) => {
     if (filter === "all") return true;
@@ -116,6 +123,25 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
     } else {
       setSelectedTasks(filteredTasks.map((t) => t.id));
     }
+  };
+
+  const handleCreateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBulkActionLoading(true);
+    
+    const result = await createTask({
+      title: newTask.title,
+      description: newTask.description,
+      priority: newTask.priority as any,
+      dueDate: newTask.dueDate ? new Date(newTask.dueDate) : undefined,
+    });
+
+    if (result.success) {
+      setShowCreateModal(false);
+      setNewTask({ title: "", description: "", priority: "MEDIUM", dueDate: "" });
+      router.refresh();
+    }
+    setBulkActionLoading(false);
   };
 
   const columns: Column<Task>[] = [
@@ -365,11 +391,84 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
           )}
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all"
+          onClick={() => setShowCreateModal(true)}
+        >
           <Plus className="w-4 h-4" />
           New Task
         </button>
       </div>
+
+      {/* Create Task Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowCreateModal(false)}>
+          <div className="bg-slate-900 border border-white/10 rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-white mb-4">Create New Task</h3>
+            <form onSubmit={handleCreateTask} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Title</label>
+                <input
+                  type="text"
+                  value={newTask.title}
+                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                  required
+                  className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white"
+                  placeholder="Task title"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Description</label>
+                <textarea
+                  value={newTask.description}
+                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                  className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white"
+                  rows={3}
+                  placeholder="Task description"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Priority</label>
+                  <select
+                    value={newTask.priority}
+                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+                    className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white"
+                  >
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Due Date</label>
+                  <input
+                    type="date"
+                    value={newTask.dueDate}
+                    onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                    className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={bulkActionLoading}
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors disabled:opacity-50"
+                >
+                  {bulkActionLoading ? "Creating..." : "Create Task"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Tasks Table */}
       <SectionCard>

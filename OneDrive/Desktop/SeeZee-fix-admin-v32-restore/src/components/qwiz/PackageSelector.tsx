@@ -25,17 +25,55 @@ const item = {
 export function PackageSelector() {
   const { setPackage, setFeatures, setStep } = useQwizStore();
   const [showComparison, setShowComparison] = useState(false);
+  const [processingPackage, setProcessingPackage] = useState<string | null>(null);
 
-  const handleSelectPackage = (tier: PackageTier) => {
-    // Set package
-    setPackage(tier);
+  const handleSelectPackage = async (tier: PackageTier) => {
+    setProcessingPackage(tier);
+    
+    try {
+      // Set package
+      setPackage(tier);
 
-    // Pre-select all included features
-    const lockedFeatures = getLockedFeatures(tier);
-    setFeatures(lockedFeatures);
+      // Pre-select all included features
+      const lockedFeatures = getLockedFeatures(tier);
+      setFeatures(lockedFeatures);
 
-    // Move to feature builder
-    setStep(1);
+      // Calculate totals
+      const { calculateTotals } = await import('@/lib/qwiz/pricing');
+      const totals = calculateTotals({
+        package: tier,
+        selectedFeatures: lockedFeatures,
+        rush: false,
+      });
+      const { setTotals } = useQwizStore.getState();
+      setTotals(totals);
+
+      // Create Stripe checkout session and redirect
+      const response = await fetch('/api/checkout/package', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          packageId: tier,
+          features: lockedFeatures,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create checkout session');
+      }
+
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      alert(error.message || 'Failed to start checkout. Please try again.');
+      setProcessingPackage(null);
+    }
   };
 
   // Get all unique features across all packages for comparison
@@ -180,10 +218,12 @@ export function PackageSelector() {
                 {/* Select Button */}
                 <button
                   onClick={() => handleSelectPackage(pkg.id)}
+                  disabled={!!processingPackage}
                   className={`
                     w-full py-3 px-6 rounded-xl font-semibold
                     flex items-center justify-center gap-2
                     transition-all duration-300
+                    disabled:opacity-50 disabled:cursor-not-allowed
                     ${
                       pkg.badge
                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl'
@@ -191,8 +231,17 @@ export function PackageSelector() {
                     }
                   `}
                 >
-                  Select {pkg.title}
-                  <ArrowRight className="w-5 h-5" />
+                  {processingPackage === pkg.id ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Select {pkg.title}
+                      <ArrowRight className="w-5 h-5" />
+                    </>
+                  )}
                 </button>
               </div>
             </motion.div>
@@ -330,9 +379,11 @@ export function PackageSelector() {
                 <div key={pkg.id} className="flex justify-center">
                   <button
                     onClick={() => handleSelectPackage(pkg.id)}
+                    disabled={!!processingPackage}
                     className={`
                       px-6 py-2 rounded-lg font-semibold text-sm
-                      transition-all duration-300
+                      transition-all duration-300 flex items-center gap-2
+                      disabled:opacity-50 disabled:cursor-not-allowed
                       ${
                         pkg.badge
                           ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
@@ -340,7 +391,14 @@ export function PackageSelector() {
                       }
                     `}
                   >
-                    Select {pkg.title}
+                    {processingPackage === pkg.id ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>Select {pkg.title}</>
+                    )}
                   </button>
                 </div>
               ))}

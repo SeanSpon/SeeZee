@@ -1,6 +1,6 @@
 "use client"
 import { motion, HTMLMotionProps } from "framer-motion"
-import { ReactNode } from "react"
+import { ReactNode, useRef } from "react"
 
 interface FadeInProps {
   children: ReactNode
@@ -21,6 +21,43 @@ export function FadeIn({ children, delay = 0, className = "" }: FadeInProps) {
   )
 }
 
+// Scroll-triggered fade in component (Linear-style)
+interface ScrollRevealProps {
+  children: ReactNode
+  delay?: number
+  className?: string
+  direction?: "up" | "down" | "left" | "right"
+}
+
+export function ScrollReveal({ children, delay = 0, className = "", direction = "up" }: ScrollRevealProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ 
+        opacity: 0, 
+        y: direction === "up" ? 50 : direction === "down" ? -50 : 0,
+        x: direction === "left" ? 50 : direction === "right" ? -50 : 0
+      }}
+      whileInView={{ 
+        opacity: 1, 
+        y: 0,
+        x: 0
+      }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ 
+        duration: 0.8, 
+        delay, 
+        ease: [0.16, 1, 0.3, 1] 
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 interface GlowingTextProps {
   children: ReactNode
   className?: string
@@ -34,8 +71,18 @@ export function GlowingText({ children, className = "" }: GlowingTextProps) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-xl"></div>
-      <div className="relative bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 blur-2xl"
+        animate={{
+          opacity: [0.3, 0.6, 0.3],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <div className="relative bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
         {children}
       </div>
     </motion.div>

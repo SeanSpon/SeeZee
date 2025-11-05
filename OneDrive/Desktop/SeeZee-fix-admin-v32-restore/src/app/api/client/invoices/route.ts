@@ -22,46 +22,53 @@ export async function GET(req: NextRequest) {
     });
 
     if (!lead?.organizationId) {
-      return NextResponse.json({ items: [] });
+      return NextResponse.json({
+        invoices: [],
+        totalSpent: 0,
+        pendingAmount: 0,
+        totalInvoices: 0,
+      });
     }
 
     const invoices = await prisma.invoice.findMany({
       where: { organizationId: lead.organizationId },
       orderBy: { createdAt: "desc" },
       take: 50,
-      select: {
-        id: true,
-        number: true,
-        title: true,
-        amount: true,
-        total: true,
-        currency: true,
-        status: true,
-        dueDate: true,
-        paidAt: true,
-        stripeInvoiceId: true,
-        createdAt: true,
+      include: {
+        project: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
+    const totalSpent = invoices
+      .filter((inv) => inv.status === "PAID")
+      .reduce((sum, inv) => sum + Number(inv.total), 0);
+
+    const pendingAmount = invoices
+      .filter((inv) => inv.status === "SENT")
+      .reduce((sum, inv) => sum + Number(inv.total), 0);
+
     return NextResponse.json({
-      items: invoices.map((inv) => ({
+      invoices: invoices.map((inv) => ({
         id: inv.id,
-        number: inv.number,
-        title: inv.title,
-        amount: inv.total,
-        currency: inv.currency,
+        number: inv.number || inv.id.slice(0, 8),
+        total: inv.total,
         status: inv.status,
+        createdAt: inv.createdAt,
         dueDate: inv.dueDate,
         paidAt: inv.paidAt,
-        // Add payUrl for unpaid invoices (Stripe hosted page)
+        project: inv.project,
         payUrl:
           inv.status === "SENT" && inv.stripeInvoiceId
             ? `https://invoice.stripe.com/i/${inv.stripeInvoiceId}`
             : null,
-        pdfUrl: null, // TODO: implement PDF generation
-        createdAt: inv.createdAt,
       })),
+      totalSpent,
+      pendingAmount,
+      totalInvoices: invoices.length,
     });
   } catch (error: any) {
     console.error("[GET /api/client/invoices]", error);

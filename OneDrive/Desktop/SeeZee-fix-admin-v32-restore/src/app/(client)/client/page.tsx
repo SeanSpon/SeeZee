@@ -1,5 +1,5 @@
-﻿import ClientOverviewClient from "./components/OverviewClient";
+﻿import { redirect } from "next/navigation";
 
-export default async function ClientOverviewPage() {
-  return <ClientOverviewClient />;
+export default function ClientIndexPage() {
+  redirect("/client/overview");
 }

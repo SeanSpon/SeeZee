@@ -36,21 +36,6 @@ const navItems = [
     icon: <FolderKanban className="w-5 h-5" />,
   },
   {
-    label: "Progress",
-    href: "/client/progress",
-    icon: <TrendingUp className="w-5 h-5" />,
-  },
-  {
-    label: "Messages",
-    href: "/client/messages",
-    icon: <MessageSquare className="w-5 h-5" />,
-  },
-  {
-    label: "Invoices",
-    href: "/client/invoices",
-    icon: <Receipt className="w-5 h-5" />,
-  },
-  {
     label: "Files",
     href: "/client/files",
     icon: <Upload className="w-5 h-5" />,

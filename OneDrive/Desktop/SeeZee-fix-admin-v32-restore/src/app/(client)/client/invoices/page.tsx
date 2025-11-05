@@ -1,146 +1,199 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+"use client";
 
-export default async function ClientInvoicesPage() {
-  const session = await auth();
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { CreditCard, DollarSign, AlertCircle, CheckCircle, Eye } from "lucide-react";
+import { fetchJson } from "@/lib/client-api";
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+interface Invoice {
+  id: string;
+  number: string;
+  total: number;
+  status: string;
+  createdAt: string;
+  dueDate?: string;
+  paidAt?: string;
+  project?: { name: string };
+}
 
-  // Allow all authenticated users to view
+interface InvoicesData {
+  invoices: Invoice[];
+  totalSpent: number;
+  pendingAmount: number;
+  totalInvoices: number;
+}
 
-  // Fetch client's invoices via project's lead relationship
-  const invoices = await prisma.invoice.findMany({
-    where: {
-      project: {
-        lead: {
-          email: session.user.email!,
-        },
-      },
-    },
-    include: {
-      project: {
-        select: {
-          name: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+export default function ClientInvoicesPage() {
+  const [data, setData] = useState<InvoicesData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchJson<InvoicesData>("/api/client/invoices")
+      .then((response) => {
+        // Ensure we always have the expected structure
+        setData({
+          invoices: response.invoices || [],
+          totalSpent: response.totalSpent || 0,
+          pendingAmount: response.pendingAmount || 0,
+          totalInvoices: response.totalInvoices || 0,
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch invoices:", error);
+        // Set empty state on error
+        setData({
+          invoices: [],
+          totalSpent: 0,
+          pendingAmount: 0,
+          totalInvoices: 0,
+        });
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "paid":
-        return "bg-green-500/20 text-green-300 border-green-500/30";
-      case "sent":
-        return "bg-blue-500/20 text-blue-300 border-blue-500/30";
-      case "overdue":
-        return "bg-red-500/20 text-red-300 border-red-500/30";
-      default:
-        return "bg-slate-500/20 text-slate-300 border-slate-500/30";
-    }
+    const config: Record<string, { bg: string; text: string; border: string; label: string; gradient: string }> = {
+      PAID: { bg: "bg-emerald-500/20", text: "text-emerald-300", border: "border-emerald-500/30", label: "Paid", gradient: "from-emerald-400 to-green-400" },
+      SENT: { bg: "bg-blue-500/20", text: "text-blue-300", border: "border-blue-500/30", label: "Sent", gradient: "from-blue-400 to-cyan-400" },
+      OVERDUE: { bg: "bg-red-500/20", text: "text-red-300", border: "border-red-500/30", label: "Overdue", gradient: "from-red-400 to-rose-400" },
+      DRAFT: { bg: "bg-slate-500/20", text: "text-slate-300", border: "border-slate-500/30", label: "Draft", gradient: "from-slate-400 to-gray-400" },
+    };
+    return config[status] || { bg: "bg-slate-500/20", text: "text-slate-300", border: "border-slate-500/30", label: status, gradient: "from-slate-400 to-gray-400" };
   };
 
-  const totalSpent = invoices
-    .filter((inv) => inv.status === "PAID")
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="skeleton h-32 rounded-2xl" />
+          ))}
+        </div>
+        <div className="skeleton h-64 rounded-2xl" />
+      </div>
+    );
+  }
 
-  const pendingAmount = invoices
-    .filter((inv) => inv.status === "SENT")
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+  if (!data) {
+    return (
+      <div className="seezee-glass p-12 text-center rounded-2xl">
+        <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-400/60" />
+        <h3 className="text-lg font-semibold text-white mb-2">Failed to load</h3>
+        <p className="text-white/60">Please refresh the page to try again.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-white">Invoices</h2>
-        <p className="text-slate-400 mt-1">View and manage your project invoices</p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Invoices & Payments</h1>
+        <p className="text-white/60">View and manage your project invoices</p>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-          <p className="text-sm text-slate-400 mb-2">Total Invoices</p>
-          <p className="text-3xl font-bold text-white">{invoices.length}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="seezee-glass p-5 rounded-xl">
+          <div className="flex items-start justify-between mb-3">
+            <div className="p-2 bg-blue-500/20 rounded-lg">
+              <CreditCard className="w-5 h-5 text-blue-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-white mb-1">
+            {data.totalInvoices || 0}
+          </div>
+          <div className="text-sm text-white/60">Total Invoices</div>
         </div>
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-          <p className="text-sm text-slate-400 mb-2">Total Spent</p>
-          <p className="text-3xl font-bold text-green-400">
-            ${(totalSpent / 100).toFixed(2)}
-          </p>
+
+        <div className="seezee-glass p-5 rounded-xl">
+          <div className="flex items-start justify-between mb-3">
+            <div className="p-2 bg-emerald-500/20 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-emerald-400 mb-1">
+            ${((data.totalSpent || 0) / 100).toFixed(2)}
+          </div>
+          <div className="text-sm text-white/60">Total Spent</div>
         </div>
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-          <p className="text-sm text-slate-400 mb-2">Pending Payment</p>
-          <p className="text-3xl font-bold text-amber-400">
-            ${(pendingAmount / 100).toFixed(2)}
-          </p>
+
+        <div className="seezee-glass p-5 rounded-xl">
+          <div className="flex items-start justify-between mb-3">
+            <div className="p-2 bg-amber-500/20 rounded-lg">
+              <DollarSign className="w-5 h-5 text-amber-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-amber-400 mb-1">
+            ${((data.pendingAmount || 0) / 100).toFixed(2)}
+          </div>
+          <div className="text-sm text-white/60">Pending Payment</div>
         </div>
       </div>
 
       {/* Invoices Table */}
-      {invoices.length === 0 ? (
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-12 text-center">
-          <p className="text-slate-400">No invoices yet</p>
+      {!data.invoices || data.invoices.length === 0 ? (
+        <div className="seezee-glass p-12 text-center rounded-xl">
+          <CreditCard className="w-16 h-16 text-white/20 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">No invoices yet</h3>
+          <p className="text-white/60">Invoices will appear here once projects are started</p>
         </div>
       ) : (
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-slate-900/50 border-b border-white/5">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
-                  Invoice
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
-                  Project
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
-                  Amount
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
-                  Issued
-                </th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {invoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 text-sm text-white font-mono">
-                    #{invoice.id.slice(0, 8)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-white">
-                    {invoice.project?.name || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-white font-semibold">
-                    ${Number(invoice.total).toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-                        invoice.status
-                      )}`}
-                    >
-                      {invoice.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-400">
-                    {new Date(invoice.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-cyan-400 hover:text-cyan-300 text-sm font-medium">
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="seezee-glass rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-white/10">
+            <h3 className="text-lg font-bold text-white">All Invoices</h3>
+          </div>
+          <div className="divide-y divide-white/5">
+            {data.invoices.map((invoice) => {
+              const statusConfig = getStatusColor(invoice.status);
+              return (
+                <div
+                  key={invoice.id}
+                  className="p-5 hover:bg-white/5 transition-all group"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6 flex-1">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h4 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">
+                            #{invoice.number}
+                          </h4>
+                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}>
+                            {statusConfig.label}
+                          </span>
+                        </div>
+                        <p className="text-sm text-white/60 mb-1">
+                          {invoice.project?.name || "N/A"}
+                        </p>
+                        <p className="text-xs text-white/40">
+                          Issued {new Date(invoice.createdAt).toLocaleDateString()}
+                          {invoice.dueDate && ` • Due ${new Date(invoice.dueDate).toLocaleDateString()}`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-white mb-1">
+                          ${(Number(invoice.total) / 100).toFixed(2)}
+                        </div>
+                        {invoice.status === "PAID" && invoice.paidAt && (
+                          <p className="text-xs text-emerald-400">Paid {new Date(invoice.paidAt).toLocaleDateString()}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 ml-6">
+                      <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 hover:border-blue-400/30 transition-all">
+                        <Eye className="w-4 h-4 text-white/60 group-hover:text-blue-400 transition-colors" />
+                      </button>
+                      {invoice.status === "SENT" && (
+                        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg transition-colors">
+                          Pay Now
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

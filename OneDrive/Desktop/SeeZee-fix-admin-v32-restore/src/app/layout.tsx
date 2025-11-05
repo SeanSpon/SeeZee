@@ -14,9 +14,46 @@ import { Toaster } from '../components/ui/toaster'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'SeeZee Studio - Modern Web Development | Next.js, Tailwind, Full-Stack Solutions',
+  title: 'SeeZee Studio | Custom Web & App Development',
   description:
-    'SeeZee Studio is a small dev studio led by Sean & Zach, specializing in modern full-stack web applications with Next.js, Tailwind, Prisma, PostgreSQL, and Vercel deployment.',
+    'Fast, reliable web applications and databases for small teams and big ideas. Next.js, React, and modern tech stack. Louisville, KY.',
+  keywords: ['web development', 'app development', 'Next.js', 'React', 'Louisville KY', 'custom software', 'full-stack development'],
+  authors: [{ name: 'Sean & Zach' }],
+  creator: 'SeeZee Studio',
+  publisher: 'SeeZee Studio',
+  openGraph: {
+    title: 'SeeZee Studio | Custom Web Development',
+    description: 'Websites, apps, and databases that ship fast and look sharp.',
+    url: 'https://see-zee.com',
+    siteName: 'SeeZee Studio',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'SeeZee Studio - Custom Web Development',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SeeZee Studio',
+    description: 'Custom web development for small teams',
+    images: ['/og-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -24,8 +61,34 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Structured data for SEO
+  const schemaOrg = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "SeeZee Studio",
+    "description": "Custom web and app development",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Louisville",
+      "addressRegion": "KY",
+      "addressCountry": "US"
+    },
+    "founder": [
+      {"@type": "Person", "name": "Sean"},
+      {"@type": "Person", "name": "Zach"}
+    ],
+    "url": "https://see-zee.com",
+    "priceRange": "$$"
+  };
+
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+        />
+      </head>
       <body className={inter.className}>
         <Providers>
           <Background />

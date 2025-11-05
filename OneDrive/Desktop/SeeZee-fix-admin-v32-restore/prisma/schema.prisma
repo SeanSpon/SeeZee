@@ -50,6 +50,11 @@ enum RequestStatus {
   ARCHIVED
 }
 
+enum RequestSource {
+  MANUAL
+  AI
+}
+
 enum BudgetTier {
   UNKNOWN
   MICRO
@@ -70,12 +75,18 @@ enum ServiceType {
 }
 
 enum ProjectStatus {
-  LEAD
-  PAID
-  IN_PROGRESS
-  REVIEW
-  COMPLETED
-  CANCELLED
+  PLANNING      // Initial scoping, not yet paid
+  LEAD          // Legacy status (can remove after migration)
+  PAID          // Deposit paid, ready to start
+  ACTIVE        // Work in progress
+  DESIGN        // Design phase
+  BUILD         // Development phase  
+  IN_PROGRESS   // Legacy (same as ACTIVE)
+  REVIEW        // Client review stage
+  LAUNCH        // Going live
+  COMPLETED     // Fully complete
+  ON_HOLD       // Temporarily paused
+  CANCELLED     // Canceled project
 }
 
 enum InvoiceStatus {
@@ -335,6 +346,7 @@ model Project {
   startDate       DateTime?
   endDate         DateTime?
   budget          Decimal?
+  githubRepo      String?       // e.g. "owner/repo" for GitHub API integration
   
   organizationId  String
   assigneeId      String?
@@ -356,6 +368,8 @@ model Project {
   requests        Request[]
   subscriptions   Subscription[]
   maintenanceSchedules MaintenanceSchedule[]
+  feedEvents      FeedEvent[]
+  messageThreads  MessageThread[]
 
   @@map("projects")
 }
@@ -739,16 +753,17 @@ model Subscription {
 
 // Client requests for maintenance/changes
 model Request {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   projectId String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   
   title     String
-  details   String   @db.Text
-  state     String   @default("new") // new, in_progress, blocked, done
+  details   String        @db.Text
+  state     String        @default("new") // new, in_progress, blocked, done
+  source    RequestSource @default(MANUAL) // MANUAL or AI
   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@map("requests")
 }
@@ -1069,4 +1084,54 @@ model Completion {
   @@index([userId])
   @@index([status])
   @@map("completions")
+}
+
+// ==========================================
+// PHASE 1: ADD-ONLY MODELS FOR WORKFLOW
+// ==========================================
+
+// Unified activity feed for projects
+model FeedEvent {
+  id         String   @id @default(cuid())
+  projectId  String
+  type       String   // lead.created, project.created, status.changed, invoice.created, payment.succeeded, commit.summary, message.sent, subscription.updated
+  payload    Json?
+  createdAt  DateTime @default(now())
+
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt])
+  @@map("feed_events")
+}
+
+// Threaded messaging system (distinct from simple Message contact forms)
+model MessageThread {
+  id        String   @id @default(cuid())
+  projectId String?
+  clientId  String
+  subject   String
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project?    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messages  ThreadMessage[]
+
+  @@index([projectId])
+  @@index([clientId])
+  @@map("message_threads")
+}
+
+model ThreadMessage {
+  id         String   @id @default(cuid())
+  threadId   String
+  senderId   String
+  role       String   // client, admin, ceo, ai
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  thread     MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("thread_messages")
 }

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { Prisma, ProjectStatus, InvoiceStatus, PaymentStatus, LeadStatus } from '@prisma/client'
+import { feedHelpers } from '@/lib/feed/emit'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -245,6 +246,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       }
     })
 
+    // Emit feed events
+    await feedHelpers.projectCreated(project.id, project.name);
+    await feedHelpers.paymentSucceeded(project.id, depositAmount, depositInvoice.id);
+
     // Create notification for client
     await prisma.notification.create({
       data: {
@@ -297,6 +302,11 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
           processedAt: new Date(),
         }
       })
+
+      // Emit feed event
+      if (dbInvoice.projectId) {
+        await feedHelpers.paymentSucceeded(dbInvoice.projectId, invoice.amount_paid / 100, dbInvoice.id);
+      }
 
       console.log('Invoice marked as paid:', dbInvoice.id)
     }

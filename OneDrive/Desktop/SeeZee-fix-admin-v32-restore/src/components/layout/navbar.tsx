@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -13,8 +13,18 @@ import { MobileMenu } from "@/components/navbar/MobileMenu";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: session, status } = useSession();
   const pathname = usePathname();
+
+  // Add scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Determine user context and role
   const isCEO = session?.user?.role === "CEO";
@@ -30,7 +40,14 @@ export function Navbar() {
 
   return (
     <>
-      <header role="banner" className="fixed inset-x-0 top-0 z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/10">
+      <header 
+        role="banner" 
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-slate-950/95 backdrop-blur-xl shadow-lg shadow-black/20' 
+            : 'bg-slate-950/60 backdrop-blur-xl'
+        } border-b border-white/10`}
+      >
         <div className="max-w-7xl mx-auto h-[var(--nav-h)] flex items-center gap-3 px-4 lg:px-6">
           {/* Mobile Menu Toggle */}
           <button

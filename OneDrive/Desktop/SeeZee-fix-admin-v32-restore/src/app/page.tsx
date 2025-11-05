@@ -1,20 +1,20 @@
 import { Hero } from '../components/sections/hero'
+import { DashboardShowcase } from '../components/sections/dashboard-showcase'
 import { Services } from '../components/sections/services-new'
-import { Portfolio } from '../components/sections/portfolio'
-import { PortalPreview } from '../components/sections/portal-preview'
-import { Testimonials } from '../components/sections/testimonials'
 import { About } from '../components/sections/about'
+import { Portfolio } from '../components/sections/portfolio'
+import { Testimonials } from '../components/sections/testimonials'
 import { CtaBand } from '../components/sections/cta-band'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
       <Hero />
+      <DashboardShowcase />
       <Services />
-      <Portfolio />
-      <PortalPreview />
-      <Testimonials />
       <About />
+      <Portfolio />
+      <Testimonials />
       <CtaBand />
     </div>
   )

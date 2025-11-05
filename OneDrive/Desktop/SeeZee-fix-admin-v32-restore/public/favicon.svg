@@ -1,0 +1,28 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" fill="#000000"/>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feOffset in="coloredBlur" dx="0" dy="0" result="offsetBlur"/>
+      <feFlood flood-color="#3b82f6" flood-opacity="0.8"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <text 
+    x="16" 
+    y="22" 
+    font-family="Arial, sans-serif" 
+    font-size="20" 
+    font-weight="900" 
+    fill="#ffffff" 
+    text-anchor="middle"
+    filter="url(#glow)"
+  >
+    SZ
+  </text>
+</svg>
+

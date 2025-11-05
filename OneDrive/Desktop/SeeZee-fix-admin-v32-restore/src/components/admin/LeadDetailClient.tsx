@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Package, DollarSign, FileText, Mail, Phone, Building, Calendar, CheckCircle, XCircle } from "lucide-react";
 import { updateLeadStatus } from "@/server/actions";
+import { approveLeadAndCreateProject } from "@/server/actions/leads";
 import { formatPrice } from "@/lib/qwiz/pricing";
 import { getPackage } from "@/lib/qwiz/packages";
 
@@ -34,6 +35,9 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
   const router = useRouter();
   const [status, setStatus] = useState(lead.status);
   const [updating, setUpdating] = useState(false);
+  const [approving, setApproving] = useState(false);
+  const [approvalError, setApprovalError] = useState<string | null>(null);
+  const [approvalSuccess, setApprovalSuccess] = useState(false);
 
   const handleStatusChange = async (newStatus: string) => {
     setUpdating(true);
@@ -44,6 +48,26 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
     }
     setUpdating(false);
     router.refresh();
+  };
+
+  const handleApproveAndCreateProject = async () => {
+    setApproving(true);
+    setApprovalError(null);
+    
+    try {
+      const result = await approveLeadAndCreateProject(lead.id);
+      
+      setApprovalSuccess(true);
+      setStatus("CONVERTED");
+      // Redirect to the new project after a short delay
+      setTimeout(() => {
+        router.push(`/admin/pipeline/projects`);
+      }, 2000);
+    } catch (error) {
+      setApprovalError(error instanceof Error ? error.message : "An unexpected error occurred");
+    } finally {
+      setApproving(false);
+    }
   };
 
   const questionnaireData = questionnaire?.data as any;
@@ -274,7 +298,33 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
           {/* Quick Actions */}
           <div className="glass p-6 rounded-lg">
             <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+            
+            {/* Success Message */}
+            {approvalSuccess && (
+              <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+                ✓ Project created successfully! Redirecting...
+              </div>
+            )}
+            
+            {/* Error Message */}
+            {approvalError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                {approvalError}
+              </div>
+            )}
+            
             <div className="space-y-2">
+              {/* CEO Approval Button - Primary Action */}
+              {lead.status !== 'CONVERTED' && questionnaireData?.totals && (
+                <button
+                  onClick={handleApproveAndCreateProject}
+                  disabled={approving || approvalSuccess}
+                  className="block w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg text-center font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
+                >
+                  {approving ? "Creating Project..." : "✓ Approve & Create Project"}
+                </button>
+              )}
+              
               <a
                 href={`mailto:${lead.email}`}
                 className="block w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center font-medium transition-colors"

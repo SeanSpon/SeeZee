@@ -745,3 +745,166 @@ footer{ position: relative; z-index: 10; }
 /* Optional: chart canvas color fix on dark backgrounds */
 .recharts-default-tooltip{ backdrop-filter: blur(8px); }
 
+/* ===== PREMIUM CLIENT DASHBOARD DESIGN SYSTEM ===== */
+/* Agency-grade glass morphism + buttery interactions */
+
+:root {
+  /* Premium dark palette */
+  --client-bg: 15 15 18;           /* #0f0f12 - deep black */
+  --client-panel: 18 18 22;        /* #121216 - panel bg */
+  --client-glass: 255 255 255 / 0.06;
+  --client-border: 255 255 255 / 0.10;
+  --client-ring: 56 189 248;       /* cyan-400 */
+  --client-brand-1: 88 101 242;    /* periwinkle */
+  --client-brand-2: 59 130 246;    /* blue-500 */
+  
+  /* Spacing scale (8px base) */
+  --sp-1: 8px;
+  --sp-2: 12px;
+  --sp-3: 16px;
+  --sp-4: 24px;
+  --sp-5: 32px;
+  --sp-6: 48px;
+}
+
+/* Premium glass effect with layered shadows */
+.glass {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.glass:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.25),
+    0 12px 40px rgba(56, 189, 248, 0.08);
+}
+
+/* Unified card with consistent padding */
+.card {
+  @apply glass p-5 md:p-6;
+}
+
+/* Page container with max-width */
+.page {
+  @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
+}
+
+/* Section title typography */
+.section-title {
+  @apply text-lg md:text-xl font-semibold tracking-tight text-white;
+}
+
+/* Subtle text for descriptions */
+.subtle {
+  @apply text-white/60;
+}
+
+/* Buttery active state */
+.buttery-tap {
+  @apply transition-transform active:scale-[0.99];
+}
+
+/* Skeleton loader */
+.skeleton {
+  @apply animate-pulse bg-white/5 rounded-xl;
+}
+
+/* Hover glow effect */
+.hover-glow {
+  @apply transition-shadow duration-300;
+}
+
+.hover-glow:hover {
+  box-shadow: 
+    0 0 0 1px rgba(56, 189, 248, 0.25),
+    0 12px 40px rgba(56, 189, 248, 0.08);
+}
+
+/* Focus ring for accessibility */
+.focus-ring {
+  @apply outline-none focus:ring-2 focus:ring-cyan-400/40 focus:ring-offset-2 focus:ring-offset-slate-900;
+}
+
+/* Empty state styling */
+.empty-state {
+  @apply text-center py-12 px-4 text-white/60;
+}
+
+/* Page header component */
+.page-header {
+  @apply flex items-center justify-between mb-6;
+}
+
+/* Status pill base */
+.status-pill {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium;
+}
+
+/* Progress bar container */
+.progress-bar {
+  @apply h-2 w-full rounded-full bg-white/10 overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500;
+}
+
+/* Drag-drop active state */
+.drag-active {
+  @apply ring-2 ring-cyan-400/40 bg-white/10 border-cyan-400/50;
+}
+
+/* Client-specific gradient backgrounds */
+.client-gradient-1 {
+  background: linear-gradient(135deg, rgb(88 101 242 / 0.1) 0%, rgb(59 130 246 / 0.1) 100%);
+}
+
+.client-gradient-2 {
+  background: linear-gradient(135deg, rgb(56 189 248 / 0.1) 0%, rgb(14 165 233 / 0.1) 100%);
+}
+
+/* Smooth transitions everywhere */
+.smooth-transition {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Micro-animations */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+.float-gentle {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* Badge variants */
+.badge-new {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  @apply bg-cyan-500/15 text-cyan-300 border border-cyan-300/20;
+}
+
+.badge-success {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  @apply bg-emerald-500/15 text-emerald-300 border border-emerald-300/20;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  @apply bg-amber-500/15 text-amber-300 border border-amber-300/20;
+}
+
+/* Typography utilities */
+.text-gradient {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
+}
+/* Spacing utilities matching 8px scale */
+.space-y-tight { @apply space-y-3; }
+.space-y-normal { @apply space-y-4 md:space-y-6; }
+.space-y-loose { @apply space-y-6 md:space-y-8; }
+
+

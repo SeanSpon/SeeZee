@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { User, LayoutDashboard, Shield, Crown, CreditCard, Settings, Moon, Sun, Monitor, LogOut } from "lucide-react";
+import { useTheme } from "@/providers/ThemeProvider";
 
 interface ProfileMenuProps {
   user?: {
@@ -17,7 +18,9 @@ interface ProfileMenuProps {
 
 export function ProfileMenu({ user }: ProfileMenuProps) {
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("dark");
+  const { theme, setTheme } = useTheme();
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("dark");
+  const [themeMode, setThemeMode] = useState<"light" | "dark" | "system">("dark");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -35,6 +38,32 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
     if (role === "DEV") return "Developer";
     return "Client";
   };
+
+  // Detect system theme preference and load saved theme mode
+  useEffect(() => {
+    const savedThemeMode = localStorage.getItem("themeMode") as "light" | "dark" | "system" | null;
+    if (savedThemeMode) {
+      setThemeMode(savedThemeMode);
+      if (savedThemeMode === "system") {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        setSystemTheme(mediaQuery.matches ? "dark" : "light");
+        setTheme(mediaQuery.matches ? "dark" : "light");
+      }
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setSystemTheme(mediaQuery.matches ? "dark" : "light");
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setSystemTheme(e.matches ? "dark" : "light");
+      if (themeMode === "system") {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    };
+    
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [themeMode, setTheme]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -194,7 +223,13 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
               </Link>
 
               <Link
-                href="/settings"
+                href={
+                  pathname?.startsWith("/ceo") 
+                    ? "/ceo/settings" 
+                    : pathname?.startsWith("/admin")
+                    ? "/admin/settings"
+                    : "/client/settings"
+                }
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-white/5 transition-colors"
               >
@@ -210,8 +245,13 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
               </div>
               <div className="flex gap-1">
                 <button
-                  onClick={() => setTheme("light")}
-                  data-active={theme === "light"}
+                  onClick={() => {
+                    setTheme("light");
+                    setThemeMode("light");
+                    localStorage.setItem("theme", "light");
+                    localStorage.setItem("themeMode", "light");
+                  }}
+                  data-active={themeMode === "light"}
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/5 transition-colors
                              data-[active=true]:bg-white/10 data-[active=true]:text-white"
                   aria-label="Light theme"
@@ -220,8 +260,13 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
                   Light
                 </button>
                 <button
-                  onClick={() => setTheme("dark")}
-                  data-active={theme === "dark"}
+                  onClick={() => {
+                    setTheme("dark");
+                    setThemeMode("dark");
+                    localStorage.setItem("theme", "dark");
+                    localStorage.setItem("themeMode", "dark");
+                  }}
+                  data-active={themeMode === "dark"}
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/5 transition-colors
                              data-[active=true]:bg-white/10 data-[active=true]:text-white"
                   aria-label="Dark theme"
@@ -230,8 +275,13 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
                   Dark
                 </button>
                 <button
-                  onClick={() => setTheme("system")}
-                  data-active={theme === "system"}
+                  onClick={() => {
+                    setThemeMode("system");
+                    setTheme(systemTheme);
+                    localStorage.setItem("themeMode", "system");
+                    localStorage.setItem("theme", systemTheme);
+                  }}
+                  data-active={themeMode === "system"}
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/5 transition-colors
                              data-[active=true]:bg-white/10 data-[active=true]:text-white"
                   aria-label="System theme"
