@@ -54,6 +54,7 @@ export function CollapsibleNavGroup({
 
   // When collapsed, show only icons in a vertical stack
   if (collapsed) {
+    if (!Icon) return null;
     return (
       <div className={`space-y-1 ${className}`}>
         <div className="relative group">
@@ -66,7 +67,7 @@ export function CollapsibleNavGroup({
             }`}
             title={title}
           >
-            {Icon && <Icon className={`h-5 w-5 ${hasActiveItem ? "text-trinity-red" : ""}`} />}
+            <Icon className={`h-5 w-5 ${hasActiveItem ? "text-trinity-red" : ""}`} />
           </button>
           {/* Tooltip on hover */}
           <div className="absolute left-full ml-2 top-0 z-50 hidden group-hover:block">
@@ -83,6 +84,7 @@ export function CollapsibleNavGroup({
               <div className="space-y-1">
                 {items.map(({ href, label, icon: ItemIcon }) => {
                   const active = isActive(href);
+                  if (!ItemIcon) return null;
                   return (
                     <button
                       key={href}
@@ -106,6 +108,8 @@ export function CollapsibleNavGroup({
     );
   }
 
+  if (!Icon) return null;
+  
   return (
     <div className={`space-y-1 ${className}`}>
       <button
@@ -117,7 +121,7 @@ export function CollapsibleNavGroup({
         }`}
       >
         <div className="flex items-center gap-3">
-          {Icon && <Icon className={`h-5 w-5 ${hasActiveItem ? "text-trinity-red" : ""}`} />}
+          <Icon className={`h-5 w-5 ${hasActiveItem ? "text-trinity-red" : ""}`} />
           <span className="font-medium">{title}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -147,6 +151,7 @@ export function CollapsibleNavGroup({
             <div className="ml-4 space-y-1 border-l-2 border-gray-700 pl-4">
               {items.map(({ href, label, icon: ItemIcon }) => {
                 const active = isActive(href);
+                if (!ItemIcon) return null;
                 return (
                   <motion.button
                     key={href}

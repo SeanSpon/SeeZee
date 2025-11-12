@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const filters: Prisma.ProjectWhereInput[] = [{ OR: orConditions }];
 
     if (status) {
-      filters.push({ status });
+      filters.push({ status: status as any });
     }
 
     if (q) {

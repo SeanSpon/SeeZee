@@ -19,6 +19,8 @@ import {
   FiCreditCard,
   FiHelpCircle,
   FiMail,
+  FiChevronLeft,
+  FiChevronRight,
 } from "react-icons/fi";
 import Avatar from "@/components/ui/Avatar";
 import LogoHeader from "@/components/brand/LogoHeader";
@@ -36,6 +38,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   const router = useRouter();
   const { data: session } = useSession();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [hasActiveRequest, setHasActiveRequest] = useState(false);
   const [checkingRequests, setCheckingRequests] = useState(true);
   const [pendingTaskCount, setPendingTaskCount] = useState(0);
@@ -136,13 +139,27 @@ export default function ClientShell({ children }: { children: React.ReactNode })
       <div className="relative flex min-h-screen">
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-gray-800 bg-gray-900 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 transform border-r border-gray-800 bg-gray-900 transition-all duration-300 ease-in-out lg:translate-x-0 ${
+            isCollapsed ? "w-20 lg:w-20" : "w-64 lg:w-64"
+          } ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex h-full flex-col">
-            <div className="border-b border-gray-800 px-6 py-6">
-              <LogoHeader href="/client" />
+            <div className={`border-b border-gray-800 px-6 py-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+              {!isCollapsed && <LogoHeader href="/client" />}
+              {/* Desktop Collapse Toggle */}
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="hidden lg:flex p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-[color,background-color] duration-150 ease-in-out"
+                aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              >
+                {isCollapsed ? (
+                  <FiChevronRight className="w-5 h-5" />
+                ) : (
+                  <FiChevronLeft className="w-5 h-5" />
+                )}
+              </button>
             </div>
             <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-4">
               {navItems.map(({ href, label, icon: Icon, badge }) => (
@@ -151,14 +168,17 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleNavigate(href)}
                   className={`group relative flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-200 ${
+                    isCollapsed ? 'justify-center' : ''
+                  } ${
                     isActive(href)
                       ? "bg-trinity-red text-white shadow-lg"
                       : "text-gray-400 hover:bg-gray-800 hover:text-white"
                   }`}
+                  title={isCollapsed ? label : undefined}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span className="font-medium">{label}</span>
-                  {badge !== undefined && badge !== null && badge > 0 && (
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && <span className="font-medium">{label}</span>}
+                  {!isCollapsed && badge !== undefined && badge !== null && badge > 0 && (
                     <span className="rounded-full bg-cyan-500 px-2 py-0.5 text-xs font-semibold text-white">
                       {badge}
                     </span>
@@ -174,35 +194,67 @@ export default function ClientShell({ children }: { children: React.ReactNode })
               ))}
             </nav>
             <div className="border-t border-gray-800 px-4 py-4">
-              <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-                <Avatar
-                  src={user?.image ?? undefined}
-                  alt={user?.name ?? "User"}
-                  size={40}
-                  fallbackText={user?.name ?? undefined}
-                  className="h-10 w-10 flex-shrink-0"
-                />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-white">{user?.name ?? "User"}</p>
-                  <p className="truncate text-xs text-gray-400">{user?.email ?? ""}</p>
+              {!isCollapsed ? (
+                <>
+                  <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+                    <Avatar
+                      src={user?.image ?? undefined}
+                      alt={user?.name ?? "User"}
+                      size={40}
+                      fallbackText={user?.name ?? undefined}
+                      className="h-10 w-10 flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-white">{user?.name ?? "User"}</p>
+                      <p className="truncate text-xs text-gray-400">{user?.email ?? ""}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-2">
+                    <button
+                      onClick={() => handleNavigate("/")}
+                      className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                    >
+                      <FiArrowLeft className="h-5 w-5" />
+                      Back to Site
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                    >
+                      <FiLogOut className="h-5 w-5" />
+                      Logout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-3">
+                  <div title={`${user?.name ?? "User"} - ${user?.email ?? ""}`}>
+                    <Avatar
+                      src={user?.image ?? undefined}
+                      alt={user?.name ?? "User"}
+                      size={40}
+                      fallbackText={user?.name ?? undefined}
+                      className="h-10 w-10 flex-shrink-0"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2 w-full">
+                    <button
+                      onClick={() => handleNavigate("/")}
+                      className="flex items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      title="Back to Site"
+                    >
+                      <FiArrowLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      title="Logout"
+                    >
+                      <FiLogOut className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-3 space-y-2">
-                <button
-                  onClick={() => handleNavigate("/")}
-                  className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
-                >
-                  <FiArrowLeft className="h-5 w-5" />
-                  Back to Site
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
-                >
-                  <FiLogOut className="h-5 w-5" />
-                  Logout
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </aside>
@@ -215,7 +267,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
           />
         )}
 
-        <div className="flex min-h-screen flex-1 flex-col lg:ml-64">
+        <div className={`flex min-h-screen flex-1 flex-col transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
           <header className="border-b border-gray-800 bg-gray-900/80 px-4 py-4 lg:px-8">
             <div className="flex items-center justify-between">
               <button

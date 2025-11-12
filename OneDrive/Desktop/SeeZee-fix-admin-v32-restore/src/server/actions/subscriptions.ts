@@ -220,13 +220,18 @@ export async function getSubscriptionStats(subscriptionId: string) {
   const session = await requireAuth();
 
   try {
+    const subscriptionBase = await db.subscription.findUnique({
+      where: { id: subscriptionId },
+      select: { resetDate: true },
+    });
+    
     const subscription = await db.subscription.findUnique({
       where: { id: subscriptionId },
       include: {
         changeRequests: {
           where: {
             createdAt: {
-              gte: subscription?.resetDate || new Date(0),
+              gte: subscriptionBase?.resetDate || new Date(0),
             },
           },
         },

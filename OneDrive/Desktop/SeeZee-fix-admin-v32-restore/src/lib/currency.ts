@@ -11,7 +11,7 @@ export function toStripeCents(amount: string | number): number {
   const [intPart, fracPart = ""] = normalized.split(".");
   const frac = (fracPart + "00").slice(0, 2);
   // Use BigInt for safe integer math, then convert back
-  const centsBigInt = BigInt(intPart || "0") * 100n + BigInt(frac);
+  const centsBigInt = BigInt(intPart || "0") * BigInt(100) + BigInt(frac);
   const result = Number(centsBigInt);
   return negative ? -result : result;
 }

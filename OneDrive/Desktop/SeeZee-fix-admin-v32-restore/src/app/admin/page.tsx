@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
 
   // Get recent leads
   // Note: lead.createdAt is already a string from toPlain() serialization
-  const recentLeads = leads.slice(0, 5).map((lead) => ({
+  const recentLeads = leads.slice(0, 5).map((lead: any) => ({
     id: lead.id,
     company: lead.company,
     name: lead.name,
@@ -115,9 +115,9 @@ export default async function AdminDashboardPage() {
   }));
 
   // Calculate metrics
-  const newLeads = leads.filter((lead) => lead.status === "NEW").length;
-  const openTasks = tasks.filter((task) => task.status !== "DONE").length;
-  const pipelineProjects = projects.filter((proj) =>
+  const newLeads = leads.filter((lead: any) => lead.status === "NEW").length;
+  const openTasks = tasks.filter((task: any) => task.status !== "DONE").length;
+  const pipelineProjects = projects.filter((proj: any) =>
     ["LEAD", "PROPOSAL", "QUOTE"].includes(proj.status)
   ).length;
 

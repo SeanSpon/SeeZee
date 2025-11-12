@@ -22,10 +22,9 @@ import {
   FiActivity,
   FiDollarSign,
   FiCalendar,
-  FiCrown,
+  FiStar,
   FiTool,
   FiDatabase,
-  FiWrench,
   FiBarChart2,
   FiCreditCard,
   FiServer,
@@ -113,7 +112,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   // CEO Command Center group (CEO only)
   const ceoItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/ceo", label: "CEO Dashboard", icon: FiCrown },
+      { href: "/admin/ceo", label: "CEO Dashboard", icon: FiStar },
       { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2 },
       { href: "/admin/ceo/finances", label: "Finances", icon: FiCreditCard },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer },
@@ -129,7 +128,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin/links", label: "Links", icon: FiLink },
       { href: "/admin/database", label: "Database", icon: FiDatabase },
-      { href: "/admin/maintenance", label: "Maintenance", icon: FiWrench },
+      { href: "/admin/maintenance", label: "Maintenance", icon: FiTool },
       { href: "/admin/settings", label: "Settings", icon: FiSettings },
       { href: "/admin/test/create-project", label: "Test Tools", icon: FiTool },
     ],
@@ -262,7 +261,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               {isUserCEO && (
                 <CollapsibleNavGroup
                   title="CEO Command Center"
-                  icon={FiCrown}
+                  icon={FiStar}
                   items={ceoItems}
                   isActive={isActive}
                   onNavigate={handleNavigate}
@@ -318,14 +317,15 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 </>
               ) : (
                 <div className="flex flex-col items-center gap-3">
-                  <Avatar
-                    src={user.image ?? undefined}
-                    alt={user.name ?? "Admin"}
-                    size={40}
-                    fallbackText={user.name ?? undefined}
-                    className="h-10 w-10 flex-shrink-0"
-                    title={`${user.name ?? "Admin"} - ${user.email ?? ""}`}
-                  />
+                  <div title={`${user.name ?? "Admin"} - ${user.email ?? ""}`}>
+                    <Avatar
+                      src={user.image ?? undefined}
+                      alt={user.name ?? "Admin"}
+                      size={40}
+                      fallbackText={user.name ?? undefined}
+                      className="h-10 w-10 flex-shrink-0"
+                    />
+                  </div>
                   <div className="flex flex-col gap-2 w-full">
                     <button
                       onClick={() => handleNavigate("/")}

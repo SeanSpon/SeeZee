@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Section } from "@/components/ui/section";
 
@@ -30,7 +30,7 @@ const TIMELINE_OPTIONS = [
   { value: 'flexible', label: 'Flexible / No rush' },
 ];
 
-export default function Page() {
+function ContactForm() {
   const searchParams = useSearchParams();
   const serviceParam = searchParams.get('service');
 
@@ -59,7 +59,7 @@ export default function Page() {
 
       if (response.ok) {
         setStatus('success');
-        setState({ name: "", email: "", message: "" });
+        setState({ name: "", email: "", message: "", serviceType: serviceParam || "", budget: "", timeline: "" });
       } else {
         const data = await response.json();
         setErrorMessage(data.error || 'Something went wrong');
@@ -220,5 +220,13 @@ export default function Page() {
         </p>
       </form>
     </Section>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<Section title="Contact Us" subtitle="Loading..."><div className="mx-auto max-w-2xl text-center">Loading contact form...</div></Section>}>
+      <ContactForm />
+    </Suspense>
   );
 }
