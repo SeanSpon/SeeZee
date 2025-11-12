@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { FolderKanban, Clock, CheckCircle2, AlertCircle, Plus, ArrowRight } from "lucide-react";
 import { ProjectsClient } from "../components/ProjectsClient";
+import { buildClientProjectWhere } from "@/lib/client-access";
 
 export default async function ClientProjectsPage() {
   const session = await auth();
@@ -12,40 +13,9 @@ export default async function ClientProjectsPage() {
     redirect("/login");
   }
 
-  // Fetch client's projects via Lead relationship OR organization membership
-  // First, get user's organizations
-  const userOrgs = await prisma.organizationMember.findMany({
-    where: {
-      userId: session.user.id!,
-    },
-    select: {
-      organizationId: true,
-    },
-  });
-
-  const orgIds = userOrgs.map((om) => om.organizationId);
-
-  // Build where clause: projects where user is lead OR user is org member
-  const whereClause: any = {
-    OR: [
-      // Projects where lead email matches user email
-      {
-        lead: {
-          email: session.user.email!,
-        },
-      },
-      // Projects where user is a member of the organization
-      ...(orgIds.length > 0
-        ? [
-            {
-              organizationId: {
-                in: orgIds,
-              },
-            },
-          ]
-        : []),
-    ],
-  };
+  // Build access control where clause using centralized helper
+  const identity = { userId: session.user.id, email: session.user.email };
+  const whereClause = await buildClientProjectWhere(identity);
 
   const projects = await prisma.project.findMany({
     where: whereClause,

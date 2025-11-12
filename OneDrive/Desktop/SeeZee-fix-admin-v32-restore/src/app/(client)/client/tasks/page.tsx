@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/requireRole';
 import { prisma } from '@/lib/prisma';
 import { TasksList } from '@/components/client/TasksList';
+import { buildClientProjectWhere } from '@/lib/client-access';
 
 export const metadata = {
   title: 'My Tasks | Client Dashboard',
@@ -15,37 +16,43 @@ export default async function ClientTasksPage() {
     redirect('/login?returnUrl=/client/tasks');
   }
 
-  // Get user's projects
-  const organizations = await prisma.organizationMember.findMany({
-    where: { userId: user.id },
-    include: {
-      organization: {
-        include: {
-          projects: {
-            include: {
-              clientTasks: {
-                orderBy: {
-                  createdAt: 'desc',
-                },
-              },
-            },
-          },
+  // Build access control where clause using centralized helper
+  const identity = { userId: user.id, email: user.email };
+  const projectWhere = await buildClientProjectWhere(identity);
+
+  // Get user's accessible projects with their tasks
+  const projects = await prisma.project.findMany({
+    where: projectWhere,
+    select: {
+      id: true,
+      name: true,
+      clientTasks: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          type: true,
+          status: true,
+          dueDate: true,
+          completedAt: true,
+          createdAt: true,
         },
       },
     },
   });
 
   // Flatten all tasks from all projects
-  const allTasks = organizations.flatMap((orgMember) =>
-    orgMember.organization.projects.flatMap((project) =>
-      project.clientTasks.map((task) => ({
-        ...task,
-        project: {
-          id: project.id,
-          name: project.name,
-        },
-      }))
-    )
+  const allTasks = projects.flatMap((project) =>
+    project.clientTasks.map((task) => ({
+      ...task,
+      project: {
+        id: project.id,
+        name: project.name,
+      },
+    }))
   );
 
   return (

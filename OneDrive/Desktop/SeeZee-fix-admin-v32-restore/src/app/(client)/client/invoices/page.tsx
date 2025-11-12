@@ -35,12 +35,13 @@ export default function ClientInvoicesPage() {
   useEffect(() => {
     fetchJson<InvoicesData>("/api/client/invoices")
       .then((response) => {
-        // Ensure we always have the expected structure
+        // The API returns stats object with these properties
+        const stats = (response as any).stats || {};
         setData({
           invoices: response.invoices || [],
-          totalSpent: response.totalSpent || 0,
-          pendingAmount: response.pendingAmount || 0,
-          totalInvoices: response.totalInvoices || 0,
+          totalSpent: stats.totalSpent || 0,
+          pendingAmount: stats.pendingAmount || 0,
+          totalInvoices: stats.total || response.invoices?.length || 0,
         });
       })
       .catch((error) => {

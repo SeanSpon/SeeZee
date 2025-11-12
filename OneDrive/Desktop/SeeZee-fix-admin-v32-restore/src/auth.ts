@@ -122,7 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       clientId: GOOGLE_ID!,
       clientSecret: GOOGLE_SECRET!,
-      allowDangerousEmailAccountLinking: false,
+      allowDangerousEmailAccountLinking: true,
       authorization: { 
         params: { 
           prompt: "consent", 

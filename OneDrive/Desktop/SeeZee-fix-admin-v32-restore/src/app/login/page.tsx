@@ -23,7 +23,7 @@ function LoginContent() {
       console.log("🔴 Login error detected:", errorParam);
       setError(
         errorParam === "OAuthAccountNotLinked"
-          ? "This email is already linked to another account. Please contact support."
+          ? "Unable to link your Google account. If you have an existing account with this email, please try signing in again or contact support."
           : errorParam === "Configuration"
           ? "Authentication configuration error. Please check /auth-check for details."
           : errorParam === "AccessDenied"
