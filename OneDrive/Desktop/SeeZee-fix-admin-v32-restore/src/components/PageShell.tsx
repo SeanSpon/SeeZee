@@ -8,7 +8,7 @@ interface PageShellProps {
 /**
  * PageShell - Shared page layout wrapper
  * 
- * Provides consistent stacking for all pages with proper navbar offset.
+ * Provides consistent layout for all pages.
  * Use this wrapper for pricing, selection, dashboard, and other pages.
  * 
  * Note: Background (gradient, vignette, noise, particles) is handled globally 
@@ -19,7 +19,6 @@ interface PageShellProps {
  * - Particles at z-0 (#particles div)
  * - Vignette at z-1
  * - Noise at z-2
- * - Navbar at z-100
  * - Content at z-10+ (this wrapper's children)
  * 
  * @example
@@ -35,7 +34,7 @@ interface PageShellProps {
  */
 export default function PageShell({ children, className = "" }: PageShellProps) {
   return (
-    <main className={`min-h-screen pt-[var(--nav-h)] ${className}`}>
+    <main className={`min-h-screen ${className}`}>
       {/* Background is already in layout.tsx, no need to duplicate */}
       {children}
     </main>

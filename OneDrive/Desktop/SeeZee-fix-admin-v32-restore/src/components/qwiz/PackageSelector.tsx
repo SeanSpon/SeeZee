@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useQwizStore } from '@/lib/qwiz/store';
 import { PACKAGES, FEATURES, getLockedFeatures, getFeature, type PackageTier } from '@/lib/qwiz/packages';
@@ -22,7 +23,12 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-export function PackageSelector() {
+interface PackageSelectorProps {
+  editId?: string;
+}
+
+export function PackageSelector({ editId }: PackageSelectorProps = {}) {
+  const router = useRouter();
   const { setPackage, setFeatures, setStep } = useQwizStore();
   const [showComparison, setShowComparison] = useState(false);
   const [processingPackage, setProcessingPackage] = useState<string | null>(null);
@@ -48,30 +54,13 @@ export function PackageSelector() {
       const { setTotals } = useQwizStore.getState();
       setTotals(totals);
 
-      // Create Stripe checkout session and redirect
-      const response = await fetch('/api/checkout/package', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          packageId: tier,
-          features: lockedFeatures,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create checkout session');
-      }
-
-      const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
-      } else {
-        throw new Error('No checkout URL received');
-      }
+      // Navigate to questionnaire page
+      const editParam = editId ? `&edit=${editId}` : '';
+      router.push(`/start/questionnaire?package=${tier}${editParam}`);
+      setProcessingPackage(null);
     } catch (error: any) {
-      console.error('Checkout error:', error);
-      alert(error.message || 'Failed to start checkout. Please try again.');
+      console.error('Package selection error:', error);
+      alert(error.message || 'Failed to save package selection. Please try again.');
       setProcessingPackage(null);
     }
   };
@@ -96,7 +85,7 @@ export function PackageSelector() {
           Professional websites without agency-level prices
         </p>
         <p className="text-sm text-green-400 mt-2 font-medium">
-          Most projects range from $1,200–$2,800 • No hidden fees
+          Packages starting at $299 • Flexible pricing tailored to your needs
         </p>
       </motion.div>
 
@@ -160,7 +149,7 @@ export function PackageSelector() {
                 </div>
 
                 {/* Price */}
-                <div className="text-center mb-6 pb-6 border-b border-gray-800">
+                <div className="text-center mb-6 pb-6 border-b border-white/10">
                   <div className="text-sm text-gray-500 mb-1">Starting at</div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     {formatPrice(pkg.basePrice)}
@@ -169,6 +158,9 @@ export function PackageSelector() {
                     {pkg.id === 'starter' && '+ up to $1,300 in add-ons'}
                     {pkg.id === 'pro' && '+ up to $1,500 in add-ons'}
                     {pkg.id === 'elite' && 'Premium features included'}
+                  </div>
+                  <div className="text-xs text-blue-400/70 mt-2 italic">
+                    Final price determined during project approval
                   </div>
                 </div>
 
@@ -253,7 +245,7 @@ export function PackageSelector() {
       <div className="text-center mb-8">
         <button
           onClick={() => setShowComparison(!showComparison)}
-          className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-full px-6 py-3 hover:border-gray-700 transition-all"
+          className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-sm border border-white/10 rounded-full px-6 py-3 hover:border-white/20 transition-all"
         >
           <span className="text-sm text-gray-300">
             {showComparison ? 'Hide' : 'Show'} Detailed Comparison
@@ -274,11 +266,11 @@ export function PackageSelector() {
           exit={{ opacity: 0, height: 0 }}
           className="mb-12 overflow-hidden"
         >
-          <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-2xl overflow-hidden">
+          <div className="bg-gray-900/40 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-800">
+                  <tr className="border-b border-white/10">
                     <th className="text-left p-4 text-sm font-semibold text-gray-400 sticky left-0 bg-gray-900/40 backdrop-blur-sm">
                       Feature
                     </th>
@@ -299,7 +291,7 @@ export function PackageSelector() {
                     return (
                       <tr
                         key={featureId}
-                        className={`border-b border-gray-800/50 ${
+                        className={`border-b border-white/10 ${
                           idx % 2 === 0 ? 'bg-gray-900/20' : ''
                         }`}
                       >
@@ -334,7 +326,7 @@ export function PackageSelector() {
                   })}
                   
                   {/* Maintenance Row */}
-                  <tr className="border-b border-gray-800/50 bg-blue-500/5">
+                  <tr className="border-b border-white/10 bg-blue-500/5">
                     <td className="p-4 text-sm sticky left-0 bg-gray-900/40 backdrop-blur-sm">
                       <div className="flex items-center gap-2">
                         <span>🛡️</span>
@@ -371,7 +363,7 @@ export function PackageSelector() {
             </div>
 
             {/* CTA Row */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 border-t border-gray-800">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 border-t border-white/10">
               <div className="md:col-span-1 flex items-center justify-center">
                 <span className="text-sm text-gray-400">Ready to start?</span>
               </div>
@@ -407,20 +399,138 @@ export function PackageSelector() {
         </motion.div>
       )}
 
+      {/* Additional Services Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="mt-16"
+      >
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-white mb-2">Standalone Services</h2>
+          <p className="text-gray-400">Already have a website? We offer maintenance and quick fixes too</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {/* Web Care Card */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+            className="glass-container p-6"
+          >
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">🛡️</div>
+              <h3 className="text-xl font-bold text-white mb-1">Web Care</h3>
+              <p className="text-sm text-blue-400 font-medium">Maintenance & Support</p>
+            </div>
+
+            <div className="text-center mb-4 pb-4 border-b border-white/10">
+              <div className="text-sm text-gray-500 mb-1">Starting at</div>
+              <div className="text-3xl font-bold text-blue-400">$50/mo</div>
+              <div className="text-xs text-gray-500 mt-1">Billed monthly or annually</div>
+            </div>
+
+            <ul className="space-y-2 mb-6">
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Hosting & SSL certificate</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Security updates & backups</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Performance monitoring</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Email support</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>2-5 change requests/month</span>
+              </li>
+            </ul>
+
+            <a
+              href="/contact?service=web-care"
+              className="w-full py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 bg-gray-800 hover:bg-gray-700 text-white"
+            >
+              Learn More
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          </motion.div>
+
+          {/* Quick Repairs Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+            className="glass-container p-6"
+          >
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">⚡</div>
+              <h3 className="text-xl font-bold text-white mb-1">Quick Repairs</h3>
+              <p className="text-sm text-blue-400 font-medium">Fast Fixes & Updates</p>
+            </div>
+
+            <div className="text-center mb-4 pb-4 border-b border-white/10">
+              <div className="text-sm text-gray-500 mb-1">Starting at</div>
+              <div className="text-3xl font-bold text-purple-400">$150</div>
+              <div className="text-xs text-gray-500 mt-1">Per request</div>
+            </div>
+
+            <ul className="space-y-2 mb-6">
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Bug fixes & troubleshooting</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Content updates</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Small feature additions</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>Same-day turnaround</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span>No monthly commitment</span>
+              </li>
+            </ul>
+
+            <a
+              href="/contact?service=quick-repairs"
+              className="w-full py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 bg-gray-800 hover:bg-gray-700 text-white"
+            >
+              Request Service
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          </motion.div>
+        </div>
+      </motion.div>
+
       {/* Footer Note */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.8 }}
         className="mt-12 text-center"
       >
-        <div className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-full px-6 py-3">
+        <div className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-sm border border-white/10 rounded-full px-6 py-3">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           <p className="text-sm text-gray-400">
             All packages are fully customizable in the next step
           </p>
         </div>
       </motion.div>
+
     </div>
   );
 }

@@ -1,12 +1,10 @@
 /**
- * CEO Resources Management
- * Documentation, guides, and reference materials
+ * CEO Resources Management - Redirects to /admin/learning/resources
+ * CEO features are now consolidated into /admin with role-based sections
  */
 
-"use client";
-
-import ResourceList from "@/components/ceo/ResourceList";
+import { redirect } from "next/navigation";
 
 export default function CEOResourcesPage() {
-  return <ResourceList />;
+  redirect("/admin/learning/resources");
 }

@@ -78,29 +78,41 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+button {
+  background-color: inherit;
+  color: inherit;
+}
+
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #C41E3A;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 4px;
+}
+
+.skip-to-content:focus {
+  top: 0;
 }
 
 html.light body {
   background: #F8FAFC;
 }
 
-/* Very subtle grain texture */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.01;
-  pointer-events: none;
-  z-index: 9998;
-  mix-blend-mode: overlay;
-}
 
 /* Glass morphism utilities */
 .glass {
@@ -508,11 +520,6 @@ body::after {
   html {
     scroll-behavior: smooth;
   }
-  
-  body {
-    @apply bg-slate-900 text-white;
-    box-sizing: border-box;
-  }
 }
 
 @layer components {
@@ -527,13 +534,6 @@ body::after {
     @apply transition-all duration-300 hover:bg-white/20 hover:shadow-xl hover:scale-105;
   }
   
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
-    background: linear-gradient(135deg, #2563eb, #9333ea);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
   
   .glow-button {
     @apply relative font-semibold rounded-lg transition-all duration-300 transform hover:scale-105;
@@ -603,7 +603,7 @@ body::after {
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-20px); }
 }
 
 @keyframes pulse {
@@ -635,6 +635,36 @@ body::after {
   animation: fade-in 0.5s ease-out forwards;
 }
 
+.glow-on-hover {
+  transition: all 0.3s ease;
+}
+
+.glow-on-hover:hover {
+  box-shadow: 0 0 20px rgba(196, 30, 58, 0.5), 0 0 40px rgba(196, 30, 58, 0.3);
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #000000, #1a1a1a, #0a0a0a, #1a1a1a);
+  background-size: 400% 400%;
+  animation: gradient-animation 15s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
 /* Scrollbar styling for onboarding pages */
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
@@ -664,83 +694,114 @@ body::after {
 
 /* ===== SeeZee Layout Vars ===== */
 :root{
-  --h-nav: 64px;        /* main site navbar height */
-  --sidebar-w: 16rem;   /* admin sidebar width (256px) */
+  --sidebar-w: 16rem;   /* sidebar width (256px) */
+  --sidebar-w-collapsed: 5rem;   /* collapsed sidebar width (80px) */
 }
 
-/* App background: clean slate/navy gradient */
-body{
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  background-attachment: fixed;
-  color: #E6EEF8;
-  min-height: 100vh;
-  overflow-x: hidden;
+/* Trinity Red and Maroon color aliases */
+.trinity-red {
+  color: #C41E3A;
 }
 
-/* Reusable glass card (matches Start a Project) */
-.seezee-glass{
-  background: rgba(18,25,37,0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(35,48,64,0.6);
-  border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25) inset, 0 8px 30px rgba(0,0,0,0.25);
+.bg-trinity-red {
+  background-color: #C41E3A;
 }
 
-/* Layering: keep things honest */
-.bg-layer{ position: fixed; inset: 0; pointer-events: none; z-index: -1; }
-.nav-layer{ position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: var(--h-nav); }
-.sidebar-layer{ 
-  width: var(--sidebar-w); 
-  height: 100%;
-  overflow-y: auto; 
-  flex-shrink: 0;
-}
-.main-layer{
-  position: relative; 
-  z-index: 10;
-  padding-top: calc(var(--h-nav) + 16px);
-  padding-bottom: 80px;
-  min-height: 100vh;
-  flex: 1;
+.border-trinity-red {
+  border-color: #C41E3A;
 }
 
-/* When a page has NO admin bar, add this class to body or wrapper */
-.no-admin .main-layer{ 
-  padding-top: calc(var(--h-nav) + 16px); 
-  min-height: 100vh;
-  flex: 1;
+.hover\:bg-trinity-maroon:hover {
+  background-color: #8B0000;
 }
 
-/* Content area shift so it doesn't hide under the sidebar */
-.admin-main {
-  margin-left: var(--sidebar-w);
-  transition: margin 0.3s ease;
-  width: 100%;
-  overflow-x: hidden;
+.hover\:text-trinity-maroon:hover {
+  color: #8B0000;
 }
 
-@media (max-width: 768px) {
-  .admin-main {
-    margin-left: 0;
+.text-trinity-red {
+  color: #C41E3A;
+}
+
+.trinity-maroon {
+  color: #8B0000;
+}
+
+.bg-trinity-maroon {
+  background-color: #8B0000;
+}
+
+.border-trinity-maroon {
+  border-color: #8B0000;
+}
+
+/* Font heading utility */
+.font-heading {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Glass effect utility */
+.glass-effect {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #C41E3A 0%, #FFD700 50%, #C41E3A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
 
-.main-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 0 16px;
+/* Glow on hover utility */
+.glow-on-hover {
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 640px) {
-  .main-inner {
-    padding: 0 12px;
+.glow-on-hover:hover {
+  box-shadow: 0 0 20px rgba(196, 30, 58, 0.5), 0 0 40px rgba(196, 30, 58, 0.3);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
   }
 }
 
-/* Footer always visible and not overlapped */
-footer{ position: relative; z-index: 10; }
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Shadow utilities */
+.shadow-soft {
+  box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-large {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
 
 /* Optional: chart canvas color fix on dark backgrounds */
 .recharts-default-tooltip{ backdrop-filter: blur(8px); }

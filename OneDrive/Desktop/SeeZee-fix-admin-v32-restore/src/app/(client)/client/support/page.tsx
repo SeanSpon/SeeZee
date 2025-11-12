@@ -7,7 +7,7 @@ export default function ClientSupportPage() {
       </div>
 
       {/* Contact Support */}
-      <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
         <h3 className="text-lg font-bold text-white mb-4">Contact Support</h3>
         <p className="text-slate-400 mb-4">
           Need help? Our team is here to assist you. Send us a message and we'll get back to you as soon as possible.
@@ -24,7 +24,7 @@ export default function ClientSupportPage() {
       <div>
         <h3 className="text-lg font-bold text-white mb-4">Frequently Asked Questions</h3>
         <div className="space-y-4">
-          <details className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-6 group">
+          <details className="bg-gray-900 border border-gray-800 rounded-xl p-6 group">
             <summary className="text-white font-medium cursor-pointer">
               How do I track my project progress?
             </summary>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -14,7 +15,9 @@ import {
   HelpCircle,
   Settings,
   Receipt,
+  CheckSquare,
 } from "lucide-react";
+import { fetchJson } from "@/lib/client-api";
 
 interface ClientSidebarProps {
   user: {
@@ -24,36 +27,48 @@ interface ClientSidebarProps {
   };
 }
 
-const navItems = [
+const getNavItems = (pendingTaskCount: number = 0) => [
   {
     label: "Overview",
     href: "/client",
     icon: <LayoutDashboard className="w-5 h-5" />,
+    badge: null,
   },
   {
     label: "Projects",
     href: "/client/projects",
     icon: <FolderKanban className="w-5 h-5" />,
+    badge: null,
+  },
+  {
+    label: "Tasks",
+    href: "/client/tasks",
+    icon: <CheckSquare className="w-5 h-5" />,
+    badge: pendingTaskCount > 0 ? pendingTaskCount : null,
   },
   {
     label: "Files",
     href: "/client/files",
     icon: <Upload className="w-5 h-5" />,
+    badge: null,
   },
   {
     label: "Requests",
     href: "/client/requests",
     icon: <HelpCircle className="w-5 h-5" />,
+    badge: null,
   },
   {
     label: "Settings",
     href: "/client/settings",
     icon: <Settings className="w-5 h-5" />,
+    badge: null,
   },
 ];
 
 export default function ClientSidebar({ user }: ClientSidebarProps) {
   const pathname = usePathname();
+  const [pendingTaskCount, setPendingTaskCount] = useState(0);
   
   // Generate breadcrumbs from pathname
   const segments = pathname.split("/").filter(Boolean);
@@ -62,10 +77,27 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
   );
   const pageTitle = breadcrumbs.slice(-1)[0] || "Dashboard";
 
+  // Fetch pending task count
+  useEffect(() => {
+    fetchJson<any>("/api/client/tasks")
+      .then((data) => {
+        const tasks = data?.tasks || [];
+        const pending = tasks.filter((task: any) => 
+          task.status === 'pending' || task.status === 'in_progress'
+        ).length;
+        setPendingTaskCount(pending);
+      })
+      .catch(() => {
+        // Silently fail - tasks endpoint might not exist yet
+      });
+  }, []);
+
   const isActive = (href: string) => {
     if (href === "/client") return pathname === href;
     return pathname.startsWith(href);
   };
+
+  const navItems = getNavItems(pendingTaskCount);
 
   return (
     <aside
@@ -99,7 +131,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
               className={`
                 relative flex items-center gap-3 px-3 py-2 rounded-lg
                 text-sm font-medium
-                transition-all duration-200
+                transition-[color,background-color] duration-150 ease-in-out
                 ${
                   active
                     ? "bg-white/10 text-white shadow-lg"
@@ -116,6 +148,11 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
               )}
               <span className="relative z-10">{item.icon}</span>
               <span className="relative z-10 flex-1">{item.label}</span>
+              {item.badge !== null && item.badge !== undefined && (
+                <span className="relative z-10 px-2 py-0.5 bg-cyan-500 text-white text-xs font-semibold rounded-full min-w-[1.25rem] text-center">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -123,7 +160,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
 
       {/* User Footer */}
       <div className="flex-shrink-0 p-4 border-t border-white/5">
-        <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+        <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-[background-color] duration-150 ease-in-out cursor-pointer">
           <img
             src={user.image || "/default-avatar.png"}
             alt={user.name || "User"}

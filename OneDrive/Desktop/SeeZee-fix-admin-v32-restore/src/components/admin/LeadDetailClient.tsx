@@ -53,18 +53,32 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
   const handleApproveAndCreateProject = async () => {
     setApproving(true);
     setApprovalError(null);
+    setApprovalSuccess(false);
     
     try {
       const result = await approveLeadAndCreateProject(lead.id);
       
-      setApprovalSuccess(true);
-      setStatus("CONVERTED");
-      // Redirect to the new project after a short delay
-      setTimeout(() => {
-        router.push(`/admin/pipeline/projects`);
-      }, 2000);
+      if (result.success) {
+        setApprovalSuccess(true);
+        setStatus("CONVERTED");
+        // Refresh the page to show updated status
+        router.refresh();
+        // Redirect to the new project after a short delay
+        setTimeout(() => {
+          if (result.projectId) {
+            router.push(`/admin/pipeline/projects/${result.projectId}`);
+          } else {
+            router.push(`/admin/pipeline/projects`);
+          }
+        }, 2000);
+      } else {
+        setApprovalError(result.error || "Failed to create project");
+      }
     } catch (error) {
-      setApprovalError(error instanceof Error ? error.message : "An unexpected error occurred");
+      // Fallback error handling in case of unexpected errors
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      setApprovalError(errorMessage);
+      console.error("Error converting lead:", error);
     } finally {
       setApproving(false);
     }
@@ -315,14 +329,31 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
             
             <div className="space-y-2">
               {/* CEO Approval Button - Primary Action */}
-              {lead.status !== 'CONVERTED' && questionnaireData?.totals && (
+              {lead.status !== 'CONVERTED' && (
                 <button
                   onClick={handleApproveAndCreateProject}
                   disabled={approving || approvalSuccess}
                   className="block w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg text-center font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
                 >
-                  {approving ? "Creating Project..." : "✓ Approve & Create Project"}
+                  {approving ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="animate-spin">⏳</span>
+                      Creating Project...
+                    </span>
+                  ) : (
+                    "✓ Approve & Create Project"
+                  )}
                 </button>
+              )}
+              
+              {/* Show link to project if already converted */}
+              {lead.status === 'CONVERTED' && lead.project && (
+                <a
+                  href={`/admin/pipeline/projects/${lead.project.id}`}
+                  className="block w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-center font-medium transition-colors"
+                >
+                  View Project →
+                </a>
               )}
               
               <a

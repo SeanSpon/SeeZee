@@ -4,16 +4,19 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, Rocket } from "lucide-react";
+import { Menu, Rocket, Clock } from "lucide-react";
 import { NavLink } from "@/components/navbar/NavLink";
 import { Notifications } from "@/components/navbar/Notifications";
 import { ContextPill } from "@/components/navbar/ContextPill";
 import { ProfileMenu } from "@/components/navbar/ProfileMenu";
 import { MobileMenu } from "@/components/navbar/MobileMenu";
+import { fetchJson } from "@/lib/client-api";
+import { getActiveProjectRequest } from "@/lib/dashboard-state";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeProjectRequest, setActiveProjectRequest] = useState<any | null>(null);
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
@@ -25,6 +28,22 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch active project request for client users
+  useEffect(() => {
+    if (session?.user && (session.user.role === "CLIENT" || !session.user.role)) {
+      fetchJson<{ requests: any[] }>("/api/client/requests")
+        .then((data) => {
+          const activeRequest = getActiveProjectRequest(data.requests || []);
+          setActiveProjectRequest(activeRequest);
+        })
+        .catch(() => {
+          // Silently fail - user might not have access yet
+        });
+    } else {
+      setActiveProjectRequest(null);
+    }
+  }, [session, pathname]); // Refetch when pathname changes (e.g., after submission redirect)
 
   // Determine user context and role
   const isCEO = session?.user?.role === "CEO";
@@ -80,24 +99,36 @@ export function Navbar() {
             {/* Context Pill - Show only if authenticated */}
             {session && (
               <ContextPill
-                currentContext={currentContext}
+                currentContext={currentContext === "CEO" ? "Admin" : currentContext}
                 hasAdminAccess={isAdmin || isCEO}
                 hasClientAccess={true}
-                hasCEOAccess={isCEO}
               />
             )}
 
             {/* Notifications */}
             {session && <Notifications />}
 
-            {/* Start a Project CTA - Desktop */}
-            <Link
-              href="/start"
-              className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-3 lg:px-4 py-2 text-sm font-semibold text-white shadow-md hover:from-blue-600 hover:to-purple-600 transition-all"
-            >
-              <Rocket className="h-4 w-4" />
-              <span className="hidden lg:inline">Start a Project</span>
-            </Link>
+            {/* Start a Project CTA or Project Status - Desktop */}
+            {activeProjectRequest ? (
+              <Link
+                href="/client"
+                className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-3 lg:px-4 py-2 text-sm font-semibold text-white shadow-md hover:from-amber-600 hover:to-orange-600 transition-all"
+              >
+                <Clock className="h-4 w-4" />
+                <span className="hidden lg:inline">
+                  {activeProjectRequest.title || 'Project Request'} - {activeProjectRequest.status.replace(/_/g, ' ')}
+                </span>
+                <span className="lg:hidden">Project Status</span>
+              </Link>
+            ) : (
+              <Link
+                href="/start"
+                className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-3 lg:px-4 py-2 text-sm font-semibold text-white shadow-md hover:from-blue-600 hover:to-purple-600 transition-all"
+              >
+                <Rocket className="h-4 w-4" />
+                <span className="hidden lg:inline">Start a Project</span>
+              </Link>
+            )}
 
             {/* Profile Menu */}
             <ProfileMenu user={session?.user} />

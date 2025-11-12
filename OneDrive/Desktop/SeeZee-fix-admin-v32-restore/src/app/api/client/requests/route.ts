@@ -2,64 +2,85 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { clientRequestCreate } from "@/lib/validation/client";
+import { handleCors, addCorsHeaders } from "@/lib/cors";
+
+/**
+ * OPTIONS /api/client/requests
+ * Handle CORS preflight
+ */
+export async function OPTIONS(req: NextRequest) {
+  return handleCors(req) || new NextResponse(null, { status: 200 });
+}
 
 /**
  * GET /api/client/requests
- * Returns client-submitted requests
+ * Returns client-submitted project requests
  */
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session?.user?.id) {
+      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
-    const userEmail = session.user.email!;
-
-    // Find organization
-    const lead = await prisma.lead.findFirst({
-      where: { email: userEmail },
-      select: { organizationId: true },
-    });
-
-    if (!lead?.organizationId) {
-      return NextResponse.json({ items: [] });
-    }
-
-    // Fetch todos created by this client org
-    const requests = await prisma.todo.findMany({
-      where: {
-        createdBy: {
-          email: userEmail,
-        },
-      },
+    // Fetch ProjectRequests for this user
+    const requests = await prisma.projectRequest.findMany({
+      where: { userId: session.user.id },
       orderBy: { createdAt: "desc" },
-      take: 50,
       select: {
         id: true,
         title: true,
         description: true,
         status: true,
-        priority: true,
+        contactEmail: true,
+        email: true,
+        company: true,
+        budget: true,
+        timeline: true,
+        services: true,
+        notes: true,
         createdAt: true,
         updatedAt: true,
       },
     });
 
-    return NextResponse.json({
-      items: requests.map((r) => ({
-        id: r.id,
-        type: r.priority, // Use priority as type proxy
-        title: r.title,
-        description: r.description,
-        status: r.status,
-        createdAt: r.createdAt,
-        updatedAt: r.updatedAt,
-      })),
-    });
+    // For each request, find related project by matching email with Lead email
+    const requestsWithProjects = await Promise.all(
+      requests.map(async (request) => {
+        const email = request.contactEmail || request.email;
+        if (!email) {
+          return { ...request, project: null };
+        }
+
+        // Find project via Lead email matching
+        const lead = await prisma.lead.findFirst({
+          where: { email: email },
+          include: {
+            project: {
+              select: {
+                id: true,
+                name: true,
+                status: true,
+                createdAt: true,
+              },
+            },
+          },
+        });
+
+        return {
+          ...request,
+          project: lead?.project || null,
+        };
+      })
+    );
+
+    const response = NextResponse.json({ requests: requestsWithProjects });
+    return addCorsHeaders(response, req.headers.get("origin"));
   } catch (error: any) {
     console.error("[GET /api/client/requests]", error);
-    return NextResponse.json({ error: "Failed to fetch requests" }, { status: 500 });
+    const response = NextResponse.json({ error: "Failed to fetch requests" }, { status: 500 });
+    return addCorsHeaders(response, req.headers.get("origin"));
   }
 }
 
@@ -71,13 +92,15 @@ export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
     const body = await req.json();
     const parsed = clientRequestCreate.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "Invalid input", details: parsed.error }, { status: 400 });
+      const response = NextResponse.json({ error: "Invalid input", details: parsed.error }, { status: 400 });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
     const { type, title, description, projectId } = parsed.data;
@@ -89,7 +112,8 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      const response = NextResponse.json({ error: "User not found" }, { status: 404 });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
     // Map type to priority
@@ -128,7 +152,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       item: {
         id: todo.id,
         type: todo.priority,
@@ -138,8 +162,10 @@ export async function POST(req: NextRequest) {
         createdAt: todo.createdAt,
       },
     });
+    return addCorsHeaders(response, req.headers.get("origin"));
   } catch (error: any) {
     console.error("[POST /api/client/requests]", error);
-    return NextResponse.json({ error: "Failed to create request" }, { status: 500 });
+    const response = NextResponse.json({ error: "Failed to create request" }, { status: 500 });
+    return addCorsHeaders(response, req.headers.get("origin"));
   }
 }

@@ -1,9 +1,9 @@
 /**
- * Redirect /admin/finances to /admin/executive/finances
+ * Redirect /admin/finances to /admin/ceo/finances
  */
 
 import { redirect } from "next/navigation";
 
 export default function FinancesRedirect() {
-  redirect("/admin/executive/finances");
+  redirect("/admin/ceo/finances");
 }

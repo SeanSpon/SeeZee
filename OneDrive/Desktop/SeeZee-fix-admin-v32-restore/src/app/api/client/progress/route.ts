@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { db } from "@/server/db";
+import { prisma } from "@/lib/prisma";
+import { buildClientProjectWhere } from "@/lib/client-access";
+import type { Prisma } from "@prisma/client";
 
 export async function GET() {
   try {
@@ -11,53 +13,59 @@ export async function GET() {
     }
 
     // Get projects for the current user's organization
-    const user = await db.user.findUnique({
-      where: { email: session.user.email },
-      include: {
-        organizations: {
-          include: {
-            organization: {
-              include: {
-                projects: {
-                  where: {
-                    status: {
-                      in: ["IN_PROGRESS", "REVIEW", "PAID"],
-                    },
-                  },
-                  include: {
-                    milestones: true,
-                  },
-                },
-              },
-            },
+    const identity = { userId: session.user.id, email: session.user.email };
+    const accessWhere = await buildClientProjectWhere(identity);
+    const orConditions =
+      "OR" in accessWhere && Array.isArray(accessWhere.OR)
+        ? accessWhere.OR
+        : [];
+
+    if (orConditions.length === 0) {
+      return NextResponse.json({ projects: [] });
+    }
+
+    const filters: Prisma.ProjectWhereInput[] = [
+      { OR: orConditions },
+      {
+        status: {
+          in: ["IN_PROGRESS", "REVIEW", "PAID"],
+        },
+      },
+    ];
+
+    const projectsResult = await prisma.project.findMany({
+      where: {
+        AND: filters,
+      },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        milestones: {
+          select: {
+            id: true,
+            completed: true,
           },
         },
       },
     });
 
-    if (!user || user.organizations.length === 0) {
-      return NextResponse.json({ projects: [] });
-    }
+    const projects = projectsResult.map((project) => {
+      const completedMilestones = project.milestones.filter((m) => m.completed).length;
+      const totalMilestones = project.milestones.length || 1;
+      const progress = Math.round((completedMilestones / totalMilestones) * 100);
 
-    // Flatten projects from all organizations
-    const projects = user.organizations.flatMap((orgMember) =>
-      orgMember.organization.projects.map((project) => {
-        const completedMilestones = project.milestones.filter((m) => m.completed).length;
-        const totalMilestones = project.milestones.length || 1;
-        const progress = Math.round((completedMilestones / totalMilestones) * 100);
-
-        return {
-          id: project.id,
-          name: project.name,
-          progress,
-          status: project.status,
-          milestones: {
-            total: totalMilestones,
-            completed: completedMilestones,
-          },
-        };
-      })
-    );
+      return {
+        id: project.id,
+        name: project.name,
+        progress,
+        status: project.status,
+        milestones: {
+          total: totalMilestones,
+          completed: completedMilestones,
+        },
+      };
+    });
 
     return NextResponse.json({ projects });
   } catch (error) {

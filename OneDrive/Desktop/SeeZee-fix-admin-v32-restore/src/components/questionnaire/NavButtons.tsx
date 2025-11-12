@@ -21,7 +21,7 @@ export function NavButtons({
       {canGoBack && backHref ? (
         <Link
           href={backHref}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors rounded-xl hover:bg-white/5"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors rounded-lg hover:bg-gray-800 border border-gray-700 hover:border-gray-600"
         >
           <ArrowLeft size={16} />
           Back
@@ -33,7 +33,7 @@ export function NavButtons({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-2 px-6 py-3 bg-trinity-red text-white font-semibold rounded-lg hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
       >
         {isSubmitting ? 'Saving...' : nextLabel}
         <ArrowRight size={16} />

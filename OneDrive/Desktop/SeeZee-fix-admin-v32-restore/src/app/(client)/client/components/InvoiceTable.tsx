@@ -1,6 +1,6 @@
 interface Invoice {
   id: string;
-  amount: number;
+  total: number;
   status: string;
   issuedAt: string;
   dueAt?: string | null;
@@ -13,8 +13,8 @@ interface InvoiceTableProps {
 export default function InvoiceTable({ invoices }: InvoiceTableProps) {
   if (!invoices || invoices.length === 0) {
     return (
-      <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl p-8 text-center">
-        <p className="text-slate-400">No open invoices</p>
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
+        <p className="text-gray-400">No open invoices</p>
       </div>
     );
   }
@@ -33,9 +33,9 @@ export default function InvoiceTable({ invoices }: InvoiceTableProps) {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden">
+    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
       <table className="w-full">
-        <thead className="bg-slate-900/50 border-b border-white/5">
+        <thead className="bg-gray-900 border-b border-gray-800">
           <tr>
             <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
               Invoice
@@ -54,14 +54,14 @@ export default function InvoiceTable({ invoices }: InvoiceTableProps) {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-gray-800">
           {invoices.map((invoice) => (
-            <tr key={invoice.id} className="hover:bg-white/5 transition-colors">
+            <tr key={invoice.id} className="hover:bg-gray-800 transition-colors">
               <td className="px-6 py-4 text-sm text-white font-mono">
                 #{invoice.id.slice(0, 8)}
               </td>
               <td className="px-6 py-4 text-sm text-white font-semibold">
-                ${(invoice.amount / 100).toFixed(2)}
+                ${(Number(invoice.total) / 100).toFixed(2)}
               </td>
               <td className="px-6 py-4">
                 <span
@@ -72,7 +72,7 @@ export default function InvoiceTable({ invoices }: InvoiceTableProps) {
                   {invoice.status}
                 </span>
               </td>
-              <td className="px-6 py-4 text-sm text-slate-400">
+              <td className="px-6 py-4 text-sm text-gray-400">
                 {invoice.dueAt
                   ? new Date(invoice.dueAt).toLocaleDateString()
                   : "N/A"}

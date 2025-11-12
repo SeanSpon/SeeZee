@@ -5,7 +5,7 @@
  */
 
 import { db } from "@/server/db";
-import { requireRole } from "@/lib/permissions";
+import { requireRole } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
 import { revalidatePath } from "next/cache";
 
@@ -25,7 +25,7 @@ interface CreateLinkParams {
  * Get all links
  */
 export async function getLinks(filter?: { category?: LinkCategory; pinned?: boolean }) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const where: any = {};
@@ -58,7 +58,7 @@ export async function getLinks(filter?: { category?: LinkCategory; pinned?: bool
  * Create a link
  */
 export async function createLink(params: CreateLinkParams) {
-  const user = await requireRole("STAFF");
+  const user = await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const link = await db.link.create({
@@ -86,7 +86,7 @@ export async function createLink(params: CreateLinkParams) {
  * Update a link
  */
 export async function updateLink(linkId: string, data: Partial<CreateLinkParams>) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const link = await db.link.update({
@@ -106,7 +106,7 @@ export async function updateLink(linkId: string, data: Partial<CreateLinkParams>
  * Delete a link
  */
 export async function deleteLink(linkId: string) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     await db.link.delete({
@@ -125,7 +125,7 @@ export async function deleteLink(linkId: string) {
  * Toggle link pinned status
  */
 export async function toggleLinkPin(linkId: string) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const link = await db.link.findUnique({
@@ -153,7 +153,7 @@ export async function toggleLinkPin(linkId: string) {
  * Reorder links
  */
 export async function reorderLinks(linkIds: string[]) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     // Update order for each link

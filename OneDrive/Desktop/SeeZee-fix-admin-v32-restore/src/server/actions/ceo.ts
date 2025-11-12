@@ -16,14 +16,15 @@ import { UserRole, TodoStatus } from "@prisma/client";
 // ============================================
 
 /**
- * Assign learning resources to users or role groups
+ * CEO-only: Assign learning resources to users or role groups
+ * Only CEOs can assign resources to team members
  */
 export async function assignLearningResources(data: {
   resourceIds: string[];
   userIds?: string[];
   roles?: UserRole[];
 }) {
-  const user = await requireRole(["CEO", "ADMIN"]);
+  const user = await requireRole(["CEO"]);
 
   try {
     // If specific users are provided
@@ -71,14 +72,15 @@ export async function assignLearningResources(data: {
 }
 
 /**
- * Assign tools to users or role groups
+ * CEO-only: Assign tools to users or role groups
+ * Only CEOs can assign tools to team members
  */
 export async function assignTools(data: {
   toolIds: string[];
   userIds?: string[];
   roles?: UserRole[];
 }) {
-  const user = await requireRole(["CEO", "ADMIN"]);
+  const user = await requireRole(["CEO"]);
 
   try {
     if (data.userIds && data.userIds.length > 0) {
@@ -122,14 +124,15 @@ export async function assignTools(data: {
 }
 
 /**
- * Assign tasks to users or role groups
+ * CEO-only: Assign tasks to users or role groups
+ * Only CEOs can assign tasks to team members
  */
 export async function assignTasksToTeam(data: {
   taskIds: string[];
   userIds?: string[];
   roles?: UserRole[];
 }) {
-  const user = await requireRole(["CEO", "ADMIN"]);
+  const user = await requireRole(["CEO"]);
 
   try {
     // Assign to specific users
@@ -199,7 +202,7 @@ export async function assignTasksToTeam(data: {
  * Get comprehensive executive dashboard metrics
  */
 export async function getExecutiveMetrics() {
-  await requireRole(["CEO", "ADMIN"]);
+  await requireRole(["CEO", "CFO"]);
 
   try {
     // Revenue metrics
@@ -281,6 +284,76 @@ export async function getExecutiveMetrics() {
         ? ((recentRevenue - previousRevenue) / previousRevenue) * 100
         : 0;
 
+    // Generate revenue over time (last 6 months)
+    const revenueOverTime: { month: string; revenue: number }[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      
+      const monthRevenue = invoices
+        .filter(
+          (inv) =>
+            inv.status === "PAID" &&
+            inv.paidAt &&
+            inv.paidAt >= monthStart &&
+            inv.paidAt <= monthEnd
+        )
+        .reduce((sum, inv) => sum + Number(inv.total), 0);
+      
+      revenueOverTime.push({
+        month: date.toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+        revenue: monthRevenue,
+      });
+    }
+
+    // Generate monthly comparison (current vs previous month)
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    const currentMonthRevenue = invoices
+      .filter(
+        (inv) =>
+          inv.status === "PAID" &&
+          inv.paidAt &&
+          inv.paidAt >= currentMonthStart &&
+          inv.paidAt <= currentMonthEnd
+      )
+      .reduce((sum, inv) => sum + Number(inv.total), 0);
+
+    const previousMonthRevenue = invoices
+      .filter(
+        (inv) =>
+          inv.status === "PAID" &&
+          inv.paidAt &&
+          inv.paidAt >= previousMonthStart &&
+          inv.paidAt <= previousMonthEnd
+      )
+      .reduce((sum, inv) => sum + Number(inv.total), 0);
+
+    // Project status breakdown
+    const projectStatusBreakdown = {
+      PLANNING: projects.filter((p) => p.status === "PLANNING").length,
+      IN_PROGRESS: projects.filter((p) => p.status === "IN_PROGRESS").length,
+      ON_HOLD: projects.filter((p) => p.status === "ON_HOLD").length,
+      COMPLETED: completedProjects,
+      CANCELLED: projects.filter((p) => p.status === "CANCELLED").length,
+    };
+
+    // Lead funnel breakdown
+    const leadStatusBreakdown = {
+      NEW: leads.filter((l) => l.status === "NEW").length,
+      CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
+      QUALIFIED: leads.filter((l) => l.status === "QUALIFIED").length,
+      PROPOSAL_SENT: leads.filter((l) => l.status === "PROPOSAL_SENT").length,
+      CONVERTED: convertedLeads,
+      LOST: leads.filter((l) => l.status === "LOST").length,
+    };
+
     return {
       success: true,
       metrics: {
@@ -289,17 +362,26 @@ export async function getExecutiveMetrics() {
           pending: pendingRevenue,
           trend: revenueTrend,
           recent: recentRevenue,
+          overTime: revenueOverTime,
+          monthlyComparison: {
+            current: currentMonthRevenue,
+            previous: previousMonthRevenue,
+            currentMonth: now.toLocaleDateString("en-US", { month: "long" }),
+            previousMonth: new Date(now.getFullYear(), now.getMonth() - 1, 1).toLocaleDateString("en-US", { month: "long" }),
+          },
         },
         projects: {
           active: activeProjects,
           completed: completedProjects,
           total: projects.length,
           avgValue: avgProjectValue,
+          statusBreakdown: projectStatusBreakdown,
         },
         leads: {
           total: leads.length,
           converted: convertedLeads,
           conversionRate,
+          statusBreakdown: leadStatusBreakdown,
         },
         tasks: {
           total: tasks.length,
@@ -318,12 +400,12 @@ export async function getExecutiveMetrics() {
  * Get team workload distribution
  */
 export async function getTeamWorkload() {
-  await requireRole(["CEO", "ADMIN"]);
+  await requireRole(["CEO", "CFO"]);
 
   try {
     const users = await db.user.findMany({
       where: {
-        role: { in: ["CEO", "ADMIN", "STAFF"] },
+        role: { in: ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"] },
       },
       include: {
         assignedTodos: {
@@ -373,13 +455,13 @@ export async function getResourceUtilization() {
   try {
     const totalUsers = await db.user.count({
       where: {
-        role: { in: ["CEO", "ADMIN", "STAFF"] },
+        role: { in: ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"] },
       },
     });
 
     const activeUsers = await db.user.count({
       where: {
-        role: { in: ["CEO", "ADMIN", "STAFF"] },
+        role: { in: ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"] },
         assignedTodos: {
           some: {
             status: { not: TodoStatus.DONE },

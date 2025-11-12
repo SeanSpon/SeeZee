@@ -1,0 +1,113 @@
+"use client";
+
+import { DataTable, type DataTableColumn } from "@/components/table/DataTable";
+import StatusBadge from "@/components/ui/StatusBadge";
+import { FiCalendar, FiFlag, FiUsers, FiCheckSquare } from "react-icons/fi";
+
+interface TaskRow {
+  id: string;
+  title: string;
+  project: string;
+  client: string;
+  status: string;
+  priority: string;
+  dueDate: string | null;
+}
+
+interface ClientTasksClientProps {
+  rows: TaskRow[];
+  overdue: number;
+  openTasks: number;
+}
+
+export function ClientTasksClient({ rows, overdue, openTasks }: ClientTasksClientProps) {
+  const columns: DataTableColumn<TaskRow>[] = [
+    {
+      header: "Task",
+      key: "title",
+      render: (task) => (
+        <div className="space-y-1">
+          <p className="text-sm font-semibold text-white">{task.title}</p>
+          <p className="text-xs text-gray-500">{task.project}</p>
+        </div>
+      ),
+    },
+    {
+      header: "Client",
+      key: "client",
+      render: (task) => (
+        <div className="flex items-center gap-2 text-xs text-gray-300">
+          <FiUsers className="h-3.5 w-3.5 text-gray-500" />
+          {task.client}
+        </div>
+      ),
+    },
+    {
+      header: "Status",
+      key: "status",
+      render: (task) => <StatusBadge status={task.status} size="sm" />,
+    },
+    {
+      header: "Priority",
+      key: "priority",
+      render: (task) => (
+        <span className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gray-400">
+          <FiFlag className="h-3.5 w-3.5" />
+          {task.priority || "unknown"}
+        </span>
+      ),
+    },
+    {
+      header: "Due",
+      key: "dueDate",
+      render: (task) => (
+        <div className="flex items-center gap-2 text-xs text-gray-300">
+          <FiCalendar className="h-3.5 w-3.5 text-gray-500" />
+          {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date"}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Open Tasks</p>
+            <div className="w-10 h-10 bg-trinity-red/20 rounded-lg flex items-center justify-center border border-trinity-red/30">
+              <FiCheckSquare className="w-5 h-5 text-trinity-red" />
+            </div>
+          </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{openTasks}</p>
+          <p className="text-xs text-gray-500">Active deliverables</p>
+        </div>
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Overdue</p>
+            <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
+              <FiFlag className="w-5 h-5 text-red-400" />
+            </div>
+          </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{overdue}</p>
+          <p className="text-xs text-gray-500">Needs attention</p>
+        </div>
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Total Tasks</p>
+            <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
+              <FiCalendar className="w-5 h-5 text-blue-400" />
+            </div>
+          </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{rows.length}</p>
+          <p className="text-xs text-gray-500">All time</p>
+        </div>
+      </section>
+
+      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+        <DataTable columns={columns} data={rows} emptyMessage="No tasks found" />
+      </div>
+    </>
+  );
+}
+

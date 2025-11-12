@@ -16,7 +16,7 @@ interface TeamAssignmentModalProps {
 type AssignmentType = "learning" | "tools" | "tasks";
 type TargetType = "users" | "roles";
 
-const AVAILABLE_ROLES: UserRole[] = ["CEO", "ADMIN", "STAFF"];
+const AVAILABLE_ROLES: UserRole[] = ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"];
 
 export function TeamAssignmentModal({ onClose }: TeamAssignmentModalProps) {
   const [assignmentType, setAssignmentType] =

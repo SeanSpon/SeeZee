@@ -56,10 +56,20 @@ export async function POST(request: NextRequest) {
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
         break
       case 'invoice.paid':
+      case 'invoice.payment_succeeded':
         await handleInvoicePaid(event.data.object as Stripe.Invoice)
         break
       case 'invoice.payment_failed':
         await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice)
+        break
+      case 'customer.subscription.created':
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription)
+        break
+      case 'customer.subscription.updated':
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
+        break
+      case 'customer.subscription.deleted':
+        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
         break
       default:
         console.log(`Unhandled event type: ${event.type}`)
@@ -80,11 +90,111 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const metadata = session.metadata!
+  const metadata = session.metadata || {}
+  const invoiceId = metadata.invoiceId || metadata.invoice_id
+  
+  // Handle invoice payment from pipeline
+  if (invoiceId) {
+    try {
+      const invoice = await prisma.invoice.findUnique({
+        where: { id: invoiceId },
+        include: {
+          project: {
+            select: {
+              id: true,
+              status: true,
+            },
+          },
+          organization: true,
+        },
+      })
+
+      if (!invoice) {
+        console.error(`Invoice not found: ${invoiceId}`)
+        return
+      }
+
+      // Update invoice status to PAID
+      await prisma.invoice.update({
+        where: { id: invoiceId },
+        data: {
+          status: InvoiceStatus.PAID,
+          paidAt: new Date(),
+          stripeInvoiceId: session.id, // Store checkout session ID
+        },
+      })
+
+      // Get payment amount from session
+      const amountTotal = session.amount_total ? session.amount_total / 100 : Number(invoice.total)
+      const currency = session.currency?.toUpperCase() || invoice.currency || 'USD'
+
+      // Create payment record
+      await prisma.payment.create({
+        data: {
+          amount: amountTotal,
+          currency: currency,
+          status: PaymentStatus.COMPLETED,
+          method: 'stripe',
+          stripePaymentId: session.payment_intent as string,
+          invoiceId: invoice.id,
+          processedAt: new Date(),
+        },
+      })
+
+      // Update project status if applicable
+      if (invoice.projectId && invoice.project) {
+        const project = invoice.project
+        
+        // If project is in LEAD status, update to PAID
+        if (project.status === ProjectStatus.LEAD) {
+          await prisma.project.update({
+            where: { id: invoice.projectId },
+            data: { status: ProjectStatus.PAID },
+          })
+          
+          // Emit status change event
+          await feedHelpers.statusChanged(invoice.projectId, ProjectStatus.LEAD, ProjectStatus.PAID)
+        }
+
+        // Emit payment succeeded event
+        await feedHelpers.paymentSucceeded(invoice.projectId, amountTotal, invoice.id)
+      }
+
+      // Calculate project payouts when client pays
+      if (invoice.projectId) {
+        const { calculateProjectPayouts } = await import("@/lib/payouts")
+        await calculateProjectPayouts(invoice.projectId)
+      }
+
+      // Revalidate invoice pages
+      const { revalidatePath } = await import("next/cache")
+      revalidatePath("/admin/pipeline/invoices")
+      revalidatePath(`/admin/pipeline/invoices/${invoiceId}`)
+      revalidatePath("/admin/pipeline")
+
+      console.log('Successfully processed invoice payment:', {
+        invoiceId,
+        amount: amountTotal,
+        projectId: invoice.projectId,
+      })
+
+      return
+    } catch (error) {
+      console.error('Error processing invoice payment:', error)
+      throw error
+    }
+  }
+
+  // Handle lead/quote payment (existing logic)
   const leadId = metadata.lead_id
   const quoteId = metadata.quote_id
-  const fullAmount = parseFloat(metadata.full_amount)
-  const depositAmount = parseFloat(metadata.deposit_amount)
+  const fullAmount = parseFloat(metadata.full_amount || '0')
+  const depositAmount = parseFloat(metadata.deposit_amount || '0')
+
+  if (!leadId) {
+    console.warn('Checkout session missing both invoiceId and lead_id in metadata')
+    return
+  }
 
   try {
     // Get the lead
@@ -250,12 +360,38 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await feedHelpers.projectCreated(project.id, project.name);
     await feedHelpers.paymentSucceeded(project.id, depositAmount, depositInvoice.id);
 
+    // Calculate project payouts when client pays (deposit)
+    const { calculateProjectPayouts } = await import("@/lib/payouts");
+    await calculateProjectPayouts(project.id);
+
+    // Create a client task for detailed project questionnaire
+    await prisma.clientTask.create({
+      data: {
+        projectId: project.id,
+        title: 'Complete Project Details Questionnaire',
+        description: 'Please complete this questionnaire to help us understand your project requirements better. This will include details about your target audience, brand preferences, must-have features, and more.',
+        type: 'questionnaire',
+        status: 'pending',
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      }
+    })
+
     // Create notification for client
     await prisma.notification.create({
       data: {
         title: 'Welcome to SeeZee Studio!',
         message: `Your project has been successfully created. We'll be in touch within 24 hours to schedule your kick-off call.`,
         type: 'SUCCESS',
+        userId: user.id,
+      }
+    })
+
+    // Create notification for questionnaire task
+    await prisma.notification.create({
+      data: {
+        title: 'Action Required: Complete Project Questionnaire',
+        message: `Please complete the project details questionnaire in your dashboard to help us get started on your project.`,
+        type: 'INFO',
         userId: user.id,
       }
     })
@@ -276,12 +412,23 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
   try {
     const stripeInvoiceId = invoice.id
+    const projectId = invoice.metadata?.projectId
+    const label = invoice.metadata?.label // 'deposit' or 'final'
 
     const dbInvoice = await prisma.invoice.findFirst({
-      where: { stripeInvoiceId }
+      where: { stripeInvoiceId },
+      include: {
+        project: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+      },
     })
 
     if (dbInvoice) {
+      // Update invoice status
       await prisma.invoice.update({
         where: { id: dbInvoice.id },
         data: {
@@ -303,12 +450,35 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
         }
       })
 
-      // Emit feed event
-      if (dbInvoice.projectId) {
+      // Update project status based on invoice type
+      if (dbInvoice.projectId && dbInvoice.project) {
+        const project = dbInvoice.project
+        
+        // If this is a deposit invoice and project is PLANNING, update to PAID
+        if (label === 'deposit' && project.status === ProjectStatus.PLANNING) {
+          await prisma.project.update({
+            where: { id: dbInvoice.projectId },
+            data: { status: ProjectStatus.PAID },
+          })
+          
+          // Emit status change event
+          await feedHelpers.statusChanged(dbInvoice.projectId, ProjectStatus.PLANNING, ProjectStatus.PAID);
+        }
+        
+        // If final invoice paid, status should already be COMPLETED (set by admin)
+        // Just ensure it stays as COMPLETED
+
+        // Emit payment succeeded event
         await feedHelpers.paymentSucceeded(dbInvoice.projectId, invoice.amount_paid / 100, dbInvoice.id);
       }
 
-      console.log('Invoice marked as paid:', dbInvoice.id)
+      // Calculate project payouts when client pays
+      if (dbInvoice.projectId) {
+        const { calculateProjectPayouts } = await import("@/lib/payouts");
+        await calculateProjectPayouts(dbInvoice.projectId);
+      }
+
+      console.log('Invoice marked as paid:', dbInvoice.id, 'Label:', label)
     }
   } catch (error) {
     console.error('Error processing invoice.paid:', error)
@@ -334,6 +504,119 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
     }
   } catch (error) {
     console.error('Error processing invoice.payment_failed:', error)
+    throw error
+  }
+}
+
+async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  try {
+    const projectId = subscription.metadata?.projectId;
+    const maintenancePlan = subscription.metadata?.maintenancePlan || 'standard';
+
+    if (!projectId) {
+      console.warn('Subscription missing projectId in metadata:', subscription.id);
+      return;
+    }
+
+    const priceId = subscription.items.data[0]?.price.id || '';
+
+    // Create subscription record
+    await prisma.subscription.create({
+      data: {
+        projectId,
+        stripeId: subscription.id,
+        priceId,
+        status: subscription.status,
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      },
+    });
+
+    // Update project with subscription details
+    await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        stripeSubscriptionId: subscription.id,
+        maintenancePlan,
+        maintenanceStatus: subscription.status,
+        nextBillingDate: new Date(subscription.current_period_end * 1000),
+      },
+    });
+
+    console.log('Subscription created for project:', projectId, 'Plan:', maintenancePlan);
+  } catch (error) {
+    console.error('Error handling subscription.created:', error);
+    throw error;
+  }
+}
+
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  try {
+    const projectId = subscription.metadata?.projectId
+
+    if (!projectId) {
+      console.warn('Subscription missing projectId in metadata:', subscription.id)
+      return
+    }
+
+    // Find or create subscription record
+    const existingSubscription = await prisma.subscription.findUnique({
+      where: { stripeId: subscription.id }
+    })
+
+    const priceId = subscription.items.data[0]?.price.id || ''
+
+    if (existingSubscription) {
+      await prisma.subscription.update({
+        where: { id: existingSubscription.id },
+        data: {
+          status: subscription.status,
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        }
+      })
+
+      // Also update project maintenance status
+      await prisma.project.update({
+        where: { id: projectId },
+        data: {
+          maintenanceStatus: subscription.status,
+          nextBillingDate: new Date(subscription.current_period_end * 1000),
+        },
+      });
+    } else {
+      await prisma.subscription.create({
+        data: {
+          projectId,
+          stripeId: subscription.id,
+          priceId,
+          status: subscription.status,
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        }
+      })
+    }
+
+    console.log('Subscription updated:', subscription.id)
+  } catch (error) {
+    console.error('Error processing subscription.updated:', error)
+    throw error
+  }
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  try {
+    const existingSubscription = await prisma.subscription.findUnique({
+      where: { stripeId: subscription.id }
+    })
+
+    if (existingSubscription) {
+      await prisma.subscription.update({
+        where: { id: existingSubscription.id },
+        data: { status: 'canceled' }
+      })
+
+      console.log('Subscription canceled:', subscription.id)
+    }
+  } catch (error) {
+    console.error('Error processing subscription.deleted:', error)
     throw error
   }
 }

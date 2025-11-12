@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { feedHelpers } from "@/lib/feed/emit";
+import { Prisma } from "@prisma/client";
 
 /**
  * Approve a lead and create a project
@@ -12,8 +13,8 @@ import { feedHelpers } from "@/lib/feed/emit";
 export async function approveLeadAndCreateProject(leadId: string) {
   const session = await auth();
   
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
-    throw new Error("Unauthorized: CEO or Admin role required");
+  if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
+    return { success: false, error: "Unauthorized: CEO or CFO role required" };
   }
 
   try {
@@ -24,11 +25,11 @@ export async function approveLeadAndCreateProject(leadId: string) {
     });
 
     if (!lead) {
-      throw new Error("Lead not found");
+      return { success: false, error: "Lead not found" };
     }
 
     if (lead.status === "CONVERTED") {
-      throw new Error("Lead already converted to project");
+      return { success: false, error: "Lead already converted to project" };
     }
 
     // Check if project already exists
@@ -37,7 +38,7 @@ export async function approveLeadAndCreateProject(leadId: string) {
     });
 
     if (existingProject) {
-      throw new Error("Project already exists for this lead");
+      return { success: false, error: "Project already exists for this lead" };
     }
 
     // Create organization if lead doesn't have one
@@ -76,19 +77,23 @@ export async function approveLeadAndCreateProject(leadId: string) {
       });
 
       if (projectWithQuestionnaire) {
-        throw new Error("This questionnaire is already linked to another project");
+        return { success: false, error: "This questionnaire is already linked to another project" };
       }
     }
 
     // Create the project
+    // Status starts as PLANNING (awaiting payment)
+    // Budget should be set when creating project - extract from lead if available
     const project = await prisma.project.create({
       data: {
         name: lead.company || `Project for ${lead.name}`,
         description: lead.message || `${lead.serviceType || "Web"} project`,
-        status: "LEAD", // Will move to IN_PROGRESS after deposit
+        status: "PLANNING", // Awaiting deposit payment
         organizationId: orgId,
         leadId: lead.id,
         questionnaireId,
+        // Extract budget from lead budget field or metadata if available
+        budget: lead.budget ? new Prisma.Decimal(lead.budget) : null,
       },
     });
 
@@ -101,16 +106,55 @@ export async function approveLeadAndCreateProject(leadId: string) {
       },
     });
 
+    // Link user to organization if they exist
+    // Find user by email from the lead
+    const user = await prisma.user.findUnique({
+      where: { email: lead.email },
+    });
+
+    if (user) {
+      // Check if user is already a member of the organization
+      const existingMember = await prisma.organizationMember.findUnique({
+        where: {
+          organizationId_userId: {
+            organizationId: orgId,
+            userId: user.id,
+          },
+        },
+      });
+
+      // If not a member, add them to the organization
+      if (!existingMember) {
+        await prisma.organizationMember.create({
+          data: {
+            organizationId: orgId,
+            userId: user.id,
+            role: "OWNER", // Lead creator becomes owner
+          },
+        });
+      }
+    }
+
     // Emit feed event
     await feedHelpers.projectCreated(project.id, project.name);
 
+    // Revalidate all relevant pages to show new project
     revalidatePath("/admin/pipeline/leads");
     revalidatePath(`/admin/pipeline/leads/${leadId}`);
     revalidatePath("/admin/pipeline/projects");
+    revalidatePath("/admin/pipeline");
+    revalidatePath("/admin/projects"); // Main projects page
+    revalidatePath(`/admin/projects/${project.id}`); // New project detail page
+    
+    // Revalidate client pages so the new project appears
+    revalidatePath("/client");
+    revalidatePath("/client/projects");
+    revalidatePath("/client/dashboard");
 
     return { success: true, projectId: project.id };
   } catch (error) {
     console.error("[Approve Lead Error]", error);
-    throw error;
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+    return { success: false, error: errorMessage };
   }
 }

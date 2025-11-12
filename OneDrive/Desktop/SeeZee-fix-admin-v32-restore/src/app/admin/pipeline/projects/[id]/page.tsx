@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProjectDetailClient } from "@/components/admin/ProjectDetailClient";
+import { toPlain } from "@/lib/serialize";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -11,7 +12,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
   const { id } = await params;
   const session = await auth();
 
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+    if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
     redirect("/login");
   }
 
@@ -42,11 +43,22 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
           status: true,
         },
       },
+      questionnaire: {
+        select: {
+          id: true,
+          estimate: true,
+          deposit: true,
+          data: true,
+        },
+      },
       milestones: {
         orderBy: { createdAt: "desc" },
       },
       invoices: {
         orderBy: { createdAt: "desc" },
+        include: {
+          items: true,
+        },
       },
       feedEvents: {
         orderBy: { createdAt: "desc" },
@@ -59,5 +71,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <ProjectDetailClient project={project} />;
+  // Convert to JSON-serializable plain object (Decimal -> string, Date -> ISO)
+  const plainProject = toPlain(project);
+  return <ProjectDetailClient project={plainProject} />;
 }

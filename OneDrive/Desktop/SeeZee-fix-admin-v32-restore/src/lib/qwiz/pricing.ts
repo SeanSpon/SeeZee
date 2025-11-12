@@ -15,6 +15,9 @@ import {
 } from './packages';
 import type { Totals } from './store';
 
+// Re-export for convenience
+export { getPackage, getFeature, PRICE_CEILING, RUSH_MULTIPLIER, DEPOSIT_PERCENT, MIN_DEPOSIT, MAINTENANCE };
+
 export interface CalculateTotalsParams {
   package: PackageTier | null;
   selectedFeatures: string[];

@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { handleCors, addCorsHeaders } from "@/lib/cors";
+import { getClientAccessContext } from "@/lib/client-access";
+import type { Prisma } from "@prisma/client";
+
+/**
+ * OPTIONS /api/client/overview
+ * Handle CORS preflight
+ */
+export async function OPTIONS(req: NextRequest) {
+  return handleCors(req) || new NextResponse(null, { status: 200 });
+}
 
 /**
  * GET /api/client/overview
@@ -10,38 +21,64 @@ export async function GET(req: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
-    const userEmail = session.user.email!;
+    const identity = {
+      userId: session.user.id,
+      email: session.user.email,
+    };
+    const { organizationIds, leadProjectIds } = await getClientAccessContext(identity);
 
-    // Find user's organization through their lead
-    const lead = await prisma.lead.findFirst({
-      where: { email: userEmail },
-      select: { organizationId: true },
-    });
-
-    if (!lead?.organizationId) {
-      return NextResponse.json({
+    if (organizationIds.length === 0 && leadProjectIds.length === 0) {
+      const response = NextResponse.json({
         projects: { active: 0, total: 0 },
         invoices: { open: 0, overdue: 0, paidThisMonth: 0 },
         activity: { items: [] },
         files: { recent: [] },
+        requests: { recent: [] },
       });
+      return addCorsHeaders(response, req.headers.get("origin"));
     }
 
-    const orgId = lead.organizationId;
+    const projectScope: Prisma.ProjectWhereInput = {
+      OR: [
+        ...(organizationIds.length > 0
+          ? [
+              {
+                organizationId: {
+                  in: organizationIds,
+                },
+              },
+            ]
+          : []),
+        ...(leadProjectIds.length > 0
+          ? [
+              {
+                id: {
+                  in: leadProjectIds,
+                },
+              },
+            ]
+          : []),
+      ],
+    };
 
     // Projects count
     const [activeProjects, totalProjects] = await Promise.all([
       prisma.project.count({
         where: {
-          organizationId: orgId,
-          status: { in: ["IN_PROGRESS", "REVIEW"] },
+          AND: [
+            projectScope,
+            {
+              status: { in: ["IN_PROGRESS", "REVIEW"] },
+            },
+          ],
         },
       }),
       prisma.project.count({
-        where: { organizationId: orgId },
+        where: projectScope,
       }),
     ]);
 
@@ -51,64 +88,230 @@ export async function GET(req: NextRequest) {
 
     const [openInvoices, overdueInvoices, paidThisMonth] = await Promise.all([
       prisma.invoice.count({
-        where: { organizationId: orgId, status: "SENT" },
-      }),
-      prisma.invoice.count({
         where: {
-          organizationId: orgId,
-          status: "OVERDUE",
+          status: "SENT",
+          OR: [
+            ...(organizationIds.length > 0
+              ? [
+                  {
+                    organizationId: {
+                      in: organizationIds,
+                    },
+                  },
+                ]
+              : []),
+            ...(leadProjectIds.length > 0
+              ? [
+                  {
+                    projectId: {
+                      in: leadProjectIds,
+                    },
+                  },
+                ]
+              : []),
+          ],
         },
       }),
       prisma.invoice.count({
         where: {
-          organizationId: orgId,
+          status: "OVERDUE",
+          OR: [
+            ...(organizationIds.length > 0
+              ? [
+                  {
+                    organizationId: {
+                      in: organizationIds,
+                    },
+                  },
+                ]
+              : []),
+            ...(leadProjectIds.length > 0
+              ? [
+                  {
+                    projectId: {
+                      in: leadProjectIds,
+                    },
+                  },
+                ]
+              : []),
+          ],
+        },
+      }),
+      prisma.invoice.count({
+        where: {
           status: "PAID",
           paidAt: { gte: firstOfMonth },
+          OR: [
+            ...(organizationIds.length > 0
+              ? [
+                  {
+                    organizationId: {
+                      in: organizationIds,
+                    },
+                  },
+                ]
+              : []),
+            ...(leadProjectIds.length > 0
+              ? [
+                  {
+                    projectId: {
+                      in: leadProjectIds,
+                    },
+                  },
+                ]
+              : []),
+          ],
         },
       }),
     ]);
 
-    // Recent activity
-    const activities = await prisma.activity.findMany({
-      where: { entityType: "project", entityId: { not: null } },
+    // Get invoice amounts
+    const [invoiceAmounts, paidInvoices] = await Promise.all([
+      prisma.invoice.aggregate({
+        where: {
+          status: { in: ["SENT", "OVERDUE"] },
+          OR: [
+            ...(organizationIds.length > 0
+              ? [
+                  {
+                    organizationId: {
+                      in: organizationIds,
+                    },
+                  },
+                ]
+              : []),
+            ...(leadProjectIds.length > 0
+              ? [
+                  {
+                    projectId: {
+                      in: leadProjectIds,
+                    },
+                  },
+                ]
+              : []),
+          ],
+        },
+        _sum: { total: true },
+      }),
+      prisma.invoice.aggregate({
+        where: {
+          status: "PAID",
+          paidAt: { gte: firstOfMonth },
+          OR: [
+            ...(organizationIds.length > 0
+              ? [
+                  {
+                    organizationId: {
+                      in: organizationIds,
+                    },
+                  },
+                ]
+              : []),
+            ...(leadProjectIds.length > 0
+              ? [
+                  {
+                    projectId: {
+                      in: leadProjectIds,
+                    },
+                  },
+                ]
+              : []),
+          ],
+        },
+        _sum: { total: true },
+      }),
+    ]);
+
+    // Recent activity (filtered by organization's projects)
+    const accessibleProjectIds = await prisma.project
+      .findMany({
+        where: projectScope,
+        select: { id: true },
+      })
+      .then((projects) => projects.map((project) => project.id));
+
+    const activities = accessibleProjectIds.length
+      ? await prisma.activity.findMany({
+          where: {
+            entityType: "project",
+            entityId: {
+              in: accessibleProjectIds,
+            },
+          },
+          orderBy: { createdAt: "desc" },
+          take: 10,
+          include: {
+            user: {
+              select: { name: true, email: true, image: true },
+            },
+          },
+        })
+      : [];
+
+    // Recent files (from accessible projects)
+    const files = await prisma.file.findMany({
+      where: {
+        projectId: {
+          in: accessibleProjectIds,
+        },
+      },
       orderBy: { createdAt: "desc" },
-      take: 10,
+      take: 6,
       include: {
-        user: {
-          select: { name: true, email: true },
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
     });
 
-    // Recent files (from projects in this org)
-    const files = await prisma.file.findMany({
+    // Recent requests
+    const requests = await prisma.request.findMany({
       where: {
-        project: { organizationId: orgId },
+        projectId: {
+          in: accessibleProjectIds,
+        },
       },
       orderBy: { createdAt: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        size: true,
-        mimeType: true,
-        url: true,
-        createdAt: true,
+      take: 5,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
-    return NextResponse.json({
-      projects: { active: activeProjects, total: totalProjects },
-      invoices: { open: openInvoices, overdue: overdueInvoices, paidThisMonth },
+    const response = NextResponse.json({
+      projects: {
+        active: activeProjects,
+        total: totalProjects,
+      },
+      invoices: {
+        open: openInvoices,
+        overdue: overdueInvoices,
+        paidThisMonth,
+        openAmount: Number(invoiceAmounts._sum.total || 0),
+        paidThisMonthAmount: Number(paidInvoices._sum.total || 0),
+      },
       activity: {
         items: activities.map((a) => ({
           id: a.id,
           type: a.type,
           title: a.title,
           description: a.description,
+          metadata: a.metadata,
           createdAt: a.createdAt,
           user: a.user
-            ? { name: a.user.name, email: a.user.email }
+            ? {
+                name: a.user.name,
+                email: a.user.email,
+                image: a.user.image,
+              }
             : null,
         })),
       },
@@ -120,14 +323,37 @@ export async function GET(req: NextRequest) {
           mimeType: f.mimeType,
           url: f.url,
           uploadedAt: f.createdAt,
+          project: f.project
+            ? {
+                id: f.project.id,
+                name: f.project.name,
+              }
+            : null,
+        })),
+      },
+      requests: {
+        recent: requests.map((r) => ({
+          id: r.id,
+          title: r.title,
+          details: r.details,
+          state: r.state,
+          createdAt: r.createdAt,
+          project: r.project
+            ? {
+                id: r.project.id,
+                name: r.project.name,
+              }
+            : null,
         })),
       },
     });
+    return addCorsHeaders(response, req.headers.get("origin"));
   } catch (error: any) {
     console.error("[GET /api/client/overview]", error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: "Failed to fetch overview" },
       { status: 500 }
     );
+    return addCorsHeaders(response, req.headers.get("origin"));
   }
 }

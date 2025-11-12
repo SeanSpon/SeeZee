@@ -31,7 +31,7 @@ export async function GET(
     }
 
     // Check authorization
-    const isAdmin = ["CEO", "ADMIN", "STAFF"].includes(session.user.role || "");
+    const isAdmin = ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"].includes(session.user.role || "");
     
     if (!isAdmin) {
       // For clients, verify they're in the organization

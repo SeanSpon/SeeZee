@@ -23,40 +23,9 @@ export interface Notification {
 }
 
 /**
- * Mock notifications for initial render
+ * Mock notifications removed - notifications now come from database via API
+ * @deprecated Use /api/notifications instead
  */
-export const mockNotifications: Notification[] = [
-  {
-    id: "notif-1",
-    type: "maintenance",
-    title: "New Maintenance Request",
-    message: "Tyree has submitted a new maintenance request",
-    timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 min ago
-    read: false,
-    actionUrl: "/admin/maintenance",
-    actionLabel: "View Request",
-  },
-  {
-    id: "notif-2",
-    type: "payment",
-    title: "Invoice Paid",
-    message: "Invoice #32 has been paid by CloudTech Solutions",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    read: false,
-    actionUrl: "/admin/pipeline/invoices",
-    actionLabel: "View Invoice",
-  },
-  {
-    id: "notif-3",
-    type: "task",
-    title: "Task Completed",
-    message: "Zach marked task #22 'Update homepage hero' as done",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-    read: true,
-    actionUrl: "/admin/tasks",
-    actionLabel: "View Task",
-  },
-];
 
 /**
  * Get notification icon and color

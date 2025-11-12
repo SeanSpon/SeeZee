@@ -6,9 +6,11 @@
 
 import { useState } from "react";
 import { DataTable, type Column } from "@/components/admin/DataTable";
-import { updateLeadStatus } from "@/server/actions";
-import { Plus } from "lucide-react";
+import { updateLeadStatus, deleteLead, updateLead } from "@/server/actions";
+import { approveLeadAndCreateProject } from "@/server/actions/leads";
+import { Plus, Trash2, Edit2, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type Lead = {
   id: string;
@@ -45,8 +47,18 @@ const statusOptions = [
 
 export function LeadsTableClient({ leads: initialLeads }: LeadsTableClientProps) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [leads, setLeads] = useState(initialLeads);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Lead>>({});
+  const [converting, setConverting] = useState<string | null>(null);
+  const [convertError, setConvertError] = useState<string | null>(null);
+
+  const isCEO = session?.user?.role === "CEO";
+  const isCFO = session?.user?.role === "CFO";
+  const canConvert = isCEO || isCFO;
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     setUpdating(leadId);
@@ -59,6 +71,94 @@ export function LeadsTableClient({ leads: initialLeads }: LeadsTableClientProps)
     }
     setUpdating(null);
     router.refresh();
+  };
+
+  const handleDelete = async (leadId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this lead? This action cannot be undone.")) {
+      return;
+    }
+
+    setDeleting(leadId);
+    const result = await deleteLead(leadId);
+
+    if (result.success) {
+      setLeads((prev) => prev.filter((l) => l.id !== leadId));
+    } else {
+      alert(result.error || "Failed to delete lead");
+    }
+    setDeleting(null);
+    router.refresh();
+  };
+
+  const handleEdit = async (lead: Lead, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditing(lead.id);
+    setEditForm({
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone || "",
+      company: lead.company || "",
+      status: lead.status,
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editing) return;
+
+    const result = await updateLead(editing, {
+      name: editForm.name,
+      email: editForm.email,
+      phone: editForm.phone || undefined,
+      company: editForm.company || undefined,
+      status: editForm.status as any,
+    });
+
+    if (result.success) {
+      setLeads((prev) =>
+        prev.map((l) => (l.id === editing ? { ...l, ...editForm } : l))
+      );
+      setEditing(null);
+      setEditForm({});
+      router.refresh();
+    } else {
+      alert(result.error || "Failed to update lead");
+    }
+  };
+
+  const handleConvertLead = async (leadId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to convert this lead to a project? This will create a new project.")) {
+      return;
+    }
+
+    setConverting(leadId);
+    setConvertError(null);
+
+    try {
+      const result = await approveLeadAndCreateProject(leadId);
+      
+      if (result.success) {
+        setLeads((prev) =>
+          prev.map((l) => (l.id === leadId ? { ...l, status: "CONVERTED" } : l))
+        );
+        // Redirect to the new project
+        if (result.projectId) {
+          router.push(`/admin/pipeline/projects/${result.projectId}`);
+        } else {
+          router.push(`/admin/pipeline/projects`);
+        }
+      } else {
+        setConvertError(result.error || "Failed to convert lead");
+        alert(result.error || "Failed to convert lead");
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      setConvertError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setConverting(null);
+    }
   };
 
   const columns: Column<Lead>[] = [
@@ -103,20 +203,147 @@ export function LeadsTableClient({ leads: initialLeads }: LeadsTableClientProps)
       label: "Created",
       render: (lead) => new Date(lead.createdAt).toLocaleDateString(),
     },
+    ...(canConvert
+      ? [
+          {
+            key: "actions",
+            label: "Actions",
+            render: (lead: Lead) => (
+              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                {lead.status !== "CONVERTED" && (
+                  <button
+                    onClick={(e) => handleConvertLead(lead.id, e)}
+                    disabled={converting === lead.id}
+                    className="p-1 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
+                    title="Convert lead to project"
+                  >
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                  </button>
+                )}
+                <button
+                  onClick={(e) => handleEdit(lead, e)}
+                  className="p-1 rounded hover:bg-white/10 transition-colors"
+                  title="Edit lead"
+                >
+                  <Edit2 className="w-4 h-4 text-blue-400" />
+                </button>
+                <button
+                  onClick={(e) => handleDelete(lead.id, e)}
+                  disabled={deleting === lead.id}
+                  className="p-1 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
+                  title="Delete lead"
+                >
+                  <Trash2 className="w-4 h-4 text-red-400" />
+                </button>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
-    <DataTable
-      data={leads}
-      columns={columns}
-      searchPlaceholder="Search leads by name, email, or company..."
-      actions={
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all">
-          <Plus className="w-4 h-4" />
-          Add Lead
-        </button>
-      }
-      onRowClick={(lead) => router.push(`/admin/pipeline/leads/${lead.id}`)}
-    />
+    <>
+      <DataTable
+        data={leads}
+        columns={columns}
+        searchPlaceholder="Search leads by name, email, or company..."
+        actions={
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all">
+            <Plus className="w-4 h-4" />
+            Add Lead
+          </button>
+        }
+        onRowClick={(lead) => router.push(`/admin/pipeline/leads/${lead.id}`)}
+      />
+
+      {/* Edit Modal */}
+      {editing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4 border border-white/10">
+            <h2 className="text-xl font-semibold mb-4 text-white">Edit Lead</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={editForm.name || ""}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={editForm.email || ""}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  value={editForm.phone || ""}
+                  onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Company
+                </label>
+                <input
+                  type="text"
+                  value={editForm.company || ""}
+                  onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Status
+                </label>
+                <select
+                  value={editForm.status || "NEW"}
+                  onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {statusOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleSaveEdit}
+                className="flex-1 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setEditing(null);
+                  setEditForm({});
+                }}
+                className="flex-1 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-medium transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

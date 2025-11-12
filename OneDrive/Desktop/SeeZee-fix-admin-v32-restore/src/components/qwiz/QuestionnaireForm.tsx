@@ -47,7 +47,7 @@ export function QuestionnaireForm() {
   };
 
   const handleContinueToContact = () => {
-    setStep(2); // Move to review step (no contact form anymore)
+    setStep(4); // Move to review step
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -95,13 +95,13 @@ export function QuestionnaireForm() {
           <span className="text-sm text-white/60">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </span>
-          <span className="text-sm text-cyan-400 font-semibold">
+          <span className="text-sm text-trinity-red font-semibold">
             {Math.round(progress)}% Complete
           </span>
         </div>
-        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500"
+            className="h-full bg-trinity-red"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.3 }}
@@ -120,12 +120,12 @@ export function QuestionnaireForm() {
           className="min-h-[400px] flex flex-col"
         >
           <div className="mb-6">
-            <div className="text-2xl font-bold text-white mb-3 drop-shadow-lg">
+            <div className="text-2xl md:text-3xl font-heading font-bold gradient-text mb-3">
               {currentQuestion.label}
-              {currentQuestion.required && <span className="text-red-400 ml-2">*</span>}
+              {currentQuestion.required && <span className="text-trinity-red ml-2">*</span>}
             </div>
             {currentQuestion.description && (
-              <div className="text-base text-white/60 drop-shadow-md">{currentQuestion.description}</div>
+              <div className="text-base text-white/60">{currentQuestion.description}</div>
             )}
           </div>
 
@@ -143,17 +143,17 @@ export function QuestionnaireForm() {
                       type="button"
                       onClick={() => handleMultiSelect(currentQuestion.id, option)}
                       className={`
-                        px-5 py-4 rounded-xl font-medium text-sm transition-all text-left
+                        px-5 py-4 rounded-lg font-medium text-sm transition-all text-left
                         ${
                           selected
-                            ? 'bg-cyan-500/20 text-cyan-300 border-2 border-cyan-500/50 shadow-lg shadow-cyan-500/20'
-                            : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                            ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                            : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                         }
                       `}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                          selected ? 'bg-cyan-500 border-cyan-500' : 'border-white/30'
+                          selected ? 'bg-trinity-red border-trinity-red' : 'border-gray-600'
                         }`}>
                           {selected && <Check className="w-3 h-3 text-white" />}
                         </div>
@@ -169,12 +169,12 @@ export function QuestionnaireForm() {
               <select
                 value={(questionnaire[currentQuestion.id as keyof typeof questionnaire] as string) || ''}
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
-                className="w-full px-5 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-base focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
                 required={currentQuestion.required}
               >
                 <option value="">Select an option...</option>
                 {currentQuestion.options.map((option) => (
-                  <option key={option} value={option} className="bg-slate-900">
+                  <option key={option} value={option} className="bg-gray-900">
                     {option}
                   </option>
                 ))}
@@ -187,7 +187,7 @@ export function QuestionnaireForm() {
                 value={(questionnaire[currentQuestion.id as keyof typeof questionnaire] as string) || ''}
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
                 placeholder={currentQuestion.placeholder}
-                className="w-full px-5 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
                 required={currentQuestion.required}
               />
             )}
@@ -198,7 +198,7 @@ export function QuestionnaireForm() {
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
                 placeholder={currentQuestion.placeholder}
                 rows={6}
-                className="w-full px-5 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all resize-none"
                 required={currentQuestion.required}
               />
             )}
@@ -209,11 +209,11 @@ export function QuestionnaireForm() {
                   type="button"
                   onClick={() => updateQuestionnaire({ [currentQuestion.id]: true })}
                   className={`
-                    flex-1 px-8 py-6 rounded-xl font-semibold text-lg transition-all
+                    flex-1 px-8 py-6 rounded-lg font-semibold text-lg transition-all
                     ${
                       questionnaire[currentQuestion.id as keyof typeof questionnaire] === true
-                        ? 'bg-cyan-500/20 text-cyan-300 border-2 border-cyan-500/50 shadow-lg'
-                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                        ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                        : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                     }
                   `}
                 >
@@ -223,11 +223,11 @@ export function QuestionnaireForm() {
                   type="button"
                   onClick={() => updateQuestionnaire({ [currentQuestion.id]: false })}
                   className={`
-                    flex-1 px-8 py-6 rounded-xl font-semibold text-lg transition-all
+                    flex-1 px-8 py-6 rounded-lg font-semibold text-lg transition-all
                     ${
                       questionnaire[currentQuestion.id as keyof typeof questionnaire] === false
-                        ? 'bg-slate-500/20 text-slate-300 border-2 border-slate-500/50 shadow-lg'
-                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                        ? 'bg-gray-700/50 text-gray-300 border-2 border-gray-600 shadow-lg'
+                        : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                     }
                   `}
                 >
@@ -238,10 +238,10 @@ export function QuestionnaireForm() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
             <button
               onClick={handlePrevious}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 text-white transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
               {currentQuestionIndex === 0 ? 'Back to Packages' : 'Previous'}
@@ -253,10 +253,10 @@ export function QuestionnaireForm() {
                   key={idx}
                   className={`w-2 h-2 rounded-full transition-all ${
                     idx === currentQuestionIndex
-                      ? 'bg-cyan-500 w-6'
+                      ? 'bg-trinity-red w-6'
                       : idx < currentQuestionIndex
-                      ? 'bg-cyan-500/50'
-                      : 'bg-white/10'
+                      ? 'bg-trinity-red/50'
+                      : 'bg-gray-700'
                   }`}
                 />
               ))}
@@ -266,7 +266,7 @@ export function QuestionnaireForm() {
               <button
                 onClick={handleNext}
                 disabled={!isQuestionAnswered()}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg shadow-cyan-500/30"
+                className="flex items-center gap-2 px-6 py-3 rounded-lg bg-trinity-red hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-semibold text-white"
               >
                 Next
                 <ArrowRight className="w-5 h-5" />
@@ -275,7 +275,7 @@ export function QuestionnaireForm() {
               <button
                 onClick={handleContinueToContact}
                 disabled={!allQuestionsAnswered()}
-                className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-lg shadow-green-500/30"
+                className="flex items-center gap-2 px-8 py-3 rounded-lg bg-trinity-red hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-bold text-white"
               >
                 <Check className="w-5 h-5" />
                 Continue to Review

@@ -16,15 +16,18 @@ interface TeamWorkloadTableProps {
 }
 
 const roleColors: Record<UserRole, string> = {
-  CEO: "bg-purple-500/20 text-purple-400",
-  ADMIN: "bg-blue-500/20 text-blue-400",
+  ADMIN: "bg-red-500/20 text-red-400",
   STAFF: "bg-green-500/20 text-green-400",
-  DESIGNER: "bg-pink-500/20 text-pink-400",
-  DEV: "bg-cyan-500/20 text-cyan-400",
-  OUTREACH: "bg-orange-500/20 text-orange-400",
-  INTERN: "bg-yellow-500/20 text-yellow-400",
-  PARTNER: "bg-indigo-500/20 text-indigo-400",
   CLIENT: "bg-slate-500/20 text-slate-400",
+  CEO: "bg-purple-500/20 text-purple-400",
+  CFO: "bg-blue-500/20 text-blue-400",
+  DESIGNER: "bg-yellow-500/20 text-yellow-400",
+  DEV: "bg-indigo-500/20 text-indigo-400",
+  OUTREACH: "bg-orange-500/20 text-orange-400",
+  INTERN: "bg-teal-500/20 text-teal-400",
+  PARTNER: "bg-emerald-500/20 text-emerald-400",
+  FRONTEND: "bg-pink-500/20 text-pink-400",
+  BACKEND: "bg-cyan-500/20 text-cyan-400",
 };
 
 export function TeamWorkloadTable({ workload }: TeamWorkloadTableProps) {

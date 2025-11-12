@@ -1,16 +1,10 @@
 /**
- * CEO Database Management
- * Full CRUD access to all database models
+ * CEO Database Management - Redirects to /admin/database
+ * CEO features are now consolidated into /admin with role-based sections
  */
 
-import { listModels } from "@/server/actions/database";
-import { DatabaseClient } from "@/components/admin/DatabaseClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function CEODatabasePage() {
-  const result = await listModels();
-  const models = result.success ? result.models : [];
-
-  return <DatabaseClient models={models} />;
+export default function CEODatabasePage() {
+  redirect("/admin/database");
 }

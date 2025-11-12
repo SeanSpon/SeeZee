@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
-import { Prisma, ProjectStatus } from '@prisma/client';
+import { Prisma, ProjectStatus, InvoiceStatus, PaymentStatus } from '@prisma/client';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -237,7 +237,7 @@ async function handleCheckoutSessionCompleted(
 
     const organizationId = await ensureOrganization(tx, { ...contact, email: normalizedEmail }, user.id);
 
-    await tx.project.upsert({
+    const project = await tx.project.upsert({
       where: { questionnaireId },
       update: {
         name: `${selectedService} for ${contact.company || contact.name || 'Client'}`,
@@ -257,6 +257,56 @@ async function handleCheckoutSessionCompleted(
         ...(stripeCustomerId ? { stripeCustomerId } : {}),
       },
     });
+
+    // Get payment amount from Stripe session (amount_total is in cents)
+    const paymentAmountCents = session.amount_total || 0;
+    const paymentAmount = paymentAmountCents > 0 ? new Prisma.Decimal(paymentAmountCents).dividedBy(100) : budgetDecimal || new Prisma.Decimal(0);
+
+    // Create invoice for full payment (100% paid upfront)
+    if (paymentAmount.gt(0)) {
+      const invoiceNumber = `INV-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      
+      const invoice = await tx.invoice.create({
+        data: {
+          number: invoiceNumber,
+          title: 'Project Payment',
+          description: `Full payment for ${selectedService} project`,
+          amount: paymentAmount,
+          tax: new Prisma.Decimal(0),
+          total: paymentAmount,
+          status: InvoiceStatus.PAID,
+          organizationId: organizationId,
+          projectId: project.id,
+          stripeInvoiceId: session.invoice as string | undefined,
+          sentAt: new Date(),
+          paidAt: new Date(),
+          dueDate: new Date(),
+          items: {
+            create: {
+              description: `${selectedService} - Full Payment`,
+              quantity: 1,
+              rate: paymentAmount,
+              amount: paymentAmount,
+            },
+          },
+        },
+      });
+
+      // Create payment record
+      if (session.payment_intent) {
+        await tx.payment.create({
+          data: {
+            amount: paymentAmount,
+            currency: 'USD',
+            status: PaymentStatus.COMPLETED,
+            method: 'stripe',
+            stripePaymentId: typeof session.payment_intent === 'string' ? session.payment_intent : undefined,
+            invoiceId: invoice.id,
+            processedAt: new Date(),
+          },
+        });
+      }
+    }
 
     return true;
   });

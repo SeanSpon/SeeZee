@@ -226,24 +226,40 @@ export function MaintenanceClient({ initialSchedules, clients, stats }: Maintena
           onRowClick={(schedule) => router.push(`/admin/maintenance/${schedule.id}`)}
         />
       ) : (
-        <div className="glass-container-static p-8 text-center">
-          <h3 className="text-lg font-semibold text-white mb-2">Client Plans</h3>
-          <p className="text-slate-400 mb-6">
-            {clients.length} clients with maintenance plans
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {clients.map((client) => (
-              <div
-                key={client.id}
-                className="glass-container-static p-4 text-left cursor-pointer hover:border-blue-500/50 transition-all"
-                onClick={() => router.push(`/admin/projects/${client.id}`)}
-              >
-                <h4 className="font-semibold text-white mb-2">{client.name}</h4>
-                <p className="text-sm text-slate-400">
-                  {client.maintenanceSchedules?.length || 0} scheduled tasks
-                </p>
-              </div>
-            ))}
+        <div className="space-y-4">
+          <div className="glass-container-static p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Client Plans</h3>
+            <p className="text-slate-400 mb-6">
+              {clients.length} clients with maintenance plans
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {clients.map((client) => (
+                <div
+                  key={client.id}
+                  className="glass-container-static p-4 text-left cursor-pointer hover:border-blue-500/50 transition-all"
+                  onClick={() => router.push(`/admin/pipeline/projects/${client.id}`)}
+                >
+                  <h4 className="font-semibold text-white mb-2">{client.name || client.organization.name}</h4>
+                  <div className="space-y-1">
+                    <p className="text-sm text-slate-400">
+                      {client.maintenanceSchedules?.length || 0} scheduled tasks
+                    </p>
+                    {client.subscriptions && client.subscriptions.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                          Active Subscription
+                        </span>
+                        {client.subscriptions[0].currentPeriodEnd && (
+                          <span className="text-xs text-slate-500">
+                            Renews {new Date(client.subscriptions[0].currentPeriodEnd).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

@@ -7,6 +7,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { getClientProjectOrThrow } from "@/lib/client-access";
+import { ClientAccessError } from "@/lib/client-access-types";
 
 export async function GET(
   req: NextRequest,
@@ -20,23 +22,20 @@ export async function GET(
 
     const { id: projectId } = await params;
 
-    // Verify user has access to this project
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        organization: {
-          members: {
-            some: { userId: session.user.id },
-          },
-        },
-      },
-    });
-
-    if (!project) {
-      return NextResponse.json(
-        { error: "Project not found or access denied" },
-        { status: 404 }
+    try {
+      await getClientProjectOrThrow(
+        { userId: session.user.id, email: session.user.email },
+        projectId,
+        { select: { id: true } }
       );
+    } catch (error) {
+      if (error instanceof ClientAccessError) {
+        return NextResponse.json(
+          { error: "Project not found or access denied" },
+          { status: 404 }
+        );
+      }
+      throw error;
     }
 
     // Fetch all requests for this project
@@ -67,23 +66,20 @@ export async function POST(
 
     const { id: projectId } = await params;
 
-    // Verify user has access to this project
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        organization: {
-          members: {
-            some: { userId: session.user.id },
-          },
-        },
-      },
-    });
-
-    if (!project) {
-      return NextResponse.json(
-        { error: "Project not found or access denied" },
-        { status: 404 }
+    try {
+      await getClientProjectOrThrow(
+        { userId: session.user.id, email: session.user.email },
+        projectId,
+        { select: { id: true } }
       );
+    } catch (error) {
+      if (error instanceof ClientAccessError) {
+        return NextResponse.json(
+          { error: "Project not found or access denied" },
+          { status: 404 }
+        );
+      }
+      throw error;
     }
 
     // Parse request body

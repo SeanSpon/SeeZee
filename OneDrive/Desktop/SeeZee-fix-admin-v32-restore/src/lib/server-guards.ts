@@ -4,11 +4,11 @@ import { redirect } from "next/navigation";
 
 // Helper functions to check user roles
 export function isAdmin(role: UserRole): boolean {
-  return role === UserRole.ADMIN;
+  return role === UserRole.CFO || role === UserRole.CEO;
 }
 
 export function isStaffOrAdmin(role: UserRole): boolean {
-  return role === UserRole.ADMIN || role === UserRole.STAFF;
+  return role === UserRole.CFO || role === UserRole.CEO || role === UserRole.FRONTEND || role === UserRole.BACKEND || role === UserRole.OUTREACH;
 }
 
 /**
@@ -33,7 +33,14 @@ export async function requireRole(requiredRoles: UserRole[]) {
   const session = await requireAuth();
   
   if (!session.user?.role || !requiredRoles.includes(session.user.role)) {
-    redirect("/unauthorized");
+    // Redirect to appropriate dashboard based on user's role
+    const userRole = session.user?.role;
+    if (userRole === UserRole.CEO || userRole === UserRole.CFO || 
+        userRole === UserRole.FRONTEND || userRole === UserRole.BACKEND || userRole === UserRole.OUTREACH) {
+      redirect("/admin");
+    } else {
+      redirect("/client");
+    }
   }
   
   return session;
@@ -46,8 +53,21 @@ export async function requireRole(requiredRoles: UserRole[]) {
 export async function requireAdmin() {
   const session = await requireAuth();
   
+  // CEO email always has access - bypass role check
+  const CEO_EMAIL = "seanspm1007@gmail.com";
+  if (session.user?.email === CEO_EMAIL || session.user?.email === "seanpm1007@gmail.com") {
+    return session;
+  }
+  
   if (!session.user?.role || !isAdmin(session.user.role)) {
-    redirect("/unauthorized");
+    // Redirect to appropriate dashboard based on user's role
+    const userRole = session.user?.role;
+    if (userRole === UserRole.CEO || userRole === UserRole.CFO || 
+        userRole === UserRole.FRONTEND || userRole === UserRole.BACKEND || userRole === UserRole.OUTREACH) {
+      redirect("/admin");
+    } else {
+      redirect("/client");
+    }
   }
   
   return session;
@@ -61,7 +81,14 @@ export async function requireStaffOrAdmin() {
   const session = await requireAuth();
   
   if (!session.user?.role || !isStaffOrAdmin(session.user.role)) {
-    redirect("/unauthorized");
+    // Redirect to appropriate dashboard based on user's role
+    const userRole = session.user?.role;
+    if (userRole === UserRole.CEO || userRole === UserRole.CFO || 
+        userRole === UserRole.FRONTEND || userRole === UserRole.BACKEND || userRole === UserRole.OUTREACH) {
+      redirect("/admin");
+    } else {
+      redirect("/client");
+    }
   }
   
   return session;

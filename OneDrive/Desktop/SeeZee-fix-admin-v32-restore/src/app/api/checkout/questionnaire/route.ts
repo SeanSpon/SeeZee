@@ -21,6 +21,17 @@ const QuestionnaireDataSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Disabled: This route bypasses lead/project creation
+  // Projects must be created manually through the admin dashboard
+  return NextResponse.json(
+    { 
+      error: 'This checkout route is disabled. Please create a project through the admin dashboard and send an invoice manually.',
+      message: 'Manual project creation is required. Contact an admin to create your project.'
+    },
+    { status: 410 } // 410 Gone - indicates the resource is no longer available
+  );
+  
+  /* DISABLED CODE - Keeping for reference
   try {
     const formData = await request.formData();
     const questionnaireId = formData.get('questionnaireId') as string;
@@ -127,4 +138,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+  */
 }

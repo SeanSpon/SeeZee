@@ -32,6 +32,7 @@ export interface PackageDefinition {
   maxAddonsCost: number; // Maximum allowed add-ons cost
   badge?: string;
   icon: string;
+  paymentLink: string; // Stripe Payment Link URL
 }
 
 // Package Definitions
@@ -48,10 +49,11 @@ export const PACKAGES: PackageDefinition[] = [
       'mobile-responsive',
       'search-functionality', // NOW INCLUDED
     ],
-    basePrice: getEnvPrice('PKG_STARTER_BASE', 120000), // $1,200
+    basePrice: getEnvPrice('PKG_STARTER_BASE', 29900), // $299
     maxAddonsCost: 130000, // $1,300 max add-ons (total max ~$2,500)
     badge: 'Most Popular',
     icon: '🌱',
+    paymentLink: 'https://buy.stripe.com/dRmcN6bPwa630kUbwjes002',
   },
   {
     id: 'pro',
@@ -70,9 +72,10 @@ export const PACKAGES: PackageDefinition[] = [
       'smart-forms',
       'seo-optimization', // NOW INCLUDED
     ],
-    basePrice: getEnvPrice('PKG_PRO_BASE', 199900), // $1,999 (down from $2,800)
+    basePrice: getEnvPrice('PKG_PRO_BASE', 79900), // $799
     maxAddonsCost: 150000, // $1,500 max add-ons (total max ~$3,500)
     icon: '🚀',
+    paymentLink: 'https://buy.stripe.com/4gM4gA8Dkemj2t2fMzes001',
   },
   {
     id: 'elite',
@@ -98,10 +101,11 @@ export const PACKAGES: PackageDefinition[] = [
       'performance-optimization', // NOW INCLUDED
       'security-hardening', // NOW INCLUDED
     ],
-    basePrice: getEnvPrice('PKG_ELITE_BASE', 299900), // $2,999 (down from $5,500)
+    basePrice: getEnvPrice('PKG_ELITE_BASE', 199900), // $1,999
     maxAddonsCost: 50000, // $500 max add-ons (total max ~$3,500)
     badge: 'Best Value',
     icon: '👑',
+    paymentLink: 'https://buy.stripe.com/6oU5kE4n4gurffOdEres000',
   },
 ];
 
@@ -436,6 +440,7 @@ export const MAINTENANCE = {
   title: 'Website Care & Support',
   description: 'Hosting, updates, backups & ongoing support',
   monthlyPrice: getEnvPrice('MAINTENANCE_MONTHLY', 5000), // $50/month (down from $60)
+  stripePriceId: process.env.STRIPE_PRICE_MAINTENANCE_STANDARD || '', // Stripe price ID for standard maintenance
   features: [
     '✓ Managed hosting & SSL certificate',
     '✓ Security & plugin updates',
@@ -447,6 +452,7 @@ export const MAINTENANCE = {
   premium: {
     title: 'Premium Support',
     monthlyPrice: 9000, // $90/month
+    stripePriceId: process.env.STRIPE_PRICE_MAINTENANCE_PREMIUM || '', // Stripe price ID for premium maintenance
     features: [
       '✓ Everything in Standard Support',
       '✓ Priority support (24hr response)',

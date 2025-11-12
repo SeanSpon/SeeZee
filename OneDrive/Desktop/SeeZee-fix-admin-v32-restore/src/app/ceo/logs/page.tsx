@@ -1,16 +1,10 @@
 /**
- * CEO System Logs
- * Real-time activity and system events
+ * CEO System Logs - Redirects to /admin/ceo/systems/logs
+ * CEO features are now consolidated into /admin/ceo
  */
 
-import { listActivity } from "@/server/actions";
-import { LogsClient } from "@/components/admin/LogsClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function CEOLogsPage() {
-  const result = await listActivity(100);
-  const activities = result.success ? result.activities : [];
-
-  return <LogsClient activities={activities} />;
+export default function CEOLogsPage() {
+  redirect("/admin/ceo/systems/logs");
 }

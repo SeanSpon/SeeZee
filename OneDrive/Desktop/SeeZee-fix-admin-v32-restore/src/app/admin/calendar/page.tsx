@@ -3,19 +3,24 @@
  * Shows all tasks, deadlines, and events across the organization
  */
 
-import { requireRole } from "@/lib/auth/requireRole";
+import { getCurrentUser } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
 import { db } from "@/server/db";
 import { CalendarClient } from "@/components/admin/CalendarClient";
+import { AdminAppShell } from "@/components/admin/AdminAppShell";
 
 export const dynamic = "force-dynamic";
 
 export default async function CalendarPage() {
-  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await getCurrentUser();
+  
+  if (!user) {
+    return null;
+  }
 
-  // Fetch all tasks across the organization (for CEO/ADMIN)
-  // or just user's tasks (for staff/designers/devs)
-  const isCEOorAdmin = user.role === ROLE.CEO || user.role === ROLE.ADMIN;
+  // Fetch all tasks across the organization (for CEO/CFO)
+  // or just user's tasks (for staff)
+  const isCEOorAdmin = user.role === ROLE.CEO || user.role === ROLE.CFO;
 
   const tasks = await db.todo.findMany({
     where: isCEOorAdmin ? {} : { assignedToId: user.id },
@@ -91,18 +96,46 @@ export default async function CalendarPage() {
     },
   });
 
+  // Serialize projects to convert Decimal budget to number
+  // Explicitly construct objects to avoid passing Prisma Decimal objects
+  const serializedProjects = projects.map((project) => ({
+    id: project.id,
+    name: project.name,
+    description: project.description,
+    status: project.status,
+    budget: project.budget ? Number(project.budget) : null,
+    startDate: project.startDate,
+    endDate: project.endDate,
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
+    assigneeId: project.assigneeId,
+    leadId: project.leadId,
+    organizationId: project.organizationId,
+    questionnaireId: project.questionnaireId,
+    stripeCustomerId: project.stripeCustomerId,
+    stripeSubscriptionId: project.stripeSubscriptionId,
+    maintenancePlan: project.maintenancePlan,
+    maintenanceStatus: project.maintenanceStatus,
+    nextBillingDate: project.nextBillingDate,
+    githubRepo: project.githubRepo,
+    organization: project.organization,
+    milestones: project.milestones,
+  }));
+
   return (
-    <CalendarClient
-      tasks={tasks}
-      maintenanceSchedules={maintenanceSchedules}
-      projects={projects}
-      currentUser={{
-        id: user.id,
-        name: user.name,
-        email: user.email || "",
-        role: user.role,
-      }}
-      viewMode={isCEOorAdmin ? "organization" : "personal"}
-    />
+    <AdminAppShell user={user}>
+      <CalendarClient
+        tasks={tasks}
+        maintenanceSchedules={maintenanceSchedules}
+        projects={serializedProjects}
+        currentUser={{
+          id: user.id,
+          name: user.name,
+          email: user.email || "",
+          role: user.role,
+        }}
+        viewMode={isCEOorAdmin ? "organization" : "personal"}
+      />
+    </AdminAppShell>
   );
 }

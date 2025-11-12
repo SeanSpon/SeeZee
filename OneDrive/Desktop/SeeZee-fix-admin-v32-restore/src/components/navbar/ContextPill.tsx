@@ -2,20 +2,18 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Crown, User, Sparkles, Zap, Shield } from "lucide-react";
+import { ChevronDown, User, Zap, Shield } from "lucide-react";
 
 interface ContextPillProps {
-  currentContext: "Client" | "Admin" | "CEO";
+  currentContext: "Client" | "Admin";
   hasAdminAccess?: boolean;
   hasClientAccess?: boolean;
-  hasCEOAccess?: boolean;
 }
 
 export function ContextPill({ 
   currentContext, 
   hasAdminAccess = false, 
-  hasClientAccess = true,
-  hasCEOAccess = false 
+  hasClientAccess = true
 }: ContextPillProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -34,18 +32,17 @@ export function ContextPill({
     }
   }, [open]);
 
-  const handleSwitch = (context: "Client" | "Admin" | "CEO") => {
+  const handleSwitch = (context: "Client" | "Admin") => {
     setOpen(false);
-    const url = context === "Admin" ? "/admin" : context === "CEO" ? "/ceo" : "/client";
+    const url = context === "Admin" ? "/admin" : "/client";
     router.push(url);
   };
 
   // If user has multiple contexts, allow switching
-  const contextCount = [hasClientAccess, hasAdminAccess, hasCEOAccess].filter(Boolean).length;
+  const contextCount = [hasClientAccess, hasAdminAccess].filter(Boolean).length;
   const canSwitch = contextCount > 1;
   
   const isAdmin = currentContext === "Admin";
-  const isCEO = currentContext === "CEO";
   
   return (
     <div className="relative" ref={dropdownRef}>
@@ -61,11 +58,9 @@ export function ContextPill({
         <div 
           className={`
             absolute inset-0 transition-all duration-500
-            ${isCEO
-              ? "bg-gradient-to-r from-purple-600 via-blue-500 to-purple-600"
-              : isAdmin 
-                ? "bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600" 
-                : "bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600"
+            ${isAdmin 
+              ? "bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600" 
+              : "bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600"
             }
             bg-[length:200%_100%] group-hover:bg-[position:100%_0]
           `}
@@ -75,11 +70,9 @@ export function ContextPill({
         <div 
           className={`
             absolute inset-0 blur-xl opacity-50 transition-opacity duration-300
-            ${isCEO
-              ? "bg-gradient-to-r from-purple-400 to-blue-400"
-              : isAdmin 
-                ? "bg-gradient-to-r from-purple-400 to-pink-400" 
-                : "bg-gradient-to-r from-blue-400 to-cyan-400"
+            ${isAdmin 
+              ? "bg-gradient-to-r from-purple-400 to-pink-400" 
+              : "bg-gradient-to-r from-blue-400 to-cyan-400"
             }
             group-hover:opacity-75
           `}
@@ -97,13 +90,7 @@ export function ContextPill({
 
         {/* Content */}
         <div className="relative flex items-center gap-2 text-white">
-          {isCEO ? (
-            <>
-              <Crown className="h-4 w-4 animate-pulse" />
-              <span className="font-bold tracking-wide">CEO</span>
-              <Sparkles className="h-3 w-3 animate-spin" style={{ animationDuration: "3s" }} />
-            </>
-          ) : isAdmin ? (
+          {isAdmin ? (
             <>
               <Shield className="h-4 w-4" />
               <span className="font-bold tracking-wide">ADMIN</span>
@@ -157,30 +144,6 @@ export function ContextPill({
                 </div>
                 {currentContext === "Client" && (
                   <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-                )}
-              </button>
-            )}
-            
-            {hasCEOAccess && (
-              <button
-                onClick={() => handleSwitch("CEO")}
-                className={`
-                  w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-all mt-2
-                  ${currentContext === "CEO" 
-                    ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 border border-purple-500/30" 
-                    : "text-slate-300 hover:bg-white/5 hover:text-white"
-                  }
-                `}
-              >
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500">
-                  <Crown className="h-4 w-4 text-white" />
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="font-semibold">CEO Dashboard</div>
-                  <div className="text-xs text-slate-400">Executive Control</div>
-                </div>
-                {currentContext === "CEO" && (
-                  <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
                 )}
               </button>
             )}

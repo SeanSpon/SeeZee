@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Send } from "lucide-react";
+import { Send, MessageSquare } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 interface Message {
   id: string;
@@ -116,14 +117,14 @@ export default function ClientMessagesPage() {
 
       {/* Thread Selector */}
       {threads.length > 1 && (
-        <div className="glass-container-static">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <label className="block text-sm font-medium text-white mb-2">
             Conversation
           </label>
           <select
             value={activeThread || ""}
             onChange={(e) => setActiveThread(e.target.value)}
-            className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+              className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-trinity-red transition-colors"
           >
             {threads.map((thread) => (
               <option key={thread.id} value={thread.id}>
@@ -134,16 +135,24 @@ export default function ClientMessagesPage() {
         </div>
       )}
 
-      <div className="glass-container-static overflow-hidden p-0">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden p-0">
         {/* Messages Area */}
         <div className="h-[500px] overflow-y-auto p-6 space-y-4">
           {loading ? (
             <div className="text-center py-20">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mx-auto"></div>
             </div>
-          ) : messages.length === 0 ? (
+          ) : messages.length === 0 && !activeThread ? (
+            <div className="flex items-center justify-center h-full">
+              <EmptyState
+                icon={MessageSquare}
+                title="No messages yet"
+                description="Start a conversation with the SeeZee team about your projects"
+              />
+            </div>
+          ) : messages.length === 0 && activeThread ? (
             <div className="text-center py-20">
-              <p className="text-slate-400">No messages yet. Start a conversation!</p>
+              <p className="text-slate-400">No messages in this thread yet. Start a conversation!</p>
             </div>
           ) : (
             messages.map((msg) => (
@@ -157,7 +166,7 @@ export default function ClientMessagesPage() {
                   className={`max-w-[70%] rounded-lg p-4 ${
                     msg.role === "client"
                       ? "bg-cyan-500/20 border border-cyan-500/30 shadow-lg shadow-cyan-500/20"
-                      : "bg-slate-700/50 border border-white/10"
+                      : "bg-gray-900 border border-gray-800"
                   }`}
                 >
                   <p className="text-white">{msg.content}</p>
@@ -181,7 +190,7 @@ export default function ClientMessagesPage() {
               onKeyPress={(e) => e.key === "Enter" && handleSend()}
               placeholder="Type your message..."
               disabled={!activeThread}
-              className="flex-1 bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 transition-colors disabled:opacity-50"
+              className="flex-1 bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-trinity-red transition-colors disabled:opacity-50"
             />
             <button
               onClick={handleSend}

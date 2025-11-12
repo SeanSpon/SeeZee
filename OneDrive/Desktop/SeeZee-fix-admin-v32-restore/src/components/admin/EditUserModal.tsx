@@ -20,7 +20,7 @@ interface EditUserModalProps {
   onSuccess: () => void;
 }
 
-const ROLES: UserRole[] = ["CLIENT", "DEV", "DESIGNER", "STAFF", "ADMIN", "CEO"];
+const ROLES: UserRole[] = ["CLIENT", "FRONTEND", "BACKEND", "OUTREACH", "CFO", "CEO"];
 
 export function EditUserModal({ user, isOpen, onClose, onSuccess }: EditUserModalProps) {
   const [name, setName] = useState(user.name || "");

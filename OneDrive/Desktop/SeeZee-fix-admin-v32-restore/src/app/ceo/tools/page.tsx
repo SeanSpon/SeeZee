@@ -1,12 +1,10 @@
 /**
- * CEO Tools Management
- * Company tools directory and integrations
+ * CEO Tools Management - Redirects to /admin/learning/tools
+ * CEO features are now consolidated into /admin with role-based sections
  */
 
-"use client";
-
-import ToolGrid from "@/components/ceo/ToolGrid";
+import { redirect } from "next/navigation";
 
 export default function CEOToolsPage() {
-  return <ToolGrid />;
+  redirect("/admin/learning/tools");
 }

@@ -67,6 +67,27 @@ export async function approveLead(input: ApproveLeadInput) {
       },
     });
 
+    // Update related ProjectRequest status to APPROVED if it exists
+    // Match by email (Lead.email matches ProjectRequest.contactEmail or ProjectRequest.email)
+    try {
+      await prisma.projectRequest.updateMany({
+        where: {
+          OR: [
+            { contactEmail: lead.email },
+            { email: lead.email },
+          ],
+          status: { not: "APPROVED" }, // Only update if not already approved
+        },
+        data: {
+          status: "APPROVED",
+          updatedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      // Log but don't fail if ProjectRequest update fails
+      console.error("[approveLead] Failed to update ProjectRequest status:", error);
+    }
+
     // Emit feed events
     await emitFeedEvent(project.id, "lead.created", {
       leadId: lead.id,
@@ -85,7 +106,8 @@ export async function approveLead(input: ApproveLeadInput) {
     revalidatePath("/admin/pipeline");
     revalidatePath("/admin/projects");
 
-    return { success: true, project };
+    // Return only a plain identifier to avoid passing Prisma objects to client
+    return { success: true, projectId: project.id };
   } catch (error) {
     console.error("[approveLead] Error:", error);
     throw error;
@@ -98,7 +120,7 @@ export async function approveLead(input: ApproveLeadInput) {
 export async function updateProjectStatus(projectId: string, newStatus: ProjectStatus) {
   const session = await auth();
 
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+  if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
     throw new Error("Unauthorized");
   }
 
@@ -150,7 +172,8 @@ export async function completeMilestone(milestoneId: string) {
   }
 
   try {
-    // TODO: Uncomment when Milestone model is added to schema
+    // Milestone completion - model exists but needs to be verified
+    // Uncomment when Milestone model relationships are confirmed in schema
     /*
     const milestone = await prisma.milestone.update({
       where: { id: milestoneId },

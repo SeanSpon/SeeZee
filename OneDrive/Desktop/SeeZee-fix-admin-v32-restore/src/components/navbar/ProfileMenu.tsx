@@ -25,17 +25,17 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
   const pathname = usePathname();
 
   const isCEO = user?.role === "CEO";
-  const isAdmin = user?.role === "ADMIN" || user?.role === "STAFF" || user?.role === "CEO";
+  const isAdmin = user?.role === "CFO" || ["FRONTEND", "BACKEND", "OUTREACH"].includes(user?.role || "") || user?.role === "CEO";
 
   // Format role for display
   const getRoleDisplay = () => {
     if (!user?.role) return "Client";
     const role = user.role;
     if (role === "CEO") return "Chief Executive";
-    if (role === "ADMIN") return "Administrator";
-    if (role === "STAFF") return "Staff Member";
-    if (role === "DESIGNER") return "Designer";
-    if (role === "DEV") return "Developer";
+    if (role === "CFO") return "Chief Financial Officer";
+    if (role === "FRONTEND") return "Frontend Developer";
+    if (role === "BACKEND") return "Backend Developer";
+    if (role === "OUTREACH") return "Outreach Specialist";
     return "Client";
   };
 
@@ -79,9 +79,18 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
     }
   }, [open]);
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
-    setOpen(false);
+  const handleSignOut = async () => {
+    try {
+      setOpen(false);
+      await signOut({ 
+        callbackUrl: "/",
+        redirect: true 
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Fallback: redirect manually if signOut fails
+      window.location.href = "/";
+    }
   };
 
   const getInitials = () => {
@@ -166,9 +175,7 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
             <div className="p-2">
               <Link
                 href={
-                  pathname?.startsWith("/ceo") 
-                    ? "/ceo/profile" 
-                    : pathname?.startsWith("/admin")
+                  pathname?.startsWith("/admin")
                     ? "/admin/profile"
                     : "/client/profile"
                 }
@@ -188,20 +195,6 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
                 Client Dashboard
               </Link>
 
-              {isCEO && (
-                <Link
-                  href="/ceo"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-purple-500/10 transition-colors border border-purple-500/20"
-                >
-                  <Crown className="h-4 w-4 text-purple-400" />
-                  <span className="flex items-center gap-2">
-                    CEO Dashboard
-                    <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">Executive</span>
-                  </span>
-                </Link>
-              )}
-
               {isAdmin && (
                 <Link
                   href="/admin"
@@ -210,6 +203,9 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
                 >
                   <Shield className="h-4 w-4 text-slate-400" />
                   Admin Dashboard
+                  {isCEO && (
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">Executive</span>
+                  )}
                 </Link>
               )}
 
@@ -223,13 +219,7 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
               </Link>
 
               <Link
-                href={
-                  pathname?.startsWith("/ceo") 
-                    ? "/ceo/settings" 
-                    : pathname?.startsWith("/admin")
-                    ? "/admin/settings"
-                    : "/client/settings"
-                }
+                href="/settings"
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-white/5 transition-colors"
               >

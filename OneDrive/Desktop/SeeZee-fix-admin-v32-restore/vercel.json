@@ -4,6 +4,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["iad1"],
+  "outputDirectory": ".next",
   "redirects": [
     {
       "source": "/:path*",
@@ -18,6 +19,7 @@
     }
   ],
   "env": {
+    "AUTH_URL": "https://see-zee.com",
     "NEXTAUTH_URL": "https://see-zee.com",
     "NEXT_PUBLIC_APP_URL": "https://see-zee.com",
     "NEXT_PUBLIC_DOMAIN": "see-zee.com"

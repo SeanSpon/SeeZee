@@ -12,15 +12,63 @@ export default async function ClientProjectsPage() {
     redirect("/login");
   }
 
-  // Fetch client's projects via Lead relationship
-  const projects = await prisma.project.findMany({
+  // Fetch client's projects via Lead relationship OR organization membership
+  // First, get user's organizations
+  const userOrgs = await prisma.organizationMember.findMany({
     where: {
-      lead: {
-        email: session.user.email!,
-      },
+      userId: session.user.id!,
     },
+    select: {
+      organizationId: true,
+    },
+  });
+
+  const orgIds = userOrgs.map((om) => om.organizationId);
+
+  // Build where clause: projects where user is lead OR user is org member
+  const whereClause: any = {
+    OR: [
+      // Projects where lead email matches user email
+      {
+        lead: {
+          email: session.user.email!,
+        },
+      },
+      // Projects where user is a member of the organization
+      ...(orgIds.length > 0
+        ? [
+            {
+              organizationId: {
+                in: orgIds,
+              },
+            },
+          ]
+        : []),
+    ],
+  };
+
+  const projects = await prisma.project.findMany({
+    where: whereClause,
     orderBy: { createdAt: "desc" },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      status: true,
+      budget: true,
+      startDate: true,
+      endDate: true,
+      createdAt: true,
+      updatedAt: true,
+      assigneeId: true,
+      leadId: true,
+      organizationId: true,
+      questionnaireId: true,
+      stripeCustomerId: true,
+      maintenancePlan: true,
+      maintenanceStatus: true,
+      nextBillingDate: true,
+      githubRepo: true,
       assignee: {
         select: {
           name: true,
@@ -53,5 +101,30 @@ export default async function ClientProjectsPage() {
     return config;
   };
 
-  return <ProjectsClient projects={projects} />;
+  // Convert Decimal budget to number for client components
+  // Explicitly construct objects to avoid passing Prisma Decimal objects
+  const serializedProjects = projects.map((project) => ({
+    id: project.id,
+    name: project.name,
+    description: project.description,
+    status: project.status,
+    budget: project.budget ? Number(project.budget) : null,
+    startDate: project.startDate,
+    endDate: project.endDate,
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
+    assigneeId: project.assigneeId,
+    leadId: project.leadId,
+    organizationId: project.organizationId,
+    questionnaireId: project.questionnaireId,
+    stripeCustomerId: project.stripeCustomerId,
+    maintenancePlan: project.maintenancePlan,
+    maintenanceStatus: project.maintenanceStatus,
+    nextBillingDate: project.nextBillingDate,
+    githubRepo: project.githubRepo,
+    assignee: project.assignee,
+    milestones: project.milestones,
+  }));
+
+  return <ProjectsClient projects={serializedProjects} />;
 }

@@ -1,0 +1,43 @@
+# robots.txt for SeeZee Studio
+# https://see-zee.com
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /ceo/
+Disallow: /api/
+Disallow: /client/
+Disallow: /(client)/
+Disallow: /(admin)/
+Disallow: /(portal)/
+Disallow: /login
+Disallow: /signin
+Disallow: /signup
+Disallow: /register
+Disallow: /auth-check
+Disallow: /auth-test
+Disallow: /debug-session
+Disallow: /test-login
+Disallow: /onboarding
+Disallow: /billing
+Disallow: /settings
+Disallow: /verify-request
+
+# Allow public pages
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /contact
+Allow: /projects
+Allow: /start
+
+# Sitemap location
+Sitemap: https://see-zee.com/sitemap.xml
+
+
+
+
+
+
+
+

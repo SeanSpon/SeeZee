@@ -27,11 +27,11 @@
 4. **Name**: `SeeZee Local Development`
 5. **Authorized JavaScript origins**:
    ```
-   http://localhost:3001
+   http://localhost:3000
    ```
 6. **Authorized redirect URIs**:
    ```
-   http://localhost:3001/api/auth/callback/google
+   http://localhost:3000/api/auth/callback/google
    ```
 7. Click **Create**
 8. **Copy the Client ID and Client Secret** immediately
@@ -64,7 +64,7 @@ For production deployment, create a **separate** OAuth client:
 
 ```env
 # Auth.js v5 (NextAuth v5) 
-AUTH_URL="http://localhost:3001"
+AUTH_URL="http://localhost:3000"
 AUTH_SECRET="b9e3c4ecaff234c426e6ace42663b8f1317b7fa2287f2f91d95807f378d36125"
 
 # Google OAuth - Auth.js v5 naming
@@ -72,7 +72,7 @@ AUTH_GOOGLE_ID="659797017979-sipunrpq0tlabjqthklic4kvoi81rfe7.apps.googleusercon
 AUTH_GOOGLE_SECRET="REPLACE_WITH_ACTUAL_SECRET_FROM_GOOGLE_CONSOLE"
 
 # App Configuration  
-NEXT_PUBLIC_APP_URL="http://localhost:3001"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
 ## Testing Steps
@@ -83,9 +83,9 @@ NEXT_PUBLIC_APP_URL="http://localhost:3001"
    ```
 
 2. **Test endpoints**:
-   - Providers: `http://localhost:3001/api/auth/providers`
-   - Sign in: `http://localhost:3001/api/auth/signin`
-   - Session: `http://localhost:3001/api/auth/session`
+   - Providers: `http://localhost:3000/api/auth/providers`
+   - Sign in: `http://localhost:3000/api/auth/signin`
+   - Session: `http://localhost:3000/api/auth/session`
 
 3. **Sign in flow**:
    - Visit `/api/auth/signin`

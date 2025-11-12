@@ -15,7 +15,7 @@ interface Project {
   status: string;
   startDate: Date | null;
   endDate: Date | null;
-  budget: any;
+  budget: string | null;
   organization: {
     id: string;
     name: string;

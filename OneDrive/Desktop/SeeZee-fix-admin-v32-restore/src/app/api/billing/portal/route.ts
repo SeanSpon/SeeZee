@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify user has access
-    if (project.organization.members.length === 0 && session.user.role !== "CEO" && session.user.role !== "ADMIN") {
+    if (project.organization.members.length === 0 && session.user.role !== "CEO" && session.user.role !== "CFO") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 

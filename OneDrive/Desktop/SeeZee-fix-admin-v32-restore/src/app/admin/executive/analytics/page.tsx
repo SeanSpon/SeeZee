@@ -1,17 +1,11 @@
 /**
- * Executive Analytics Dashboard
+ * Executive Analytics Dashboard - Redirects to CEO Analytics
  */
 
-import { getExecutiveMetrics } from "@/server/actions";
-import { AnalyticsClient } from "@/components/admin/AnalyticsClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function AnalyticsPage() {
-  const result = await getExecutiveMetrics();
-  const metrics = result.success ? result.metrics : null;
-
-  return <AnalyticsClient metrics={metrics} />;
+export default function ExecutiveAnalyticsPage() {
+  redirect("/admin/ceo/analytics");
 }
 
 

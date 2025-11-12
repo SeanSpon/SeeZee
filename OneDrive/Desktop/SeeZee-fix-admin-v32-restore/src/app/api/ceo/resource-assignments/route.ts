@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role)) {
+    if (!session?.user || !["CEO", "CFO"].includes(session.user.role)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role)) {
+    if (!session?.user || !["CEO", "CFO"].includes(session.user.role)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

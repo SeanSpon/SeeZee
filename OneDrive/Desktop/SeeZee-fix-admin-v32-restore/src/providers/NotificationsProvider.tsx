@@ -5,9 +5,8 @@
  * TODO: Wire to WebSocket for live updates
  */
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { Notification } from "@/lib/notifications";
-import { mockNotifications } from "@/lib/notifications";
 
 interface NotificationsContextType {
   notifications: Notification[];
@@ -27,11 +26,33 @@ export function NotificationsProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [notifications, setNotifications] = useState<Notification[]>(
-    mockNotifications
-  );
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  // Fetch notifications from API
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch("/api/notifications");
+        if (response.ok) {
+          const data = await response.json();
+          setNotifications(data.notifications || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+
+    // Poll for new notifications every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const addNotification = useCallback(
     (notification: Omit<Notification, "id" | "timestamp">) => {
@@ -46,26 +67,49 @@ export function NotificationsProvider({
     []
   );
 
-  const markAsRead = useCallback((id: string) => {
+  const markAsRead = useCallback(async (id: string) => {
+    // Optimistically update UI
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
+
+    // Update on server
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notificationId: id }),
+      });
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+      // Revert on error
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: false } : n))
+      );
+    }
   }, []);
 
-  const markAllAsRead = useCallback(() => {
+  const markAllAsRead = useCallback(async () => {
+    // Optimistically update UI
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+
+    // Update on server
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markAllAsRead: true }),
+      });
+    } catch (error) {
+      console.error("Failed to mark all notifications as read:", error);
+      // Revert on error
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: false })));
+    }
   }, []);
 
   const removeNotification = useCallback((id: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
-
-  // TODO: Add WebSocket connection for real-time notifications
-  // useEffect(() => {
-  //   const ws = connectToNotificationSocket();
-  //   ws.on('notification', addNotification);
-  //   return () => ws.disconnect();
-  // }, [addNotification]);
 
   return (
     <NotificationsContext.Provider

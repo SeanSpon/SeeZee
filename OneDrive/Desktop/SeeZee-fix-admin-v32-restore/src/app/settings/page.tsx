@@ -17,9 +17,8 @@ export default async function SettingsPage() {
   const role = session.user.role;
 
   // Redirect based on role
-  if (role === "CEO") {
-    redirect("/ceo/settings");
-  } else if (role === "ADMIN" || role === "STAFF" || role === "DESIGNER" || role === "DEV") {
+  // CEO uses admin dashboard, so redirect to admin settings
+  if (role === "CEO" || role === "CFO" || role === "FRONTEND" || role === "BACKEND" || role === "OUTREACH") {
     redirect("/admin/settings");
   } else {
     // Default to client settings

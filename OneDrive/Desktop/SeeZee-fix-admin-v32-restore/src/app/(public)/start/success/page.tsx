@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Mail, ArrowRight, Package, DollarSign, Calendar, FileText } from 'lucide-react';

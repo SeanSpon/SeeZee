@@ -16,12 +16,12 @@ export function StepShell({ title, description, children }: StepShellProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
+      className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large"
     >
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">{title}</h1>
+        <h1 className="text-2xl md:text-3xl font-heading font-bold gradient-text mb-2">{title}</h1>
         {description && (
-          <p className="text-white/60 text-sm">{description}</p>
+          <p className="text-white/60 text-sm md:text-base">{description}</p>
         )}
       </div>
       

@@ -16,8 +16,22 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const thread = await prisma.messageThread.findFirst({
+      where: {
+        id: threadId,
+        clientId: session.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!thread) {
+      return NextResponse.json({ error: "Thread not found" }, { status: 404 });
+    }
+
     const messages = await prisma.threadMessage.findMany({
-      where: { threadId },
+      where: { threadId: thread.id },
       orderBy: { createdAt: "asc" },
     });
 

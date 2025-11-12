@@ -6,14 +6,17 @@ import { ProjectFeed } from "@/components/shared/ProjectFeed";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, DollarSign, Calendar, User, Plus, Trash } from "lucide-react";
 import { toggleMilestone, createMilestone, deleteMilestone } from "@/server/actions/milestones";
+import { CreateInvoiceButton } from "@/components/admin/CreateInvoiceButton";
 
 interface ProjectDetailClientProps {
   project: any;
 }
 
 const statusColors: Record<string, string> = {
+  PLANNING: "bg-slate-500/20 text-slate-400 border-slate-500/30",
   LEAD: "bg-blue-500/20 text-blue-400 border-blue-500/30",
   PAID: "bg-green-500/20 text-green-400 border-green-500/30",
+  ACTIVE: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
   IN_PROGRESS: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
   REVIEW: "bg-purple-500/20 text-purple-400 border-purple-500/30",
   COMPLETED: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
@@ -21,8 +24,10 @@ const statusColors: Record<string, string> = {
 };
 
 const statusOptions = [
+  { value: "PLANNING", label: "Planning" },
   { value: "LEAD", label: "Lead" },
   { value: "PAID", label: "Paid" },
+  { value: "ACTIVE", label: "Active" },
   { value: "IN_PROGRESS", label: "In Progress" },
   { value: "REVIEW", label: "Review" },
   { value: "COMPLETED", label: "Completed" },
@@ -94,28 +99,6 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
     }
   };
 
-  const handleCreateInvoice = async (type: "deposit" | "final") => {
-    const amount = type === "deposit" ? 50000 : 150000; // $500 or $1500 in cents
-    
-    try {
-      const response = await fetch("/api/invoices", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId: project.id,
-          amountCents: amount,
-          label: type,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.url) {
-        window.open(data.url, "_blank");
-      }
-    } catch (error) {
-      console.error("Failed to create invoice:", error);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -213,19 +196,71 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               <p className="text-slate-300 mb-4">{project.description}</p>
             )}
             
-            <div className="grid grid-cols-2 gap-4 mt-6">
-              <button
-                onClick={() => handleCreateInvoice("deposit")}
-                className="px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors"
-              >
-                Create Deposit Invoice
-              </button>
-              <button
-                onClick={() => handleCreateInvoice("final")}
-                className="px-4 py-3 bg-green-600 hover:bg-green-700 rounded-lg text-white font-medium transition-colors"
-              >
-                Create Final Invoice
-              </button>
+            <div className="mt-6 space-y-4">
+              {(() => {
+                // Use questionnaire estimate if available, otherwise fall back to budget
+                const totalEstimate = project.questionnaire?.estimate 
+                  ? project.questionnaire.estimate / 100 // Convert from cents to dollars
+                  : project.budget 
+                    ? Number(project.budget) 
+                    : null;
+
+                if (totalEstimate) {
+                  const depositAmount = totalEstimate / 2; // 50% deposit
+                  const finalAmount = totalEstimate / 2; // 50% final
+
+                  return (
+                    <div className="space-y-3">
+                      <div>
+                        <h4 className="text-sm font-semibold text-white mb-2">Create Invoice</h4>
+                        <div className="flex flex-wrap gap-3">
+                          <CreateInvoiceButton
+                            projectId={project.id}
+                            projectName={project.name}
+                            organizationId={project.organizationId}
+                            type="deposit"
+                            amount={depositAmount}
+                            onSuccess={() => {
+                              router.refresh();
+                            }}
+                          />
+                          {project.status === "PAID" || project.status === "ACTIVE" || project.status === "IN_PROGRESS" ? (
+                            <CreateInvoiceButton
+                              projectId={project.id}
+                              projectName={project.name}
+                              organizationId={project.organizationId}
+                              type="final"
+                              amount={finalAmount}
+                              onSuccess={() => {
+                                router.refresh();
+                              }}
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                      
+                      <div className="text-sm text-slate-400 mt-4 space-y-1">
+                        {project.questionnaire?.estimate && (
+                          <p className="text-xs text-slate-500 mb-2">
+                            Pricing from questionnaire: ${(totalEstimate).toLocaleString()}
+                          </p>
+                        )}
+                        <p>• Deposit invoice: 50% of project total (${depositAmount.toLocaleString()})</p>
+                        <p>• Final invoice: 50% remaining balance (${finalAmount.toLocaleString()})</p>
+                        <p className="text-xs text-slate-500 mt-2">Final invoice available after deposit is paid</p>
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                      <p className="text-sm text-yellow-400">
+                        No pricing information available. Please set project pricing or budget first to calculate invoice amounts.
+                      </p>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           </div>
         </TabsContent>

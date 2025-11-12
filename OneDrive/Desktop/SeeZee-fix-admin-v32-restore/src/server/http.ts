@@ -58,16 +58,16 @@ export function withCEO(
 }
 
 /**
- * Shorthand wrapper for Admin or CEO routes (read-only admin access)
+ * Shorthand wrapper for CFO or CEO routes (admin access)
  */
 export function withAdminOrCEO(
   handler: (req: NextRequest, context?: any) => Promise<NextResponse>
 ) {
-  return withRole([UserRole.ADMIN, UserRole.CEO], handler);
+  return withRole([UserRole.CFO, UserRole.CEO], handler);
 }
 
 /**
- * Shorthand wrapper for any internal staff (ADMIN, CEO, STAFF, etc.)
+ * Shorthand wrapper for any internal staff (CEO, CFO, FRONTEND, BACKEND, OUTREACH)
  */
 export function withInternalStaff(
   handler: (req: NextRequest, context?: any) => Promise<NextResponse>
@@ -75,12 +75,10 @@ export function withInternalStaff(
   return withRole(
     [
       UserRole.CEO,
-      UserRole.ADMIN,
-      UserRole.DESIGNER,
-      UserRole.DEV,
+      UserRole.CFO,
+      UserRole.FRONTEND,
+      UserRole.BACKEND,
       UserRole.OUTREACH,
-      UserRole.INTERN,
-      UserRole.STAFF,
     ],
     handler
   );

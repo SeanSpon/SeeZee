@@ -83,41 +83,39 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Settings</h1>
-          <p className="admin-page-subtitle">
-            Manage your account preferences and notifications
-          </p>
-        </div>
-      </div>
+    <div className="space-y-8">
+      <header className="space-y-2">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+          Control Center
+        </span>
+        <h1 className="text-3xl font-heading font-bold text-white">Settings</h1>
+        <p className="max-w-2xl text-sm text-gray-400">
+          Fine-tune your profile, communication preferences, and system alerts without leaving mission control.
+        </p>
+      </header>
 
-      {/* Tabs */}
-      <div className="glass-container-static">
-        <div className="border-b border-white/10">
-          <div className="flex gap-6">
+      <div className="rounded-2xl border border-white/10 bg-gray-900/70 p-6 shadow-lg shadow-gray-900/20 backdrop-blur">
+        <div className="border-b border-gray-800/80">
+          <div className="flex gap-4">
             <button
               onClick={() => setActiveTab("profile")}
-              className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all ${
+              className={`flex items-center gap-2 border-b-2 px-2 pb-3 text-sm font-medium transition-colors ${
                 activeTab === "profile"
-                  ? "border-cyan-500 text-cyan-400"
-                  : "border-transparent text-slate-400 hover:text-white"
+                  ? "border-trinity-red text-trinity-red"
+                  : "border-transparent text-gray-400 hover:text-white"
               }`}
             >
-              <User className="w-4 h-4" />
-              Profile
+              <User className="h-4 w-4" /> Profile
             </button>
             <button
               onClick={() => setActiveTab("notifications")}
-              className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all ${
+              className={`flex items-center gap-2 border-b-2 px-2 pb-3 text-sm font-medium transition-colors ${
                 activeTab === "notifications"
-                  ? "border-cyan-500 text-cyan-400"
-                  : "border-transparent text-slate-400 hover:text-white"
+                  ? "border-trinity-red text-trinity-red"
+                  : "border-transparent text-gray-400 hover:text-white"
               }`}
             >
-              <Bell className="w-4 h-4" />
-              Notifications
+              <Bell className="h-4 w-4" /> Notifications
             </button>
           </div>
         </div>
@@ -134,7 +132,7 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-3 text-white shadow-inner transition focus:border-trinity-red focus:outline-none"
                   required
                 />
               </div>
@@ -147,7 +145,7 @@ export default function AdminSettingsPage() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-3 text-white shadow-inner transition focus:border-trinity-red focus:outline-none"
                 />
               </div>
 
@@ -155,7 +153,7 @@ export default function AdminSettingsPage() {
                 <label className="block text-sm font-medium text-white mb-2">
                   Role
                 </label>
-                <div className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-slate-400 flex items-center gap-2">
+                <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-3 text-sm text-gray-300">
                   <Shield className="w-4 h-4" />
                   {session?.user?.role || "N/A"}
                 </div>
@@ -164,7 +162,7 @@ export default function AdminSettingsPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all font-medium flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-trinity-red px-6 py-2 font-medium text-white transition hover:bg-trinity-maroon disabled:opacity-50"
               >
                 {success ? (
                   <>
@@ -184,9 +182,9 @@ export default function AdminSettingsPage() {
           {/* Notifications Tab */}
           {activeTab === "notifications" && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-colors group">
+              <div className="group flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900/60 p-4 transition hover:border-trinity-red/40">
                 <div>
-                  <p className="text-white font-medium group-hover:text-cyan-400 transition-colors">
+                  <p className="font-medium text-white transition group-hover:text-trinity-red">
                     Email Notifications
                   </p>
                   <p className="text-sm text-slate-400">
@@ -197,13 +195,13 @@ export default function AdminSettingsPage() {
                   type="checkbox"
                   checked={emailNotifications}
                   onChange={(e) => setEmailNotifications(e.target.checked)}
-                  className="w-5 h-5 rounded border-white/20 bg-slate-800 checked:bg-cyan-500"
+                  className="h-5 w-5 rounded border-gray-700 bg-gray-800 text-trinity-red focus:ring-trinity-red"
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-colors group">
+              <div className="group flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900/60 p-4 transition hover:border-trinity-red/40">
                 <div>
-                  <p className="text-white font-medium group-hover:text-cyan-400 transition-colors">
+                  <p className="font-medium text-white transition group-hover:text-trinity-red">
                     Project Updates
                   </p>
                   <p className="text-sm text-slate-400">
@@ -214,13 +212,13 @@ export default function AdminSettingsPage() {
                   type="checkbox"
                   checked={projectUpdates}
                   onChange={(e) => setProjectUpdates(e.target.checked)}
-                  className="w-5 h-5 rounded border-white/20 bg-slate-800 checked:bg-cyan-500"
+                  className="h-5 w-5 rounded border-gray-700 bg-gray-800 text-trinity-red focus:ring-trinity-red"
                 />
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-cyan-500/30 transition-colors group">
+              <div className="group flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900/60 p-4 transition hover:border-trinity-red/40">
                 <div>
-                  <p className="text-white font-medium group-hover:text-cyan-400 transition-colors">
+                  <p className="font-medium text-white transition group-hover:text-trinity-red">
                     System Alerts
                   </p>
                   <p className="text-sm text-slate-400">
@@ -231,14 +229,14 @@ export default function AdminSettingsPage() {
                   type="checkbox"
                   checked={systemAlerts}
                   onChange={(e) => setSystemAlerts(e.target.checked)}
-                  className="w-5 h-5 rounded border-white/20 bg-slate-800 checked:bg-cyan-500"
+                  className="h-5 w-5 rounded border-gray-700 bg-gray-800 text-trinity-red focus:ring-trinity-red"
                 />
               </div>
 
               <button
                 onClick={handleSaveNotifications}
                 disabled={loading}
-                className="w-full px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-trinity-red px-6 py-2 font-medium text-white transition hover:bg-trinity-maroon disabled:opacity-50"
               >
                 {success ? (
                   <>
@@ -259,5 +257,13 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
 
 

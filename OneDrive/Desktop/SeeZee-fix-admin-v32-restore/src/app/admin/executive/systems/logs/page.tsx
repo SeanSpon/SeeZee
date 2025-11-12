@@ -1,17 +1,11 @@
 /**
- * System Logs - Real Activity from Database
+ * Executive System Logs - Redirects to CEO System Logs
  */
 
-import { listActivity } from "@/server/actions";
-import { LogsClient } from "@/components/admin/LogsClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function LogsPage() {
-  const result = await listActivity(100);
-  const activities = result.success ? result.activities : [];
-
-  return <LogsClient activities={activities} />;
+export default function ExecutiveLogsPage() {
+  redirect("/admin/ceo/systems/logs");
 }
 
 

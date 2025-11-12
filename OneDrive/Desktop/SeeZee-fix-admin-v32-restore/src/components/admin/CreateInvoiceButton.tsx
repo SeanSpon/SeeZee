@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { DollarSign, Send, Loader2 } from "lucide-react";
+import { createInvoiceWithLineItems } from "@/server/actions/pipeline";
+import { useRouter } from "next/navigation";
 
 interface CreateInvoiceButtonProps {
   projectId: string;
   projectName: string;
   type: "deposit" | "final";
   amount: number;
+  organizationId?: string;
   onSuccess?: () => void;
 }
 
@@ -16,41 +19,53 @@ export function CreateInvoiceButton({
   projectName,
   type,
   amount,
+  organizationId,
   onSuccess,
 }: CreateInvoiceButtonProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleCreateInvoice = async () => {
+    if (!organizationId) {
+      setError("Organization ID is required");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/invoices", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId,
-          amountCents: Math.round(amount * 100), // Convert to cents
-          label: type,
-          description: `${type === "deposit" ? "50% Deposit" : "Final Payment"} - ${projectName}`,
-        }),
+      // Calculate due date (30 days from now)
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 30);
+
+      const result = await createInvoiceWithLineItems({
+        projectId,
+        organizationId,
+        title: `${type === "deposit" ? "Deposit" : "Final Payment"} - ${projectName}`,
+        description: `${type === "deposit" ? "50% Deposit" : "Final Payment (50%)"} for ${projectName}`,
+        dueDate,
+        tax: 0,
+        invoiceType: type,
+        items: [
+          {
+            description: `${type === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${projectName}`,
+            quantity: 1,
+            rate: amount,
+            amount: amount,
+          },
+        ],
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Failed to create invoice");
-      }
-
-      const data = await response.json();
-      
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        window.open(data.url, "_blank");
+      if (result.success) {
         onSuccess?.();
+        router.refresh();
+      } else {
+        throw new Error(result.error || "Failed to create invoice");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to create invoice");
       console.error("Invoice creation error:", err);
     } finally {
       setLoading(false);

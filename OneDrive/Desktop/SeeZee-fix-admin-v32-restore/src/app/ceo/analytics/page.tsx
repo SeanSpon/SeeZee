@@ -1,16 +1,10 @@
 /**
- * CEO Analytics Dashboard
- * Real-time business metrics and performance insights
+ * CEO Analytics Dashboard - Redirects to /admin/ceo/analytics
+ * CEO features are now consolidated into /admin/ceo
  */
 
-import { getExecutiveMetrics } from "@/server/actions";
-import { AnalyticsClient } from "@/components/admin/AnalyticsClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function CEOAnalyticsPage() {
-  const result = await getExecutiveMetrics();
-  const metrics = result.success ? result.metrics : null;
-
-  return <AnalyticsClient metrics={metrics} />;
+export default function CEOAnalyticsPage() {
+  redirect("/admin/ceo/analytics");
 }

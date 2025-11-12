@@ -12,7 +12,7 @@ import { requireRole } from "@/lib/permissions";
  * List all available database models
  */
 export async function listModels() {
-  await requireRole("ADMIN"); // CEO role is higher than ADMIN, so CEO can access
+  await requireRole("CFO"); // CEO role is higher than ADMIN, so CEO can access
   
   return {
     success: true,
@@ -36,7 +36,7 @@ export async function listModels() {
  * @param limit - Maximum number of records to return
  */
 export async function query(model: string, limit = 50) {
-  await requireRole("ADMIN");
+  await requireRole("CFO");
   
   try {
     // Type-safe model access
@@ -74,7 +74,7 @@ export async function query(model: string, limit = 50) {
  * @param model - The name of the Prisma model
  */
 export async function getModelCount(model: string) {
-  await requireRole("ADMIN");
+  await requireRole("CFO");
   
   try {
     // @ts-ignore - Dynamic model access

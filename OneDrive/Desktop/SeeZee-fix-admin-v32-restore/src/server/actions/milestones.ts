@@ -16,7 +16,7 @@ export async function createMilestone(data: {
 }) {
   const session = await auth();
 
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+  if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
     throw new Error("Unauthorized");
   }
 
@@ -47,7 +47,7 @@ export async function createMilestone(data: {
 export async function toggleMilestone(milestoneId: string) {
   const session = await auth();
 
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+  if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
     throw new Error("Unauthorized");
   }
 
@@ -90,7 +90,7 @@ export async function toggleMilestone(milestoneId: string) {
 export async function deleteMilestone(milestoneId: string) {
   const session = await auth();
 
-  if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+  if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
     throw new Error("Unauthorized");
   }
 

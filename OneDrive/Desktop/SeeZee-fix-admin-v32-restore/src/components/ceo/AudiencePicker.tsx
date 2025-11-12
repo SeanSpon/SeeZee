@@ -29,7 +29,7 @@ export default function AudiencePicker({
   loadingUsers,
 }: AudiencePickerProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set(["CEO", "ADMIN", "STAFF", "DESIGNER", "DEV"]));
+  const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set(["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH"]));
 
   // Group users by role
   const usersByRole = useMemo(() => {

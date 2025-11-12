@@ -35,7 +35,7 @@ export function StepInput({
           onChange={(e) => setLocalValue(e.target.value)}
           placeholder={placeholder}
           required={required}
-          className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
         />
         {error && (
           <p className="text-sm text-red-400 flex items-center gap-1">
@@ -57,7 +57,7 @@ export function StepInput({
           placeholder={placeholder}
           required={required}
           rows={4}
-          className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all resize-none"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all resize-none"
         />
         {error && (
           <p className="text-sm text-red-400 flex items-center gap-1">
@@ -77,11 +77,11 @@ export function StepInput({
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
           required={required}
-          className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all cursor-pointer"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all cursor-pointer"
         >
           <option value="">Select an option...</option>
           {options.map((option) => (
-            <option key={option} value={option} className="bg-slate-900">
+            <option key={option} value={option} className="bg-gray-900">
               {option}
             </option>
           ))}
@@ -118,10 +118,10 @@ export function StepInput({
                 type="button"
                 onClick={() => toggleOption(option)}
                 className={`
-                  px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200
+                  px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
                   ${isSelected
-                    ? 'bg-cyan-500/20 text-cyan-300 border-2 border-cyan-500/50 shadow-lg shadow-cyan-500/25'
-                    : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white'
+                    ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                    : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:text-white hover:border-gray-600'
                   }
                 `}
               >
@@ -158,10 +158,10 @@ export function StepInput({
             type="button"
             onClick={() => setLocalValue(true)}
             className={`
-              flex-1 px-6 py-4 rounded-xl font-semibold transition-all duration-200
+              flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200
               ${boolValue
-                ? 'bg-cyan-500/20 text-cyan-300 border-2 border-cyan-500/50 shadow-lg shadow-cyan-500/25'
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
               }
             `}
           >
@@ -171,10 +171,10 @@ export function StepInput({
             type="button"
             onClick={() => setLocalValue(false)}
             className={`
-              flex-1 px-6 py-4 rounded-xl font-semibold transition-all duration-200
+              flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200
               ${!boolValue
-                ? 'bg-slate-500/20 text-slate-300 border-2 border-slate-500/50'
-                : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'
+                ? 'bg-gray-700/50 text-gray-300 border-2 border-gray-600'
+                : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
               }
             `}
           >

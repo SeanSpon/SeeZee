@@ -110,8 +110,8 @@ export function DataTable<T extends { id: string }>({
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-white/5">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-lg border border-white/5 max-w-full">
+        <table className="w-full min-w-0">
           <thead className="bg-slate-900/60 border-b border-white/5">
             <tr>
               {columns.map((col) => (

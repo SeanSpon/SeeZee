@@ -1,5 +1,5 @@
-﻿import { redirect } from "next/navigation";
+﻿import ClientDashboardClient from "./components/DashboardClient";
 
-export default function ClientIndexPage() {
-  redirect("/client/overview");
+export default async function ClientIndexPage() {
+  return <ClientDashboardClient />;
 }

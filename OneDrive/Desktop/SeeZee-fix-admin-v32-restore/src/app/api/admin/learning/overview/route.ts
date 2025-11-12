@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const session = await auth();
     
     // Allow CEO and ADMIN to view
-    if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role)) {
+    if (!session?.user || !["CEO", "CFO"].includes(session.user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

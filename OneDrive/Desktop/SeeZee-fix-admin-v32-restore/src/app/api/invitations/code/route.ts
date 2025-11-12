@@ -37,12 +37,10 @@ export async function POST(request: Request) {
     // Validate role
     const validRoles: UserRole[] = [
       "CEO",
-      "ADMIN",
-      "DESIGNER",
-      "DEV",
+      "CFO",
+      "FRONTEND",
+      "BACKEND",
       "OUTREACH",
-      "INTERN",
-      "STAFF",
     ];
     if (!validRoles.includes(role)) {
       return NextResponse.json({ error: "Invalid role" }, { status: 400 });
@@ -103,7 +101,8 @@ export async function POST(request: Request) {
     });
 
     // Send email with the 6-digit code
-    const signinUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/login`;
+    const baseUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const signinUrl = `${baseUrl}/login`;
     
     await sendInviteEmail({
       to: email,

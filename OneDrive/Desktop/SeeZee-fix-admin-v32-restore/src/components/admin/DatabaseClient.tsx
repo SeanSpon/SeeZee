@@ -59,29 +59,30 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Database Browser</h1>
-        <p className="text-gray-400">
+      <header className="space-y-3 relative">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block mb-2">
+          System Database
+        </span>
+        <h1 className="text-4xl font-heading font-bold gradient-text">Database Browser</h1>
+        <p className="max-w-2xl text-base text-gray-300 leading-relaxed">
           Browse and inspect database models (Admin+ only)
         </p>
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Models List */}
         <div className="lg:col-span-1">
-          <SectionCard
-            title="Available Models"
-            className="h-fit"
-          >
+          <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300 h-fit">
+            <h2 className="text-xl font-heading font-semibold text-white mb-4">Available Models</h2>
             <div className="space-y-2">
               {models.map((model) => (
                 <button
                   key={model}
                   onClick={() => setSelectedModel(model)}
-                  className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                  className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
                     selectedModel === model
-                      ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
-                      : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
+                      ? "glass-effect border-trinity-red/50 text-trinity-red hover:shadow-medium"
+                      : "glass-effect border-gray-700 text-gray-300 hover:border-gray-600"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -91,24 +92,25 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
                 </button>
               ))}
             </div>
-          </SectionCard>
+          </div>
         </div>
 
         {/* Model Details */}
         <div className="lg:col-span-2">
           {selectedModel ? (
-            <SectionCard
-              title={`${selectedModel.charAt(0).toUpperCase()}${selectedModel.slice(1)}`}
-              action={
+            <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-heading font-semibold text-white capitalize">
+                  {selectedModel}
+                </h2>
                 <button
                   onClick={handleRefresh}
-                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="p-2 rounded-lg border border-gray-700 bg-gray-800/50 hover:border-trinity-red/50 hover:bg-gray-700 transition-colors"
                   disabled={loading}
                 >
-                  <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                  <RefreshCw className={`h-4 w-4 text-gray-400 ${loading ? "animate-spin" : ""}`} />
                 </button>
-              }
-            >
+              </div>
               {loading ? (
                 <div className="text-center py-12">
                   <Loader2 className="h-12 w-12 text-purple-400 mx-auto mb-4 animate-spin" />
@@ -164,7 +166,7 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
                   </div>
                 </div>
               )}
-            </SectionCard>
+            </div>
           ) : (
             <SectionCard
               title="Select a Model"

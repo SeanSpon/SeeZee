@@ -39,7 +39,7 @@ export async function getLearningResources(filter?: {
   category?: string;
   search?: string;
 }) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const where: any = {};
@@ -77,7 +77,7 @@ export async function getLearningResources(filter?: {
  * Create a learning resource
  */
 export async function createLearningResource(params: CreateResourceParams) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const resource = await db.learningResource.create({
@@ -106,7 +106,7 @@ export async function createLearningResource(params: CreateResourceParams) {
  * Get all tools
  */
 export async function getTools(filter?: { category?: string; search?: string }) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const where: any = {};
@@ -140,7 +140,7 @@ export async function getTools(filter?: { category?: string; search?: string }) 
  * Create a tool entry
  */
 export async function createTool(params: CreateToolParams) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const tool = await db.tool.create({
@@ -167,7 +167,7 @@ export async function createTool(params: CreateToolParams) {
  * Delete a learning resource
  */
 export async function deleteLearningResource(resourceId: string) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     await db.learningResource.delete({
@@ -186,7 +186,7 @@ export async function deleteLearningResource(resourceId: string) {
  * Delete a tool
  */
 export async function deleteTool(toolId: string) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     await db.tool.delete({

@@ -113,7 +113,7 @@ export function TaskDetailClient({
   const currentPriority = priorityOptions.find((p) => p.value === task.priority) || priorityOptions[1];
 
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== "DONE";
-  const canEdit = currentUser.role === "CEO" || currentUser.role === "ADMIN" || task.createdBy.id === currentUser.id;
+  const canEdit = currentUser.role === "CEO" || currentUser.role === "CFO" || task.createdBy.id === currentUser.id;
 
   const handleStatusChange = async (newStatus: string) => {
     setLoading(true);

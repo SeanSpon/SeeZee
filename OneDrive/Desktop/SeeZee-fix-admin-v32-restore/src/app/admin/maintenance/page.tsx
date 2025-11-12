@@ -4,10 +4,18 @@
 
 import { getMaintenanceSchedules, getMaintenanceClients, getMaintenanceStats } from "@/server/actions";
 import { MaintenanceClient } from "@/components/admin/MaintenanceClient";
+import { AdminAppShell } from "@/components/admin/AdminAppShell";
+import { getCurrentUser } from "@/lib/auth/requireRole";
 
 export const dynamic = "force-dynamic";
 
 export default async function MaintenancePage() {
+  const user = await getCurrentUser();
+  
+  if (!user) {
+    return null;
+  }
+
   const [schedulesResult, clientsResult, statsResult] = await Promise.all([
     getMaintenanceSchedules(),
     getMaintenanceClients(),
@@ -38,7 +46,11 @@ export default async function MaintenancePage() {
     avgResponseTime: maintenanceStats.avgResponseTime,
   };
 
-  return <MaintenanceClient initialSchedules={schedules} clients={clients} stats={stats} />;
+  return (
+    <AdminAppShell user={user}>
+      <MaintenanceClient initialSchedules={schedules} clients={clients} stats={stats} />
+    </AdminAppShell>
+  );
 }
 
 

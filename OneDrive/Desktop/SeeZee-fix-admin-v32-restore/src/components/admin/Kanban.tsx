@@ -42,7 +42,7 @@ export function Kanban({
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div className="flex gap-4 overflow-x-auto pb-4 max-w-full">
       {columns.map((column) => (
         <div
           key={column.id}

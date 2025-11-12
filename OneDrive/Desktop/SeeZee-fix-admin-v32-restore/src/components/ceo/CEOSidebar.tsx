@@ -225,7 +225,7 @@ export function CEOSidebar({ userRole }: CEOSidebarProps) {
                           className={`
                             relative flex items-center gap-3 px-3 py-2 rounded-lg
                             text-sm font-medium
-                            transition-all duration-200
+                            transition-[color,background-color] duration-150 ease-in-out
                             ${
                               active
                                 ? "bg-purple-500/20 text-white shadow-lg shadow-purple-500/10"

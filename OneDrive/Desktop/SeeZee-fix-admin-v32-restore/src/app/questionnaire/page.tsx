@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
-import { StepSlugs } from '@/lib/steps';
 
+/**
+ * Questionnaire route - Redirects to /start
+ * Primary questionnaire route is now /start
+ */
 export default function QuestionnairePage() {
-  // Redirect to first step
-  redirect(`/questionnaire/step/${StepSlugs[0]}`);
+  redirect("/start");
 }

@@ -239,65 +239,60 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="glass-container-static p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <CheckSquare className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <div className="text-xs text-slate-400">Total Tasks</div>
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Total Tasks</p>
+            <div className="w-10 h-10 bg-trinity-red/20 rounded-lg flex items-center justify-center border border-trinity-red/30">
+              <CheckSquare className="w-5 h-5 text-trinity-red" />
             </div>
           </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{stats.total}</p>
+          <p className="text-xs text-gray-500">All tasks</p>
         </div>
 
-        <div className="glass-container-static p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-500/20 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-slate-400" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">{stats.todo}</div>
-              <div className="text-xs text-slate-400">To Do</div>
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">To Do</p>
+            <div className="w-10 h-10 bg-gray-500/20 rounded-lg flex items-center justify-center border border-gray-500/30">
+              <Clock className="w-5 h-5 text-gray-400" />
             </div>
           </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{stats.todo}</p>
+          <p className="text-xs text-gray-500">Pending</p>
         </div>
 
-        <div className="glass-container-static p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">In Progress</p>
+            <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
               <Clock className="w-5 h-5 text-blue-400" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-white">{stats.inProgress}</div>
-              <div className="text-xs text-slate-400">In Progress</div>
-            </div>
           </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{stats.inProgress}</p>
+          <p className="text-xs text-gray-500">Active</p>
         </div>
 
-        <div className="glass-container-static p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Completed</p>
+            <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
               <CheckSquare className="w-5 h-5 text-green-400" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-white">{stats.done}</div>
-              <div className="text-xs text-slate-400">Completed</div>
-            </div>
           </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{stats.done}</p>
+          <p className="text-xs text-gray-500">Finished</p>
         </div>
 
-        <div className="glass-container-static p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Overdue</p>
+            <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
               <AlertCircle className="w-5 h-5 text-red-400" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-white">{stats.overdue}</div>
-              <div className="text-xs text-slate-400">Overdue</div>
-            </div>
           </div>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{stats.overdue}</p>
+          <p className="text-xs text-gray-500">Needs attention</p>
         </div>
       </div>
 
@@ -338,11 +333,11 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
               <button
                 onClick={() => setFilter("all")}
                 className={`
-                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all border-2
                   ${
                     filter === "all"
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                      ? "bg-trinity-red/20 text-trinity-red border-trinity-red/50"
+                      : "text-gray-400 border-gray-700 hover:text-white hover:border-gray-600"
                   }
                 `}
               >
@@ -351,11 +346,11 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
               <button
                 onClick={() => setFilter("TODO")}
                 className={`
-                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all border-2
                   ${
                     filter === "TODO"
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                      ? "bg-trinity-red/20 text-trinity-red border-trinity-red/50"
+                      : "text-gray-400 border-gray-700 hover:text-white hover:border-gray-600"
                   }
                 `}
               >
@@ -364,11 +359,11 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
               <button
                 onClick={() => setFilter("IN_PROGRESS")}
                 className={`
-                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all border-2
                   ${
                     filter === "IN_PROGRESS"
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                      ? "bg-trinity-red/20 text-trinity-red border-trinity-red/50"
+                      : "text-gray-400 border-gray-700 hover:text-white hover:border-gray-600"
                   }
                 `}
               >
@@ -377,11 +372,11 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
               <button
                 onClick={() => setFilter("DONE")}
                 className={`
-                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all border-2
                   ${
                     filter === "DONE"
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800/40"
+                      ? "bg-trinity-red/20 text-trinity-red border-trinity-red/50"
+                      : "text-gray-400 border-gray-700 hover:text-white hover:border-gray-600"
                   }
                 `}
               >
@@ -391,7 +386,7 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
           )}
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all"
+        <button className="flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 border-trinity-red/40 bg-trinity-red/10 text-trinity-red hover:bg-trinity-red hover:text-white text-sm font-medium transition-all hover:shadow-large"
           onClick={() => setShowCreateModal(true)}
         >
           <Plus className="w-4 h-4" />
@@ -471,14 +466,14 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       )}
 
       {/* Tasks Table */}
-      <SectionCard>
+      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
         <DataTable
           data={filteredTasks}
           columns={columns}
           searchPlaceholder="Search tasks..."
           onRowClick={(task) => router.push(`/admin/tasks/${task.id}`)}
         />
-      </SectionCard>
+      </div>
     </div>
   );
 }

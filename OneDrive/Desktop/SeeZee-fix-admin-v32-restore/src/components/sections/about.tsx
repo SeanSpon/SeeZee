@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Trophy, Rocket, Zap, Code, Palette } from 'lucide-react'
 
@@ -67,6 +68,32 @@ export function About() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
+          <motion.div
+            className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <Image 
+                src="/logos/trinity-logo.png" 
+                alt="Trinity High School" 
+                width={400}
+                height={150}
+                className="h-24 md:h-32 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <Image 
+                src="/logos/fbla-logo.png" 
+                alt="Future Business Leaders of America" 
+                width={400}
+                height={120}
+                className="h-20 md:h-28 w-auto object-contain"
+              />
+            </div>
+          </motion.div>
           <motion.h2 
             className="text-5xl md:text-6xl font-black mb-6"
             initial={{ opacity: 0, scale: 0.9 }}

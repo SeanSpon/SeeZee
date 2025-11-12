@@ -5,7 +5,8 @@
  */
 
 import { db } from "@/server/db";
-import { requireRole } from "@/lib/permissions";
+import { requireRole } from "@/lib/auth/requireRole";
+import { ROLE } from "@/lib/role";
 import { revalidateTag } from "next/cache";
 import { tags } from "@/lib/tags";
 import { UserRole } from "@prisma/client";
@@ -14,7 +15,7 @@ import { UserRole } from "@prisma/client";
  * List all team members
  */
 export async function listTeam() {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
   
   try {
     const users = await db.user.findMany({
@@ -43,7 +44,7 @@ export async function listTeam() {
  * @param role - New role to assign
  */
 export async function updateRole(userId: string, role: UserRole) {
-  await requireRole("ADMIN");
+  await requireRole([ROLE.CFO]);
   
   try {
     const user = await db.user.update({
@@ -65,7 +66,7 @@ export async function updateRole(userId: string, role: UserRole) {
  * @param userId - ID of the user to fetch
  */
 export async function getUserById(userId: string) {
-  await requireRole("STAFF");
+  await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
   
   try {
     const user = await db.user.findUnique({
@@ -101,7 +102,7 @@ export async function updateUserProfile(
   userId: string,
   data: { name?: string; email?: string }
 ) {
-  await requireRole("CEO"); // Only CEO can edit other users
+  await requireRole([ROLE.CEO]); // Only CEO can edit other users
   
   try {
     const user = await db.user.update({
@@ -126,7 +127,7 @@ export async function updateUserProfile(
  * @param userId - ID of the user to delete
  */
 export async function deleteUser(userId: string) {
-  await requireRole("CEO"); // Only CEO can delete users
+  await requireRole([ROLE.CEO]); // Only CEO can delete users
   
   try {
     await db.user.delete({

@@ -1,12 +1,14 @@
 /**
  * Role-based access control utilities
+ * Updated for new roles: CEO, CFO, FRONTEND, BACKEND, OUTREACH, CLIENT
  */
 
 import { auth } from "@/auth";
 
-export type Role = "CEO" | "ADMIN" | "STAFF" | "DESIGNER" | "DEV" | "CLIENT";
+export type Role = "CEO" | "CFO" | "FRONTEND" | "BACKEND" | "OUTREACH" | "CLIENT";
 
-export const roleOrder: Role[] = ["CLIENT", "DEV", "DESIGNER", "STAFF", "ADMIN", "CEO"];
+// Role hierarchy (lower index = lower privilege)
+export const roleOrder: Role[] = ["CLIENT", "OUTREACH", "FRONTEND", "BACKEND", "CFO", "CEO"];
 
 /**
  * Require a minimum role level for an action

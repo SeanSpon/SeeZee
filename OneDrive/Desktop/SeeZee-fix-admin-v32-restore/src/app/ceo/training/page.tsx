@@ -1,12 +1,10 @@
 /**
- * CEO Training Management
- * Upload and assign training materials to team members
+ * CEO Training Management - Redirects to /admin/learning/training
+ * CEO features are now consolidated into /admin with role-based sections
  */
 
-"use client";
-
-import TrainingList from "@/components/ceo/TrainingList";
+import { redirect } from "next/navigation";
 
 export default function CEOTrainingPage() {
-  return <TrainingList />;
+  redirect("/admin/learning/training");
 }

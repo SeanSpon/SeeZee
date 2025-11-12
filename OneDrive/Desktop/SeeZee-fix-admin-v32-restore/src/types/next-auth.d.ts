@@ -8,6 +8,7 @@ declare module "next-auth" {
       role: UserRole;
       tosAcceptedAt: Date | null;
       profileDoneAt: Date | null;
+      questionnaireCompleted: Date | null;
     } & DefaultSession["user"];
   }
 
@@ -15,6 +16,7 @@ declare module "next-auth" {
     role: UserRole;
     tosAcceptedAt: Date | null;
     profileDoneAt: Date | null;
+    questionnaireCompleted: Date | null;
   }
 }
 
@@ -24,5 +26,6 @@ declare module "next-auth/jwt" {
     role: UserRole;
     tosAcceptedAt: Date | null;
     profileDoneAt: Date | null;
+    questionnaireCompleted: string | null;
   }
 }

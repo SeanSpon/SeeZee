@@ -2,6 +2,7 @@
 
 /**
  * Server actions for Task management
+ * Updated for role-based assignment and payout system
  */
 
 import { db } from "@/server/db";
@@ -9,7 +10,7 @@ import { requireRole } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
 import { revalidatePath } from "next/cache";
 import { createActivity } from "./activity";
-import { TodoStatus, TodoPriority } from "@prisma/client";
+import { TodoStatus, TodoPriority, UserRole } from "@prisma/client";
 
 // Type aliases for backward compatibility
 export type TaskStatus = TodoStatus;
@@ -20,34 +21,58 @@ interface CreateTaskParams {
   description?: string;
   priority?: TodoPriority;
   assignedToId?: string;
+  assignedToRole?: UserRole; // Role group assignment
+  projectId?: string;
+  payoutAmount?: number;
   dueDate?: Date;
 }
 
 /**
- * Get all tasks - defaults to current user's tasks unless assignedToId is explicitly set
+ * Get all tasks - defaults to current user's tasks unless filters are provided
  */
 export async function getTasks(filter?: {
   status?: TaskStatus;
   assignedToId?: string;
+  assignedToRole?: UserRole;
+  projectId?: string;
 }) {
-  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const where: any = {};
 
-    // Default to current user's tasks if no assignedToId filter is provided
+    // TODO: Add assignedToRole field to Todo model
+    // If assignedToRole filter is provided, use it
+    // if (filter?.assignedToRole) {
+    //   where.assignedToRole = filter.assignedToRole;
+    // }
+
+    // If assignedToId filter is provided, use it
     if (filter?.assignedToId !== undefined) {
-      // Explicit filter (can be null to get unassigned tasks)
       if (filter.assignedToId !== null) {
         where.assignedToId = filter.assignedToId;
+      } else {
+        where.assignedToId = null;
       }
     } else {
-      // Default: show only tasks assigned to current user
+      // Default: show tasks assigned to current user
       where.assignedToId = user.id;
+      // TODO: Add assignedToRole and claimedById fields to Todo model
+      // where.OR = [
+      //   { assignedToId: user.id },
+      //   { 
+      //     assignedToRole: user.role as UserRole,
+      //     claimedById: null, // Available to claim
+      //   },
+      // ];
     }
 
     if (filter?.status) {
       where.status = filter.status;
+    }
+
+    if (filter?.projectId) {
+      where.projectId = filter.projectId;
     }
 
     const tasks = await db.todo.findMany({
@@ -61,6 +86,15 @@ export async function getTasks(filter?: {
             image: true,
           },
         },
+        // TODO: Add claimedBy field to Todo model if needed
+        // claimedBy: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //     image: true,
+        //   },
+        // },
         createdBy: {
           select: {
             id: true,
@@ -68,7 +102,7 @@ export async function getTasks(filter?: {
             email: true,
           },
         },
-      },
+      } as any,
       orderBy: [
         { status: "asc" },
         { priority: "desc" },
@@ -84,10 +118,66 @@ export async function getTasks(filter?: {
 }
 
 /**
+ * Get tasks by role group
+ */
+export async function getTasksByRole(role: UserRole, projectId?: string) {
+  const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
+
+  try {
+    // TODO: Add assignedToRole field to Todo model
+    const where: any = {
+      // assignedToRole: role,
+    };
+
+    if (projectId) {
+      where.projectId = projectId;
+    }
+
+    const tasks = await db.todo.findMany({
+      where,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        // TODO: Add claimedBy field to Todo model if needed
+        // claimedBy: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //   },
+        // },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      } as any,
+      orderBy: [
+        { status: "asc" },
+        { priority: "desc" },
+        { dueDate: "asc" },
+      ],
+    });
+
+    return { success: true, tasks };
+  } catch (error) {
+    console.error("Failed to fetch tasks by role:", error);
+    return { success: false, error: "Failed to fetch tasks by role", tasks: [] };
+  }
+}
+
+/**
  * Create a new task
+ * Supports role-based assignment (assign to role group) or individual assignment
  */
 export async function createTask(params: CreateTaskParams) {
-  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  const user = await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     const task = await db.todo.create({
@@ -96,10 +186,20 @@ export async function createTask(params: CreateTaskParams) {
         description: params.description,
         priority: params.priority || TodoPriority.MEDIUM,
         assignedToId: params.assignedToId,
+        // assignedToRole: params.assignedToRole, // TODO: Add this field to Todo model
+        projectId: params.projectId,
+        // payoutAmount: params.payoutAmount ? params.payoutAmount.toString() : null, // TODO: Add this field to Todo model
         dueDate: params.dueDate,
         createdById: user.id,
-      },
+        status: TodoStatus.TODO,
+      } as any,
       include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         assignedTo: {
           select: {
             id: true,
@@ -107,7 +207,7 @@ export async function createTask(params: CreateTaskParams) {
             email: true,
           },
         },
-      },
+      } as any,
     });
 
     // Create activity
@@ -127,10 +227,271 @@ export async function createTask(params: CreateTaskParams) {
 }
 
 /**
+ * Claim a task from a role group
+ */
+export async function claimTask(taskId: string) {
+  const user = await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
+
+  try {
+    // Get the task
+    const task = await db.todo.findUnique({
+      where: { id: taskId },
+    });
+
+    if (!task) {
+      return { success: false, error: "Task not found" };
+    }
+
+    // Check if task is available to claim
+    if (task.assignedToId) {
+      return { success: false, error: "Task already assigned" };
+    }
+
+    // TODO: Add assignedToRole field to Todo model for role-based claiming
+    // Check if user has the correct role
+    // if (task.assignedToRole !== user.role) {
+    //   return { success: false, error: "You don't have permission to claim this task" };
+    // }
+
+    // Update task
+    const updatedTask = await db.todo.update({
+      where: { id: taskId },
+      data: {
+        assignedToId: user.id,
+        status: TodoStatus.IN_PROGRESS,
+      } as any,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      } as any,
+    });
+    
+    // TODO: Create taskClaim when model is added to schema
+    // await db.taskClaim.create({
+    //   data: {
+    //     taskId,
+    //     userId: user.id,
+    //     status: "ACTIVE",
+    //   },
+    // });
+
+    // Create activity
+    await createActivity({
+      type: "PROJECT_UPDATED",
+      title: "Task claimed",
+      description: `${user.name} claimed task: ${task.title}`,
+      userId: user.id,
+    });
+
+    revalidatePath("/admin/tasks");
+    return { success: true, task: updatedTask };
+  } catch (error) {
+    console.error("Failed to claim task:", error);
+    return { success: false, error: "Failed to claim task" };
+  }
+}
+
+/**
+ * Submit a completed task for review
+ */
+export async function submitTask(taskId: string, submissionNotes?: string) {
+  const user = await requireRole([ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
+
+  try {
+    // Get the task
+    const task = await db.todo.findUnique({
+      where: { id: taskId },
+    });
+
+    if (!task) {
+      return { success: false, error: "Task not found" };
+    }
+
+    // Check if user is the one who is assigned to it
+    if (task.assignedToId !== user.id) {
+      return { success: false, error: "You don't have permission to submit this task" };
+    }
+
+    // Update task
+    const updatedTask = await db.todo.update({
+      where: { id: taskId },
+          data: {
+            status: TodoStatus.SUBMITTED,
+            submittedAt: new Date(),
+            submissionNotes: submissionNotes || null,
+          } as any,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        // TODO: Add claimedBy field to Todo model if needed
+        // claimedBy: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //   },
+        // },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      } as any,
+    });
+
+    // Create activity
+    await createActivity({
+      type: "PROJECT_UPDATED",
+      title: "Task submitted for review",
+      description: `${user.name} submitted task: ${task.title}`,
+      userId: user.id,
+    });
+
+    revalidatePath("/admin/tasks");
+    return { success: true, task: updatedTask };
+  } catch (error) {
+    console.error("Failed to submit task:", error);
+    return { success: false, error: "Failed to submit task" };
+  }
+}
+
+/**
+ * Approve or reject a submitted task (CEO only)
+ */
+export async function approveTask(taskId: string, approved: boolean, notes?: string) {
+  const user = await requireRole([ROLE.CEO]);
+
+  try {
+    // Get the task
+    const task = await db.todo.findUnique({
+      where: { id: taskId },
+      include: {
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      } as any,
+    });
+
+    if (!task) {
+      return { success: false, error: "Task not found" };
+    }
+
+    if (task.status !== TodoStatus.SUBMITTED) {
+      return { success: false, error: "Task is not in submitted status" };
+    }
+
+    if (approved) {
+      // Approve task - move to awaiting payout
+      const updatedTask = await db.todo.update({
+        where: { id: taskId },
+        data: {
+          status: "AWAITING_PAYOUT" as any,
+          approvedAt: new Date(),
+        } as any,
+        include: {
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          assignedTo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        } as any,
+      });
+      
+      // TODO: Create taskPayout when model is added to schema
+      // const payout = await db.taskPayout.create({
+      //   data: {
+      //     taskId,
+      //     userId: task.assignedToId!,
+      //     amount: task.payoutAmount || "0",
+      //     status: "AWAITING_CLIENT_PAYMENT",
+      //   },
+      // });
+
+      // Create activity
+      await createActivity({
+        type: "TASK_COMPLETED",
+        title: "Task approved",
+        description: `Task approved: ${task.title}`,
+        userId: user.id,
+      });
+
+      revalidatePath("/admin/tasks");
+      return { success: true, task: updatedTask };
+    } else {
+      // Reject task - reset to in progress
+      const updatedTask = await db.todo.update({
+        where: { id: taskId },
+        data: {
+          status: TodoStatus.IN_PROGRESS,
+        },
+        include: {
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          assignedTo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        } as any,
+      });
+
+      // Create activity
+      await createActivity({
+        type: "PROJECT_UPDATED",
+        title: "Task rejected",
+        description: `Task rejected: ${task.title}${notes ? ` - ${notes}` : ""}`,
+        userId: user.id,
+      });
+
+      revalidatePath("/admin/tasks");
+      return { success: true, task: updatedTask };
+    }
+  } catch (error) {
+    console.error("Failed to approve task:", error);
+    return { success: false, error: "Failed to approve task" };
+  }
+}
+
+/**
  * Update task status
  */
 export async function updateTaskStatus(taskId: string, status: TaskStatus) {
-  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     const task = await db.todo.update({
@@ -163,7 +524,7 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
  * Assign task to user
  */
 export async function assignTask(taskId: string, userId: string) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     const task = await db.todo.update({
@@ -194,7 +555,7 @@ export async function assignTask(taskId: string, userId: string) {
  * Delete a task
  */
 export async function deleteTask(taskId: string) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     await db.todo.delete({
@@ -213,7 +574,7 @@ export async function deleteTask(taskId: string) {
  * Get task statistics
  */
 export async function getTaskStats() {
-  const user = await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF, ROLE.DESIGNER, ROLE.DEV]);
+  const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
     // Filter tasks assigned to the current user
@@ -251,7 +612,7 @@ export async function getTaskStats() {
  * Bulk update task status
  */
 export async function bulkUpdateTaskStatus(taskIds: string[], status: TaskStatus) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     const result = await db.todo.updateMany({
@@ -276,7 +637,7 @@ export async function bulkUpdateTaskStatus(taskIds: string[], status: TaskStatus
  * Bulk assign tasks to a user
  */
 export async function bulkAssignTasks(taskIds: string[], assignedToId: string | null) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN, ROLE.STAFF]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     const result = await db.todo.updateMany({
@@ -300,7 +661,7 @@ export async function bulkAssignTasks(taskIds: string[], assignedToId: string | 
  * Bulk delete tasks
  */
 export async function bulkDeleteTasks(taskIds: string[]) {
-  await requireRole([ROLE.CEO, ROLE.ADMIN]);
+  await requireRole([ROLE.CEO, ROLE.CFO]);
 
   try {
     const result = await db.todo.deleteMany({

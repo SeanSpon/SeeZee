@@ -1,99 +1,253 @@
-/**
- * ClientShell - Premium client dashboard layout matching admin/CEO style
- * Fixed sidebar + main content area with consistent glass morphism
- */
-
 "use client";
 
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
-import { Home, FolderKanban, FileText, MessageSquare, Settings, Plus, CreditCard } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { useSession, signOut } from "next-auth/react";
+import {
+  FiHome,
+  FiFolder,
+  FiFileText,
+  FiMessageSquare,
+  FiSettings,
+  FiMenu,
+  FiX,
+  FiArrowLeft,
+  FiLogOut,
+  FiCheckSquare,
+  FiCreditCard,
+  FiHelpCircle,
+  FiMail,
+} from "react-icons/fi";
+import Avatar from "@/components/ui/Avatar";
+import LogoHeader from "@/components/brand/LogoHeader";
+import { fetchJson } from "@/lib/client-api";
 
-const NAV_ITEMS = [
-  { href: "/client/overview", label: "Overview", icon: Home },
-  { href: "/client/projects", label: "Projects", icon: FolderKanban },
-  { href: "/client/invoices", label: "Invoices", icon: CreditCard },
-  { href: "/client/files", label: "Files", icon: FileText },
-  { href: "/client/requests", label: "Requests", icon: MessageSquare },
-];
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: number | null;
+}
 
-export default function ClientShell({ children }: { children: ReactNode }) {
+export default function ClientShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [hasActiveRequest, setHasActiveRequest] = useState(false);
+  const [checkingRequests, setCheckingRequests] = useState(true);
+  const [pendingTaskCount, setPendingTaskCount] = useState(0);
+
+  const isActive = useCallback(
+    (href: string) => {
+      if (href === "/client") {
+        return pathname === "/client" || pathname === "/client/overview";
+      }
+      if (href === "/start") {
+        return pathname === "/start";
+      }
+      return pathname.startsWith(href);
+    },
+    [pathname]
+  );
+
+  const handleNavigate = useCallback(
+    (href: string) => {
+      setIsSidebarOpen(false);
+      router.push(href);
+    },
+    [router]
+  );
+
+  const handleLogout = useCallback(async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+  }, [router]);
+
+  // Check for active project requests
+  useEffect(() => {
+    if (!session?.user) {
+      setCheckingRequests(false);
+      return;
+    }
+
+    fetchJson<any>("/api/client/requests")
+      .then((data) => {
+        const requests = data?.requests || [];
+        const active = requests.filter((req: any) => {
+          const status = String(req.status || "").toUpperCase();
+          return ["DRAFT", "SUBMITTED", "REVIEWING", "NEEDS_INFO"].includes(status);
+        });
+        setHasActiveRequest(active.length > 0);
+      })
+      .catch((err) => {
+        console.error("Failed to check active requests:", err);
+        setHasActiveRequest(false);
+      })
+      .finally(() => {
+        setCheckingRequests(false);
+      });
+  }, [session]);
+
+  // Fetch pending task count
+  useEffect(() => {
+    if (!session?.user) {
+      setPendingTaskCount(0);
+      return;
+    }
+
+    fetchJson<any>("/api/client/tasks")
+      .then((data) => {
+        const summary = data?.summary || {};
+        setPendingTaskCount(summary.pending || 0);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch pending tasks:", err);
+        setPendingTaskCount(0);
+      });
+  }, [session]);
+
+  const navItems: NavItem[] = useMemo(
+    () => [
+      { href: "/client", label: "Dashboard", icon: FiHome },
+      { href: "/client/projects", label: "Projects", icon: FiFolder },
+      {
+        href: "/client/tasks",
+        label: "Tasks",
+        icon: FiCheckSquare,
+        badge: pendingTaskCount > 0 ? pendingTaskCount : null,
+      },
+      { href: "/client/files", label: "Files", icon: FiFileText },
+      { href: "/client/requests", label: "Requests", icon: FiMessageSquare },
+      { href: "/client/invoices", label: "Invoices", icon: FiCreditCard },
+      { href: "/client/messages", label: "Messages", icon: FiMail },
+      { href: "/client/support", label: "Support", icon: FiHelpCircle },
+      { href: "/client/settings", label: "Settings", icon: FiSettings },
+    ],
+    [pendingTaskCount]
+  );
+
+  const user = session?.user;
 
   return (
-    <div className="fixed inset-0 flex flex-col" style={{ top: 'var(--h-nav)' }}>
-      <div className="flex flex-1 overflow-hidden">
-        {/* Fixed Sidebar - Desktop Only */}
-        <aside 
-          className="sidebar-layer hidden md:block fixed left-0 seezee-glass border-r border-white/10 w-64"
-          style={{ top: 'var(--h-nav)', height: 'calc(100vh - var(--h-nav))' }}
+    <div className="min-h-screen bg-black text-white">
+      <div className="relative flex min-h-screen">
+        {/* Sidebar */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-gray-800 bg-gray-900 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
-          <div className="flex flex-col h-full p-6">
-            {/* Logo - Clean and simple */}
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                <span className="text-xl font-bold text-white">Z</span>
-              </div>
-              <div>
-                <div className="font-bold text-white text-base">SeeZee</div>
-                <div className="text-xs text-white/50">Client Portal</div>
-              </div>
+          <div className="flex h-full flex-col">
+            <div className="border-b border-gray-800 px-6 py-6">
+              <LogoHeader href="/client" />
             </div>
-
-            {/* Navigation - Clean and simple */}
-            <nav className="space-y-1 flex-1">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const isActive =
-                  pathname === item.href || pathname.startsWith(item.href + "/");
-                return (
-                  <Link key={item.href} href={item.href}>
-                    <div
-                      className={`
-                        flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200
-                        ${
-                          isActive
-                            ? "bg-blue-500/20 text-white border-l-2 border-blue-400"
-                            : "text-white/60 hover:bg-white/5 hover:text-white"
-                        }
-                      `}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-              
-              <div className="h-px bg-white/10 my-4" />
-              
-              <Link href="/start">
-                <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-white border border-blue-400/30 transition-all duration-200">
-                  <Plus className="w-5 h-5" />
-                  <span className="text-sm font-semibold">Start Project</span>
-                </div>
-              </Link>
+            <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-4">
+              {navItems.map(({ href, label, icon: Icon, badge }) => (
+                <motion.button
+                  key={href}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => handleNavigate(href)}
+                  className={`group relative flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-all duration-200 ${
+                    isActive(href)
+                      ? "bg-trinity-red text-white shadow-lg"
+                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="font-medium">{label}</span>
+                  {badge !== undefined && badge !== null && badge > 0 && (
+                    <span className="rounded-full bg-cyan-500 px-2 py-0.5 text-xs font-semibold text-white">
+                      {badge}
+                    </span>
+                  )}
+                  {isActive(href) && (
+                    <motion.span
+                      layoutId="client-nav-active"
+                      className="absolute inset-0 rounded-lg border border-trinity-red"
+                      transition={{ type: "spring", stiffness: 250, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              ))}
             </nav>
-
-            {/* Settings at bottom */}
-            <div className="border-t border-white/10 pt-4">
-              <Link href="/client/settings">
-                <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 text-white/60 hover:bg-white/5 hover:text-white">
-                  <Settings className="w-5 h-5" />
-                  <span className="text-sm font-medium">Settings</span>
+            <div className="border-t border-gray-800 px-4 py-4">
+              <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+                <Avatar
+                  src={user?.image ?? undefined}
+                  alt={user?.name ?? "User"}
+                  size={40}
+                  fallbackText={user?.name ?? undefined}
+                  className="h-10 w-10 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-white">{user?.name ?? "User"}</p>
+                  <p className="truncate text-xs text-gray-400">{user?.email ?? ""}</p>
                 </div>
-              </Link>
+              </div>
+              <div className="mt-3 space-y-2">
+                <button
+                  onClick={() => handleNavigate("/")}
+                  className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                >
+                  <FiArrowLeft className="h-5 w-5" />
+                  Back to Site
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                >
+                  <FiLogOut className="h-5 w-5" />
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </aside>
 
-        {/* Main content area */}
-        <main className="admin-main flex-1 overflow-y-auto md:ml-64">
-          <div className="main-inner px-4 sm:px-6 py-6 sm:py-8 max-w-7xl mx-auto">
-            {children}
-          </div>
-        </main>
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        <div className="flex min-h-screen flex-1 flex-col lg:ml-64">
+          <header className="border-b border-gray-800 bg-gray-900/80 px-4 py-4 lg:px-8">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setIsSidebarOpen((prev) => !prev)}
+                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white lg:hidden"
+                aria-label="Toggle sidebar"
+              >
+                {isSidebarOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+              </button>
+              <div className="flex flex-1 items-center justify-end gap-3">
+                {!hasActiveRequest && !checkingRequests && (
+                  <Link
+                    href="/start"
+                    className="rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-3 py-2 text-sm font-semibold text-white shadow-lg transition hover:from-blue-600 hover:to-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  >
+                    Start a Project
+                  </Link>
+                )}
+                <Link
+                  href="/"
+                  className="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  Back to Site
+                </Link>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-y-auto animated-gradient px-4 py-6 lg:px-10 lg:py-10">
+            <div className="mx-auto w-full max-w-[1200px] space-y-8">{children}</div>
+          </main>
+        </div>
       </div>
     </div>
   );

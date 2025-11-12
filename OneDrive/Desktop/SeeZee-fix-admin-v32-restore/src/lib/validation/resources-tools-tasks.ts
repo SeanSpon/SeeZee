@@ -38,8 +38,24 @@ export const assignTaskSchema = z.object({
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).default("MEDIUM"),
   projectId: z.string().optional(),
   dueDate: z.string().datetime().optional(),
-  userIds: z.array(z.string()).min(1, "At least one user must be selected"),
-});
+  // Role-based assignment (assign to role group)
+  assignedToRole: z.enum(["FRONTEND", "BACKEND", "OUTREACH"]).optional(),
+  // Individual assignment (backward compatibility)
+  userIds: z.array(z.string()).optional(),
+  // Payout amount for the task
+  payoutAmount: z.number().positive().optional(),
+  templateId: z.string().optional(), // For saving/loading templates
+  tags: z.array(z.string()).optional(), // Task tags for organization
+  estimatedHours: z.number().positive().optional(), // Estimated time to complete
+  dependencies: z.array(z.string()).optional(), // Task IDs this task depends on
+  isRecurring: z.boolean().optional().default(false),
+  recurringPattern: z.enum(["DAILY", "WEEKLY", "MONTHLY"]).optional(),
+}).refine(
+  (data) => data.assignedToRole || (data.userIds && data.userIds.length > 0),
+  {
+    message: "Either assignedToRole or userIds must be provided",
+  }
+);
 
 // Types
 export type CreateResourceInput = z.infer<typeof createResourceSchema>;

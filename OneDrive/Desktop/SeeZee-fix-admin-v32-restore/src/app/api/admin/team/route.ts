@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only CEO and ADMIN can view team
-    if (session.user.role !== "CEO" && session.user.role !== "ADMIN") {
+    // Only CEO and CFO can view team
+    if (session.user.role !== "CEO" && session.user.role !== "CFO") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

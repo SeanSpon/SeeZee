@@ -44,8 +44,8 @@ export default async function SummaryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
+      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large">
+        <h1 className="text-3xl md:text-4xl font-heading font-bold gradient-text mb-2">
           Review Your Project
         </h1>
         <p className="text-white/60">
@@ -54,8 +54,8 @@ export default async function SummaryPage() {
       </div>
 
       {/* Answers */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Your Answers</h2>
+      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-6 shadow-medium hover:shadow-large">
+        <h2 className="text-xl font-heading font-semibold text-white mb-4">Your Answers</h2>
         <div className="space-y-4">
           {data && StepSlugs.map((slug) => {
             const value = (data as Record<string, any>)[slug];
@@ -64,7 +64,7 @@ export default async function SummaryPage() {
             return (
               <div
                 key={slug}
-                className="flex items-start justify-between gap-4 p-4 bg-black/20 rounded-xl"
+                className="flex items-start justify-between gap-4 p-4 bg-gray-800 border border-gray-700 rounded-lg hover:border-gray-600 transition-colors"
               >
                 <div className="flex-1">
                   <div className="text-sm text-white/60 mb-1">
@@ -76,10 +76,10 @@ export default async function SummaryPage() {
                 </div>
                 <Link
                   href={`/questionnaire/step/${slug}`}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                   title="Edit"
                 >
-                  <Edit2 className="w-4 h-4 text-white/60" />
+                  <Edit2 className="w-4 h-4 text-white/60 hover:text-trinity-red" />
                 </Link>
               </div>
             );
@@ -89,8 +89,8 @@ export default async function SummaryPage() {
 
       {/* Pricing */}
       {estimate && deposit && (
-        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
+        <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large">
+          <h2 className="text-2xl md:text-3xl font-heading font-bold gradient-text mb-4">
             Your Project Estimate
           </h2>
           
@@ -102,7 +102,7 @@ export default async function SummaryPage() {
             ))}
           </div>
 
-          <div className="border-t border-white/10 pt-4 space-y-2">
+          <div className="border-t border-gray-700 pt-4 space-y-2">
             <div className="flex justify-between text-lg">
               <span className="text-white/80">Total Estimate:</span>
               <span className="text-white font-semibold">
@@ -110,43 +110,40 @@ export default async function SummaryPage() {
               </span>
             </div>
             <div className="flex justify-between text-xl font-bold">
-              <span className="text-cyan-300">Deposit Required:</span>
-              <span className="text-cyan-300">{formatPrice(deposit)}</span>
+              <span className="text-trinity-red">Deposit Required:</span>
+              <span className="text-trinity-red">{formatPrice(deposit)}</span>
             </div>
           </div>
 
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link
               href="/questionnaire/step/name"
-              className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white font-semibold transition-all"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg text-white font-semibold transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
               Edit Answers
             </Link>
-            <form action="/api/checkout/questionnaire" method="POST" className="flex-1">
-              <input type="hidden" name="questionnaireId" value={qId} />
-              <input type="hidden" name="amount" value={deposit} />
-              <button
-                type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 rounded-xl text-white font-bold shadow-lg shadow-cyan-500/25 transition-all"
-              >
-                <CreditCard className="w-5 h-5" />
-                Continue to Secure Checkout
-              </button>
-            </form>
+            <div className="flex-1 px-6 py-3 bg-gray-800 border border-gray-700 rounded-lg text-center">
+              <p className="text-white/80 text-sm">
+                Manual project creation required. An admin will review your questionnaire and create your project.
+              </p>
+              <p className="text-white/60 text-xs mt-2">
+                You will receive an invoice via email once your project is approved.
+              </p>
+            </div>
           </div>
         </div>
       )}
 
       {/* No pricing fallback */}
       {(!estimate || !deposit) && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6">
+        <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 shadow-medium">
           <p className="text-yellow-200">
             Complete all required fields to see your project estimate.
           </p>
           <Link
             href="/questionnaire/step/name"
-            className="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-white font-semibold transition-all"
+            className="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg text-white font-semibold transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Questions

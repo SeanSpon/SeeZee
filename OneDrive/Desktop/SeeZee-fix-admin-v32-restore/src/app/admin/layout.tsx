@@ -1,52 +1,26 @@
 /**
- * Admin Layout with role-based access control
+ * Admin Layout - SeeZee Studio Branded Admin Layout
+ * Provides consistent layout for all admin pages
  */
 
-import "@/styles/admin.css";
 import { requireRole } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
-import { Sidebar } from "@/components/admin/Sidebar";
-import { CommandPalette } from "@/components/admin/CommandPalette";
-import { NotificationsProvider } from "@/providers/NotificationsProvider";
-import { CommandPaletteProvider } from "@/providers/CommandPaletteProvider";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Require user to be CEO, ADMIN, STAFF, DESIGNER, or DEV
-  const user = await requireRole([
+  // Check auth at layout level to prevent any rendering before redirect
+  // Allow CEO, CFO, and all staff roles (FRONTEND, BACKEND, OUTREACH)
+  await requireRole([
     ROLE.CEO,
-    ROLE.ADMIN,
-    ROLE.STAFF,
-    ROLE.DESIGNER,
-    ROLE.DEV,
+    ROLE.CFO,
+    ROLE.FRONTEND,
+    ROLE.BACKEND,
+    ROLE.OUTREACH,
   ]);
 
-  return (
-    <NotificationsProvider>
-      <CommandPaletteProvider>
-        {/* Admin layout without topbar */}
-        <div className="with-sidebar fixed inset-0 flex flex-col">
-          <div className="flex flex-1 overflow-hidden" style={{ marginTop: 'var(--h-nav)' }}>
-            {/* Sidebar pinned below navbar - Desktop Only */}
-            <aside className="sidebar-layer hidden md:block fixed left-0 w-64" style={{ top: 'var(--h-nav)', height: 'calc(100vh - var(--h-nav))' }}>
-              <Sidebar userRole={user.role} />
-            </aside>
-
-            {/* Content shifted by sidebar width and pushed below navbar */}
-            <main className="admin-main flex-1 overflow-y-auto md:ml-64">
-              <div className="main-inner px-4 sm:px-6 py-6 sm:py-8">
-                {children}
-              </div>
-            </main>
-          </div>
-
-          {/* Command Palette (global) */}
-          <CommandPalette />
-        </div>
-      </CommandPaletteProvider>
-    </NotificationsProvider>
-  );
+  // Render children - each page will handle its own layout (AdminAppShell, etc.)
+  return <>{children}</>;
 }

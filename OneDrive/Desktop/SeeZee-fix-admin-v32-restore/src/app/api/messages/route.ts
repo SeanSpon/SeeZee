@@ -62,11 +62,14 @@ export async function POST(req: NextRequest) {
           subject: `${project.name} Discussion`,
           projectId,
           clientId: session.user.id,
-        }
+        },
       });
     } else if (threadId) {
-      thread = await prisma.messageThread.findUnique({
-        where: { id: threadId }
+      thread = await prisma.messageThread.findFirst({
+        where: {
+          id: threadId,
+          clientId: session.user.id,
+        },
       });
     }
 
@@ -76,8 +79,8 @@ export async function POST(req: NextRequest) {
 
     // Determine role from session
     const role = session.user.role === "CEO" ? "ceo" : 
-                 session.user.role === "ADMIN" ? "admin" :
-                 session.user.role === "STAFF" ? "admin" : "client";
+                 session.user.role === "CFO" ? "admin" :
+                 ["FRONTEND", "BACKEND", "OUTREACH"].includes(session.user.role || "") ? "admin" : "client";
 
     // Create message
     const message = await prisma.threadMessage.create({

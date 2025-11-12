@@ -78,8 +78,9 @@ export async function POST(request: Request) {
       },
     });
 
-    // TODO: Send email notification to team
-    // You can integrate with Resend, SendGrid, etc.
+    // Email notification to team - to be implemented
+    // To enable: integrate with Resend (already in dependencies) or SendGrid
+    // Example: await resend.emails.send({ to: 'team@seezee.com', subject: 'New Contact Form', html: ... })
 
     return NextResponse.json({ 
       success: true,

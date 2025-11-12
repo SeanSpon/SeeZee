@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,20 +7,899 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enumerations
+model Account {
+  id                String  @id @default(cuid())
+  type              String
+  provider          String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  providerAccountId String  @map("provider_account_id")
+  userId            String  @map("user_id")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  expires      DateTime
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id                     String               @id @default(cuid())
+  email                  String               @unique
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  password               String?
+  image                  String?
+  name                   String?
+  emailVerified          DateTime?            @map("email_verified")
+  role                   UserRole             @default(CLIENT)
+  company                String?
+  invitedById            String?
+  phone                  String?
+  profileDoneAt          DateTime?
+  tosAcceptedAt          DateTime?
+  tosVersion             String?
+  twofaEnabled           Boolean              @default(false)
+  twofaSecret            String?
+  questionnaireCompleted DateTime?
+  briefQuestionnaireId   String?              @unique
+  accounts               Account[]
+  activities             Activity[]
+  assignmentsCreated     Assignment[]         @relation("AssignmentCreatedBy")
+  channelMemberships     ChannelMember[]
+  messages               ChatMessage[]
+  completions            Completion[]         @relation("CompletionUser")
+  notifications          Notification[]
+  organizations          OrganizationMember[]
+  projectRequests        ProjectRequest[]
+  assignedProjects       Project[]            @relation("ProjectAssignee")
+  resourcesCreated       Resource[]           @relation("ResourceCreatedBy")
+  sessions               Session[]
+  signatures             Signature[]
+  createdInviteCodes     StaffInviteCode[]    @relation("InviteCodeCreator")
+  systemLogs             SystemLog[]
+  assignedTodos          Todo[]               @relation("TodoAssignee")
+  createdTodos           Todo[]               @relation("TodoCreator")
+  trainingsCreated       Training[]           @relation("TrainingCreatedBy")
+  briefQuestionnaire     BriefQuestionnaire?  @relation("UserBriefQuestionnaire")
+  revenueSplitsCreated   RevenueSplit[]       @relation("RevenueSplitCreatedBy")
+  invitedBy              User?                @relation("Inviter", fields: [invitedById], references: [id])
+  invitees               User[]               @relation("Inviter")
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model Organization {
+  id           String               @id @default(cuid())
+  name         String
+  slug         String               @unique
+  website      String?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  address      String?
+  billingEmail String?
+  city         String?
+  country      String?              @default("US")
+  email        String?
+  phone        String?
+  state        String?
+  taxId        String?
+  zipCode      String?
+  invoices     Invoice[]
+  leads        Lead[]
+  members      OrganizationMember[]
+  projects     Project[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           OrgRole      @default(MEMBER)
+  joinedAt       DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@map("organization_members")
+}
+
+model Lead {
+  id             String        @id @default(cuid())
+  name           String
+  email          String
+  message        String?
+  createdAt      DateTime      @default(now())
+  company        String?
+  budget         String?
+  phone          String?
+  source         String?       @default("website")
+  timeline       String?
+  updatedAt      DateTime      @updatedAt
+  convertedAt    DateTime?
+  organizationId String?
+  requirements   Json?
+  serviceType    String?
+  status         LeadStatus    @default(NEW)
+  metadata       Json?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  project        Project?
+
+  @@map("leads")
+}
+
+model Project {
+  id                   String                @id @default(cuid())
+  name                 String
+  description          String?
+  status               ProjectStatus         @default(LEAD)
+  budget               Decimal?
+  startDate            DateTime?
+  endDate              DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  assigneeId           String?
+  leadId               String?               @unique
+  organizationId       String
+  questionnaireId      String?               @unique
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  maintenancePlan      String?
+  maintenanceStatus    String?
+  nextBillingDate      DateTime?
+  githubRepo           String?
+  feedEvents           FeedEvent[]
+  files                File[]
+  invoices             Invoice[]
+  maintenanceSchedules MaintenanceSchedule[]
+  messageThreads       MessageThread[]
+  milestones           ProjectMilestone[]
+  clientTasks          ClientTask[]
+  projectQuestionnaire ProjectQuestionnaire?
+  revenueSplits        RevenueSplit[]
+  assignee             User?                 @relation("ProjectAssignee", fields: [assigneeId], references: [id])
+  lead                 Lead?                 @relation(fields: [leadId], references: [id])
+  organization         Organization          @relation(fields: [organizationId], references: [id])
+  questionnaire        Questionnaire?        @relation(fields: [questionnaireId], references: [id])
+  requests             Request[]
+  subscriptions        Subscription[]
+  changeRequests       ChangeRequest[]
+  todos                Todo[]
+
+  @@map("projects")
+}
+
+model ProjectMilestone {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  projectId   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_milestones")
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  number          String        @unique
+  status          InvoiceStatus @default(DRAFT)
+  total           Decimal
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  amount          Decimal
+  currency        String        @default("USD")
+  description     String?
+  dueDate         DateTime
+  organizationId  String
+  paidAt          DateTime?
+  projectId       String?
+  sentAt          DateTime?
+  stripeInvoiceId String?
+  tax             Decimal?      @default(0)
+  title           String
+  customerApprovedAt DateTime?
+  adminApprovedAt DateTime?
+  invoiceType     String?       @default("deposit") // "deposit", "final", "subscription", "custom"
+  isFirstInvoice  Boolean       @default(false) // Marks the first invoice that sets project price
+  leadId          String?
+  items           InvoiceItem[]
+  organization    Organization  @relation(fields: [organizationId], references: [id])
+  project         Project?      @relation(fields: [projectId], references: [id])
+  payments        Payment[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Int     @default(1)
+  rate        Decimal
+  amount      Decimal
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Decimal
+  status          PaymentStatus @default(PENDING)
+  method          String?
+  createdAt       DateTime      @default(now())
+  currency        String        @default("USD")
+  invoiceId       String
+  processedAt     DateTime?
+  stripeChargeId  String?
+  stripePaymentId String?
+  invoice         Invoice       @relation(fields: [invoiceId], references: [id])
+
+  @@map("payments")
+}
+
+model PricingRule {
+  id                 String    @id @default(cuid())
+  name               String    @unique
+  description        String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  active             Boolean   @default(true)
+  basePrice          Decimal
+  extendedMultiplier Decimal?  @default(0.9)
+  features           Json?
+  rushMultiplier     Decimal?  @default(1.5)
+  serviceType        String
+  standardMultiplier Decimal?  @default(1.0)
+  validFrom          DateTime  @default(now())
+  validTo            DateTime?
+  quotes             Quote[]
+
+  @@map("pricing_rules")
+}
+
+model Quote {
+  id                 String      @id @default(cuid())
+  serviceType        String
+  timeline           String
+  features           Json?
+  requirements       Json?
+  basePrice          Decimal
+  featurePrice       Decimal     @default(0)
+  timelineMultiplier Decimal     @default(1.0)
+  subtotal           Decimal
+  tax                Decimal     @default(0)
+  total              Decimal
+  customerName       String?
+  customerEmail      String?
+  pricingRuleId      String
+  convertedToLead    Boolean     @default(false)
+  convertedAt        DateTime?
+  expiresAt          DateTime
+  createdAt          DateTime    @default(now())
+  pricingRule        PricingRule @relation(fields: [pricingRuleId], references: [id])
+
+  @@map("quotes")
+}
+
+model File {
+  id              String          @id @default(cuid())
+  name            String
+  size            Int
+  url             String
+  createdAt       DateTime        @default(now())
+  mimeType        String
+  originalName    String
+  projectId       String?
+  scanResult      String?
+  type            FileType
+  uploadedById    String?
+  virusScanStatus VirusScanStatus @default(PENDING)
+  project         Project?        @relation(fields: [projectId], references: [id])
+
+  @@map("files")
+}
+
+model Signature {
+  id            String   @id @default(cuid())
+  signedAt      DateTime @default(now())
+  documentId    String
+  ipAddress     String?
+  signatureData String
+  signerEmail   String
+  signerName    String
+  userAgent     String?
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id])
+
+  @@map("signatures")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType @default(INFO)
+  title     String
+  message   String
+  createdAt DateTime         @default(now())
+  read      Boolean          @default(false)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventId   String   @unique
+  type      String
+  data      Json
+  processed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("webhook_events")
+}
+
+model Channel {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  type        ChannelType     @default(GENERAL)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  members     ChannelMember[]
+  messages    ChatMessage[]
+
+  @@map("channels")
+}
+
+model ChannelMember {
+  id        String   @id @default(cuid())
+  channelId String
+  userId    String
+  joinedAt  DateTime @default(now())
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@map("channel_members")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  channelId String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
+model Todo {
+  id              String       @id @default(cuid())
+  title           String
+  description     String?
+  status          TodoStatus   @default(TODO)
+  priority        TodoPriority @default(MEDIUM)
+  assignedToId    String?
+  createdById     String
+  projectId       String?
+  dueDate         DateTime?
+  completedAt     DateTime?
+  submittedAt     DateTime?
+  submissionNotes String?
+  approvedAt      DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  assignedTo      User?        @relation("TodoAssignee", fields: [assignedToId], references: [id])
+  createdBy       User         @relation("TodoCreator", fields: [createdById], references: [id])
+  project         Project?     @relation(fields: [projectId], references: [id])
+
+  @@map("todos")
+}
+
+model SystemLog {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String
+  userId     String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  area       String?
+  message    String?
+  meta       Json?
+  refId      String?
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([area, refId])
+  @@map("system_logs")
+}
+
+model StaffInviteCode {
+  id          String    @id @default(cuid())
+  email       String
+  role        UserRole
+  codeHash    String
+  createdById String
+  expiresAt   DateTime
+  redeemedAt  DateTime?
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(5)
+  createdAt   DateTime  @default(now())
+  createdBy   User      @relation("InviteCodeCreator", fields: [createdById], references: [id])
+
+  @@index([email])
+  @@map("staff_invite_codes")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String
+  email     String
+  name      String
+  status    String   @default("UNREAD")
+  subject   String?
+
+  @@map("messages")
+}
+
+model Questionnaire {
+  id        String   @id @default(cuid())
+  userEmail String
+  data      Json
+  estimate  Int?
+  deposit   Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project?
+
+  @@map("questionnaires")
+}
+
+model Subscription {
+  id                     String          @id @default(cuid())
+  projectId              String
+  stripeId               String          @unique
+  priceId                String
+  status                 String
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  planName               String?         // "Standard Monthly", "Premium Monthly", "Standard Annual", "Premium Annual"
+  changeRequestsAllowed  Int             @default(2) // Number of change requests allowed per period
+  changeRequestsUsed     Int             @default(0) // Number of change requests used in current period
+  resetDate              DateTime?       // When change requests reset
+  project                Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  changeRequests         ChangeRequest[]
+
+  @@map("subscriptions")
+}
+
+model Request {
+  id        String        @id @default(cuid())
+  projectId String
+  title     String
+  details   String
+  state     String        @default("new")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  source    RequestSource @default(MANUAL)
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("requests")
+}
+
+model ChangeRequest {
+  id             String       @id @default(cuid())
+  projectId      String
+  subscriptionId String
+  description    String
+  status         String       @default("pending") // "pending", "approved", "completed", "rejected"
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  completedAt    DateTime?
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("change_requests")
+}
+
+model ProjectRequest {
+  id           String        @id @default(cuid())
+  name         String?
+  email        String?
+  projectType  String?
+  goal         String?
+  timeline     String?
+  createdAt    DateTime      @default(now())
+  company      String?
+  contactEmail String        @default("")
+  description  String        @default("")
+  notes        String?
+  resourcesUrl String?
+  services     ServiceType[]
+  title        String        @default("")
+  updatedAt    DateTime      @default(now()) @updatedAt
+  userId       String?
+  budget       BudgetTier    @default(UNKNOWN)
+  status       RequestStatus @default(DRAFT)
+  user         User?         @relation(fields: [userId], references: [id])
+
+  @@map("project_requests")
+}
+
+model Activity {
+  id          String       @id @default(cuid())
+  type        ActivityType
+  title       String
+  description String?
+  metadata    Json?
+  userId      String?
+  entityType  String?
+  entityId    String?
+  read        Boolean      @default(false)
+  readAt      DateTime?
+  createdAt   DateTime     @default(now())
+  user        User?        @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([read])
+  @@map("activities")
+}
+
+model MaintenanceSchedule {
+  id           String            @id @default(cuid())
+  projectId    String
+  title        String
+  description  String?
+  status       MaintenanceStatus @default(UPCOMING)
+  scheduledFor DateTime
+  completedAt  DateTime?
+  assignedToId String?
+  notes        String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  project      Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@map("maintenance_schedules")
+}
+
+model LearningResource {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  type         String
+  url          String
+  category     String?
+  thumbnailUrl String?
+  duration     Int?
+  difficulty   String?
+  tags         String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@index([type])
+  @@map("learning_resources")
+}
+
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  url         String
+  category    String
+  logoUrl     String?
+  pricing     String?
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@map("tools")
+}
+
+model Link {
+  id          String       @id @default(cuid())
+  title       String
+  url         String
+  description String?
+  category    LinkCategory @default(OTHER)
+  icon        String?
+  color       String?
+  order       Int          @default(0)
+  pinned      Boolean      @default(false)
+  createdById String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([category])
+  @@index([pinned])
+  @@index([order])
+  @@map("links")
+}
+
+model Automation {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  trigger     String
+  action      String
+  config      Json
+  enabled     Boolean   @default(true)
+  lastRunAt   DateTime?
+  runCount    Int       @default(0)
+  createdById String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([enabled])
+  @@index([trigger])
+  @@map("automations")
+}
+
+model Training {
+  id          String       @id @default(cuid())
+  title       String
+  type        TrainingType
+  description String
+  visibility  Visibility   @default(INTERNAL)
+  url         String?
+  fileKey     String?
+  tags        String[]
+  createdById String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignments Assignment[]
+  createdBy   User         @relation("TrainingCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([visibility])
+  @@index([type])
+  @@index([createdById])
+  @@map("trainings")
+}
+
+model Resource {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  url         String
+  visibility  Visibility @default(INTERNAL)
+  tags        String[]
+  createdById String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdBy   User       @relation("ResourceCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([visibility])
+  @@index([createdById])
+  @@map("resources")
+}
+
+model ToolEntry {
+  id          String     @id @default(cuid())
+  name        String
+  category    String
+  url         String
+  description String
+  ownerTeamId String?
+  visibility  Visibility @default(INTERNAL)
+  icon        String?
+  tags        String[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([visibility])
+  @@index([category])
+  @@map("tool_entries")
+}
+
+model Assignment {
+  id           String       @id @default(cuid())
+  trainingId   String
+  audienceType AudienceType
+  userId       String?
+  teamId       String?
+  role         UserRole?
+  dueAt        DateTime?
+  createdById  String
+  createdAt    DateTime     @default(now())
+  createdBy    User         @relation("AssignmentCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  training     Training     @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  completions  Completion[]
+
+  @@index([trainingId])
+  @@index([audienceType])
+  @@index([userId])
+  @@index([teamId])
+  @@index([role])
+  @@index([dueAt])
+  @@map("assignments")
+}
+
+model Completion {
+  id           String           @id @default(cuid())
+  assignmentId String
+  userId       String
+  status       CompletionStatus @default(NOT_STARTED)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  notes        String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  user         User             @relation("CompletionUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, userId])
+  @@index([userId])
+  @@index([status])
+  @@map("completions")
+}
+
+model FeedEvent {
+  id        String   @id @default(cuid())
+  projectId String
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt])
+  @@map("feed_events")
+}
+
+model MessageThread {
+  id        String          @id @default(cuid())
+  projectId String?
+  clientId  String
+  subject   String
+  status    String          @default("open")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  project   Project?        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messages  ThreadMessage[]
+
+  @@index([projectId])
+  @@index([clientId])
+  @@map("message_threads")
+}
+
+model ThreadMessage {
+  id        String        @id @default(cuid())
+  threadId  String
+  senderId  String
+  role      String
+  content   String
+  createdAt DateTime      @default(now())
+  thread    MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("thread_messages")
+}
+
+model BriefQuestionnaire {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  companyName        String
+  projectType        String
+  budgetRange        String
+  timelinePreference String
+  keyFeatures        Json
+  currentWebsite     String?
+  notes              String?
+  createdAt          DateTime @default(now())
+  user               User     @relation("UserBriefQuestionnaire", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("brief_questionnaires")
+}
+
+model ClientTask {
+  id                    String                 @id @default(cuid())
+  projectId             String
+  title                 String
+  description           String
+  type                  String
+  status                String                 @default("pending")
+  dueDate               DateTime?
+  completedAt           DateTime?
+  data                  Json?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  project               Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectQuestionnaires ProjectQuestionnaire[]
+
+  @@index([projectId])
+  @@index([status])
+  @@map("client_tasks")
+}
+
+model ProjectQuestionnaire {
+  id          String     @id @default(cuid())
+  projectId   String     @unique
+  taskId      String
+  responses   Json
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  task        ClientTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@map("project_questionnaires")
+}
+
+model RevenueSplit {
+  id            String   @id @default(cuid())
+  projectId     String
+  totalAmount   Decimal
+  businessShare Decimal
+  adminShares   Json
+  notes         String?
+  createdById   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy     User     @relation("RevenueSplitCreatedBy", fields: [createdById], references: [id])
+
+  @@index([projectId])
+  @@index([createdById])
+  @@map("revenue_splits")
+}
+
 enum UserRole {
-  CEO
   ADMIN
+  STAFF
+  CLIENT
+  CEO
+  CFO
   DESIGNER
   DEV
   OUTREACH
   INTERN
-  STAFF
   PARTNER
-  CLIENT
+  FRONTEND
+  BACKEND
 }
-
-// AccountType REMOVED - role is now the single source of truth
 
 enum OrgRole {
   OWNER
@@ -75,18 +951,18 @@ enum ServiceType {
 }
 
 enum ProjectStatus {
-  PLANNING      // Initial scoping, not yet paid
-  LEAD          // Legacy status (can remove after migration)
-  PAID          // Deposit paid, ready to start
-  ACTIVE        // Work in progress
-  DESIGN        // Design phase
-  BUILD         // Development phase  
-  IN_PROGRESS   // Legacy (same as ACTIVE)
-  REVIEW        // Client review stage
-  LAUNCH        // Going live
-  COMPLETED     // Fully complete
-  ON_HOLD       // Temporarily paused
-  CANCELLED     // Canceled project
+  LEAD
+  PAID
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  CANCELLED
+  PLANNING
+  ACTIVE
+  DESIGN
+  BUILD
+  LAUNCH
+  ON_HOLD
 }
 
 enum InvoiceStatus {
@@ -136,6 +1012,8 @@ enum ChannelType {
 enum TodoStatus {
   TODO
   IN_PROGRESS
+  SUBMITTED
+  AWAITING_PAYOUT
   DONE
 }
 
@@ -148,6 +1026,7 @@ enum TodoPriority {
 enum ActivityType {
   LEAD_CREATED
   LEAD_UPDATED
+  LEAD_DELETED
   PROJECT_CREATED
   PROJECT_UPDATED
   TASK_COMPLETED
@@ -174,776 +1053,6 @@ enum LinkCategory {
   OTHER
 }
 
-// NextAuth.js Models
-model Account {
-  id                String  @id @default(cuid())
-  userId            String  @map("user_id")
-  type              String
-  provider          String
-  providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
-}
-
-model User {
-  id            String       @id @default(cuid())
-  name          String?
-  email         String       @unique
-  emailVerified DateTime?    @map("email_verified")
-  image         String?
-  password      String?
-  role          UserRole     @default(CLIENT)
-  
-  // Onboarding & compliance
-  tosAcceptedAt DateTime?
-  tosVersion    String?
-  profileDoneAt DateTime?
-  
-  // Profile fields
-  phone         String?
-  company       String?
-  
-  // 2FA
-  twofaEnabled  Boolean      @default(false)
-  twofaSecret   String?
-  
-  // Invitation tracking
-  invitedById   String?
-  invitedBy     User?        @relation("Inviter", fields: [invitedById], references: [id], onDelete: SetNull)
-  invitees      User[]       @relation("Inviter")
-  
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-
-  accounts           Account[]
-  sessions           Session[]
-  organizations      OrganizationMember[]
-  assignedProjects   Project[] @relation("ProjectAssignee")
-  notifications      Notification[]
-  signatures         Signature[]
-  messages           ChatMessage[]
-  channelMemberships ChannelMember[]
-  assignedTodos      Todo[] @relation("TodoAssignee")
-  createdTodos       Todo[] @relation("TodoCreator")
-  systemLogs         SystemLog[]
-  createdInviteCodes StaffInviteCode[] @relation("InviteCodeCreator")
-  projectRequests    ProjectRequest[]
-  activities         Activity[]
-  
-  // Learning Hub relations
-  trainingsCreated   Training[] @relation("TrainingCreatedBy")
-  resourcesCreated   Resource[] @relation("ResourceCreatedBy")
-  assignmentsCreated Assignment[] @relation("AssignmentCreatedBy")
-  completions        Completion[] @relation("CompletionUser")
-
-  @@map("users")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verificationtokens")
-}
-
-// Business Models
-model Organization {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  email       String?
-  phone       String?
-  website     String?
-  address     String?
-  city        String?
-  state       String?
-  zipCode     String?
-  country     String?  @default("US")
-  taxId       String?
-  billingEmail String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  members     OrganizationMember[]
-  projects    Project[]
-  invoices    Invoice[]
-  leads       Lead[]
-
-  @@map("organizations")
-}
-
-model OrganizationMember {
-  id             String   @id @default(cuid())
-  organizationId String
-  userId         String
-  role           OrgRole  @default(MEMBER)
-  joinedAt       DateTime @default(now())
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([organizationId, userId])
-  @@map("organization_members")
-}
-
-model Lead {
-  id             String     @id @default(cuid())
-  name           String
-  email          String
-  phone          String?
-  company        String?
-  message        String?
-  source         String?    @default("website")
-  status         LeadStatus @default(NEW)
-  
-  // Service details from checkout
-  serviceType    String?
-  timeline       String?
-  budget         String?
-  requirements   Json?
-  metadata       Json?      // Additional questionnaire data
-  
-  organizationId String?
-  convertedAt    DateTime?
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  project        Project?
-
-  @@map("leads")
-}
-
-model Project {
-  id              String        @id @default(cuid())
-  name            String
-  description     String?
-  status          ProjectStatus @default(LEAD)
-  startDate       DateTime?
-  endDate         DateTime?
-  budget          Decimal?
-  githubRepo      String?       // e.g. "owner/repo" for GitHub API integration
-  
-  organizationId  String
-  assigneeId      String?
-  leadId          String?       @unique
-  questionnaireId String?       @unique
-  stripeCustomerId String?
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  organization    Organization @relation(fields: [organizationId], references: [id])
-  assignee        User?        @relation("ProjectAssignee", fields: [assigneeId], references: [id])
-  lead            Lead?        @relation(fields: [leadId], references: [id])
-  questionnaire   Questionnaire? @relation(fields: [questionnaireId], references: [id])
-  
-  milestones      ProjectMilestone[]
-  invoices        Invoice[]
-  files           File[]
-  requests        Request[]
-  subscriptions   Subscription[]
-  maintenanceSchedules MaintenanceSchedule[]
-  feedEvents      FeedEvent[]
-  messageThreads  MessageThread[]
-
-  @@map("projects")
-}
-
-model ProjectMilestone {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  dueDate     DateTime?
-  completed   Boolean   @default(false)
-  completedAt DateTime?
-  
-  projectId   String
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@map("project_milestones")
-}
-
-model Invoice {
-  id             String        @id @default(cuid())
-  number         String        @unique
-  title          String
-  description    String?
-  amount         Decimal
-  tax            Decimal?      @default(0)
-  total          Decimal
-  currency       String        @default("USD")
-  status         InvoiceStatus @default(DRAFT)
-  
-  dueDate        DateTime
-  sentAt         DateTime?
-  paidAt         DateTime?
-  
-  organizationId String
-  projectId      String?
-  
-  stripeInvoiceId String?
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  project        Project?     @relation(fields: [projectId], references: [id])
-  
-  items          InvoiceItem[]
-  payments       Payment[]
-
-  @@map("invoices")
-}
-
-model InvoiceItem {
-  id          String  @id @default(cuid())
-  description String
-  quantity    Int     @default(1)
-  rate        Decimal
-  amount      Decimal
-  
-  invoiceId   String
-  
-  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-
-  @@map("invoice_items")
-}
-
-model Payment {
-  id              String        @id @default(cuid())
-  amount          Decimal
-  currency        String        @default("USD")
-  status          PaymentStatus @default(PENDING)
-  method          String?       // "stripe", "bank_transfer", etc.
-  
-  stripePaymentId String?
-  stripeChargeId  String?
-  
-  invoiceId       String
-  
-  processedAt     DateTime?
-  createdAt       DateTime @default(now())
-
-  invoice         Invoice @relation(fields: [invoiceId], references: [id])
-
-  @@map("payments")
-}
-
-model PricingRule {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?
-  
-  // Service configuration
-  serviceType String   // "website", "ecommerce", "webapp", etc.
-  basePrice   Decimal
-  
-  // Timeline multipliers
-  rushMultiplier    Decimal? @default(1.5)  // < 4 weeks
-  standardMultiplier Decimal? @default(1.0)  // 4-12 weeks
-  extendedMultiplier Decimal? @default(0.9)  // > 12 weeks
-  
-  // Feature pricing (JSON object)
-  features    Json?    // { "cms": 500, "ecommerce": 1500, "auth": 300 }
-  
-  validFrom   DateTime @default(now())
-  validTo     DateTime?
-  active      Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  quotes      Quote[]
-
-  @@map("pricing_rules")
-}
-
-model Quote {
-  id            String  @id @default(cuid())
-  
-  // Service details
-  serviceType   String
-  timeline      String
-  features      Json?
-  requirements  Json?
-  
-  // Pricing breakdown
-  basePrice     Decimal
-  featurePrice  Decimal @default(0)
-  timelineMultiplier Decimal @default(1.0)
-  subtotal      Decimal
-  tax           Decimal @default(0)
-  total         Decimal
-  
-  // Customer info
-  customerName  String?
-  customerEmail String?
-  
-  pricingRuleId String
-  
-  // Conversion tracking
-  convertedToLead Boolean @default(false)
-  convertedAt     DateTime?
-  
-  expiresAt     DateTime
-  createdAt     DateTime @default(now())
-
-  pricingRule   PricingRule @relation(fields: [pricingRuleId], references: [id])
-
-  @@map("quotes")
-}
-
-model File {
-  id              String           @id @default(cuid())
-  name            String
-  originalName    String
-  mimeType        String
-  size            Int
-  type            FileType
-  url             String
-  
-  virusScanStatus VirusScanStatus  @default(PENDING)
-  scanResult      String?
-  
-  projectId       String?
-  uploadedById    String?
-  
-  createdAt       DateTime @default(now())
-
-  project         Project? @relation(fields: [projectId], references: [id])
-
-  @@map("files")
-}
-
-model Signature {
-  id          String   @id @default(cuid())
-  documentId  String   // Reference to document being signed
-  signerName  String
-  signerEmail String
-  signedAt    DateTime @default(now())
-  
-  // Signature data (base64 image or metadata)
-  signatureData String
-  ipAddress     String?
-  userAgent     String?
-  
-  userId      String?
-  
-  user        User?    @relation(fields: [userId], references: [id])
-
-  @@map("signatures")
-}
-
-model Notification {
-  id        String           @id @default(cuid())
-  title     String
-  message   String
-  type      NotificationType @default(INFO)
-  read      Boolean          @default(false)
-  
-  userId    String
-  
-  createdAt DateTime @default(now())
-
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("notifications")
-}
-
-model WebhookEvent {
-  id        String   @id @default(cuid())
-  eventId   String   @unique  // Stripe event ID for idempotency
-  type      String
-  data      Json
-  processed Boolean  @default(false)
-  
-  createdAt DateTime @default(now())
-
-  @@map("webhook_events")
-}
-
-// Team Communication Models
-model Channel {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  type        ChannelType @default(GENERAL)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  messages    ChatMessage[]
-  members     ChannelMember[]
-
-  @@map("channels")
-}
-
-model ChannelMember {
-  id        String   @id @default(cuid())
-  channelId String
-  userId    String
-  joinedAt  DateTime @default(now())
-
-  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([channelId, userId])
-  @@map("channel_members")
-}
-
-model ChatMessage {
-  id        String   @id @default(cuid())
-  content   String
-  channelId String
-  authorId  String
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  author    User    @relation(fields: [authorId], references: [id])
-
-  @@map("chat_messages")
-}
-
-// Task Management Models
-model Todo {
-  id          String       @id @default(cuid())
-  title       String
-  description String?
-  status      TodoStatus   @default(TODO)
-  priority    TodoPriority @default(MEDIUM)
-  
-  assignedToId String?
-  createdById  String
-  
-  dueDate     DateTime?
-  completedAt DateTime?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  assignedTo  User? @relation("TodoAssignee", fields: [assignedToId], references: [id])
-  createdBy   User  @relation("TodoCreator", fields: [createdById], references: [id])
-
-  @@map("todos")
-}
-
-// System Audit Log
-model SystemLog {
-  id         String   @id @default(cuid())
-  area       String?  // "ProjectRequest", "User", "Lead", etc. (optional for backward compat)
-  refId      String?  // FK value as text (optional for backward compat)
-  action     String   // "ROLE_CHANGE", "STATUS_UPDATE", "CREATE", "DELETE", etc.
-  entityType String   // "User", "Lead", "Project", "Todo", etc.
-  entityId   String
-  
-  userId     String   // Who performed the action
-  
-  metadata   Json?    // Additional context (old value, new value, etc.)
-  meta       Json?    // Alias for metadata
-  message    String?  // Human-readable log message
-  
-  createdAt  DateTime @default(now())
-
-  user       User @relation(fields: [userId], references: [id])
-
-  @@index([entityType, entityId])
-  @@index([userId])
-  @@index([createdAt])
-  @@index([area, refId])
-  @@map("system_logs")
-}
-
-// 6-digit code invitation system for staff signup
-model StaffInviteCode {
-  id           String    @id @default(cuid())
-  email        String
-  role         UserRole  // The role to grant when code is redeemed
-  codeHash     String    // Bcrypt hash of 6-digit code
-  
-  createdById  String
-  createdBy    User      @relation("InviteCodeCreator", fields: [createdById], references: [id])
-  
-  expiresAt    DateTime
-  redeemedAt   DateTime?
-  attempts     Int       @default(0)
-  maxAttempts  Int       @default(5)
-  
-  createdAt    DateTime  @default(now())
-
-  @@index([email])
-  @@map("staff_invite_codes")
-}
-
-// Legacy models for backward compatibility
-model Message {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  subject   String?
-  content   String
-  status    String   @default("UNREAD")
-  createdAt DateTime @default(now())
-
-  @@map("messages")
-}
-
-// Questionnaire for project onboarding
-model Questionnaire {
-  id           String   @id @default(cuid())
-  userEmail    String
-  data         Json     // All questionnaire fields as JSON
-  estimate     Int?     // Computed project estimate in cents
-  deposit      Int?     // Required deposit in cents (25% or $250 min)
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
-  project      Project?
-
-  @@map("questionnaires")
-}
-
-// Stripe subscriptions for maintenance
-model Subscription {
-  id               String   @id @default(cuid())
-  projectId        String
-  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  stripeId         String   @unique
-  priceId          String
-  status           String   // active, canceled, past_due
-  currentPeriodEnd DateTime?
-  
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  @@map("subscriptions")
-}
-
-// Client requests for maintenance/changes
-model Request {
-  id        String        @id @default(cuid())
-  projectId String
-  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  title     String
-  details   String        @db.Text
-  state     String        @default("new") // new, in_progress, blocked, done
-  source    RequestSource @default(MANUAL) // MANUAL or AI
-  
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-
-  @@map("requests")
-}
-
-// Unified Project Request Pipeline
-model ProjectRequest {
-  id           String        @id @default(cuid())
-  user         User?         @relation(fields: [userId], references: [id])
-  userId       String?
-  
-  // New required fields (migrating from old schema)
-  contactEmail String        @default("") // Will be populated from old 'email' field
-  title        String        @default("") // Will be populated from old 'projectType' or 'name'
-  description  String        @default("") @db.Text // Will be populated from old 'goal' field
-  
-  // Legacy fields (keep for backward compatibility during migration)
-  name         String?       // OLD: Will be deprecated
-  email        String?       // OLD: Migrated to contactEmail
-  projectType  String?       // OLD: Migrated to title/services
-  goal         String?       // OLD: Migrated to description
-  
-  // New fields
-  company      String?
-  services     ServiceType[] // multi-select
-  budget       BudgetTier    @default(UNKNOWN)
-  timeline     String?       // e.g. "< 1 mo", "1-3 mo"
-  resourcesUrl String?       // Notion/Drive link
-  status       RequestStatus @default(DRAFT)
-  notes        String?       @db.Text // internal admin notes
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now()) @updatedAt
-
-  @@map("project_requests")
-}
-
-// Activity Feed for admin dashboard
-model Activity {
-  id         String       @id @default(cuid())
-  type       ActivityType
-  title      String
-  description String?
-  metadata   Json?        // Additional data specific to activity type
-  
-  userId     String?      // User who triggered the activity
-  user       User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  entityType String?      // "Lead", "Project", "Task", etc.
-  entityId   String?      // ID of the related entity
-  
-  read       Boolean      @default(false)
-  readAt     DateTime?
-  
-  createdAt  DateTime     @default(now())
-
-  @@index([createdAt])
-  @@index([userId])
-  @@index([read])
-  @@map("activities")
-}
-
-// Maintenance tracking for client sites
-model MaintenanceSchedule {
-  id          String            @id @default(cuid())
-  projectId   String
-  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  title       String
-  description String?
-  status      MaintenanceStatus @default(UPCOMING)
-  
-  scheduledFor DateTime
-  completedAt  DateTime?
-  
-  assignedToId String?
-  notes        String?          @db.Text
-  
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-
-  @@index([projectId])
-  @@index([status])
-  @@index([scheduledFor])
-  @@map("maintenance_schedules")
-}
-
-// Learning resources for team training
-model LearningResource {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  type        String   // "video", "article", "course", "documentation"
-  url         String
-  category    String?  // "frontend", "backend", "design", "business"
-  
-  thumbnailUrl String?
-  duration    Int?     // in minutes
-  difficulty  String?  // "beginner", "intermediate", "advanced"
-  
-  tags        String[] // searchable tags
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([category])
-  @@index([type])
-  @@map("learning_resources")
-}
-
-// Tools directory for team
-model Tool {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  url         String
-  category    String   // "design", "development", "project-management", "communication"
-  
-  logoUrl     String?
-  pricing     String?  // "free", "paid", "freemium"
-  
-  tags        String[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([category])
-  @@map("tools")
-}
-
-// Quick links manager
-model Link {
-  id          String       @id @default(cuid())
-  title       String
-  url         String
-  description String?
-  category    LinkCategory @default(OTHER)
-  
-  icon        String?      // emoji or icon name
-  color       String?      // hex color for badge
-  
-  order       Int          @default(0)
-  pinned      Boolean      @default(false)
-  
-  createdById String?
-  
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  @@index([category])
-  @@index([pinned])
-  @@index([order])
-  @@map("links")
-}
-
-// Automations/workflows (CEO only)
-model Automation {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  trigger     String   // "lead_created", "invoice_overdue", "project_completed"
-  action      String   // "send_email", "create_task", "update_status"
-  
-  config      Json     // Configuration for trigger and action
-  
-  enabled     Boolean  @default(true)
-  lastRunAt   DateTime?
-  runCount    Int      @default(0)
-  
-  createdById String
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([enabled])
-  @@index([trigger])
-  @@map("automations")
-}
-
-// ============================================
-// CEO LEARNING HUB - Training, Resources, Tools
-// ============================================
-
 enum Visibility {
   INTERNAL
   PUBLIC
@@ -967,171 +1076,4 @@ enum CompletionStatus {
   NOT_STARTED
   IN_PROGRESS
   COMPLETE
-}
-
-// Training materials that can be assigned
-model Training {
-  id           String        @id @default(cuid())
-  title        String
-  type         TrainingType
-  description  String        @db.Text
-  visibility   Visibility    @default(INTERNAL)
-  url          String?       // external or UploadThing file URL
-  fileKey      String?       // UploadThing key if stored
-  tags         String[]
-  
-  createdById  String
-  createdBy    User          @relation("TrainingCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
-  
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  
-  assignments  Assignment[]
-
-  @@index([visibility])
-  @@index([type])
-  @@index([createdById])
-  @@map("trainings")
-}
-
-// Resources (documentation, guides, etc.)
-model Resource {
-  id           String     @id @default(cuid())
-  title        String
-  description  String     @db.Text
-  url          String
-  visibility   Visibility @default(INTERNAL)
-  tags         String[]
-  
-  createdById  String
-  createdBy    User       @relation("ResourceCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
-  
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-  @@index([visibility])
-  @@index([createdById])
-  @@map("resources")
-}
-
-// Tools directory (internal/SAAS links)
-model ToolEntry {
-  id           String     @id @default(cuid())
-  name         String
-  category     String
-  url          String
-  description  String     @db.Text
-  ownerTeamId  String?
-  visibility   Visibility @default(INTERNAL)
-  icon         String?    // optional icon key/name
-  tags         String[]
-  
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-  @@index([visibility])
-  @@index([category])
-  @@map("tool_entries")
-}
-
-// Training assignments to users, teams, or roles
-model Assignment {
-  id             String        @id @default(cuid())
-  trainingId     String
-  training       Training      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
-  
-  audienceType   AudienceType
-  userId         String?
-  teamId         String?
-  role           UserRole?     // if ROLE-based assignment
-  
-  dueAt          DateTime?
-  
-  createdById    String
-  createdBy      User          @relation("AssignmentCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
-  
-  createdAt      DateTime      @default(now())
-  
-  completions    Completion[]
-
-  @@index([trainingId])
-  @@index([audienceType])
-  @@index([userId])
-  @@index([teamId])
-  @@index([role])
-  @@index([dueAt])
-  @@map("assignments")
-}
-
-// Completion tracking per user per assignment
-model Completion {
-  id           String           @id @default(cuid())
-  assignmentId String
-  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  
-  userId       String
-  user         User             @relation("CompletionUser", fields: [userId], references: [id], onDelete: Cascade)
-  
-  status       CompletionStatus @default(NOT_STARTED)
-  startedAt    DateTime?
-  completedAt  DateTime?
-  notes        String?          @db.Text
-  
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-
-  @@unique([assignmentId, userId])
-  @@index([userId])
-  @@index([status])
-  @@map("completions")
-}
-
-// ==========================================
-// PHASE 1: ADD-ONLY MODELS FOR WORKFLOW
-// ==========================================
-
-// Unified activity feed for projects
-model FeedEvent {
-  id         String   @id @default(cuid())
-  projectId  String
-  type       String   // lead.created, project.created, status.changed, invoice.created, payment.succeeded, commit.summary, message.sent, subscription.updated
-  payload    Json?
-  createdAt  DateTime @default(now())
-
-  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@index([projectId, createdAt])
-  @@map("feed_events")
-}
-
-// Threaded messaging system (distinct from simple Message contact forms)
-model MessageThread {
-  id        String   @id @default(cuid())
-  projectId String?
-  clientId  String
-  subject   String
-  status    String   @default("open")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  project   Project?    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  messages  ThreadMessage[]
-
-  @@index([projectId])
-  @@index([clientId])
-  @@map("message_threads")
-}
-
-model ThreadMessage {
-  id         String   @id @default(cuid())
-  threadId   String
-  senderId   String
-  role       String   // client, admin, ceo, ai
-  content    String   @db.Text
-  createdAt  DateTime @default(now())
-
-  thread     MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
-
-  @@index([threadId, createdAt])
-  @@map("thread_messages")
 }

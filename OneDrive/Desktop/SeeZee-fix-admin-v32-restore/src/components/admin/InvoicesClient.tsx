@@ -4,10 +4,15 @@
  * Invoices Client Component
  */
 
+import { useState } from "react";
 import { DataTable, type Column } from "@/components/admin/DataTable";
-import { Plus, Download } from "lucide-react";
+import { Plus, Download, Trash2, Edit2 } from "lucide-react";
 import { formatCurrency } from "@/lib/ui";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { arrayToCSV, downloadCSV, formatCurrencyForCSV, formatDateForCSV } from "@/lib/csv-export";
+import { deleteInvoice, updateInvoice } from "@/server/actions";
+import { CreateInvoiceModal } from "./CreateInvoiceModal";
 
 interface Invoice {
   id: string;
@@ -47,8 +52,77 @@ const statusLabels: Record<string, string> = {
   CANCELLED: "Cancelled",
 };
 
-export function InvoicesClient({ invoices }: InvoicesClientProps) {
+export function InvoicesClient({ invoices: initialInvoices }: InvoicesClientProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const [invoices, setInvoices] = useState(initialInvoices);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Invoice>>({});
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const isCEO = session?.user?.role === "CEO";
+
+  const handleDelete = async (invoiceId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this invoice? This action cannot be undone.")) {
+      return;
+    }
+
+    setDeleting(invoiceId);
+    const result = await deleteInvoice(invoiceId);
+
+    if (result.success) {
+      setInvoices((prev) => prev.filter((inv) => inv.id !== invoiceId));
+    } else {
+      alert(result.error || "Failed to delete invoice");
+    }
+    setDeleting(null);
+    router.refresh();
+  };
+
+  const handleEdit = async (invoice: Invoice, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditing(invoice.id);
+    setEditForm({
+      title: invoice.title,
+      amount: parseFloat(invoice.total || invoice.amount),
+      total: parseFloat(invoice.total || invoice.amount),
+      status: invoice.status,
+      dueDate: new Date(invoice.dueDate),
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editing) return;
+
+    const result = await updateInvoice(editing, {
+      title: editForm.title,
+      amount: editForm.amount,
+      total: editForm.total,
+      status: editForm.status,
+      dueDate: editForm.dueDate,
+    });
+
+    if (result.success) {
+      setInvoices((prev) =>
+        prev.map((inv) =>
+          inv.id === editing
+            ? {
+                ...inv,
+                ...editForm,
+                total: editForm.total || inv.amount,
+              }
+            : inv
+        )
+      );
+      setEditing(null);
+      setEditForm({});
+      router.refresh();
+    } else {
+      alert(result.error || "Failed to update invoice");
+    }
+  };
 
   const columns: Column<Invoice>[] = [
     { key: "number", label: "Invoice #", sortable: true },
@@ -92,20 +166,95 @@ export function InvoicesClient({ invoices }: InvoicesClientProps) {
       sortable: true,
       render: (invoice) => new Date(invoice.dueDate).toLocaleDateString(),
     },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (invoice) => (
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          {invoice.status === "SENT" && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/admin/pipeline/invoices/${invoice.id}`);
+              }}
+              className="px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium transition-all"
+            >
+              Pay
+            </button>
+          )}
+          {isCEO && (
+            <>
+              <button
+                onClick={(e) => handleEdit(invoice, e)}
+                className="p-1 rounded hover:bg-white/10 transition-colors"
+                title="Edit invoice"
+              >
+                <Edit2 className="w-4 h-4 text-blue-400" />
+              </button>
+              <button
+                onClick={(e) => handleDelete(invoice.id, e)}
+                disabled={deleting === invoice.id}
+                className="p-1 rounded hover:bg-white/10 transition-colors disabled:opacity-50"
+                title="Delete invoice"
+              >
+                <Trash2 className="w-4 h-4 text-red-400" />
+              </button>
+            </>
+          )}
+        </div>
+      ),
+    },
   ];
 
   const handleExport = () => {
-    // TODO: Implement export functionality
-    console.log("Export invoices");
+    type CsvRow = {
+      number: string;
+      title: string;
+      total: string;
+      status: string;
+      dueDate: string;
+      organization: string;
+      project: string;
+    };
+
+    const headers: { key: keyof CsvRow; label: string }[] = [
+      { key: "number", label: "Invoice Number" },
+      { key: "title", label: "Title" },
+      { key: "total", label: "Amount" },
+      { key: "status", label: "Status" },
+      { key: "dueDate", label: "Due Date" },
+      { key: "organization", label: "Organization" },
+      { key: "project", label: "Project" },
+    ];
+
+    const csvData: CsvRow[] = invoices.map((invoice) => ({
+      number: invoice.number || invoice.id.slice(0, 8),
+      title: invoice.title || "Invoice",
+      total: formatCurrencyForCSV(Number(invoice.total)),
+      status: statusLabels[invoice.status] || invoice.status,
+      dueDate: formatDateForCSV(invoice.dueDate),
+      organization: invoice.organization?.name || "N/A",
+      project: invoice.project?.name || "N/A",
+    }));
+
+    const csvContent = arrayToCSV(csvData, headers);
+    const filename = `invoices-${new Date().toISOString().split("T")[0]}.csv`;
+    downloadCSV(csvContent, filename);
   };
 
   const handleCreateInvoice = () => {
-    router.push("/admin/pipeline/projects");
+    setShowCreateModal(true);
   };
 
   return (
-    <div className="space-y-6">
-      <DataTable
+    <>
+      <CreateInvoiceModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
+      
+      <div className="space-y-6">
+        <DataTable
         data={invoices}
         columns={columns}
         searchPlaceholder="Search invoices..."
@@ -129,6 +278,94 @@ export function InvoicesClient({ invoices }: InvoicesClientProps) {
         }
         onRowClick={(invoice) => router.push(`/admin/pipeline/invoices/${invoice.id}`)}
       />
-    </div>
+
+      {/* Edit Modal */}
+      {editing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4 border border-white/10">
+            <h2 className="text-xl font-semibold mb-4 text-white">Edit Invoice</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={editForm.title || ""}
+                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Amount
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={editForm.amount || 0}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setEditForm({ ...editForm, amount: val, total: val });
+                  }}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Status
+                </label>
+                <select
+                  value={editForm.status || "DRAFT"}
+                  onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {Object.entries(statusLabels).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-1">
+                  Due Date
+                </label>
+                <input
+                  type="date"
+                  value={
+                    editForm.dueDate
+                      ? new Date(editForm.dueDate).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, dueDate: new Date(e.target.value) })
+                  }
+                  className="w-full px-3 py-2 rounded-lg bg-slate-700 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleSaveEdit}
+                className="flex-1 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setEditing(null);
+                  setEditForm({});
+                }}
+                className="flex-1 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-medium transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </div>
+    </>
   );
 }

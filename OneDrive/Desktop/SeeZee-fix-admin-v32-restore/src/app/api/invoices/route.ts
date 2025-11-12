@@ -10,13 +10,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 /**
  * POST /api/invoices
- * Create a Stripe checkout session for project invoice (deposit or final)
+ * Create a Stripe Invoice for project (deposit or final payment)
  */
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     
-    if (!session?.user || !["CEO", "ADMIN"].includes(session.user.role || "")) {
+    if (!session?.user || !["CEO", "CFO"].includes(session.user.role || "")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -79,45 +79,70 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Create checkout session
-    const checkoutSession = await stripe.checkout.sessions.create({
+    // Create Stripe product for invoice item
+    const productName = label === "deposit" 
+      ? "Website Project Deposit (50%)" 
+      : "Website Project Balance (50%)";
+    
+    const product = await stripe.products.create({
+      name: productName,
+      description: description || `${label === "deposit" ? "Deposit" : "Final Payment"} for ${project.name}`,
+      metadata: {
+        projectId,
+        label,
+      },
+    });
+
+    // Create price for the product
+    const price = await stripe.prices.create({
+      unit_amount: amountCents,
+      currency: "usd",
+      product: product.id,
+    });
+
+    // Create invoice item
+    await stripe.invoiceItems.create({
       customer: customerId,
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: description || `${label === "deposit" ? "Deposit" : "Payment"} for ${project.name}`,
-              description: `Project: ${project.name}`,
-            },
-            unit_amount: amountCents,
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.NEXTAUTH_URL}/admin/pipeline/projects/${projectId}?payment=success`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/admin/pipeline/projects/${projectId}?payment=cancelled`,
+      price: price.id,
+      description: description || `${label === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${project.name}`,
+    });
+
+    // Create Stripe Invoice
+    const stripeInvoice = await stripe.invoices.create({
+      customer: customerId,
+      collection_method: "send_invoice",
+      days_until_due: 7,
       metadata: {
         projectId,
         label, // 'deposit' or 'final'
       },
     });
 
-    // Create invoice record
+    // Finalize and send the invoice
+    const finalizedInvoice = await stripe.invoices.finalizeInvoice(stripeInvoice.id);
+
+    // Create invoice record in database
     const invoice = await prisma.invoice.create({
       data: {
         number: `INV-${Date.now()}`,
-        title: description || `${label === "deposit" ? "Deposit" : "Payment"} - ${project.name}`,
-        description: description,
+        title: description || `${label === "deposit" ? "Deposit" : "Final Payment"} - ${project.name}`,
+        description: description || `${label === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${project.name}`,
         amount: amountCents / 100, // Convert to dollars
         total: amountCents / 100,
-        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         status: "SENT",
         organizationId: project.organizationId,
         projectId: project.id,
-        stripeInvoiceId: checkoutSession.id,
+        stripeInvoiceId: finalizedInvoice.id,
         sentAt: new Date(),
+        items: {
+          create: {
+            description: `${label === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${project.name}`,
+            quantity: 1,
+            rate: amountCents / 100,
+            amount: amountCents / 100,
+          },
+        },
       },
     });
 
@@ -125,8 +150,9 @@ export async function POST(req: NextRequest) {
     await feedHelpers.invoiceCreated(projectId, invoice.id, amountCents / 100);
 
     return NextResponse.json({
-      url: checkoutSession.url,
+      url: finalizedInvoice.hosted_invoice_url,
       invoiceId: invoice.id,
+      invoiceUrl: finalizedInvoice.hosted_invoice_url,
     });
   } catch (error) {
     console.error("[Create Invoice Error]", error);

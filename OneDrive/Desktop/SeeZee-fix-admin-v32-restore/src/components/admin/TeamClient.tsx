@@ -47,10 +47,9 @@ interface TeamClientProps {
 const getRoleIcon = (role: string) => {
   switch (role) {
     case "CEO": return Crown;
-    case "ADMIN": return Shield;
-    case "STAFF": return UserCheck;
-    case "DEV": return Code;
-    case "DESIGNER": return Palette;
+    case "CFO": return Shield;
+    case "FRONTEND": return Palette;
+    case "BACKEND": return Code;
     case "OUTREACH": return Megaphone;
     default: return User;
   }
@@ -59,7 +58,7 @@ const getRoleIcon = (role: string) => {
 const getRoleColor = (role: string) => {
   switch (role) {
     case "CEO": return "text-yellow-400";
-    case "ADMIN": return "text-red-400";
+    case "CFO": return "text-red-400";
     case "STAFF": return "text-blue-400";
     case "DEV": return "text-green-400";
     case "DESIGNER": return "text-purple-400";
@@ -131,34 +130,45 @@ export function TeamClient({ users }: TeamClientProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Team Management</h1>
-        <p className="text-gray-400">
-          Manage team members and their roles
+      <header className="space-y-3 relative">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block mb-2">
+          People Operations
+        </span>
+        <h1 className="text-4xl font-heading font-bold gradient-text">Team Management</h1>
+        <p className="max-w-2xl text-base text-gray-300 leading-relaxed">
+          Manage team members, assign roles, and oversee access control across the platform.
         </p>
-      </div>
+      </header>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-          <div className="flex items-center space-x-2">
-            <Users className="h-5 w-5 text-blue-400" />
-            <span className="text-sm text-gray-400">Total Team</span>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Total Team</p>
+            <div className="w-10 h-10 bg-trinity-red/20 rounded-lg flex items-center justify-center border border-trinity-red/30">
+              <Users className="w-5 h-5 text-trinity-red" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-1">{users.length}</p>
+          <p className="text-4xl font-heading font-bold text-white mb-1">{users.length}</p>
+          <p className="text-xs text-gray-500">Members</p>
         </div>
         
         {roles.slice(0, 3).map((role) => {
           const Icon = getRoleIcon(role);
           const colorClass = getRoleColor(role);
+          const bgClass = colorClass.replace("text-", "bg-").replace("400", "500/20");
+          const borderClass = colorClass.replace("text-", "border-").replace("400", "500/30");
           
           return (
-            <div key={role} className="bg-white/5 p-4 rounded-lg border border-white/10">
-              <div className="flex items-center space-x-2">
-                <Icon className={`h-5 w-5 ${colorClass}`} />
-                <span className="text-sm text-gray-400">{role}s</span>
+            <div key={role} className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">{role}s</p>
+                <div className={`w-10 h-10 ${bgClass} rounded-lg flex items-center justify-center border ${borderClass}`}>
+                  <Icon className={`w-5 h-5 ${colorClass}`} />
+                </div>
               </div>
-              <p className="text-2xl font-bold text-white mt-1">{roleStats[role]}</p>
+              <p className="text-4xl font-heading font-bold text-white mb-1">{roleStats[role]}</p>
+              <p className="text-xs text-gray-500">Active</p>
             </div>
           );
         })}
@@ -168,10 +178,10 @@ export function TeamClient({ users }: TeamClientProps) {
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => setSelectedRole(null)}
-          className={`px-3 py-1 rounded-full text-sm transition-colors ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             selectedRole === null
-              ? "bg-blue-500/20 text-blue-300 border border-blue-500/50"
-              : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"
+              ? "bg-trinity-red/20 text-trinity-red border-2 border-trinity-red/50"
+              : "bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-gray-600 hover:text-white"
           }`}
         >
           All ({users.length})
@@ -180,10 +190,10 @@ export function TeamClient({ users }: TeamClientProps) {
           <button
             key={role}
             onClick={() => setSelectedRole(role)}
-            className={`px-3 py-1 rounded-full text-sm transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               selectedRole === role
-                ? "bg-blue-500/20 text-blue-300 border border-blue-500/50"
-                : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"
+                ? "bg-trinity-red/20 text-trinity-red border-2 border-trinity-red/50"
+                : "bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-gray-600 hover:text-white"
             }`}
           >
             {role} ({roleStats[role]})
@@ -209,12 +219,13 @@ export function TeamClient({ users }: TeamClientProps) {
       />
 
       {/* Team Members */}
-      <SectionCard
-        title={`Team Members ${selectedRole ? `(${selectedRole})` : ""}`}
-      >
+      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+        <h2 className="text-2xl font-heading font-bold text-white mb-6">
+          Team Members {selectedRole ? `(${selectedRole})` : ""}
+        </h2>
         <div className="space-y-4">
           {searchFilteredUsers.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-400">
                 {searchQuery ? "No team members match your search" : "No team members found"}
@@ -228,7 +239,7 @@ export function TeamClient({ users }: TeamClientProps) {
               return (
                 <div
                   key={user.id}
-                  className="bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-colors"
+                  className="rounded-xl border-2 border-gray-700 glass-effect p-4 hover:border-trinity-red/50 transition-all hover:shadow-medium"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -310,7 +321,7 @@ export function TeamClient({ users }: TeamClientProps) {
             })
           )}
         </div>
-      </SectionCard>
+      </div>
 
       {/* Edit User Modal */}
       {editingUser && (

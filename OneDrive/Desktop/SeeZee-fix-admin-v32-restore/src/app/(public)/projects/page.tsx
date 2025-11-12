@@ -1,127 +1,230 @@
-﻿'use client';
-import { motion } from 'framer-motion';
-import { ArrowRight, Clock, Trophy, Code2, Sparkles } from 'lucide-react';
-import Link from 'next/link';
-import PageShell from '@/components/PageShell';
+﻿'use client'
 
-const projects = [
-  { name: 'Red Head Printing', status: 'In Development', description: 'Modern e-commerce platform for vintage print shop with custom product configurator and Stripe checkout', tech: ['Next.js', 'Stripe', 'Tailwind'], launchDate: 'Coming Soon' },
-  { name: 'Big Red Bus', status: 'In Development', description: 'Community impact dashboard for Louisville nonprofit with real-time analytics and volunteer management', tech: ['React', 'Prisma', 'PostgreSQL'], launchDate: 'Q1 2025' },
-  { name: 'Trinity FBLA — Coding & Programming', status: 'Live Soon', description: 'Advanced web application built for FBLA Nationals competition showcasing full-stack development', tech: ['TypeScript', 'Next.js', 'AI Integration'], launchDate: 'FBLA 2025' },
-  { name: 'Trinity FBLA — Data Science', status: 'In Development', description: 'Data visualization and analytics platform competing at FBLA Nationals with machine learning', tech: ['Python', 'TensorFlow', 'D3.js'], launchDate: 'FBLA 2025' },
-  { name: 'SeeZee Studio v2.0', status: 'Live Now', description: 'Next-gen agency platform you\'re using right now with AI-powered project management and instant quotes', tech: ['Next.js 15', 'OpenAI', 'Stripe'], launchDate: 'Live' },
-  { name: 'Your Project Here', status: 'Available', description: 'This could be YOUR business. Ready to build something that stands out? Let\'s make it happen.', tech: ['Your Vision', 'Our Code'], launchDate: 'Let\'s Talk', cta: true },
-];
+export const dynamic = 'force-dynamic'
+
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import ScrollAnimation from '@/components/shared/ScrollAnimation'
+import ProjectMockup from '@/components/shared/ProjectMockup'
+import { FiArrowRight, FiClock, FiUser, FiZap } from 'react-icons/fi'
 
 export default function ProjectsPage() {
+  const projects = [
+    {
+      id: 'big-red-prints',
+      title: 'Red Head Printing',
+      client: 'Tina',
+      status: 'Work in Progress',
+      description:
+        'A high-performance e-commerce platform for Red Head Printing built with Next.js and Express. Features include a full product catalog, shopping cart, custom file uploads for print designs, Stripe payment processing, and an admin dashboard for order management.',
+      packageType: 'E-Commerce Store',
+      features: [
+        'Next.js frontend with SSR/SSG',
+        'Express backend API',
+        'Product catalog & shopping cart',
+        'File upload system for custom designs',
+        'Stripe payment integration',
+        'Order management system',
+        'Admin dashboard',
+        'User authentication',
+        'MongoDB database',
+      ],
+      mockupType: 'big-red-prints' as const,
+    },
+    {
+      id: 'big-red-bus',
+      title: 'Big Red Bus',
+      client: 'FBLA Project',
+      status: 'Work in Progress',
+      description:
+        'A nonprofit directory platform for mental health and autism support organizations. Built with React, TypeScript, and Vite, this FBLA project helps people discover and support local nonprofits through an interactive directory with filtering, search, and detailed organization profiles.',
+      packageType: 'Business Site',
+      features: [
+        'Nonprofit directory with filtering',
+        'Search and category filters',
+        'Organization detail pages',
+        'Mission, Partners, Programs pages',
+        'Stories and events sections',
+        'Donation functionality',
+        'React + TypeScript + Vite',
+        'Responsive design',
+      ],
+      mockupType: 'big-red-bus' as const,
+    },
+  ]
+
   return (
-    <PageShell>
-      {/* Hero */}
-      <section className="relative min-h-[80vh] flex items-center justify-center pt-32 pb-20">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-block mb-6 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full">
-              <span className="text-green-400 text-sm font-semibold">Trinity High School • FBLA Competitors</span>
+    <div className="w-full">
+      {/* Hero Section */}
+      <section className="bg-gray-900 py-24 lg:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-5"></div>
+        {/* Project-themed decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-32 left-1/4 w-36 h-36 border-2 border-trinity-red/30 transform rotate-45"></div>
+          <div className="absolute top-20 right-1/4 w-28 h-28 border-2 border-trinity-red/25 transform -rotate-45"></div>
+          <div className="absolute bottom-32 left-1/3 w-32 h-32 border-2 border-trinity-red/20 transform rotate-12"></div>
+          <div className="absolute bottom-20 right-1/3 w-24 h-24 border-2 border-trinity-red/25 transform -rotate-12"></div>
+        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <ScrollAnimation>
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6"
+              >
+                <span className="gradient-text">Active Projects</span>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-xl text-white leading-relaxed mb-4"
+              >
+                SeeZee is new and we're actively building client websites. Here's what we're working on right now.
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-lg text-trinity-red font-semibold"
+              >
+                Every project gets the same fast, professional treatment.
+              </motion.p>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
-              <span className="bg-gradient-to-r from-white via-cyan-200 to-green-400 bg-clip-text text-transparent">
-                Our Work in Progress
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/60 mb-8 max-w-3xl mx-auto">
-              Big things start small. Here's what we're building.
-            </p>
-          </motion.div>
+          </ScrollAnimation>
         </div>
       </section>
 
-      {/* Projects Grid */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, idx) => (
-            <motion.div key={project.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} whileHover={{ y: -8 }} className="group relative">
-              <div className={`relative h-full bg-white/5 backdrop-blur-xl border rounded-2xl p-6 transition-all ${project.cta ? 'border-cyan-500/30' : 'border-white/10'}`}>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4 bg-white/10 border border-white/10">
-                  {project.status === 'In Development' && <Clock className="w-3 h-3 animate-pulse" />}
-                  {project.status}
-                </div>
-                <h3 className="text-2xl font-bold mb-2">{project.name}</h3>
-                <p className="text-white/60 mb-6 text-sm">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech) => (
-                    <span key={tech} className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-xs text-white/80">{tech}</span>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-white/60">{project.launchDate}</span>
-                  {project.cta && (
-                    <Link href="/start">
-                      <motion.button whileHover={{ scale: 1.05 }} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg text-white text-sm font-semibold flex items-center gap-2">
-                        Get Started <ArrowRight className="w-4 h-4" />
-                      </motion.button>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-black mb-4">Our Journey</h2>
-            <p className="text-xl text-white/60">From students to studio founders</p>
-          </motion.div>
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 via-cyan-500/20 to-transparent" />
-            <div className="space-y-12">
-              {[
-                { year: '2024', event: 'Founded SeeZee Studio', icon: Sparkles },
-                { year: '2024–25', event: 'Competing at FBLA Nationals', icon: Trophy },
-                { year: '2025', event: 'Launching Client Portfolio', icon: Code2 },
-                { year: '2025+', event: 'Building the Future', icon: Code2 },
-              ].map((item, idx) => {
-                const Icon = item.icon;
-                const isEven = idx % 2 === 0;
-                return (
-                  <motion.div key={item.year} initial={{ opacity: 0, x: isEven ? -20 : 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className={`relative flex items-center ${isEven ? 'flex-row' : 'flex-row-reverse'} gap-8`}>
-                    <div className={`flex-1 ${isEven ? 'text-right' : 'text-left'}`}>
-                      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-                        <div className="flex items-center gap-3 mb-2" style={{ justifyContent: isEven ? 'flex-end' : 'flex-start' }}>
-                          <Icon className="w-5 h-5 text-cyan-400" />
-                          <span className="text-2xl font-bold text-cyan-400">{item.year}</span>
-                        </div>
-                        <p className="text-white/80">{item.event}</p>
+      {/* Active Projects Section */}
+      <section className="py-20 bg-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-16 max-w-6xl mx-auto">
+            {projects.map((project, index) => (
+              <ScrollAnimation key={project.id} delay={index * 0.2}>
+                <div className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 items-center`}>
+                  {/* Content */}
+                  <div className="flex-1">
+                    <div className="mb-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h2 className="text-3xl md:text-4xl font-heading font-bold text-white">
+                          {project.title}
+                        </h2>
+                        <span className="px-3 py-1 bg-yellow-500 text-black rounded-full text-xs font-bold">
+                          {project.status}
+                        </span>
                       </div>
+                      <div className="flex items-center gap-4 mb-4 text-gray-200">
+                        <div className="flex items-center gap-2">
+                          <FiUser className="w-4 h-4" />
+                          <span className="text-sm">Client: {project.client}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <FiZap className="w-4 h-4" />
+                          <span className="text-sm">{project.packageType}</span>
+                        </div>
+                      </div>
+                      <p className="text-lg text-white leading-relaxed mb-6">
+                        {project.description}
+                      </p>
                     </div>
-                    <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-cyan-500 rounded-full border-4 border-black" />
-                    <div className="flex-1" />
-                  </motion.div>
-                );
-              })}
-            </div>
+
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-white mb-4">Features:</h3>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {project.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-start text-white">
+                            <span className="text-trinity-red mr-2">•</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Mockup */}
+                  <div className="flex-1 w-full max-w-md">
+                    <ProjectMockup projectName={project.title} type={project.mockupType} />
+                  </div>
+                </div>
+              </ScrollAnimation>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Trophy className="w-16 h-16 text-green-400 mx-auto mb-6" />
-            <h2 className="text-5xl md:text-6xl font-black mb-6">Want to be our next case study?</h2>
-            <p className="text-xl text-white/60 mb-8">Let's build your project and show the world what we can do together.</p>
-            <Link href="/start">
-              <motion.button whileHover={{ scale: 1.05 }} className="inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl text-white font-bold text-lg shadow-lg">
-                Let's Build Your Project <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </Link>
-          </motion.div>
+      {/* Stats Section */}
+      <section className="py-20 bg-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollAnimation>
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+                SeeZee by the Numbers
+              </h2>
+              <p className="text-lg text-white">
+                We're just getting started, but we're building fast and delivering quality.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center max-w-5xl mx-auto">
+              {[
+                { value: '2', label: 'Active Projects', icon: <FiZap className="w-8 h-8" /> },
+                { value: '48h', label: 'Build Time', icon: <FiClock className="w-8 h-8" /> },
+                { value: '100%', label: 'Client Focus', icon: <FiUser className="w-8 h-8" /> },
+                { value: '24/7', label: 'Support Ready', icon: <FiClock className="w-8 h-8" /> },
+              ].map((stat, index) => (
+                <ScrollAnimation key={index} delay={index * 0.1}>
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className="p-6 bg-gray-900 rounded-xl shadow-soft hover:shadow-medium transition-all border-2 border-gray-700"
+                  >
+                    <div className="text-trinity-red mb-3 flex justify-center">
+                      {stat.icon}
+                    </div>
+                    <div className="text-4xl md:text-5xl font-heading font-bold text-white mb-2">
+                      {stat.value}
+                    </div>
+                    <div className="text-white text-lg">{stat.label}</div>
+                  </motion.div>
+                </ScrollAnimation>
+              ))}
+            </div>
+          </ScrollAnimation>
         </div>
       </section>
-    </PageShell>
-  );
+
+      {/* CTA Section */}
+      <section className="py-24 bg-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <ScrollAnimation>
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
+                Ready to Start Your Project?
+              </h2>
+              <p className="text-xl text-white mb-8 leading-relaxed">
+                Join our growing list of clients. We'll have your website live in 48 hours.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/start"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all duration-200 font-semibold text-lg shadow-medium transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
+                >
+                  Start Your Project
+                  <FiArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-transparent text-white rounded-lg hover:bg-gray-900 transition-all duration-200 font-semibold text-lg border-2 border-white hover:border-trinity-red focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
+                >
+                  See Our Packages
+                  <FiArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+            </div>
+          </ScrollAnimation>
+        </div>
+      </section>
+    </div>
+  )
 }

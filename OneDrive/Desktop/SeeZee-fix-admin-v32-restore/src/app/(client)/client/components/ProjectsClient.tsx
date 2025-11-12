@@ -1,7 +1,21 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { FolderKanban, Clock, CheckCircle2, Plus, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FolderKanban,
+  CheckCircle2,
+  Plus,
+  ArrowRight,
+  Search,
+  Filter,
+  TrendingUp,
+  Calendar,
+  User,
+  Sparkles,
+  BarChart3,
+} from "lucide-react";
 
 interface Project {
   id: string;
@@ -17,7 +31,15 @@ interface ProjectsClientProps {
   projects: Project[];
 }
 
+type SortOption = "newest" | "oldest" | "name" | "progress";
+type FilterStatus = "all" | "ACTIVE" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "PLANNING" | "DESIGN" | "BUILD" | "REVIEW";
+
 export function ProjectsClient({ projects }: ProjectsClientProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [showFilters, setShowFilters] = useState(false);
+
   const getStatusBadge = (status: string) => {
     const config: Record<string, { bg: string; text: string; border: string; label: string; gradient: string }> = {
       COMPLETED: { bg: "bg-emerald-500/20", text: "text-emerald-300", border: "border-emerald-500/30", label: "Completed", gradient: "from-emerald-400 to-green-400" },
@@ -38,113 +60,397 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
     return Math.round((completed / project.milestones.length) * 100);
   };
 
+  // Calculate stats
+  const stats = useMemo(() => {
+    const total = projects.length;
+    const active = projects.filter((p) => p.status === "ACTIVE" || p.status === "IN_PROGRESS").length;
+    const completed = projects.filter((p) => p.status === "COMPLETED").length;
+    const avgProgress =
+      projects.length > 0
+        ? Math.round(
+            projects.reduce((sum, p) => sum + calculateProgress(p), 0) / projects.length
+          )
+        : 0;
+
+    return { total, active, completed, avgProgress };
+  }, [projects]);
+
+  // Filter and sort projects
+  const filteredAndSortedProjects = useMemo(() => {
+    let filtered = [...projects];
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query) ||
+          p.assignee?.name?.toLowerCase().includes(query)
+      );
+    }
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((p) => p.status === statusFilter);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime();
+        case "oldest":
+          return new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime();
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "progress":
+          return calculateProgress(b) - calculateProgress(a);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [projects, searchQuery, statusFilter, sortBy]);
+
+  const statusOptions: FilterStatus[] = ["all", "ACTIVE", "IN_PROGRESS", "COMPLETED", "ON_HOLD", "PLANNING", "DESIGN", "BUILD", "REVIEW"];
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">My Projects</h1>
-          <p className="text-white/60">Track your active and completed projects</p>
+          <p className="text-white/60">Track and manage your active and completed projects</p>
         </div>
         <Link href="/start">
-          <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center gap-2">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all flex items-center gap-2 shadow-lg hover:shadow-blue-500/25"
+          >
             <Plus className="w-4 h-4" />
             New Project
-          </button>
+          </motion.button>
         </Link>
       </div>
 
-      {projects.length === 0 ? (
-        <div className="seezee-glass p-12 text-center rounded-xl">
-          <FolderKanban className="w-16 h-16 text-white/20 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white mb-2">No Projects Yet</h3>
-          <p className="text-white/60 mb-6">Start your first project with SeeZee</p>
-          <Link href="/start">
-            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-              Start Your First Project
+      {/* Stats Section */}
+      {projects.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        >
+          <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <FolderKanban className="w-4 h-4 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{stats.total}</p>
+                <p className="text-xs text-white/60">Total Projects</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{stats.active}</p>
+                <p className="text-xs text-white/60">Active</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{stats.completed}</p>
+                <p className="text-xs text-white/60">Completed</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <BarChart3 className="w-4 h-4 text-purple-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{stats.avgProgress}%</p>
+                <p className="text-xs text-white/60">Avg Progress</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Search and Filters */}
+      {projects.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+              />
+            </div>
+
+            {/* Filter Toggle */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-2"
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+              {(statusFilter !== "all" || sortBy !== "newest") && (
+                <span className="px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
+                  {[statusFilter !== "all" ? 1 : 0, sortBy !== "newest" ? 1 : 0].reduce((a, b) => a + b, 0)}
+                </span>
+              )}
             </button>
-          </Link>
+          </div>
+
+          {/* Filter Panel */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-4 pt-4 border-t border-white/10 overflow-hidden"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Status Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-white/80 mb-2">Status</label>
+                    <div className="flex flex-wrap gap-2">
+                      {statusOptions.map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => setStatusFilter(status)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            statusFilter === status
+                              ? "bg-blue-500 text-white"
+                              : "bg-white/5 text-white/60 hover:bg-white/10"
+                          }`}
+                        >
+                          {status === "all" ? "All" : getStatusBadge(status).label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sort */}
+                  <div>
+                    <label className="block text-sm font-semibold text-white/80 mb-2">Sort By</label>
+                    <div className="flex flex-wrap gap-2">
+                      {(
+                        [
+                          { value: "newest", label: "Newest" },
+                          { value: "oldest", label: "Oldest" },
+                          { value: "name", label: "Name" },
+                          { value: "progress", label: "Progress" },
+                        ] as { value: SortOption; label: string }[]
+                      ).map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => setSortBy(option.value)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            sortBy === option.value
+                              ? "bg-purple-500 text-white"
+                              : "bg-white/5 text-white/60 hover:bg-white/10"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+      )}
+
+      {/* Projects Grid */}
+      {projects.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gray-900 border border-gray-800 p-12 md:p-16 text-center rounded-xl"
+        >
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <FolderKanban className="w-16 h-16 text-white/20 mx-auto mb-4" />
+          </motion.div>
+          <h3 className="text-xl font-bold text-white mb-2">No Projects Yet</h3>
+          <p className="text-white/60 mb-6 max-w-md mx-auto">
+            Start your first project with SeeZee and let's build something amazing together
+          </p>
+          <Link href="/start">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-blue-500/25 inline-flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Start Your First Project
+            </motion.button>
+          </Link>
+        </motion.div>
+      ) : filteredAndSortedProjects.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-gray-900 border border-gray-800 p-12 text-center rounded-xl"
+        >
+          <Search className="w-12 h-12 text-white/20 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">No Projects Found</h3>
+          <p className="text-white/60 mb-4">
+            Try adjusting your search or filters to find what you're looking for
+          </p>
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setStatusFilter("all");
+              setSortBy("newest");
+            }}
+            className="text-blue-400 hover:text-blue-300 text-sm font-medium"
+          >
+            Clear all filters
+          </button>
+        </motion.div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project) => {
-            const badge = getStatusBadge(project.status);
-            const progress = calculateProgress(project);
-            
-            return (
-              <Link
-                key={project.id}
-                href={`/client/projects/${project.id}`}
-                className="seezee-glass p-6 hover:bg-white/[0.08] transition-all rounded-xl group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2 truncate">
-                      {project.name}
-                    </h3>
-                    {project.description && (
-                      <p className="text-sm text-white/60 line-clamp-2">
-                        {project.description}
-                      </p>
-                    )}
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-blue-400 transition-colors flex-shrink-0" />
-                </div>
+          <AnimatePresence mode="popLayout">
+            {filteredAndSortedProjects.map((project, index) => {
+              const badge = getStatusBadge(project.status);
+              const progress = calculateProgress(project);
 
-                {/* Status Badge */}
-                <div className="mb-4">
-                  <span
-                    className={`inline-flex px-3 py-1.5 rounded-full text-xs font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}
+              return (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ delay: index * 0.05 }}
+                  layout
+                >
+                  <Link
+                    href={`/client/projects/${project.id}`}
+                    className="block bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-xl group relative overflow-hidden hover:border-trinity-red"
                   >
-                    {badge.label}
-                  </span>
-                </div>
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-purple-500/0 to-cyan-500/0 group-hover:from-blue-500/5 group-hover:via-purple-500/5 group-hover:to-cyan-500/5 transition-all duration-300 pointer-events-none" />
 
-                {/* Progress Bar */}
-                {project.milestones.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between text-xs text-white/60 mb-2">
-                      <span>Progress</span>
-                      <span>{progress}%</span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                    <div className="text-xs text-white/40 mt-2">
-                      {project.milestones.filter((m) => m.completed).length}/{project.milestones.length} milestones
-                    </div>
-                  </div>
-                )}
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2 truncate">
+                            {project.name}
+                          </h3>
+                          {project.description && (
+                            <p className="text-sm text-white/60 line-clamp-2 mb-2">
+                              {project.description}
+                            </p>
+                          )}
+                        </div>
+                        <motion.div
+                          whileHover={{ x: 4 }}
+                          className="flex-shrink-0 ml-2"
+                        >
+                          <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-blue-400 transition-colors" />
+                        </motion.div>
+                      </div>
 
-                {/* Project Info */}
-                <div className="flex items-center gap-4 text-xs text-white/60 pt-4 border-t border-white/10">
-                  {project.startDate && (
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>{new Date(project.startDate).toLocaleDateString()}</span>
-                    </div>
-                  )}
-                  {project.assignee && (
-                    <div className="flex items-center gap-2 ml-auto">
-                      {project.assignee.image ? (
-                        <img
-                          src={project.assignee.image}
-                          alt={project.assignee.name || "Team"}
-                          className="w-6 h-6 rounded-full border border-blue-500/30"
-                        />
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/30" />
+                      {/* Status Badge */}
+                      <div className="mb-4">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}
+                        >
+                          {badge.label}
+                        </span>
+                      </div>
+
+                      {/* Progress Bar */}
+                      {project.milestones.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between text-xs text-white/60 mb-2">
+                            <span className="flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3" />
+                              Progress
+                            </span>
+                            <span className="font-semibold">{progress}%</span>
+                          </div>
+                          <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${progress}%` }}
+                              transition={{ duration: 0.8, ease: "easeOut" }}
+                              className={`h-full bg-gradient-to-r ${badge.gradient} transition-all duration-500`}
+                            />
+                          </div>
+                          <div className="text-xs text-white/40 mt-2">
+                            {project.milestones.filter((m) => m.completed).length}/{project.milestones.length} milestones completed
+                          </div>
+                        </div>
                       )}
-                      <span className="text-white/80">{project.assignee.name}</span>
+
+                      {/* Project Info */}
+                      <div className="flex items-center gap-4 text-xs text-white/60 pt-4 border-t border-white/10">
+                        {project.startDate && (
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>{new Date(project.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                          </div>
+                        )}
+                        {project.assignee && (
+                          <div className="flex items-center gap-2 ml-auto">
+                            {project.assignee.image ? (
+                              <img
+                                src={project.assignee.image}
+                                alt={project.assignee.name || "Team"}
+                                className="w-6 h-6 rounded-full border border-blue-500/30"
+                              />
+                            ) : (
+                              <div className="w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+                                <User className="w-3 h-3 text-blue-400" />
+                              </div>
+                            )}
+                            <span className="text-white/80 font-medium">{project.assignee.name}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* Results Count */}
+      {projects.length > 0 && filteredAndSortedProjects.length > 0 && (
+        <div className="text-center text-sm text-white/60">
+          Showing {filteredAndSortedProjects.length} of {projects.length} projects
         </div>
       )}
     </div>
