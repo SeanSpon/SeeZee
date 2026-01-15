@@ -35,14 +35,26 @@ interface Invoice {
   id: string;
   number: string;
   title: string;
+  description: string | null;
   status: string;
   total: number;
   amount: number;
+  tax: number;
+  currency: string;
+  organizationId: string;
+  projectId: string | null;
   dueDate: Date;
   paidAt: Date | null;
   createdAt: Date;
   organization: { id: string; name: string };
   project: { id: string; name: string } | null;
+  items: Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    rate: number;
+    amount: number;
+  }>;
 }
 
 interface MaintenancePlan {

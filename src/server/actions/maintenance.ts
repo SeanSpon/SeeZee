@@ -293,7 +293,7 @@ export async function getMaintenanceClients() {
       nextBillingDate: client.nextBillingDate?.toISOString() || null,
       subscriptions: client.subscriptions.map(sub => ({
         ...sub,
-        currentPeriodEnd: sub.currentPeriodEnd.toISOString(),
+        currentPeriodEnd: sub.currentPeriodEnd?.toISOString() || null,
       })),
       maintenancePlanRel: client.maintenancePlanRel ? {
         ...client.maintenancePlanRel,

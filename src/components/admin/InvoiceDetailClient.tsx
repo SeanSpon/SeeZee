@@ -23,7 +23,7 @@ interface InvoiceDetailClientProps {
     paidAt: Date | string | null;
     createdAt: Date | string;
     organizationId: string;
-    projectId?: string | null;
+    projectId: string | null;
     organization: {
       id: string;
       name: string;

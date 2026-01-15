@@ -16,12 +16,12 @@ type MaintenanceSchedule = {
   title: string;
   description: string | null;
   status: string;
-  scheduledFor: Date;
-  completedAt: Date | null;
+  scheduledFor: string;
+  completedAt: string | null;
   assignedToId: string | null;
   notes: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   project: {
     id: string;
     name: string;
@@ -41,7 +41,7 @@ type Client = {
   subscriptions: {
     id: string;
     priceId: string;
-    currentPeriodEnd: Date | null;
+    currentPeriodEnd: string | null;
   }[];
   maintenancePlanRel?: {
     id: string;
@@ -52,13 +52,13 @@ type Client = {
     supportHoursUsed: number;
     changeRequestsIncluded: number;
     changeRequestsUsed: number;
-    createdAt: Date;
+    createdAt: string;
   } | null;
   maintenanceSchedules?: {
     id: string;
     title: string;
     status: string;
-    scheduledFor: Date;
+    scheduledFor: string;
   }[];
 };
 
@@ -71,7 +71,7 @@ type MaintenancePlan = {
   supportHoursUsed: number;
   changeRequestsIncluded: number;
   changeRequestsUsed: number;
-  createdAt: Date;
+  createdAt: string;
   project: {
     id: string;
     name: string;
@@ -82,7 +82,7 @@ type MaintenancePlan = {
       name: string;
       email: string | null;
     };
-  };
+  } | null;
 };
 
 type ChangeRequest = {
@@ -93,8 +93,9 @@ type ChangeRequest = {
   priority: string;
   estimatedHours: number | null;
   urgencyFee: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string | null;
   project: {
     id: string;
     name: string;
@@ -465,14 +466,14 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
                 {plans.length} maintenance plan{plans.length !== 1 ? 's' : ''} from client submissions
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {plans.map((plan) => (
+                {plans.filter(plan => plan.project).map((plan) => (
                   <div
                     key={plan.id}
                     className="bg-seezee-card-bg border border-white/10 rounded-xl p-4 text-left cursor-pointer hover:border-white/20 transition-all"
-                    onClick={() => router.push(`/admin/pipeline/projects/${plan.project.id}`)}
+                    onClick={() => router.push(`/admin/pipeline/projects/${plan.project!.id}`)}
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-white">{plan.project.name}</h4>
+                      <h4 className="font-semibold text-white">{plan.project!.name}</h4>
                       <span className={`px-2 py-1 rounded text-xs font-medium border ${
                         plan.status === 'ACTIVE' 
                           ? 'bg-seezee-green/20 text-seezee-green border-seezee-green/30'
@@ -483,7 +484,7 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
                         {plan.status}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-400 mb-2">{plan.project.organization.name}</p>
+                    <p className="text-sm text-slate-400 mb-2">{plan.project!.organization.name}</p>
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Tier:</span>

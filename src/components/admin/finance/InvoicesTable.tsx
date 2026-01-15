@@ -20,20 +20,20 @@ interface Invoice {
   id: string;
   number: string;
   title: string;
-  description?: string | null;
+  description: string | null;
   status: string;
   total: number;
   amount: number;
-  tax?: number;
+  tax: number;
   currency: string;
   dueDate: Date;
   paidAt: Date | null;
   createdAt: Date;
   organizationId: string;
-  projectId?: string | null;
+  projectId: string | null;
   organization: { id: string; name: string };
   project: { id: string; name: string } | null;
-  items?: Array<{
+  items: Array<{
     id: string;
     description: string;
     quantity: number;

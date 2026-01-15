@@ -34,16 +34,11 @@ export default async function MaintenancePage() {
     ...p,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
-    billingCycleStart: p.billingCycleStart?.toISOString() || null,
-    nextBillingDate: p.nextBillingDate?.toISOString() || null,
-    endDate: p.endDate?.toISOString() || null,
-    project: p.project ? {
-      ...p.project,
-      startDate: p.project.startDate?.toISOString() || null,
-      endDate: p.project.endDate?.toISOString() || null,
-      createdAt: p.project.createdAt.toISOString(),
-      updatedAt: p.project.updatedAt.toISOString(),
-    } : null,
+    cancelledAt: p.cancelledAt?.toISOString() || null,
+    currentPeriodStart: p.currentPeriodStart?.toISOString() || null,
+    currentPeriodEnd: p.currentPeriodEnd?.toISOString() || null,
+    lastRequestDate: p.lastRequestDate?.toISOString() || null,
+    project: p.project || null,
   })) : [];
   const maintenanceStats = statsResult.success ? statsResult.stats : {
     total: 0,

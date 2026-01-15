@@ -330,24 +330,43 @@ export function FinanceOverview({
       {/* Revenue Chart */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
         <h2 className="text-xl font-semibold text-white mb-4">Revenue Trend</h2>
-        <div className="h-64 flex items-end justify-between gap-2">
-          {metrics.revenueByMonth.map((month, index) => {
-            const maxRevenue = Math.max(...metrics.revenueByMonth.map(m => m.revenue));
-            const height = maxRevenue > 0 ? (month.revenue / maxRevenue) * 100 : 0;
-            
-            return (
-              <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                <div className="w-full bg-white/5 rounded-t-lg relative group cursor-pointer hover:bg-emerald-500/30 transition-colors" 
-                     style={{ height: `${height}%`, minHeight: '8px' }}>
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                    {formatCurrency(month.revenue)}
+        {metrics.revenueByMonth.length > 0 ? (
+          <div className="h-64 flex items-end justify-between gap-2">
+            {metrics.revenueByMonth.map((month, index) => {
+              const maxRevenue = Math.max(...metrics.revenueByMonth.map(m => m.revenue));
+              const height = maxRevenue > 0 ? (month.revenue / maxRevenue) * 100 : 0;
+              const hasRevenue = month.revenue > 0;
+              
+              return (
+                <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                  <div 
+                    className={`w-full rounded-t-lg relative group cursor-pointer transition-all ${
+                      hasRevenue 
+                        ? 'bg-gradient-to-t from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300' 
+                        : 'bg-gray-700/50'
+                    }`}
+                    style={{ 
+                      height: height > 0 ? `${Math.max(height, 5)}%` : '4px',
+                    }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
+                      {formatCurrency(month.revenue)}
+                    </div>
                   </div>
+                  <span className="text-xs text-gray-400 whitespace-nowrap">{month.month}</span>
                 </div>
-                <span className="text-xs text-gray-400 whitespace-nowrap">{month.month}</span>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="h-64 flex items-center justify-center text-gray-400">
+            <div className="text-center">
+              <FiTrendingUp className="w-12 h-12 mx-auto mb-3 text-gray-600" />
+              <p className="text-sm">No revenue data yet</p>
+              <p className="text-xs text-gray-500 mt-1">Create and mark invoices as paid to see trends</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Recent Activity Grid */}

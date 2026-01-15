@@ -43,7 +43,7 @@ export async function GET(
             amount: true,
             status: true,
             method: true,
-            stripePaymentIntentId: true,
+            stripePaymentId: true,
             createdAt: true,
             processedAt: true,
           },
