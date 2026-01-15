@@ -17,18 +17,18 @@
       "has": [
         {
           "type": "host",
-          "value": "(?!see-zee\\.com).*"
+          "value": "(?!seezeestudios\\.com).*"
         }
       ],
-      "destination": "https://see-zee.com/:path*",
+      "destination": "https://seezeestudios.com/:path*",
       "permanent": true
     }
   ],
   "env": {
-    "AUTH_URL": "https://see-zee.com",
-    "NEXTAUTH_URL": "https://see-zee.com",
-    "NEXT_PUBLIC_APP_URL": "https://see-zee.com",
-    "NEXT_PUBLIC_DOMAIN": "see-zee.com"
+    "AUTH_URL": "https://seezeestudios.com",
+    "NEXTAUTH_URL": "https://seezeestudios.com",
+    "NEXT_PUBLIC_APP_URL": "https://seezeestudios.com",
+    "NEXT_PUBLIC_DOMAIN": "seezeestudios.com"
   },
   "functions": {
     "src/app/api/recordings/upload/route.ts": {
