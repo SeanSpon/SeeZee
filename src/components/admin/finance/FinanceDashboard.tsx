@@ -264,7 +264,7 @@ export function FinanceDashboard({
                 ))}
               </div>
 
-              <InvoicesTable invoices={filteredInvoices} />
+              <InvoicesTable invoices={filteredInvoices} organizations={organizations} />
             </>
           )}
 

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ExternalLink, Download, CreditCard, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, Download, CreditCard, CheckCircle, XCircle, Edit } from "lucide-react";
 import { formatCurrency } from "@/lib/ui";
 import { SectionCard } from "@/components/admin/SectionCard";
+import { EditInvoiceModal } from "@/components/admin/finance/EditInvoiceModal";
 
 interface InvoiceDetailClientProps {
   invoice: {
@@ -21,6 +22,8 @@ interface InvoiceDetailClientProps {
     sentAt: Date | string | null;
     paidAt: Date | string | null;
     createdAt: Date | string;
+    organizationId: string;
+    projectId?: string | null;
     organization: {
       id: string;
       name: string;
@@ -48,6 +51,11 @@ interface InvoiceDetailClientProps {
   };
   paymentUrl: string | null;
   stripeInvoiceUrl: string | null;
+  organizations?: Array<{
+    id: string;
+    name: string;
+    stripeCustomerId: string | null;
+  }>;
 }
 
 const statusColors: Record<string, string> = {
@@ -70,10 +78,12 @@ export function InvoiceDetailClient({
   invoice,
   paymentUrl,
   stripeInvoiceUrl,
+  organizations = [],
 }: InvoiceDetailClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [updating, setUpdating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Check for payment success/cancelled query params and refresh
   useEffect(() => {
@@ -119,8 +129,21 @@ export function InvoiceDetailClient({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <>
+      {isEditing && organizations.length > 0 && (
+        <EditInvoiceModal
+          invoice={invoice}
+          organizations={organizations}
+          onClose={() => setIsEditing(false)}
+          onSuccess={() => {
+            setIsEditing(false);
+            router.refresh();
+          }}
+        />
+      )}
+      
+      <div className="space-y-6">
+        {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
@@ -135,6 +158,13 @@ export function InvoiceDetailClient({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all"
+          >
+            <Edit className="w-4 h-4" />
+            Edit Invoice
+          </button>
           {invoice.status === "PAID" && stripeInvoiceUrl && (
             <a
               href={stripeInvoiceUrl}
@@ -312,7 +342,8 @@ export function InvoiceDetailClient({
           <p className="text-slate-300">{invoice.description}</p>
         </SectionCard>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 

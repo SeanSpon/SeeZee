@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiDollarSign, FiCalendar, FiRepeat, FiTag } from "react-icons/fi";
 
@@ -61,24 +61,66 @@ export function AddExpenseModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    name: editExpense?.name || "",
-    description: editExpense?.description || "",
-    amount: editExpense?.amount ? (editExpense.amount / 100).toFixed(2) : "",
-    category: editExpense?.category || "SOFTWARE",
-    vendor: editExpense?.vendor || "",
-    status: editExpense?.status || "PAID",
-    isRecurring: editExpense?.isRecurring || false,
-    frequency: editExpense?.frequency || "monthly",
-    expenseDate: editExpense?.expenseDate
-      ? new Date(editExpense.expenseDate).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0],
-    nextDueDate: editExpense?.nextDueDate
-      ? new Date(editExpense.nextDueDate).toISOString().split("T")[0]
-      : "",
-    receiptUrl: editExpense?.receiptUrl || "",
-    notes: editExpense?.notes || "",
-    tags: editExpense?.tags?.join(", ") || "",
+    name: "",
+    description: "",
+    amount: "",
+    category: "SOFTWARE",
+    vendor: "",
+    status: "PAID",
+    isRecurring: false,
+    frequency: "monthly",
+    expenseDate: new Date().toISOString().split("T")[0],
+    nextDueDate: "",
+    receiptUrl: "",
+    notes: "",
+    tags: "",
   });
+
+  // Update form data when editExpense changes or modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (editExpense) {
+        // Editing mode - populate with expense data
+        setFormData({
+          name: editExpense.name || "",
+          description: editExpense.description || "",
+          amount: editExpense.amount ? (editExpense.amount / 100).toFixed(2) : "",
+          category: editExpense.category || "SOFTWARE",
+          vendor: editExpense.vendor || "",
+          status: editExpense.status || "PAID",
+          isRecurring: editExpense.isRecurring || false,
+          frequency: editExpense.frequency || "monthly",
+          expenseDate: editExpense.expenseDate
+            ? new Date(editExpense.expenseDate).toISOString().split("T")[0]
+            : new Date().toISOString().split("T")[0],
+          nextDueDate: editExpense.nextDueDate
+            ? new Date(editExpense.nextDueDate).toISOString().split("T")[0]
+            : "",
+          receiptUrl: editExpense.receiptUrl || "",
+          notes: editExpense.notes || "",
+          tags: editExpense.tags?.join(", ") || "",
+        });
+      } else {
+        // Add mode - reset to defaults
+        setFormData({
+          name: "",
+          description: "",
+          amount: "",
+          category: "SOFTWARE",
+          vendor: "",
+          status: "PAID",
+          isRecurring: false,
+          frequency: "monthly",
+          expenseDate: new Date().toISOString().split("T")[0],
+          nextDueDate: "",
+          receiptUrl: "",
+          notes: "",
+          tags: "",
+        });
+      }
+      setError("");
+    }
+  }, [isOpen, editExpense]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,17 +133,30 @@ export function AddExpenseModal({
         : "/api/admin/expenses";
       const method = editExpense ? "PATCH" : "POST";
 
+      // Prepare data with proper null handling for optional fields
+      const payload = {
+        name: formData.name,
+        description: formData.description || null,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        vendor: formData.vendor || null,
+        status: formData.status,
+        isRecurring: formData.isRecurring,
+        frequency: formData.isRecurring ? formData.frequency : null,
+        nextDueDate: formData.nextDueDate || null,
+        expenseDate: formData.expenseDate,
+        receiptUrl: formData.receiptUrl || null,
+        notes: formData.notes || null,
+        tags: formData.tags
+          .split(",")
+          .map((t: string) => t.trim())
+          .filter(Boolean),
+      };
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          amount: parseFloat(formData.amount),
-          tags: formData.tags
-            .split(",")
-            .map((t: string) => t.trim())
-            .filter(Boolean),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -119,27 +174,26 @@ export function AddExpenseModal({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        />
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          />
 
-        {/* Modal */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-2xl bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
-        >
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-2xl bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
+          >
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b border-white/10 bg-[#0f172a]">
             <div className="flex items-center gap-3">
@@ -449,7 +503,8 @@ export function AddExpenseModal({
             </div>
           </form>
         </motion.div>
-      </div>
+        </div>
+      )}
     </AnimatePresence>
   );
 }

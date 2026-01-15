@@ -14,8 +14,8 @@ export default async function FinancePage() {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
-  // Fetch all financial data in parallel
-  const [invoices, payments, maintenancePlans, projects, organizations] = await Promise.all([
+  // Fetch all financial data in parallel including expenses
+  const [invoices, payments, maintenancePlans, projects, organizations, expenses] = await Promise.all([
     // All invoices with relationships
     db.invoice.findMany({
       include: {
@@ -71,6 +71,11 @@ export default async function FinancePage() {
         stripeCustomerId: true,
       },
     }),
+
+    // Business expenses
+    db.businessExpense.findMany({
+      orderBy: { expenseDate: "desc" },
+    }),
   ]);
 
   // Calculate key metrics
@@ -119,6 +124,28 @@ export default async function FinancePage() {
     (sum, inv) => sum + Number(inv.total),
     0
   );
+
+  // Expense calculations
+  const thisMonthExpenses = expenses
+    .filter(exp => new Date(exp.expenseDate) >= thisMonth)
+    .reduce((sum, exp) => sum + Number(exp.amount), 0);
+  
+  const lastMonthExpenses = expenses
+    .filter(exp => 
+      new Date(exp.expenseDate) >= lastMonth && 
+      new Date(exp.expenseDate) < thisMonth
+    )
+    .reduce((sum, exp) => sum + Number(exp.amount), 0);
+  
+  const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+
+  // Net profit calculations (convert cents to dollars)
+  const thisMonthNetProfit = thisMonthRevenue - (thisMonthExpenses / 100);
+  const lastMonthNetProfit = lastMonthRevenue - (lastMonthExpenses / 100);
+  const totalNetProfit = totalRevenue - (totalExpenses / 100);
+
+  // Available funds = total revenue - total expenses - outstanding amounts that need to be paid
+  const availableFunds = totalRevenue - (totalExpenses / 100);
 
   // Subscription metrics
   const activeSubscriptions = maintenancePlans.filter(plan => plan.status === "ACTIVE");
@@ -181,6 +208,14 @@ export default async function FinancePage() {
     totalPayments: payments.length,
     averagePaymentValue,
     revenueByMonth,
+    // Expense metrics
+    thisMonthExpenses: thisMonthExpenses / 100, // Convert cents to dollars
+    lastMonthExpenses: lastMonthExpenses / 100,
+    totalExpenses: totalExpenses / 100,
+    thisMonthNetProfit,
+    lastMonthNetProfit,
+    totalNetProfit,
+    availableFunds,
   };
 
   // Recent activity
@@ -213,12 +248,25 @@ export default async function FinancePage() {
     nextBillingDate: null,
   }));
 
+  // Recent expenses for display
+  const recentExpenses = expenses.slice(0, 10).map(exp => ({
+    id: exp.id,
+    name: exp.name,
+    amount: Number(exp.amount) / 100, // Convert cents to dollars
+    category: exp.category,
+    vendor: exp.vendor,
+    status: exp.status,
+    expenseDate: exp.expenseDate.toISOString(),
+    isRecurring: exp.isRecurring,
+  }));
+
   return (
     <FinanceOverview
       metrics={metrics}
       recentInvoices={recentInvoices}
       recentPayments={recentPayments}
       subscriptions={subscriptionData}
+      recentExpenses={recentExpenses}
     />
   );
 }

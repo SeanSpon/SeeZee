@@ -492,6 +492,23 @@ export interface ComprehensiveDashboardData {
     status: string;
     createdAt: Date;
   }>;
+  financialData?: {
+    totalSpent: number;
+    thisMonthSpent: number;
+    pendingPayments: number;
+    nextPaymentDue: Date | null;
+    activeSubscription: boolean;
+    subscriptionAmount: number;
+    recentInvoices: Array<{
+      id: string;
+      number: string;
+      title: string;
+      amount: number;
+      status: string;
+      dueDate: Date;
+      paidAt: Date | null;
+    }>;
+  };
 }
 
 export async function getComprehensiveDashboardData(
@@ -669,6 +686,54 @@ export async function getComprehensiveDashboardData(
     };
   });
   
+  // Calculate financial data
+  const now = new Date();
+  const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  const paidInvoices = invoices.filter(inv => inv.status === 'PAID');
+  const totalSpent = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+  
+  const thisMonthSpent = paidInvoices
+    .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
+    .reduce((sum, inv) => sum + Number(inv.total), 0);
+  
+  const pendingPayments = pendingInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+  
+  const nextPaymentDue = pendingInvoices
+    .filter(inv => inv.dueDate)
+    .sort((a, b) => new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime())[0]?.dueDate || null;
+  
+  // Check for active subscription
+  const activeMaintenancePlans = await prisma.maintenancePlan.findMany({
+    where: {
+      projectId: { in: projects.map(p => p.id) },
+      status: 'ACTIVE',
+    },
+  });
+  
+  const activeSubscription = activeMaintenancePlans.length > 0;
+  const subscriptionAmount = activeMaintenancePlans.length > 0 
+    ? Number(activeMaintenancePlans[0].monthlyPrice) / 100 // Convert cents to dollars
+    : 0;
+  
+  const financialData = {
+    totalSpent,
+    thisMonthSpent,
+    pendingPayments,
+    nextPaymentDue,
+    activeSubscription,
+    subscriptionAmount,
+    recentInvoices: invoices.slice(0, 5).map(inv => ({
+      id: inv.id,
+      number: inv.number,
+      title: inv.title,
+      amount: Number(inv.total),
+      status: inv.status,
+      dueDate: inv.dueDate,
+      paidAt: inv.paidAt,
+    })),
+  };
+  
   return {
     projects: projects.map(p => ({
       id: p.id,
@@ -702,6 +767,7 @@ export async function getComprehensiveDashboardData(
       status: req.status,
       createdAt: req.createdAt,
     })),
+    financialData,
   };
   } catch (error) {
     console.error('Error fetching comprehensive dashboard data:', error);

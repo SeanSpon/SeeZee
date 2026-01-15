@@ -1,22 +1,19 @@
 /**
- * API Route: Record Manual Transaction
- * Allows admins to log external payments/revenue not tied to invoices
+ * Manual Transaction Recording API
+ * For recording external payments and revenue
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/requireRole";
 import { db } from "@/server/db";
+import { requireAdmin } from "@/lib/authz";
 
+/**
+ * POST /api/admin/transactions/manual
+ * Record a manual transaction (payment or revenue)
+ */
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    await requireAdmin();
 
     const body = await req.json();
     const {
@@ -29,92 +26,98 @@ export async function POST(req: NextRequest) {
       date,
     } = body;
 
-    // Validate required fields
     if (!amount || !description || !date) {
       return NextResponse.json(
-        { error: "Amount, description, and date are required" },
+        { error: "Missing required fields: amount, description, date" },
         { status: 400 }
       );
     }
 
-    if (!organizationId) {
+    // Convert amount to number
+    const amountValue = typeof amount === "number" ? amount : parseFloat(amount);
+
+    if (isNaN(amountValue) || amountValue <= 0) {
       return NextResponse.json(
-        { error: "Organization is required for manual transactions" },
+        { error: "Invalid amount" },
         { status: 400 }
       );
     }
 
-    if (amount <= 0) {
-      return NextResponse.json(
-        { error: "Amount must be greater than 0" },
-        { status: 400 }
-      );
-    }
-
-    // Create a manual invoice first (as a placeholder for the manual transaction)
-    // Then create the payment linked to it
-    const orgId = organizationId as string; // Already validated above
-    const manualInvoice = await db.invoice.create({
-      data: {
-        number: `MANUAL-${Date.now()}`,
-        title: "Manual Transaction",
-        description: description,
-        amount,
-        tax: 0,
-        total: amount,
-        status: "PAID",
-        dueDate: new Date(date),
-        paidAt: new Date(date),
-        createdAt: new Date(date),
-        organization: { connect: { id: orgId } },
-      },
-    });
-
-    const payment = await db.payment.create({
-      data: {
-        amount,
-        currency: "USD",
-        status: "COMPLETED",
-        method: source || "other",
-        invoiceId: manualInvoice.id,
-        stripePaymentId: referenceId || undefined,
-        processedAt: new Date(date),
-        createdAt: new Date(date),
-      },
-    });
-
-    // If there's an organization, log activity
-    if (organizationId) {
-      await db.activity.create({
+    if (type === "payment") {
+      // Create a manual invoice and payment entry
+      // First create a manual invoice
+      const invoiceNumber = `MANUAL-${Date.now()}`;
+      
+      const invoice = await db.invoice.create({
         data: {
-          type: "PROJECT_UPDATED",
-          title: "Manual Payment Recorded",
-          description: `Manual transaction of $${(amount / 100).toFixed(2)} recorded`,
-          userId: user.id,
-          metadata: {
-            paymentId: payment.id,
-            invoiceId: manualInvoice.id,
-            amount,
-            source,
-            manual: true,
-            action: "manual_payment_recorded",
-          } as any,
+          number: invoiceNumber,
+          title: description,
+          description: `Manual entry: ${description}`,
+          amount: amountValue,
+          tax: 0,
+          total: amountValue,
+          currency: "USD",
+          status: "PAID",
+          paidAt: new Date(date),
+          sentAt: new Date(date),
+          dueDate: new Date(date),
+          organizationId: organizationId || null,
+          items: {
+            create: {
+              description: description,
+              quantity: 1,
+              rate: amountValue,
+              amount: amountValue,
+            },
+          },
         },
-      }).catch(() => {
-        // Activity logging is optional, don't fail the request
       });
-    }
 
-    return NextResponse.json({
-      success: true,
-      payment: {
-        id: payment.id,
-        amount: payment.amount,
-        date: payment.createdAt,
-      },
-    });
+      // Create payment record
+      const payment = await db.payment.create({
+        data: {
+          amount: amountValue,
+          status: "COMPLETED",
+          method: source || "manual",
+          stripePaymentId: referenceId || null,
+          invoiceId: invoice.id,
+          processedAt: new Date(date),
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        type: "payment",
+        invoice,
+        payment,
+      });
+    } else if (type === "revenue") {
+      // For non-invoice revenue, still create a payment record
+      // But mark it as revenue-only
+      const payment = await db.payment.create({
+        data: {
+          amount: amountValue,
+          status: "COMPLETED",
+          method: source || "manual",
+          stripePaymentId: referenceId || null,
+          invoiceId: null, // No invoice for direct revenue
+          processedAt: new Date(date),
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        type: "revenue",
+        payment,
+      });
+    } else {
+      return NextResponse.json(
+        { error: "Invalid transaction type. Must be 'payment' or 'revenue'" },
+        { status: 400 }
+      );
+    }
   } catch (error: any) {
-    console.error("Error recording manual transaction:", error);
+    console.error("[POST /api/admin/transactions/manual]", error);
     return NextResponse.json(
       { error: error.message || "Failed to record transaction" },
       { status: 500 }

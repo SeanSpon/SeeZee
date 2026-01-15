@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { X, Plus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Plus, Trash2, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Organization {
@@ -11,31 +11,68 @@ interface Organization {
 }
 
 interface InvoiceItem {
+  id?: string;
   description: string;
   quantity: number;
   rate: number;
 }
 
-interface CreateInvoiceModalProps {
-  organizations: Organization[];
-  onClose: () => void;
+interface Invoice {
+  id: string;
+  number: string;
+  title: string;
+  description: string | null;
+  status: string;
+  amount: number;
+  tax: number;
+  total: number;
+  currency: string;
+  dueDate: Date | string;
+  organizationId: string;
+  projectId: string | null;
+  items: InvoiceItem[];
 }
 
-export function CreateInvoiceModal({
+interface EditInvoiceModalProps {
+  invoice: Invoice;
+  organizations: Organization[];
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+export function EditInvoiceModal({
+  invoice,
   organizations,
   onClose,
-}: CreateInvoiceModalProps) {
+  onSuccess,
+}: EditInvoiceModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
-    organizationId: "",
-    title: "",
-    description: "",
+    organizationId: invoice.organizationId,
+    title: invoice.title,
+    description: invoice.description || "",
     dueDate: "",
-    invoiceType: "custom",
+    currency: invoice.currency || "USD",
+    status: invoice.status,
   });
-  const [items, setItems] = useState<InvoiceItem[]>([
-    { description: "", quantity: 1, rate: 0 },
-  ]);
+  const [items, setItems] = useState<InvoiceItem[]>([]);
+
+  useEffect(() => {
+    // Format the due date for the date input
+    const dueDate = new Date(invoice.dueDate);
+    const formattedDate = dueDate.toISOString().split("T")[0];
+    setFormData((prev) => ({ ...prev, dueDate: formattedDate }));
+
+    // Load items
+    if (invoice.items && invoice.items.length > 0) {
+      setItems(invoice.items);
+    } else {
+      setItems([{ description: "", quantity: 1, rate: 0 }]);
+    }
+
+    setIsLoading(false);
+  }, [invoice]);
 
   const addItem = () => {
     setItems([...items, { description: "", quantity: 1, rate: 0 }]);
@@ -69,14 +106,15 @@ export function CreateInvoiceModal({
     setIsSubmitting(true);
 
     try {
-      // Use the admin API endpoint
-      const res = await fetch("/api/admin/invoices", {
-        method: "POST",
+      const res = await fetch(`/api/admin/invoices/${invoice.id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           items: items.map((item) => ({
-            ...item,
+            description: item.description,
+            quantity: item.quantity,
+            rate: item.rate,
             amount: item.quantity * item.rate,
           })),
           amount: subtotal,
@@ -86,20 +124,32 @@ export function CreateInvoiceModal({
       });
 
       if (res.ok) {
-        const data = await res.json();
-        // Refresh the page or call a success callback
+        if (onSuccess) {
+          onSuccess();
+        }
         window.location.reload();
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to create invoice");
+        alert(data.error || "Failed to update invoice");
       }
     } catch (error) {
-      console.error("Failed to create invoice:", error);
-      alert("Failed to create invoice. Please try again.");
+      console.error("Failed to update invoice:", error);
+      alert("Failed to update invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+        <div className="relative">
+          <Loader2 className="w-8 h-8 text-trinity-red animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -122,9 +172,14 @@ export function CreateInvoiceModal({
         >
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-800 bg-[#0a0e1a] px-6 py-4">
-            <h2 className="text-xl font-heading font-bold text-white">
-              Create Invoice
-            </h2>
+            <div>
+              <h2 className="text-xl font-heading font-bold text-white">
+                Edit Invoice
+              </h2>
+              <p className="text-sm text-gray-400 mt-1">
+                Invoice {invoice.number}
+              </p>
+            </div>
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-gray-800 transition"
@@ -135,6 +190,13 @@ export function CreateInvoiceModal({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            {/* Status Warning */}
+            {formData.status !== "DRAFT" && (
+              <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-sm">
+                Warning: This invoice has status "{formData.status}". Editing may affect the client's view.
+              </div>
+            )}
+
             {/* Client */}
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -157,7 +219,7 @@ export function CreateInvoiceModal({
               </select>
             </div>
 
-            {/* Title & Type */}
+            {/* Title & Status */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -176,37 +238,57 @@ export function CreateInvoiceModal({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Invoice Type
+                  Status
                 </label>
                 <select
-                  value={formData.invoiceType}
+                  value={formData.status}
                   onChange={(e) =>
-                    setFormData({ ...formData, invoiceType: e.target.value })
+                    setFormData({ ...formData, status: e.target.value })
                   }
                   className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
                 >
-                  <option value="deposit">Deposit</option>
-                  <option value="final">Final Payment</option>
-                  <option value="subscription">Subscription</option>
-                  <option value="custom">Custom</option>
+                  <option value="DRAFT">Draft</option>
+                  <option value="SENT">Sent</option>
+                  <option value="PAID">Paid</option>
+                  <option value="OVERDUE">Overdue</option>
+                  <option value="CANCELLED">Cancelled</option>
                 </select>
               </div>
             </div>
 
-            {/* Due Date */}
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Due Date *
-              </label>
-              <input
-                type="date"
-                required
-                value={formData.dueDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, dueDate: e.target.value })
-                }
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
-              />
+            {/* Due Date & Currency */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  Due Date *
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={formData.dueDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, dueDate: e.target.value })
+                  }
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  Currency
+                </label>
+                <select
+                  value={formData.currency}
+                  onChange={(e) =>
+                    setFormData({ ...formData, currency: e.target.value })
+                  }
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
+                >
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="CAD">CAD</option>
+                </select>
+              </div>
             </div>
 
             {/* Description */}
@@ -321,16 +403,18 @@ export function CreateInvoiceModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-lg border-2 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600 transition"
+                disabled={isSubmitting}
+                className="px-4 py-2.5 rounded-lg border-2 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-6 py-2.5 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
               >
-                {isSubmitting ? "Creating..." : "Create Invoice"}
+                {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {isSubmitting ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>
@@ -340,16 +424,4 @@ export function CreateInvoiceModal({
   );
 }
 
-export default CreateInvoiceModal;
-
-
-
-
-
-
-
-
-
-
-
-
+export default EditInvoiceModal;

@@ -60,11 +60,36 @@ export default async function AdminDashboardPage() {
     ["DRAFT", "SENT", "OVERDUE"].includes(inv.status)
   ).length;
 
+  // Fetch expenses for this month to calculate net profit
+  const { db } = await import("@/server/db");
+  const now = new Date();
+  const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  const thisMonthExpenses = await db.businessExpense.findMany({
+    where: {
+      expenseDate: {
+        gte: thisMonth,
+      },
+    },
+  });
+
+  const totalExpenses = thisMonthExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  
+  // Calculate this month's revenue
+  const thisMonthRevenue = paidInvoices
+    .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
+    .reduce((sum, inv) => sum + (inv.total || 0), 0);
+  
+  const netProfit = thisMonthRevenue - (totalExpenses / 100); // Convert cents to dollars
+
   const stats = {
     activeProjects,
     totalRevenue,
     totalClients: clientIds.size,
     unpaidInvoices,
+    thisMonthRevenue,
+    thisMonthExpenses: totalExpenses / 100, // Convert cents to dollars
+    netProfit,
   };
 
   // Transform activities to match ActivityFeed format

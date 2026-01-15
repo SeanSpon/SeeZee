@@ -89,22 +89,30 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json();
 
+    // Validate required fields
+    if (!data.name || !data.amount || !data.category) {
+      return NextResponse.json(
+        { error: "Missing required fields: name, amount, category" },
+        { status: 400 }
+      );
+    }
+
     const expense = await db.businessExpense.create({
       data: {
         name: data.name,
-        description: data.description,
+        description: data.description || null,
         amount: Math.round(data.amount * 100), // Convert to cents
         currency: data.currency || "USD",
         category: data.category,
         status: data.status || "PAID",
-        vendor: data.vendor,
+        vendor: data.vendor || null,
         isRecurring: data.isRecurring || false,
-        frequency: data.frequency,
+        frequency: data.isRecurring ? (data.frequency || null) : null,
         nextDueDate: data.nextDueDate ? new Date(data.nextDueDate) : null,
         expenseDate: data.expenseDate ? new Date(data.expenseDate) : new Date(),
         paidAt: data.status === "PAID" ? new Date() : null,
-        receiptUrl: data.receiptUrl,
-        notes: data.notes,
+        receiptUrl: data.receiptUrl || null,
+        notes: data.notes || null,
         tags: data.tags || [],
       },
     });

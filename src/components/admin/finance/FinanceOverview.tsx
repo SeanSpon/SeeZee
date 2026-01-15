@@ -35,6 +35,25 @@ interface FinanceMetrics {
   totalPayments: number;
   averagePaymentValue: number;
   revenueByMonth: Array<{ month: string; revenue: number }>;
+  // Expense metrics
+  thisMonthExpenses?: number;
+  lastMonthExpenses?: number;
+  totalExpenses?: number;
+  thisMonthNetProfit?: number;
+  lastMonthNetProfit?: number;
+  totalNetProfit?: number;
+  availableFunds?: number;
+}
+
+interface RecentExpense {
+  id: string;
+  name: string;
+  amount: number;
+  category: string;
+  vendor: string | null;
+  status: string;
+  expenseDate: string;
+  isRecurring: boolean;
 }
 
 interface RecentInvoice {
@@ -71,6 +90,7 @@ interface FinanceOverviewProps {
   recentInvoices: RecentInvoice[];
   recentPayments: RecentPayment[];
   subscriptions: Subscription[];
+  recentExpenses?: RecentExpense[];
 }
 
 const formatCurrency = (amount: number) => {
@@ -98,7 +118,8 @@ export function FinanceOverview({
   metrics, 
   recentInvoices, 
   recentPayments, 
-  subscriptions 
+  subscriptions,
+  recentExpenses = []
 }: FinanceOverviewProps) {
   const [timeframe, setTimeframe] = useState<"30d" | "month" | "all">("month");
 
@@ -108,6 +129,16 @@ export function FinanceOverview({
     : timeframe === "month" 
     ? metrics.thisMonthRevenue 
     : metrics.totalRevenue;
+
+  // Select expenses based on timeframe
+  const displayExpenses = timeframe === "month" 
+    ? metrics.thisMonthExpenses || 0
+    : metrics.totalExpenses || 0;
+
+  // Select net profit based on timeframe
+  const displayNetProfit = timeframe === "month"
+    ? metrics.thisMonthNetProfit || 0
+    : metrics.totalNetProfit || 0;
 
   return (
     <div className="space-y-6 p-6">
@@ -138,7 +169,7 @@ export function FinanceOverview({
       </div>
 
       {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {/* Total Revenue */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -162,7 +193,7 @@ export function FinanceOverview({
           <h3 className="text-2xl font-bold text-white">
             {formatCurrency(displayRevenue)}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">Total Revenue</p>
+          <p className="text-gray-400 text-sm mt-1">Revenue</p>
           {timeframe === "month" && (
             <div className="flex items-center gap-1 mt-2">
               <FiTrendingUp className={`w-3 h-3 ${metrics.revenueGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`} />
@@ -173,11 +204,61 @@ export function FinanceOverview({
           )}
         </motion.div>
 
+        {/* Expenses */}
+        {metrics.thisMonthExpenses !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-2 bg-red-500/20 rounded-lg">
+                <FiAlertCircle className="w-5 h-5 text-red-400" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white">
+              {formatCurrency(displayExpenses)}
+            </h3>
+            <p className="text-gray-400 text-sm mt-1">Expenses</p>
+            {timeframe === "month" && metrics.lastMonthExpenses && (
+              <div className="flex items-center gap-1 mt-2">
+                <span className="text-xs text-gray-400">
+                  vs {formatCurrency(metrics.lastMonthExpenses)}
+                </span>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* Net Profit */}
+        {metrics.thisMonthNetProfit !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className={`bg-gradient-to-br ${displayNetProfit >= 0 ? 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/30' : 'from-orange-500/20 to-orange-600/10 border-orange-500/30'} border rounded-xl p-6`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className={`p-2 ${displayNetProfit >= 0 ? 'bg-cyan-500/20' : 'bg-orange-500/20'} rounded-lg`}>
+                <FiTrendingUp className={`w-5 h-5 ${displayNetProfit >= 0 ? 'text-cyan-400' : 'text-orange-400'}`} />
+              </div>
+            </div>
+            <h3 className={`text-2xl font-bold ${displayNetProfit >= 0 ? 'text-cyan-400' : 'text-orange-400'}`}>
+              {formatCurrency(displayNetProfit)}
+            </h3>
+            <p className="text-gray-400 text-sm mt-1">Net Profit</p>
+            <div className="text-xs text-gray-400 mt-2">
+              Revenue - Expenses
+            </div>
+          </motion.div>
+        )}
+
         {/* Outstanding */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.15 }}
           className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/30 rounded-xl p-6"
         >
           <div className="flex items-center justify-between mb-2">
@@ -216,33 +297,34 @@ export function FinanceOverview({
           <h3 className="text-2xl font-bold text-white">
             {formatCurrency(metrics.monthlyRecurringRevenue)}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">Monthly Recurring Revenue</p>
+          <p className="text-gray-400 text-sm mt-1">MRR</p>
           <div className="text-xs text-gray-400 mt-2">
             ARR: {formatCurrency(metrics.annualRecurringRevenue)}
           </div>
         </motion.div>
 
-        {/* Payments */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-purple-500/20 rounded-lg">
-              <FiCreditCard className="w-5 h-5 text-purple-400" />
+        {/* Available Funds (NEW) */}
+        {metrics.availableFunds !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-6"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <FiCreditCard className="w-5 h-5 text-purple-400" />
+              </div>
             </div>
-            <span className="text-xs text-gray-400">{metrics.totalPayments} payments</span>
-          </div>
-          <h3 className="text-2xl font-bold text-white">
-            {formatCurrency(metrics.averagePaymentValue)}
-          </h3>
-          <p className="text-gray-400 text-sm mt-1">Avg Payment Value</p>
-          <div className="text-xs text-gray-400 mt-2">
-            {metrics.paidInvoices} paid invoices
-          </div>
-        </motion.div>
+            <h3 className="text-2xl font-bold text-white">
+              {formatCurrency(metrics.availableFunds)}
+            </h3>
+            <p className="text-gray-400 text-sm mt-1">Available Funds</p>
+            <div className="text-xs text-gray-400 mt-2">
+              Current money on hand
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Revenue Chart */}
@@ -269,7 +351,7 @@ export function FinanceOverview({
       </div>
 
       {/* Recent Activity Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Invoices */}
         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
@@ -282,25 +364,25 @@ export function FinanceOverview({
             </Link>
           </div>
           <div className="space-y-3">
-            {recentInvoices.map((invoice) => (
+            {recentInvoices.slice(0, 5).map((invoice) => (
               <div
                 key={invoice.id}
                 className="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-medium">{invoice.number}</span>
+                    <span className="text-white font-medium text-sm">{invoice.number}</span>
                     <span className={`text-xs ${getStatusColor(invoice.status)}`}>
                       {invoice.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-400">{invoice.client}</p>
+                  <p className="text-xs text-gray-400">{invoice.client}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-white font-semibold">{formatCurrency(invoice.amount)}</p>
+                  <p className="text-white font-semibold text-sm">{formatCurrency(invoice.amount)}</p>
                   {invoice.dueDate && (
                     <p className="text-xs text-gray-400">
-                      Due {new Date(invoice.dueDate).toLocaleDateString()}
+                      {new Date(invoice.dueDate).toLocaleDateString()}
                     </p>
                   )}
                 </div>
@@ -321,7 +403,7 @@ export function FinanceOverview({
             </Link>
           </div>
           <div className="space-y-3">
-            {recentPayments.map((payment) => (
+            {recentPayments.slice(0, 5).map((payment) => (
               <div
                 key={payment.id}
                 className="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
@@ -329,18 +411,65 @@ export function FinanceOverview({
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <FiCreditCard className="w-4 h-4 text-green-400" />
-                    <span className="text-white font-medium">{payment.client}</span>
+                    <span className="text-white font-medium text-sm">{payment.client}</span>
                   </div>
-                  <p className="text-sm text-gray-400">{payment.invoiceNumber}</p>
+                  <p className="text-xs text-gray-400">{payment.invoiceNumber}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-white font-semibold">{formatCurrency(payment.amount)}</p>
+                  <p className="text-white font-semibold text-sm">{formatCurrency(payment.amount)}</p>
                   <p className="text-xs text-gray-400">
                     {new Date(payment.date).toLocaleDateString()}
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Recent Expenses */}
+        <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-white">Recent Expenses</h2>
+            <Link
+              href="/admin/finance/expenses"
+              className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1"
+            >
+              View All <FiArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {recentExpenses.length > 0 ? (
+              recentExpenses.slice(0, 5).map((expense) => (
+                <div
+                  key={expense.id}
+                  className="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <FiAlertCircle className="w-4 h-4 text-red-400" />
+                      <span className="text-white font-medium text-sm">{expense.name}</span>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      {expense.vendor || expense.category} • {expense.isRecurring ? 'Recurring' : 'One-time'}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-red-400 font-semibold text-sm">-{formatCurrency(expense.amount)}</p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(expense.expenseDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-400">
+                <FiAlertCircle className="w-8 h-8 mx-auto mb-2 text-gray-600" />
+                <p className="text-sm">No expenses tracked yet</p>
+                <Link href="/admin/finance/expenses" className="text-xs text-red-400 hover:text-red-300 mt-2 inline-block">
+                  Add your first expense →
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

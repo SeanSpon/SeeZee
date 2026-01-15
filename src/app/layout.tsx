@@ -14,6 +14,13 @@ import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
+
 export const metadata: Metadata = {
   title: {
     default: 'SeeZee Studio | Professional Web Development Louisville KY',
@@ -21,12 +28,6 @@ export const metadata: Metadata = {
   },
   description:
     'Professional web development in Louisville, KY. SeeZee Studio builds fast, modern websites and custom apps for nonprofits, businesses, and community organizations. Expert website design and development services.',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   keywords: [
     'professional web development',
     'professional web developer',
@@ -240,7 +241,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/png" href="/icon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

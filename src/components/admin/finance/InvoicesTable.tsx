@@ -11,25 +11,44 @@ import {
   ExternalLink,
   Eye,
   Mail,
+  Edit,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
+import { EditInvoiceModal } from "./EditInvoiceModal";
 
 interface Invoice {
   id: string;
   number: string;
   title: string;
+  description?: string | null;
   status: string;
   total: number;
   amount: number;
+  tax?: number;
+  currency: string;
   dueDate: Date;
   paidAt: Date | null;
   createdAt: Date;
+  organizationId: string;
+  projectId?: string | null;
   organization: { id: string; name: string };
   project: { id: string; name: string } | null;
+  items?: Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    rate: number;
+    amount: number;
+  }>;
 }
 
 interface InvoicesTableProps {
   invoices: Invoice[];
+  organizations?: Array<{
+    id: string;
+    name: string;
+    stripeCustomerId: string | null;
+  }>;
 }
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -46,8 +65,9 @@ const statusStyles: Record<string, string> = {
   CANCELLED: "bg-gray-500/20 text-gray-500 border-gray-500/30",
 };
 
-export function InvoicesTable({ invoices }: InvoicesTableProps) {
+export function InvoicesTable({ invoices, organizations = [] }: InvoicesTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
 
   const handleSendReminder = async (invoiceId: string) => {
     try {
@@ -65,16 +85,64 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
 
   const handleMarkPaid = async (invoiceId: string) => {
     try {
-      const res = await fetch(`/api/invoices/${invoiceId}`, {
+      // Use admin API endpoint
+      const res = await fetch(`/api/admin/invoices/${invoiceId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "PAID", paidAt: new Date() }),
+        body: JSON.stringify({ status: "PAID" }),
       });
       if (res.ok) {
         window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to mark as paid");
       }
     } catch (error) {
       console.error("Failed to mark as paid:", error);
+      alert("Failed to mark invoice as paid. Please try again.");
+    }
+    setOpenMenuId(null);
+  };
+
+  const handleDelete = async (invoiceId: string) => {
+    if (!confirm("Are you sure you want to delete this invoice? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/admin/invoices/${invoiceId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete invoice");
+      }
+    } catch (error) {
+      console.error("Failed to delete invoice:", error);
+      alert("Failed to delete invoice. Please try again.");
+    }
+    setOpenMenuId(null);
+  };
+
+  const handleSendInvoice = async (invoiceId: string) => {
+    try {
+      const res = await fetch(`/api/admin/invoices/${invoiceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "SENT" }),
+      });
+      if (res.ok) {
+        alert("Invoice marked as sent!");
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to send invoice");
+      }
+    } catch (error) {
+      console.error("Failed to send invoice:", error);
+      alert("Failed to send invoice. Please try again.");
     }
     setOpenMenuId(null);
   };
@@ -88,9 +156,21 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
   }
 
   return (
-    <div className="rounded-2xl border-2 border-gray-700 glass-effect overflow-hidden">
-      <div className="overflow-x-auto -mx-6 px-6">
-        <table className="w-full min-w-full">
+    <>
+      {editingInvoice && (
+        <EditInvoiceModal
+          invoice={editingInvoice}
+          organizations={organizations}
+          onClose={() => setEditingInvoice(null)}
+          onSuccess={() => {
+            setEditingInvoice(null);
+          }}
+        />
+      )}
+      
+      <div className="rounded-2xl border-2 border-gray-700 glass-effect overflow-hidden">
+        <div className="overflow-x-auto -mx-6 px-6">
+          <table className="w-full min-w-full">
           <thead>
             <tr className="border-b border-gray-700 bg-[#1a2235]">
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -193,10 +273,30 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                           <Link
                             href={`/admin/pipeline/invoices/${invoice.id}`}
                             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-[#1a2235] hover:text-white transition"
+                            onClick={() => setOpenMenuId(null)}
                           >
                             <Eye className="w-4 h-4" />
                             View Details
                           </Link>
+                          <button
+                            onClick={() => {
+                              setEditingInvoice(invoice);
+                              setOpenMenuId(null);
+                            }}
+                            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-[#1a2235] hover:text-white transition"
+                          >
+                            <Edit className="w-4 h-4" />
+                            Edit Invoice
+                          </button>
+                          {invoice.status === "DRAFT" && (
+                            <button
+                              onClick={() => handleSendInvoice(invoice.id)}
+                              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-400 hover:bg-[#1a2235] transition"
+                            >
+                              <Send className="w-4 h-4" />
+                              Mark as Sent
+                            </button>
+                          )}
                           {invoice.status !== "PAID" && (
                             <>
                               <button
@@ -215,6 +315,15 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                               </button>
                             </>
                           )}
+                          {invoice.status === "DRAFT" && (
+                            <button
+                              onClick={() => handleDelete(invoice.id)}
+                              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-[#1a2235] transition border-t border-gray-700"
+                            >
+                              <X className="w-4 h-4" />
+                              Delete Invoice
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -226,6 +335,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
         </table>
       </div>
     </div>
+    </>
   );
 }
 

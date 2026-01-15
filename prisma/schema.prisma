@@ -484,11 +484,11 @@ model Payment {
   method          String?
   createdAt       DateTime      @default(now())
   currency        String        @default("USD")
-  invoiceId       String
+  invoiceId       String?
   processedAt     DateTime?
   stripeChargeId  String?
   stripePaymentId String?
-  invoice         Invoice       @relation(fields: [invoiceId], references: [id])
+  invoice         Invoice?      @relation(fields: [invoiceId], references: [id])
 
   @@map("payments")
 }
