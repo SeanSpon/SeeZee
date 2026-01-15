@@ -1,0 +1,39 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/cron/event-reminders",
+      "schedule": "0 9 * * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?!see-zee\\.com).*"
+        }
+      ],
+      "destination": "https://see-zee.com/:path*",
+      "permanent": true
+    }
+  ],
+  "env": {
+    "AUTH_URL": "https://see-zee.com",
+    "NEXTAUTH_URL": "https://see-zee.com",
+    "NEXT_PUBLIC_APP_URL": "https://see-zee.com",
+    "NEXT_PUBLIC_DOMAIN": "see-zee.com"
+  },
+  "functions": {
+    "src/app/api/recordings/upload/route.ts": {
+      "maxDuration": 300,
+      "memory": 3008
+    }
+  }
+}

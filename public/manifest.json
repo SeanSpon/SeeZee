@@ -1,0 +1,22 @@
+{
+  "name": "SeeZee Studio - Professional Web Development Louisville KY",
+  "short_name": "SeeZee Studio",
+  "description": "Professional web development in Louisville, KY. Fast, modern websites and custom apps for businesses, nonprofits, and community organizations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

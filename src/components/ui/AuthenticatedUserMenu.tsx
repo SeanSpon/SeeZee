@@ -1,0 +1,30 @@
+"use client";
+import { signOut } from "next-auth/react";
+
+export function UserMenu({ user }: { user?: { name?: string; email?: string; image?: string } }) {
+  if (!user) return null;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({ 
+        callbackUrl: "/",
+        redirect: true 
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Fallback: redirect manually if signOut fails
+      window.location.href = "/";
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      {user.image && <img src={user.image} alt="" className="h-8 w-8 rounded-full"/>}
+      <div className="text-sm">
+        <div className="font-medium">{user.name ?? "User"}</div>
+        <div className="text-zinc-500">{user.email}</div>
+      </div>
+      <button onClick={handleSignOut} className="rounded-md border px-3 py-1">Sign out</button>
+    </div>
+  );
+}

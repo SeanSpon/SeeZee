@@ -1,0 +1,677 @@
+'use client';
+
+export const dynamic = 'force-dynamic';
+
+import { Suspense, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, CheckCircle2 } from 'lucide-react';
+import PageShell from '@/components/PageShell';
+import FloatingShapes from '@/components/shared/FloatingShapes';
+import { ServiceCategory } from '@prisma/client';
+
+type ServiceType = 'marketing-website' | 'e-commerce-store' | 'web-application' | 'landing-page' | 'maintenance' | 'quick-fix';
+
+// Map internal service types to ServiceCategory enum values for API
+const serviceTypeToCategory: Record<ServiceType, ServiceCategory> = {
+  'marketing-website': ServiceCategory.BUSINESS_WEBSITE,
+  'e-commerce-store': ServiceCategory.BUSINESS_WEBSITE,
+  'web-application': ServiceCategory.BUSINESS_WEBSITE,
+  'landing-page': ServiceCategory.BUSINESS_WEBSITE,
+  'maintenance': ServiceCategory.MAINTENANCE_PLAN,
+  'quick-fix': ServiceCategory.MAINTENANCE_PLAN,
+};
+
+interface ProjectRequestData {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  referralSource: string;
+  stage: string;
+  outreachProgram: string;
+  projectType: string[];
+  projectGoals: string;
+  timeline: string;
+  specialRequirements: string;
+  serviceType: ServiceType;
+  estimatedBudget?: string;
+}
+
+const REFERRAL_SOURCES = [
+  'Instagram',
+  'TikTok',
+  'Friend/Referral',
+  'Google',
+  'Outreach Contact',
+  'Other',
+];
+
+const STAGE_OPTIONS = [
+  'Just exploring ideas',
+  'Ready to start this month',
+  'Already have a design / content ready',
+];
+
+const BUDGET_OPTIONS = [
+  'Under $3,000',
+  '$3,000 - $6,000',
+  '$6,000 - $12,000',
+  '$12,000 - $20,000',
+  'Over $20,000',
+  'Not sure yet / Flexible',
+];
+
+const PROJECT_TYPE_OPTIONS = [
+  'Website',
+  'Web App',
+  'Mobile App',
+  'Branding',
+  'Dashboard',
+  'AI Integration',
+  'Other',
+];
+
+const TIMELINE_OPTIONS = [
+  { value: 'asap', label: 'As soon as possible' },
+  { value: '1-2-weeks', label: '1-2 weeks' },
+  { value: '1-month', label: 'Within 1 month' },
+  { value: '2-3-months', label: '2-3 months' },
+  { value: 'flexible', label: 'Flexible / No rush' },
+];
+
+function QuestionnairePageContent() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [selectedServiceType, setSelectedServiceType] = useState<ServiceType | null>(null);
+
+  const [formData, setFormData] = useState<ProjectRequestData>({
+    name: session?.user?.name || '',
+    email: session?.user?.email || '',
+    phone: '',
+    company: '',
+    referralSource: '',
+    stage: '',
+    outreachProgram: '',
+    projectType: [],
+    projectGoals: '',
+    timeline: '',
+    specialRequirements: '',
+    serviceType: 'marketing-website' as ServiceType,
+    estimatedBudget: '',
+  });
+
+  // Get service type from URL params
+  useEffect(() => {
+    const type = searchParams.get('type') as ServiceType;
+    if (type && ['marketing-website', 'e-commerce-store', 'web-application', 'landing-page', 'maintenance', 'quick-fix'].includes(type)) {
+      setSelectedServiceType(type);
+      setFormData((prev) => ({ ...prev, serviceType: type }));
+    } else {
+      // Redirect to start if no service type selected
+      router.push('/start');
+    }
+  }, [searchParams, router]);
+
+  // Update form data when session loads
+  useEffect(() => {
+    if (session?.user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: session.user.name || prev.name,
+        email: session.user.email || prev.email,
+      }));
+    }
+  }, [session]);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/start/questionnaire');
+      return;
+    }
+  }, [status, router]);
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Get service type description
+  const getServiceTypeDescription = (type: ServiceType | null): string => {
+    if (!type) return '';
+    const descriptions: Record<ServiceType, string> = {
+      'marketing-website': "Let's build your marketing website",
+      'e-commerce-store': "Let's build your online store",
+      'web-application': "Let's build your custom web application",
+      'landing-page': "Let's create your high-converting landing page",
+      'maintenance': 'Subscribe to our maintenance service',
+      'quick-fix': 'Tell us what you need help with',
+    };
+    return descriptions[type] || '';
+  };
+
+  const ALL_QUESTIONS = [
+    {
+      id: 'name',
+      label: 'Full Name',
+      type: 'text',
+      required: true,
+      placeholder: 'John Doe',
+      showIf: undefined,
+    },
+    {
+      id: 'email',
+      label: 'Email Address',
+      type: 'email',
+      required: true,
+      placeholder: 'john@example.com',
+      readOnly: true,
+      showIf: undefined,
+    },
+    {
+      id: 'phone',
+      label: 'Phone Number',
+      type: 'text',
+      required: false,
+      placeholder: '(555) 123-4567',
+      showIf: undefined,
+    },
+    {
+      id: 'company',
+      label: 'Company or Organization Name',
+      type: 'text',
+      required: false,
+      placeholder: 'Acme Inc.',
+      showIf: undefined,
+    },
+    {
+      id: 'referralSource',
+      label: 'How did you hear about SeeZee?',
+      type: 'select',
+      required: false,
+      options: REFERRAL_SOURCES,
+      showIf: undefined,
+    },
+    {
+      id: 'stage',
+      label: 'Where are you in your project planning?',
+      type: 'radio',
+      required: true,
+      options: STAGE_OPTIONS,
+      showIf: 'non-maintenance',
+    },
+    {
+      id: 'projectGoals',
+      label: selectedServiceType === 'maintenance' ? 'What do you need help with?' : 'What are your main goals for this project?',
+      type: 'textarea',
+      required: true,
+      placeholder: selectedServiceType === 'maintenance' 
+        ? 'e.g., Ongoing updates, security monitoring, performance optimization, content changes...'
+        : 'e.g., Increase online sales, improve brand visibility, streamline customer communication...',
+      showIf: undefined,
+    },
+    {
+      id: 'estimatedBudget',
+      label: 'What is your estimated budget range?',
+      type: 'radio',
+      required: false,
+      options: BUDGET_OPTIONS,
+      showIf: 'non-maintenance',
+      helpText: 'We work on an hourly basis at $75/hour. This helps us estimate project scope.',
+    },
+    {
+      id: 'timeline',
+      label: "What's your ideal timeline?",
+      type: 'select-timeline',
+      required: true,
+      options: TIMELINE_OPTIONS,
+      showIf: undefined,
+    },
+    {
+      id: 'specialRequirements',
+      label: 'Any special requirements, integrations, or additional notes?',
+      type: 'textarea',
+      required: false,
+      placeholder: 'e.g., Need integration with existing systems, specific design preferences, accessibility requirements...',
+      showIf: undefined,
+    },
+  ];
+
+  // Filter questions based on service type
+  const QUESTIONS = ALL_QUESTIONS.filter(q => !q.showIf || q.showIf === selectedServiceType);
+
+  const totalSteps = QUESTIONS.length;
+  const currentQuestion = QUESTIONS[currentStep];
+  const isLastStep = currentStep === totalSteps - 1;
+  const progress = ((currentStep + 1) / totalSteps) * 100;
+
+  const updateField = (field: keyof ProjectRequestData, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const toggleProjectType = (type: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      projectType: prev.projectType.includes(type)
+        ? prev.projectType.filter((t) => t !== type)
+        : [...prev.projectType, type],
+    }));
+    if (errors.projectType) {
+      setErrors((prev) => ({ ...prev, projectType: '' }));
+    }
+  };
+
+  const getCurrentValue = () => {
+    const value = formData[currentQuestion.id as keyof ProjectRequestData];
+    if (currentQuestion.id === 'projectType') {
+      return Array.isArray(value) ? value : [];
+    }
+    return value || '';
+  };
+
+  const validateCurrentStep = (): boolean => {
+    if (currentQuestion.required) {
+      const value = getCurrentValue();
+      if (currentQuestion.id === 'projectType') {
+        if (!Array.isArray(value) || value.length === 0) {
+          setErrors((prev) => ({
+            ...prev,
+            [currentQuestion.id]: `${currentQuestion.label} is required`,
+          }));
+          return false;
+        }
+      } else if (!value || (typeof value === 'string' && !value.trim())) {
+        setErrors((prev) => ({
+          ...prev,
+          [currentQuestion.id]: `${currentQuestion.label} is required`,
+        }));
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateCurrentStep()) {
+      if (isLastStep) {
+        handleSubmit();
+      } else {
+        setCurrentStep((prev) => prev + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!validateCurrentStep() || !selectedServiceType) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Convert internal service type to ServiceCategory enum for API
+      const serviceCategory = serviceTypeToCategory[selectedServiceType];
+      
+      // Create lead via API
+      const leadResponse = await fetch('/api/leads/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceType: serviceCategory,
+          email: formData.email,
+          name: formData.name,
+          phone: formData.phone,
+          company: formData.company,
+          referralSource: formData.referralSource,
+          stage: formData.stage,
+          outreachProgram: formData.outreachProgram,
+          projectType: formData.projectType,
+          projectGoals: formData.projectGoals,
+          timeline: formData.timeline,
+          specialRequirements: formData.specialRequirements,
+          estimatedBudget: formData.estimatedBudget,
+        }),
+      });
+
+      if (!leadResponse.ok) {
+        const error = await leadResponse.json();
+        
+        // Handle specific error cases
+        if (error.error?.includes('active project request')) {
+          // Redirect to dashboard with message about active request
+          router.push('/client?message=active-request');
+          return;
+        }
+        
+        throw new Error(error.error || 'Failed to create lead');
+      }
+
+      const leadData = await leadResponse.json();
+      
+      // Redirect to success page with leadId
+      if (leadData.leadId) {
+        router.push(`/start/questionnaire/success?leadId=${leadData.leadId}`);
+      } else {
+        // Fallback if leadId is missing
+        router.push('/start/questionnaire/success');
+      }
+    } catch (error: any) {
+      console.error('Failed to submit request:', error);
+      setErrors({ submit: error.message || 'Failed to submit request. Please try again.' });
+      setIsSubmitting(false);
+      // Scroll to top to show error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+
+  // Show loading state
+  if (status === 'loading' || !selectedServiceType) {
+    return (
+      <PageShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-trinity-red border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white/60">Loading...</p>
+          </div>
+        </div>
+      </PageShell>
+    );
+  }
+
+
+  return (
+    <PageShell>
+      <div className="relative overflow-hidden animated-gradient">
+        <FloatingShapes />
+        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-5"></div>
+        
+        <div className="relative z-10 min-h-screen">
+          {/* Header */}
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => router.push('/start')}
+                className="flex items-center gap-2 px-4 py-2 text-white/70 hover:text-white hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+                <span className="font-medium">Back to Services</span>
+              </button>
+              <div className="text-sm text-white/60">
+                Question {currentStep + 1} of {totalSteps}
+              </div>
+            </div>
+
+            {/* Service Type Description */}
+            {selectedServiceType && (
+              <div className="mb-8 text-center">
+                <p className="text-lg text-blue-400 font-medium">
+                  {getServiceTypeDescription(selectedServiceType)}
+                </p>
+              </div>
+            )}
+
+            {/* Progress Bar */}
+            <div className="w-full mb-8">
+              <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-trinity-red"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Question Card */}
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+            {/* Error Message */}
+            {errors.submit && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-lg"
+              >
+                <p className="font-semibold mb-1">Submission Error</p>
+                <p>{errors.submit}</p>
+              </motion.div>
+            )}
+            
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="w-full glass-container rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large"
+              >
+                <h1 className="text-4xl md:text-5xl font-heading font-bold gradient-text mb-6">
+                  {currentQuestion.label}
+                  {currentQuestion.required && <span className="text-trinity-red">*</span>}
+                </h1>
+
+                {/* Help Text */}
+                {(currentQuestion as any).helpText && (
+                  <p className="text-sm text-white/60 mb-4 bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3">
+                    💡 {(currentQuestion as any).helpText}
+                  </p>
+                )}
+
+                {currentQuestion.type === 'text' && (
+                  <div className="mt-6">
+                    <input
+                      type="text"
+                      value={getCurrentValue() as string}
+                      onChange={(e) => updateField(currentQuestion.id as keyof ProjectRequestData, e.target.value)}
+                      placeholder={currentQuestion.placeholder}
+                      readOnly={currentQuestion.readOnly}
+                      disabled={currentQuestion.readOnly}
+                      className={`w-full text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all ${
+                        errors[currentQuestion.id] ? 'border-red-500' : ''
+                      } ${currentQuestion.readOnly ? 'cursor-not-allowed opacity-70' : ''}`}
+                    />
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'email' && (
+                  <div className="mt-6">
+                    <input
+                      type="email"
+                      value={getCurrentValue() as string}
+                      readOnly
+                      disabled
+                      className="w-full text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 cursor-not-allowed opacity-70"
+                    />
+                    <p className="mt-2 text-sm text-white/60">(from Google account)</p>
+                  </div>
+                )}
+
+                {currentQuestion.type === 'textarea' && (
+                  <div className="mt-6">
+                    <textarea
+                      value={getCurrentValue() as string}
+                      onChange={(e) => updateField(currentQuestion.id as keyof ProjectRequestData, e.target.value)}
+                      placeholder={currentQuestion.placeholder}
+                      rows={6}
+                      className={`w-full text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red resize-none transition-all ${
+                        errors[currentQuestion.id] ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                    <p className="mt-2 text-sm text-white/60">Shift ⇧ + Enter ↵ to make a line break</p>
+                  </div>
+                )}
+
+                {currentQuestion.type === 'select' && (
+                  <div className="mt-6">
+                    <select
+                      value={getCurrentValue() as string}
+                      onChange={(e) => updateField(currentQuestion.id as keyof ProjectRequestData, e.target.value)}
+                      className={`w-full text-lg text-white bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all cursor-pointer ${
+                        errors[currentQuestion.id] ? 'border-red-500' : ''
+                      }`}
+                    >
+                      <option value="" className="bg-gray-900">Select an option...</option>
+                      {(currentQuestion.options as string[])?.map((option: string) => (
+                        <option key={option} value={option} className="bg-gray-900">
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'select-timeline' && (
+                  <div className="mt-6 space-y-3">
+                    {(currentQuestion.options as typeof TIMELINE_OPTIONS)?.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateField(currentQuestion.id as keyof ProjectRequestData, option.value)}
+                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                          getCurrentValue() === option.value
+                            ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                            : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
+                        }`}
+                      >
+                        <span className="text-lg">{option.label}</span>
+                      </button>
+                    ))}
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'radio' && (
+                  <div className="mt-6 space-y-3">
+                    {(currentQuestion.options as string[])?.map((option: string) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => updateField(currentQuestion.id as keyof ProjectRequestData, option)}
+                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                          getCurrentValue() === option
+                            ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                            : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
+                        }`}
+                      >
+                        <span className="text-lg">{option}</span>
+                      </button>
+                    ))}
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'multiselect' && (
+                  <div className="mt-6 space-y-3">
+                    {(currentQuestion.options as string[])?.map((option: string) => {
+                      const selected = (getCurrentValue() as string[]).includes(option);
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => toggleProjectType(option)}
+                          className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                            selected
+                              ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                              : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                              selected ? 'bg-trinity-red border-trinity-red' : 'border-gray-600'
+                            }`}>
+                              {selected && <CheckCircle2 className="w-3 h-3 text-white" />}
+                            </div>
+                            <span className="text-lg">{option}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                    {errors[currentQuestion.id] && (
+                      <p className="mt-2 text-sm text-red-400">{errors[currentQuestion.id]}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Navigation Buttons */}
+                <div className="mt-12 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={handlePrevious}
+                    className="px-6 py-3 text-white/70 hover:text-white font-medium transition-colors flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg"
+                  >
+                    {currentStep > 0 && (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    )}
+                    {currentStep === 0 ? 'Back' : 'Previous'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={isSubmitting}
+                    className="px-8 py-4 bg-trinity-red hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white font-semibold text-lg transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:hover:translate-y-0"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Submitting...
+                      </span>
+                    ) : isLastStep ? (
+                      'Submit'
+                    ) : (
+                      'Next'
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </PageShell>
+  );
+}
+
+export default function QuestionnairePage() {
+  return (
+    <Suspense fallback={
+      <PageShell>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="w-16 h-16 border-4 border-trinity-red border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </PageShell>
+    }>
+      <QuestionnairePageContent />
+    </Suspense>
+  );
+}
+

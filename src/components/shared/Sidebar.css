@@ -1,0 +1,98 @@
+/* Main Site Sidebar Styles - Optimized for smooth hover */
+.main-sidebar-nav a {
+  color: #9CA3AF;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.main-sidebar-nav a svg {
+  transition: color 0.15s ease-in-out;
+  will-change: color;
+}
+
+.main-sidebar-nav a span {
+  transition: color 0.15s ease-in-out;
+  will-change: color;
+}
+
+.main-sidebar-nav a:hover {
+  color: #ffffff;
+}
+
+.main-sidebar-nav a:hover svg,
+.main-sidebar-nav a:hover span {
+  color: #ffffff;
+}
+
+.main-sidebar-nav a[aria-current="page"] {
+  color: #ffffff;
+}
+
+.main-sidebar-nav a[aria-current="page"] svg,
+.main-sidebar-nav a[aria-current="page"] span {
+  color: #ffffff;
+}
+
+/* Start Project link */
+.main-sidebar-nav a[aria-label="Start a Project"] {
+  color: #ffffff;
+}
+
+.main-sidebar-nav a[aria-label="Start a Project"] svg,
+.main-sidebar-nav a[aria-label="Start a Project"] span {
+  color: #ffffff;
+}
+
+/* Dashboard Quick Access - Animated Gradient */
+.dashboard-quick-access {
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  will-change: transform, box-shadow;
+}
+
+.dashboard-quick-access:hover {
+  box-shadow: 0 6px 30px rgba(220, 38, 38, 0.5);
+  transform: translateY(-2px);
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient-shift 3s ease infinite;
+}
+
+.dashboard-quick-access svg,
+.dashboard-quick-access span {
+  color: #ffffff;
+}
+
+.main-sidebar-logout {
+  color: #9CA3AF;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.main-sidebar-logout svg,
+.main-sidebar-logout span {
+  transition: color 0.15s ease-in-out;
+  will-change: color;
+}
+
+.main-sidebar-logout:hover {
+  color: #EF4444;
+}
+
+.main-sidebar-logout:hover svg,
+.main-sidebar-logout:hover span {
+  color: #EF4444;
+}
+
