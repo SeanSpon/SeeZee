@@ -223,22 +223,17 @@ export async function deleteClient(clientId: string) {
       where: { organizationId: clientId },
     });
 
-    // 2. Delete project requests
-    await db.projectRequest.deleteMany({
-      where: { organizationId: clientId },
-    });
-
-    // 3. Delete organization members
+    // 2. Delete organization members
     await db.organizationMember.deleteMany({
       where: { organizationId: clientId },
     });
 
-    // 4. Delete completed/archived projects (if any remain)
+    // 3. Delete completed/archived projects (if any remain)
     await db.project.deleteMany({
       where: { organizationId: clientId },
     });
 
-    // 5. Delete paid/cancelled invoices (if any remain)
+    // 4. Delete paid/cancelled invoices (if any remain)
     await db.invoice.deleteMany({
       where: { organizationId: clientId },
     });
