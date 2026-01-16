@@ -1,11 +1,17 @@
 /**
  * Expense Statistics API
  * Aggregated stats and analytics for expenses
+ * PROPERLY handles recurring vs one-time expenses
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/server/db";
 import { requireAdmin } from "@/lib/authz";
+import {
+  calculateCurrentMonthExpenses,
+  calculateMonthlyExpenses,
+  calculateExpenses,
+} from "@/lib/finance/expense-calculator";
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,86 +27,140 @@ export async function GET(request: NextRequest) {
       orderBy: { expenseDate: "desc" },
     });
 
-    // This month's expenses
+    // Map to calculation format
+    const expenseItems = allExpenses.map((e) => ({
+      amount: Number(e.amount),
+      isRecurring: e.isRecurring,
+      frequency: e.frequency,
+      expenseDate: e.expenseDate,
+    }));
+
+    // This month's expenses (properly calculated)
+    const thisMonthCalc = calculateCurrentMonthExpenses(expenseItems);
+    const thisMonthTotal = thisMonthCalc.total;
+
+    // Last month's expenses
+    const lastMonthCalc = calculateMonthlyExpenses(
+      expenseItems,
+      lastMonth.getFullYear(),
+      lastMonth.getMonth()
+    );
+    const lastMonthTotal = lastMonthCalc.total;
+
+    // This year's expenses
+    const thisYearCalc = calculateExpenses(expenseItems, thisYear);
+    const thisYearTotal = thisYearCalc.total;
+
+    // Monthly recurring cost (properly calculated)
+    const totalMonthlyRecurring = thisMonthCalc.monthlyRecurringCost;
+
+    // Get recurring expenses for filtering
+    const recurringExpenses = allExpenses.filter((e: any) => e.isRecurring && e.status !== "CANCELLED");
+
+    // Expenses by category (this month) - properly avoiding double-counting
+    // Return values in DOLLARS (not cents) for display
     const thisMonthExpenses = allExpenses.filter(
       (e: any) => new Date(e.expenseDate) >= thisMonth
     );
-    const thisMonthTotal = thisMonthExpenses.reduce((sum: number, e: any) => sum + e.amount, 0);
+    
+    const byCategoryThisMonth: Record<string, number> = {};
+    const seenRecurring = new Set<string>();
+    
+    for (const e of thisMonthExpenses) {
+      const amountInDollars = Number(e.amount) / 100; // Convert cents to dollars
+      
+      if (e.isRecurring) {
+        // For recurring, only count unique ones
+        const key = `${e.category}-${e.amount}-${e.frequency}`;
+        if (!seenRecurring.has(key)) {
+          byCategoryThisMonth[e.category] = (byCategoryThisMonth[e.category] || 0) + amountInDollars;
+          seenRecurring.add(key);
+        }
+      } else {
+        // For one-time, count all
+        byCategoryThisMonth[e.category] = (byCategoryThisMonth[e.category] || 0) + amountInDollars;
+      }
+    }
 
-    // Last month's expenses
-    const lastMonthExpenses = allExpenses.filter(
-      (e: any) => new Date(e.expenseDate) >= lastMonth && new Date(e.expenseDate) < thisMonth
-    );
-    const lastMonthTotal = lastMonthExpenses.reduce((sum: number, e: any) => sum + e.amount, 0);
+    // Expenses by vendor (this month) - Return in DOLLARS
+    const byVendorThisMonth: Record<string, number> = {};
+    const seenVendorRecurring = new Set<string>();
+    
+    for (const e of thisMonthExpenses) {
+      const vendorKey = e.vendor || "Unknown";
+      const amountInDollars = Number(e.amount) / 100; // Convert cents to dollars
+      
+      if (e.isRecurring) {
+        const key = `${vendorKey}-${e.amount}-${e.frequency}`;
+        if (!seenVendorRecurring.has(key)) {
+          byVendorThisMonth[vendorKey] = (byVendorThisMonth[vendorKey] || 0) + amountInDollars;
+          seenVendorRecurring.add(key);
+        }
+      } else {
+        byVendorThisMonth[vendorKey] = (byVendorThisMonth[vendorKey] || 0) + amountInDollars;
+      }
+    }
 
-    // This year's expenses
-    const thisYearExpenses = allExpenses.filter(
-      (e: any) => new Date(e.expenseDate) >= thisYear
-    );
-    const thisYearTotal = thisYearExpenses.reduce((sum: number, e: any) => sum + e.amount, 0);
-
-    // Recurring expenses total (monthly cost)
-    const recurringExpenses = allExpenses.filter((e: any) => e.isRecurring && e.status !== "CANCELLED");
-    const monthlyRecurring = recurringExpenses
-      .filter((e: any) => e.frequency === "monthly")
-      .reduce((sum: number, e: any) => sum + e.amount, 0);
-    const yearlyRecurring = recurringExpenses
-      .filter((e: any) => e.frequency === "yearly")
-      .reduce((sum: number, e: any) => sum + e.amount, 0);
-    const totalMonthlyRecurring = monthlyRecurring + Math.round(yearlyRecurring / 12);
-
-    // Expenses by category (this month)
-    const byCategoryThisMonth = thisMonthExpenses.reduce(
-      (acc: Record<string, number>, e: any) => {
-        acc[e.category] = (acc[e.category] || 0) + e.amount;
-        return acc;
-      },
-      {}
-    );
-
-    // Expenses by vendor (this month)
-    const byVendorThisMonth = thisMonthExpenses.reduce(
-      (acc: Record<string, number>, e: any) => {
-        const vendorKey = e.vendor || "Unknown";
-        acc[vendorKey] = (acc[vendorKey] || 0) + e.amount;
-        return acc;
-      },
-      {}
-    );
-
-    // Monthly trend (last 6 months)
+    // Monthly trend (last 6 months) - properly calculated
     const monthlyTrend = [];
     for (let i = 5; i >= 0; i--) {
-      const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+      const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+      const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
 
-      const monthExpenses = allExpenses.filter(
-        (e: any) => new Date(e.expenseDate) >= monthStart && new Date(e.expenseDate) < monthEnd
-      );
+      const monthCalc = calculateExpenses(expenseItems, monthStart, monthEnd);
 
       monthlyTrend.push({
         month: monthStart.toLocaleDateString("en-US", { month: "short", year: "numeric" }),
-        total: monthExpenses.reduce((sum: number, e: any) => sum + e.amount, 0),
-        count: monthExpenses.length,
+        total: monthCalc.total,
+        count: allExpenses.filter(
+          (e: any) => new Date(e.expenseDate) >= monthStart && new Date(e.expenseDate) <= monthEnd
+        ).length,
       });
     }
 
-    // Top vendors by spend
+    // Top vendors by spend (avoid double-counting recurring) - Return in DOLLARS
     const vendorTotals: Record<string, number> = {};
-    allExpenses.forEach((e: any) => {
+    const seenVendorRecurringAll = new Set<string>();
+    
+    for (const e of allExpenses) {
       const vendor = e.vendor || "Unknown";
-      vendorTotals[vendor] = (vendorTotals[vendor] || 0) + e.amount;
-    });
+      const amountInDollars = Number(e.amount) / 100; // Convert cents to dollars
+      
+      if (e.isRecurring) {
+        const key = `${vendor}-${e.amount}-${e.frequency}`;
+        if (!seenVendorRecurringAll.has(key)) {
+          vendorTotals[vendor] = (vendorTotals[vendor] || 0) + amountInDollars;
+          seenVendorRecurringAll.add(key);
+        }
+      } else {
+        vendorTotals[vendor] = (vendorTotals[vendor] || 0) + amountInDollars;
+      }
+    }
+    
     const topVendors = Object.entries(vendorTotals)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([vendor, amount]) => ({ vendor, amount }));
 
-    // Category totals (all time)
+    // Category totals (all time) - avoid double-counting recurring - Return in DOLLARS
     const categoryTotals: Record<string, number> = {};
-    allExpenses.forEach((e: any) => {
-      categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
-    });
+    const seenCategoryRecurring = new Set<string>();
+    
+    for (const e of allExpenses) {
+      const amountInDollars = Number(e.amount) / 100; // Convert cents to dollars
+      
+      if (e.isRecurring) {
+        const key = `${e.category}-${e.amount}-${e.frequency}`;
+        if (!seenCategoryRecurring.has(key)) {
+          categoryTotals[e.category] = (categoryTotals[e.category] || 0) + amountInDollars;
+          seenCategoryRecurring.add(key);
+        }
+      } else {
+        categoryTotals[e.category] = (categoryTotals[e.category] || 0) + amountInDollars;
+      }
+    }
+    
     const categoryBreakdown = Object.entries(categoryTotals)
       .sort((a, b) => b[1] - a[1])
       .map(([category, amount]) => ({ category, amount }));

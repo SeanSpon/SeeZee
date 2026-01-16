@@ -60,20 +60,33 @@ export default async function AdminDashboardPage() {
     ["DRAFT", "SENT", "OVERDUE"].includes(inv.status)
   ).length;
 
-  // Fetch expenses for this month to calculate net profit
+  // Fetch expenses for this month to calculate net profit (PROPERLY)
   const { db } = await import("@/server/db");
+  const { calculateCurrentMonthExpenses } = await import("@/lib/finance/expense-calculator");
+  
   const now = new Date();
   const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   
-  const thisMonthExpenses = await db.businessExpense.findMany({
-    where: {
-      expenseDate: {
-        gte: thisMonth,
-      },
+  const allExpenses = await db.businessExpense.findMany({
+    select: {
+      amount: true,
+      isRecurring: true,
+      frequency: true,
+      expenseDate: true,
     },
   });
 
-  const totalExpenses = thisMonthExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  // Map to calculation format
+  const expenseItems = allExpenses.map((exp) => ({
+    amount: Number(exp.amount),
+    isRecurring: exp.isRecurring,
+    frequency: exp.frequency,
+    expenseDate: exp.expenseDate,
+  }));
+
+  // Calculate this month's expenses properly (handles recurring vs one-time)
+  const thisMonthExpenseCalc = calculateCurrentMonthExpenses(expenseItems);
+  const totalExpenses = thisMonthExpenseCalc.total; // Already in cents
   
   // Calculate this month's revenue
   const thisMonthRevenue = paidInvoices

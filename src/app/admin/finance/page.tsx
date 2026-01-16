@@ -7,6 +7,11 @@ import { db } from "@/server/db";
 import { FinanceOverview } from "@/components/admin/finance/FinanceOverview";
 import { getCurrentUser } from "@/lib/auth/requireRole";
 import { redirect } from "next/navigation";
+import {
+  calculateTotalExpenses,
+  calculateCurrentMonthExpenses,
+  calculateMonthlyExpenses,
+} from "@/lib/finance/expense-calculator";
 
 export const dynamic = "force-dynamic";
 
@@ -125,19 +130,25 @@ export default async function FinancePage() {
     0
   );
 
-  // Expense calculations
-  const thisMonthExpenses = expenses
-    .filter(exp => new Date(exp.expenseDate) >= thisMonth)
-    .reduce((sum, exp) => sum + Number(exp.amount), 0);
-  
-  const lastMonthExpenses = expenses
-    .filter(exp => 
-      new Date(exp.expenseDate) >= lastMonth && 
-      new Date(exp.expenseDate) < thisMonth
-    )
-    .reduce((sum, exp) => sum + Number(exp.amount), 0);
-  
-  const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  // Expense calculations - PROPERLY handles recurring vs one-time
+  const expenseItems = expenses.map((exp) => ({
+    amount: Number(exp.amount),
+    isRecurring: exp.isRecurring,
+    frequency: exp.frequency,
+    expenseDate: exp.expenseDate,
+  }));
+
+  const thisMonthExpenseCalc = calculateCurrentMonthExpenses(expenseItems);
+  const lastMonthExpenseCalc = calculateMonthlyExpenses(
+    expenseItems,
+    lastMonth.getFullYear(),
+    lastMonth.getMonth()
+  );
+  const totalExpenseCalc = calculateTotalExpenses(expenseItems);
+
+  const thisMonthExpenses = thisMonthExpenseCalc.total; // In cents
+  const lastMonthExpenses = lastMonthExpenseCalc.total; // In cents
+  const totalExpenses = totalExpenseCalc.total; // In cents
 
   // Net profit calculations (convert cents to dollars)
   const thisMonthNetProfit = thisMonthRevenue - (thisMonthExpenses / 100);
@@ -146,6 +157,9 @@ export default async function FinancePage() {
 
   // Available funds = total revenue - total expenses - outstanding amounts that need to be paid
   const availableFunds = totalRevenue - (totalExpenses / 100);
+
+  // Monthly recurring expense cost
+  const monthlyRecurringExpenseCost = totalExpenseCalc.monthlyRecurringCost; // In cents
 
   // Subscription metrics
   const activeSubscriptions = maintenancePlans.filter(plan => plan.status === "ACTIVE");
