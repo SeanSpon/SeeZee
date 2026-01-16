@@ -168,9 +168,12 @@ export default async function FinancePage() {
     ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
     : 0;
 
-  // Revenue by month for chart (last 6 months)
+  // Revenue and Expenses by month for chart (last 12 months)
   const revenueByMonth = [];
-  for (let i = 5; i >= 0; i--) {
+  const expensesByMonth = [];
+  const revenueVsExpenses = [];
+  
+  for (let i = 11; i >= 0; i--) {
     const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
     
@@ -182,9 +185,30 @@ export default async function FinancePage() {
       )
       .reduce((sum, inv) => sum + Number(inv.total), 0);
 
+    const monthExpenses = expenses
+      .filter(exp => 
+        new Date(exp.expenseDate) >= monthStart && 
+        new Date(exp.expenseDate) < monthEnd
+      )
+      .reduce((sum, exp) => sum + Number(exp.amount), 0) / 100; // Convert cents to dollars
+
+    const monthLabel = monthStart.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
     revenueByMonth.push({
-      month: monthStart.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      month: monthLabel,
       revenue,
+    });
+
+    expensesByMonth.push({
+      month: monthLabel,
+      expenses: monthExpenses,
+    });
+
+    revenueVsExpenses.push({
+      month: monthLabel,
+      revenue,
+      expenses: monthExpenses,
+      profit: revenue - monthExpenses,
     });
   }
 
@@ -208,6 +232,7 @@ export default async function FinancePage() {
     totalPayments: payments.length,
     averagePaymentValue,
     revenueByMonth,
+    revenueVsExpenses, // Combined revenue and expenses data
     // Expense metrics
     thisMonthExpenses: thisMonthExpenses / 100, // Convert cents to dollars
     lastMonthExpenses: lastMonthExpenses / 100,

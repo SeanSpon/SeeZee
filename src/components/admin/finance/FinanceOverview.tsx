@@ -15,6 +15,20 @@ import {
 } from "react-icons/fi";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+} from "recharts";
 
 interface FinanceMetrics {
   totalRevenue: number;
@@ -35,6 +49,7 @@ interface FinanceMetrics {
   totalPayments: number;
   averagePaymentValue: number;
   revenueByMonth: Array<{ month: string; revenue: number }>;
+  revenueVsExpenses: Array<{ month: string; revenue: number; expenses: number; profit: number }>;
   // Expense metrics
   thisMonthExpenses?: number;
   lastMonthExpenses?: number;
@@ -122,6 +137,8 @@ export function FinanceOverview({
   recentExpenses = []
 }: FinanceOverviewProps) {
   const [timeframe, setTimeframe] = useState<"30d" | "month" | "all">("month");
+  const [chartTimeframe, setChartTimeframe] = useState<"3m" | "6m" | "12m">("6m");
+  const [chartType, setChartType] = useState<"line" | "bar" | "area">("area");
 
   // Select revenue based on timeframe
   const displayRevenue = timeframe === "30d" 
@@ -327,42 +344,271 @@ export function FinanceOverview({
         )}
       </div>
 
-      {/* Revenue Chart */}
+      {/* Revenue vs Expenses Chart */}
       <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Revenue Trend</h2>
-        {metrics.revenueByMonth.length > 0 ? (
-          <div className="h-64 flex items-end justify-between gap-2">
-            {metrics.revenueByMonth.map((month, index) => {
-              const maxRevenue = Math.max(...metrics.revenueByMonth.map(m => m.revenue));
-              const height = maxRevenue > 0 ? (month.revenue / maxRevenue) * 100 : 0;
-              const hasRevenue = month.revenue > 0;
-              
-              return (
-                <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                  <div 
-                    className={`w-full rounded-t-lg relative group cursor-pointer transition-all ${
-                      hasRevenue 
-                        ? 'bg-gradient-to-t from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300' 
-                        : 'bg-gray-700/50'
-                    }`}
-                    style={{ 
-                      height: height > 0 ? `${Math.max(height, 5)}%` : '4px',
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-white">Revenue vs Expenses</h2>
+          <div className="flex gap-2">
+            {/* Chart Type Selector */}
+            <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+              <button
+                onClick={() => setChartType("area")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartType === "area" 
+                    ? "bg-emerald-500/20 text-emerald-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Area
+              </button>
+              <button
+                onClick={() => setChartType("line")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartType === "line" 
+                    ? "bg-emerald-500/20 text-emerald-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Line
+              </button>
+              <button
+                onClick={() => setChartType("bar")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartType === "bar" 
+                    ? "bg-emerald-500/20 text-emerald-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Bar
+              </button>
+            </div>
+            
+            {/* Timeline Selector */}
+            <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+              <button
+                onClick={() => setChartTimeframe("3m")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartTimeframe === "3m" 
+                    ? "bg-blue-500/20 text-blue-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                3M
+              </button>
+              <button
+                onClick={() => setChartTimeframe("6m")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartTimeframe === "6m" 
+                    ? "bg-blue-500/20 text-blue-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                6M
+              </button>
+              <button
+                onClick={() => setChartTimeframe("12m")}
+                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                  chartTimeframe === "12m" 
+                    ? "bg-blue-500/20 text-blue-400" 
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                12M
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {metrics.revenueVsExpenses.length > 0 ? (
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              {chartType === "area" ? (
+                <AreaChart 
+                  data={metrics.revenueVsExpenses.slice(
+                    chartTimeframe === "3m" ? -3 : chartTimeframe === "6m" ? -6 : 0
+                  )}
+                >
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                  />
+                  <YAxis 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{ 
+                      backgroundColor: '#1e293b', 
+                      border: '1px solid #334155', 
+                      borderRadius: '8px',
+                      padding: '12px'
                     }}
-                  >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
-                      {formatCurrency(month.revenue)}
-                    </div>
-                  </div>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">{month.month}</span>
-                </div>
-              );
-            })}
+                    labelStyle={{ color: '#e2e8f0', fontWeight: 'bold', marginBottom: '8px' }}
+                    formatter={(value: number, name: string) => {
+                      const label = name === 'revenue' ? 'Revenue' : 
+                                   name === 'expenses' ? 'Expenses' : 'Net Profit';
+                      return [formatCurrency(value), label];
+                    }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => {
+                      return value === 'revenue' ? 'Revenue' : 
+                             value === 'expenses' ? 'Expenses' : 'Net Profit';
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#10b981" 
+                    strokeWidth={2}
+                    fill="url(#colorRevenue)"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="expenses" 
+                    stroke="#ef4444" 
+                    strokeWidth={2}
+                    fill="url(#colorExpenses)"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="profit" 
+                    stroke="#8b5cf6" 
+                    strokeWidth={2}
+                    fill="url(#colorProfit)"
+                  />
+                </AreaChart>
+              ) : chartType === "line" ? (
+                <LineChart 
+                  data={metrics.revenueVsExpenses.slice(
+                    chartTimeframe === "3m" ? -3 : chartTimeframe === "6m" ? -6 : 0
+                  )}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                  />
+                  <YAxis 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{ 
+                      backgroundColor: '#1e293b', 
+                      border: '1px solid #334155', 
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                    labelStyle={{ color: '#e2e8f0', fontWeight: 'bold', marginBottom: '8px' }}
+                    formatter={(value: number, name: string) => {
+                      const label = name === 'revenue' ? 'Revenue' : 
+                                   name === 'expenses' ? 'Expenses' : 'Net Profit';
+                      return [formatCurrency(value), label];
+                    }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => {
+                      return value === 'revenue' ? 'Revenue' : 
+                             value === 'expenses' ? 'Expenses' : 'Net Profit';
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#10b981" 
+                    strokeWidth={3}
+                    dot={{ fill: '#10b981', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="expenses" 
+                    stroke="#ef4444" 
+                    strokeWidth={3}
+                    dot={{ fill: '#ef4444', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="profit" 
+                    stroke="#8b5cf6" 
+                    strokeWidth={3}
+                    dot={{ fill: '#8b5cf6', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              ) : (
+                <BarChart 
+                  data={metrics.revenueVsExpenses.slice(
+                    chartTimeframe === "3m" ? -3 : chartTimeframe === "6m" ? -6 : 0
+                  )}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                  />
+                  <YAxis 
+                    stroke="#94a3b8" 
+                    style={{ fontSize: '12px' }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{ 
+                      backgroundColor: '#1e293b', 
+                      border: '1px solid #334155', 
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                    labelStyle={{ color: '#e2e8f0', fontWeight: 'bold', marginBottom: '8px' }}
+                    formatter={(value: number, name: string) => {
+                      const label = name === 'revenue' ? 'Revenue' : 
+                                   name === 'expenses' ? 'Expenses' : 'Net Profit';
+                      return [formatCurrency(value), label];
+                    }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => {
+                      return value === 'revenue' ? 'Revenue' : 
+                             value === 'expenses' ? 'Expenses' : 'Net Profit';
+                    }}
+                  />
+                  <Bar dataKey="revenue" fill="#10b981" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="expenses" fill="#ef4444" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="profit" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              )}
+            </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-64 flex items-center justify-center text-gray-400">
+          <div className="h-96 flex items-center justify-center text-gray-400">
             <div className="text-center">
               <FiTrendingUp className="w-12 h-12 mx-auto mb-3 text-gray-600" />
-              <p className="text-sm">No revenue data yet</p>
+              <p className="text-sm">No financial data yet</p>
               <p className="text-xs text-gray-500 mt-1">Create and mark invoices as paid to see trends</p>
             </div>
           </div>
