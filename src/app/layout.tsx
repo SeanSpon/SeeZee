@@ -51,10 +51,10 @@ export const metadata: Metadata = {
     '48 hour website',
     'fast website development',
   ],
-  authors: [{ name: 'Sean & Zach', url: 'https://see-zee.com' }],
+  authors: [{ name: 'Sean & Zach', url: 'https://seezeestudios.com' }],
   creator: 'SeeZee Studio',
   publisher: 'SeeZee Studio',
-  metadataBase: new URL('https://see-zee.com'),
+  metadataBase: new URL('https://seezeestudios.com'),
   icons: {
     icon: [
       { url: '/favicon.ico', type: 'image/x-icon' },
@@ -81,11 +81,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'SeeZee Studio | Professional Web Development Louisville KY',
     description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps for businesses, nonprofits, and community organizations.',
-    url: 'https://see-zee.com',
+    url: 'https://seezeestudios.com',
     siteName: 'SeeZee Studio',
     images: [
       {
-        url: 'https://see-zee.com/opengraph-image.png',
+        url: 'https://seezeestudios.com/opengraph-image.png',
         width: 1200,
         height: 630,
         alt: 'SeeZee Studio - Professional Web Development Louisville KY',
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'SeeZee Studio | Professional Web Developer Louisville KY',
     description: 'Professional websites and apps built fast in Louisville, KY. Expert web development for businesses and nonprofits.',
-    images: ['https://see-zee.com/opengraph-image.png'],
+    images: ['https://seezeestudios.com/opengraph-image.png'],
     creator: '@seezee_studio',
   },
   robots: {
@@ -133,13 +133,13 @@ export default function RootLayout({
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': 'https://see-zee.com/#organization',
+        '@id': 'https://seezeestudios.com/#organization',
         name: 'SeeZee Studio',
         alternateName: 'SeeZee',
-        url: 'https://see-zee.com',
+        url: 'https://seezeestudios.com',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://see-zee.com/icon.png',
+          url: 'https://seezeestudios.com/icon.png',
           width: 512,
           height: 512,
         },
@@ -190,27 +190,27 @@ export default function RootLayout({
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://see-zee.com/#website',
-        url: 'https://see-zee.com',
+        '@id': 'https://seezeestudios.com/#website',
+        url: 'https://seezeestudios.com',
         name: 'SeeZee Studio',
         description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps.',
         publisher: {
-          '@id': 'https://see-zee.com/#organization',
+          '@id': 'https://seezeestudios.com/#organization',
         },
         potentialAction: {
           '@type': 'SearchAction',
           target: {
             '@type': 'EntryPoint',
-            urlTemplate: 'https://see-zee.com/?s={search_term_string}',
+            urlTemplate: 'https://seezeestudios.com/?s={search_term_string}',
           },
           'query-input': 'required name=search_term_string',
         },
       },
       {
         '@type': 'LocalBusiness',
-        '@id': 'https://see-zee.com/#localbusiness',
+        '@id': 'https://seezeestudios.com/#localbusiness',
         name: 'SeeZee Studio',
-        image: 'https://see-zee.com/opengraph-image.png',
+        image: 'https://seezeestudios.com/opengraph-image.png',
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Louisville',
@@ -218,7 +218,7 @@ export default function RootLayout({
           addressCountry: 'US',
         },
         priceRange: '$$',
-        url: 'https://see-zee.com',
+        url: 'https://seezeestudios.com',
         telephone: '',
         openingHoursSpecification: {
           '@type': 'OpeningHoursSpecification',

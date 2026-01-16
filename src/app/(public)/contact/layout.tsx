@@ -27,7 +27,7 @@ export default function ContactLayout({
     mainEntity: {
       '@type': 'Organization',
       name: 'SeeZee Studio',
-      url: 'https://see-zee.com',
+      url: 'https://seezeestudios.com',
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'Customer Service',

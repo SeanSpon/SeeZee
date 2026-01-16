@@ -32,7 +32,7 @@ export default function StartLayout({
       '@type': 'OrderAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://see-zee.com/start',
+        urlTemplate: 'https://seezeestudios.com/start',
         actionPlatform: [
           'http://schema.org/DesktopWebPlatform',
           'http://schema.org/MobileWebPlatform',

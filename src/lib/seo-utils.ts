@@ -102,7 +102,7 @@ export function generateArticleSchema(article: {
       name: 'SeeZee Studio',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://see-zee.com/favicon.svg',
+        url: 'https://seezeestudios.com/favicon.svg',
       },
     },
     mainEntityOfPage: {
@@ -273,8 +273,8 @@ export function isInternalUrl(url: string): boolean {
   try {
     const urlObj = new URL(url)
     return (
-      urlObj.hostname === 'see-zee.com' ||
-      urlObj.hostname === 'www.see-zee.com' ||
+      urlObj.hostname === 'seezeestudios.com' ||
+      urlObj.hostname === 'www.seezeestudios.com' ||
       urlObj.hostname === 'localhost'
     )
   } catch {

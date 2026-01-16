@@ -27,8 +27,8 @@ export default function AboutLayout({
     mainEntity: {
       '@type': 'Organization',
       name: 'SeeZee Studio',
-      url: 'https://see-zee.com',
-      logo: 'https://see-zee.com/favicon.svg',
+      url: 'https://seezeestudios.com',
+      logo: 'https://seezeestudios.com/favicon.svg',
       description: 'Custom web and app development for small businesses',
       foundingDate: '2023',
       founders: [

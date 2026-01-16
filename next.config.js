@@ -121,8 +121,21 @@ const nextConfig = {
       // Redirect www to apex
       {
         source: '/:path*',
+        has: [{ type: 'host', value: 'www.seezeestudios.com' }],
+        destination: 'https://seezeestudios.com/:path*',
+        permanent: true,
+      },
+      // Redirect old domain to new domain
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'see-zee.com' }],
+        destination: 'https://seezeestudios.com/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
         has: [{ type: 'host', value: 'www.see-zee.com' }],
-        destination: 'https://see-zee.com/:path*',
+        destination: 'https://seezeestudios.com/:path*',
         permanent: true,
       },
       // Removed admin dashboard redirect - now goes to main dashboard page
