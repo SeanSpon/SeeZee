@@ -38,7 +38,7 @@ const caseStudies: CaseStudy[] = [
     slug: 'big-red-bus',
     thumbnail: {
       type: 'gradient',
-      gradient: 'linear-gradient(135deg, #0a1128 0%, #5c1a1a 100%)',
+      gradient: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%)',
       icon: '🚌'
     }
   },
@@ -53,7 +53,7 @@ const caseStudies: CaseStudy[] = [
     slug: 'a-vision-for-you',
     thumbnail: {
       type: 'gradient',
-      gradient: 'linear-gradient(135deg, #7f3d8b 0%, #5c1a5c 100%)',
+      gradient: 'linear-gradient(135deg, #4c5f7a 0%, #3d5270 100%)',
       icon: '💜'
     }
   }
@@ -63,7 +63,7 @@ export default function CaseStudiesPage() {
   return (
     <div className="w-full bg-[#0a1128]">
       {/* Hero Section */}
-      <section className="bg-[#0a1128] py-20 lg:py-28 relative overflow-hidden">
+      <section className="bg-gradient-to-b from-[#0a1128] to-[#0f1825] py-20 lg:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-5"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <ScrollAnimation>
@@ -109,7 +109,7 @@ export default function CaseStudiesPage() {
                     whileHover={study.status === 'live' ? { y: -8 } : {}}
                     className={`bg-white/5 border border-white/10 rounded-[20px] overflow-hidden transition-all duration-300 ${
                       study.status === 'live' 
-                        ? 'hover:shadow-2xl hover:border-white/20' 
+                        ? 'hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-400/30' 
                         : 'opacity-90'
                     }`}
                   >
@@ -150,7 +150,7 @@ export default function CaseStudiesPage() {
                         {study.tags.map((tag, idx) => (
                           <span 
                             key={idx}
-                            className="px-3 py-1 text-xs border border-[#22d3ee] text-[#22d3ee] rounded-full"
+                            className="px-3 py-1 text-xs border border-blue-400/40 text-blue-300 rounded-full bg-blue-500/10"
                           >
                             {tag}
                           </span>
@@ -164,7 +164,7 @@ export default function CaseStudiesPage() {
                       </h2>
 
                       {/* Subtitle */}
-                      <p className="text-lg text-[#22d3ee] mb-4">
+                      <p className="text-lg text-gray-300 mb-4">
                         {study.subtitle}
                       </p>
 
@@ -189,7 +189,7 @@ export default function CaseStudiesPage() {
                       {study.status === 'live' && (
                         <Link
                           href={`/case-studies/${study.slug}`}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#ef4444] hover:bg-[#dc2626] text-white rounded-lg transition-all duration-300 font-semibold w-full justify-center transform hover:scale-105"
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 font-semibold w-full justify-center transform hover:scale-105 shadow-lg hover:shadow-blue-600/30"
                         >
                           Read Case Study
                           <FiArrowRight className="w-4 h-4" />
@@ -235,7 +235,7 @@ export default function CaseStudiesPage() {
               </p>
               <Link
                 href="/start"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#ef4444] hover:bg-[#dc2626] text-white rounded-lg transition-all duration-300 font-semibold text-lg shadow-lg transform hover:scale-105"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-blue-600/40 transform hover:scale-105"
               >
                 Start Your Project
                 <FiArrowRight className="w-5 h-5" />
