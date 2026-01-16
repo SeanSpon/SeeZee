@@ -157,6 +157,129 @@ export async function deleteUser(userId: string) {
   await requireRole([ROLE.CEO]); // Only CEO can delete users
   
   try {
+    // Check if user exists
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: {
+        assignedProjects: true,
+        projectRequests: true,
+        activities: true,
+        leads: true,
+        organizations: true,
+      },
+    });
+
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    // Check if user has critical data that needs to be handled
+    if (user.assignedProjects && user.assignedProjects.length > 0) {
+      // Unassign from projects instead of blocking deletion
+      await db.project.updateMany({
+        where: { assigneeId: userId },
+        data: { assigneeId: null },
+      });
+    }
+
+    // Delete related data that doesn't cascade automatically
+    // Activities - reassign to system or delete
+    await db.activity.deleteMany({
+      where: { userId },
+    });
+
+    // Leads - reassign to null or keep orphaned (depends on schema)
+    await db.lead.updateMany({
+      where: { sourceUserId: userId },
+      data: { sourceUserId: null },
+    });
+
+    // Project requests - keep but orphan
+    await db.projectRequest.updateMany({
+      where: { userId },
+      data: { userId: null },
+    });
+
+    // Remove from organization memberships
+    await db.organizationMember.deleteMany({
+      where: { userId },
+    });
+
+    // Delete assignments created by user
+    await db.assignment.deleteMany({
+      where: { createdById: userId },
+    });
+
+    // Delete channel memberships
+    await db.channelMember.deleteMany({
+      where: { userId },
+    });
+
+    // Delete chat messages
+    await db.chatMessage.deleteMany({
+      where: { userId },
+    });
+
+    // Delete completions
+    await db.completion.deleteMany({
+      where: { userId },
+    });
+
+    // Unassign todos
+    await db.todo.updateMany({
+      where: { assigneeId: userId },
+      data: { assigneeId: null },
+    });
+
+    // Delete todos created by user
+    await db.todo.updateMany({
+      where: { createdById: userId },
+      data: { createdById: null },
+    });
+
+    // Delete resources created
+    await db.resource.deleteMany({
+      where: { createdById: userId },
+    });
+
+    // Delete signatures
+    await db.signature.deleteMany({
+      where: { userId },
+    });
+
+    // Delete staff invite codes
+    await db.staffInviteCode.deleteMany({
+      where: { createdById: userId },
+    });
+
+    // Delete system logs
+    await db.systemLog.deleteMany({
+      where: { userId },
+    });
+
+    // Delete trainings created
+    await db.training.updateMany({
+      where: { createdById: userId },
+      data: { createdById: null },
+    });
+
+    // Delete revenue splits
+    await db.revenueSplit.deleteMany({
+      where: { createdById: userId },
+    });
+
+    // Delete client tasks
+    await db.clientTask.updateMany({
+      where: { createdById: userId },
+      data: { createdById: null },
+    });
+
+    // These should cascade automatically but double-check:
+    // - notifications (has onDelete: Cascade)
+    // - sessions (has onDelete: Cascade)
+    // - accounts (has onDelete: Cascade)
+
+    // Finally, delete the user
     await db.user.delete({
       where: { id: userId },
     });
@@ -166,8 +289,9 @@ export async function deleteUser(userId: string) {
     }
     
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to delete user:", error);
-    return { success: false, error: "Failed to delete user" };
+    const errorMessage = error?.message || "Failed to delete user";
+    return { success: false, error: errorMessage };
   }
 }

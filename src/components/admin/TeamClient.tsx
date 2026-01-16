@@ -94,6 +94,7 @@ export function TeamClient({ users }: TeamClientProps) {
   const [editingUser, setEditingUser] = useState<TeamUser | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string>("");
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("FRONTEND");
@@ -121,14 +122,20 @@ export function TeamClient({ users }: TeamClientProps) {
   const handleDelete = async (userId: string) => {
     if (deleteConfirm !== userId) {
       setDeleteConfirm(userId);
+      setDeleteError("");
       return;
     }
 
     const result = await deleteUser(userId);
     if (result.success) {
       setDeleteConfirm(null);
+      setDeleteError("");
       setOpenMenuId(null);
       router.refresh();
+    } else {
+      setDeleteError(result.error || "Failed to delete user");
+      // Auto-hide error after 5 seconds
+      setTimeout(() => setDeleteError(""), 5000);
     }
   };
 
@@ -270,6 +277,29 @@ export function TeamClient({ users }: TeamClientProps) {
           </button>
         </div>
       </header>
+
+      {/* Delete Error Notification */}
+      {deleteError && (
+        <div className="fixed top-4 right-4 z-50 max-w-md animate-in slide-in-from-top-2">
+          <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4 backdrop-blur-xl shadow-2xl">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-5 h-5 text-red-400" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-semibold text-red-200 mb-1">Failed to Delete User</h4>
+                <p className="text-xs text-red-300/80">{deleteError}</p>
+              </div>
+              <button
+                onClick={() => setDeleteError("")}
+                className="text-red-400/60 hover:text-red-300 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
