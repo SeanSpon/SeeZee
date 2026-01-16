@@ -45,6 +45,7 @@ export default async function InvoicesPage() {
               name: true,
             },
           },
+          items: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -54,31 +55,41 @@ export default async function InvoicesPage() {
 
   // Convert Decimal fields to numbers for client component serialization
   // Explicitly construct the object to avoid serialization issues with Prisma Decimal types
-  const invoices = rawInvoices.map((invoice) => ({
-    id: invoice.id,
-    number: invoice.number,
-    status: invoice.status,
-    amount: Number(invoice.amount),
-    tax: Number(invoice.tax || 0),
-    total: Number(invoice.total),
-    currency: invoice.currency,
-    description: invoice.description,
-    title: invoice.title,
-    createdAt: invoice.createdAt.toISOString(),
-    updatedAt: invoice.updatedAt.toISOString(),
-    dueDate: invoice.dueDate.toISOString(),
-    paidAt: invoice.paidAt?.toISOString() || null,
-    sentAt: invoice.sentAt?.toISOString() || null,
-    organizationId: invoice.organizationId,
-    projectId: invoice.projectId,
-    project: invoice.project,
-    stripeInvoiceId: invoice.stripeInvoiceId,
-    invoiceType: invoice.invoiceType,
-    isFirstInvoice: invoice.isFirstInvoice,
-    leadId: invoice.leadId,
-    customerApprovedAt: invoice.customerApprovedAt?.toISOString() || null,
-    adminApprovedAt: invoice.adminApprovedAt?.toISOString() || null,
-  }));
+  const invoices = rawInvoices.map((invoice) => {
+    // Calculate subtotal from items
+    const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const total = Number(invoice.total);
+    const tax = total - subtotal;
+    
+    // Extract metadata fields if they exist
+    const metadata = invoice.metadata as any || {};
+    
+    return {
+      id: invoice.id,
+      number: invoice.number,
+      status: invoice.status,
+      amount: subtotal,
+      tax: tax,
+      total: total,
+      currency: invoice.currency,
+      description: invoice.description,
+      title: invoice.title,
+      createdAt: invoice.createdAt.toISOString(),
+      updatedAt: invoice.updatedAt.toISOString(),
+      dueDate: invoice.dueDate.toISOString(),
+      paidAt: invoice.paidAt?.toISOString() || null,
+      sentAt: invoice.sentAt?.toISOString() || null,
+      organizationId: invoice.organizationId,
+      projectId: invoice.projectId,
+      project: invoice.project,
+      stripeInvoiceId: invoice.stripeInvoiceId,
+      invoiceType: metadata.invoiceType || null,
+      isFirstInvoice: metadata.isFirstInvoice || false,
+      leadId: metadata.leadId || null,
+      customerApprovedAt: metadata.customerApprovedAt || null,
+      adminApprovedAt: metadata.adminApprovedAt || null,
+    };
+  });
 
   // Calculate stats
   const totalPaid = invoices

@@ -107,13 +107,14 @@ export async function POST(req: NextRequest) {
         number: invoiceNumber,
         title: `${getPackage(packageId).title} Package - Deposit Invoice`,
         description: `Deposit invoice for ${getPackage(packageId).title} package project. Total project cost: $${(invoiceTotals.total / 100).toFixed(2)}. Deposit due: $${(invoiceTotals.deposit / 100).toFixed(2)}.`,
-        amount: invoiceTotals.deposit / 100, // Convert cents to dollars
         total: invoiceTotals.deposit / 100,
         currency: "USD",
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         status: "DRAFT",
-        invoiceType: "deposit",
-        leadId: leadId,
+        metadata: {
+          invoiceType: "deposit",
+          leadId: leadId
+        },
         organizationId: organization.id,
         items: {
           create: {
@@ -123,7 +124,7 @@ export async function POST(req: NextRequest) {
             amount: invoiceTotals.deposit / 100,
           },
         },
-      } as any,
+      },
       include: {
         items: true,
         organization: true,
@@ -137,7 +138,6 @@ export async function POST(req: NextRequest) {
         number: invoice.number,
         title: invoice.title,
         description: invoice.description,
-        amount: invoice.amount,
         total: invoice.total,
         deposit: invoiceTotals.deposit / 100,
         remainingBalance: (invoiceTotals.total - invoiceTotals.deposit) / 100,

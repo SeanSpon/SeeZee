@@ -154,8 +154,6 @@ export async function createTestProject(params: CreateTestProjectParams) {
         number: `INV-${Date.now()}-DEP`,
         title: "Project Deposit",
         description: `50% deposit for ${packageType} development project (Test)`,
-        amount: finalDepositAmount,
-        tax: 0,
         total: finalDepositAmount,
         status: InvoiceStatus.PAID,
         organizationId: organization.id,
@@ -163,6 +161,9 @@ export async function createTestProject(params: CreateTestProjectParams) {
         sentAt: new Date(),
         paidAt: new Date(),
         dueDate: new Date(),
+        metadata: {
+          invoiceType: "deposit"
+        },
         items: {
           create: {
             description: `${packageType.charAt(0).toUpperCase() + packageType.slice(1)} Development - Deposit (50%) - TEST`,
@@ -194,13 +195,14 @@ export async function createTestProject(params: CreateTestProjectParams) {
           number: `INV-${Date.now()}-BAL`,
           title: "Project Balance",
           description: `Remaining balance for ${packageType} development project (Test)`,
-          amount: remainingAmount,
-          tax: 0,
           total: remainingAmount,
           status: InvoiceStatus.DRAFT,
           organizationId: organization.id,
           projectId: project.id,
           dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+          metadata: {
+            invoiceType: "final"
+          },
           items: {
             create: {
               description: `${packageType.charAt(0).toUpperCase() + packageType.slice(1)} Development - Final Payment (50%) - TEST`,

@@ -288,6 +288,80 @@ export async function bulkSetFollowUpAction(prospectIds: string[], followUpDate:
   }
 }
 
+export async function bulkRecalculateScoresAction(prospectIds: string[]) {
+  await requireOutreachAccess();
+
+  try {
+    const { calculateLeadScoreDetailed } = await import('@/lib/leads/scoring');
+
+    // Fetch all prospects
+    const prospects = await prisma.prospect.findMany({
+      where: { id: { in: prospectIds } },
+    });
+
+    let updated = 0;
+    let failed = 0;
+    const errors: string[] = [];
+
+    // Recalculate and update each prospect
+    for (const prospect of prospects) {
+      try {
+        const scoreData = calculateLeadScoreDetailed({
+          hasWebsite: prospect.hasWebsite,
+          websiteQuality: prospect.websiteQuality,
+          annualRevenue: prospect.annualRevenue,
+          category: prospect.category,
+          city: prospect.city,
+          state: prospect.state,
+          employeeCount: prospect.employeeCount,
+          email: prospect.email,
+          phone: prospect.phone,
+          emailsSent: 0,
+          convertedAt: prospect.convertedAt,
+          googleRating: prospect.googleRating,
+          googleReviews: prospect.googleReviews,
+        });
+
+        await prisma.prospect.update({
+          where: { id: prospect.id },
+          data: {
+            leadScore: scoreData.total,
+            websiteQualityScore: scoreData.breakdown.websiteScore,
+            revenuePotential: scoreData.breakdown.revenueScore,
+            categoryFit: scoreData.breakdown.categoryScore,
+            locationScore: scoreData.breakdown.locationScore,
+            organizationSize: scoreData.breakdown.sizeScore,
+            googleScore: scoreData.breakdown.googleScore,
+          },
+        });
+
+        updated++;
+      } catch (error) {
+        failed++;
+        errors.push(`Failed to update ${prospect.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
+    revalidatePath('/admin/marketing/prospects');
+
+    return {
+      success: true,
+      processed: updated,
+      failed,
+      errors,
+      message: `Recalculated scores for ${updated} prospect(s)${failed > 0 ? `, ${failed} failed` : ''}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      processed: 0,
+      failed: prospectIds.length,
+      errors: [error instanceof Error ? error.message : 'Unknown error'],
+      message: 'Failed to recalculate scores',
+    };
+  }
+}
+
 export async function exportProspectsAction(prospectIds: string[]) {
   await requireOutreachAccess();
 

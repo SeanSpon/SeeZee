@@ -177,11 +177,10 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
           number: true,
           status: true,
           total: true,
-          amount: true,
-          tax: true,
           dueDate: true,
           paidAt: true,
           createdAt: true,
+          items: true,
         },
       },
       questionnaire: true,
@@ -230,17 +229,24 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     createdBy: t.createdBy,
   }));
 
-  const transformedInvoices = project.invoices.map((invoice) => ({
-    id: invoice.id,
-    number: invoice.number,
-    status: invoice.status,
-    total: invoice.total ? Number(invoice.total) : 0,
-    amount: invoice.amount ? Number(invoice.amount) : 0,
-    tax: invoice.tax ? Number(invoice.tax) : 0,
-    dueDate: invoice.dueDate?.toISOString() || null,
-    paidAt: invoice.paidAt?.toISOString() || null,
-    createdAt: invoice.createdAt?.toISOString() || null,
-  }));
+  const transformedInvoices = project.invoices.map((invoice) => {
+    // Calculate subtotal from items
+    const subtotal = (invoice as any).items?.reduce((sum: number, item: any) => sum + Number(item.amount), 0) || 0;
+    const total = invoice.total ? Number(invoice.total) : 0;
+    const tax = total - subtotal;
+    
+    return {
+      id: invoice.id,
+      number: invoice.number,
+      status: invoice.status,
+      total: total,
+      amount: subtotal,
+      tax: tax,
+      dueDate: invoice.dueDate?.toISOString() || null,
+      paidAt: invoice.paidAt?.toISOString() || null,
+      createdAt: invoice.createdAt?.toISOString() || null,
+    };
+  });
 
   const transformedMessageThreads = project.messageThreads.map((thread) => ({
     id: thread.id,

@@ -116,10 +116,38 @@ export function CEODashboardClient({
   const overdueInvoices = invoices?.filter((i: any) => i?.status === "OVERDUE").length || 0;
   const pendingInvoices = invoices?.filter((i: any) => i?.status === "SENT").length || 0;
   const paidInvoices = invoices?.filter((i: any) => i?.status === "PAID").length || 0;
+  const totalInvoices = invoices?.length || 0;
   
   const activeTasks = (taskStats?.todo || 0) + (taskStats?.inProgress || 0);
   const overdueTasks = taskStats?.overdue || 0;
   const completedTasks = taskStats?.done || 0;
+
+  // Calculate Business Health Metrics
+  // Revenue Health: Based on whether we have revenue and positive trend
+  const revenueHealth = totalRevenue > 0 ? (revenueTrend >= 0 ? 85 : 65) : 30;
+  const revenueStatus = revenueHealth >= 75 ? "Healthy" : revenueHealth >= 50 ? "Fair" : "Needs Attention";
+  const revenueHealthColor = revenueHealth >= 75 ? "emerald" : revenueHealth >= 50 ? "amber" : "red";
+  
+  // Pipeline Health: Based on conversion rate and active leads
+  const pipelineHealth = totalLeadsCount > 0 
+    ? Math.min(conversionRate * 3 + (qualifiedLeadsCount / totalLeadsCount) * 30, 100)
+    : activeProjectsCount > 0 ? 50 : 20;
+  const pipelineStatus = pipelineHealth >= 70 ? "Strong" : pipelineHealth >= 40 ? "Moderate" : "Weak";
+  const pipelineHealthColor = pipelineHealth >= 70 ? "blue" : pipelineHealth >= 40 ? "amber" : "red";
+  
+  // Team Capacity Health: Based on team utilization
+  const capacityHealth = teamUtilization;
+  const capacityStatus = capacityHealth >= 60 ? "Optimal" : capacityHealth >= 30 ? "Moderate" : "Low";
+  const capacityHealthColor = capacityHealth >= 60 && capacityHealth <= 90 ? "purple" : "amber";
+  
+  // Client Satisfaction: Based on invoice payment rate and project completion
+  const invoicePaymentRate = totalInvoices > 0 ? (paidInvoices / totalInvoices) * 100 : 50;
+  const clientSatisfaction = Math.min(
+    invoicePaymentRate * 0.6 + (completedProjectsCount / Math.max(totalProjectsCount, 1)) * 40,
+    100
+  );
+  const satisfactionStatus = clientSatisfaction >= 80 ? "Excellent" : clientSatisfaction >= 60 ? "Good" : "Fair";
+  const satisfactionColor = clientSatisfaction >= 80 ? "amber" : clientSatisfaction >= 60 ? "emerald" : "orange";
 
   // Navigation tabs configuration
   const tabs = [
@@ -842,30 +870,30 @@ export function CEODashboardClient({
             <div className="grid grid-cols-2 gap-4">
               <HealthMetric
                 label="Revenue Status"
-                value="Healthy"
-                percentage={85}
-                color="emerald"
+                value={revenueStatus}
+                percentage={revenueHealth}
+                color={revenueHealthColor}
                 icon={DollarSign}
               />
               <HealthMetric
                 label="Pipeline Status"
-                value="Strong"
-                percentage={75}
-                color="blue"
+                value={pipelineStatus}
+                percentage={pipelineHealth}
+                color={pipelineHealthColor}
                 icon={Activity}
               />
               <HealthMetric
                 label="Team Capacity"
-                value="Optimal"
-                percentage={teamUtilization}
-                color="purple"
+                value={capacityStatus}
+                percentage={capacityHealth}
+                color={capacityHealthColor}
                 icon={Users}
               />
               <HealthMetric
                 label="Client Satisfaction"
-                value="Excellent"
-                percentage={92}
-                color="amber"
+                value={satisfactionStatus}
+                percentage={clientSatisfaction}
+                color={satisfactionColor}
                 icon={Star}
               />
             </div>

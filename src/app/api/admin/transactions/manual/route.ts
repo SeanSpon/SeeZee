@@ -53,8 +53,6 @@ export async function POST(req: NextRequest) {
           number: invoiceNumber,
           title: description,
           description: `Manual entry: ${description}`,
-          amount: amountValue,
-          tax: 0,
           total: amountValue,
           currency: "USD",
           status: "PAID",

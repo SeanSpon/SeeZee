@@ -113,7 +113,7 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
           id: true,
           total: true,
           paidAt: true,
-          invoiceType: true,
+          metadata: true,
         },
       },
       projectQuestionnaire: {

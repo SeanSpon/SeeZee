@@ -57,13 +57,19 @@ export async function GET(req: NextRequest) {
           include: {
             organization: { select: { name: true } },
             project: { select: { name: true } },
+            items: true,
           },
           orderBy: { createdAt: "desc" },
         });
 
         csvContent = "ID,Number,Title,Organization,Project,Amount,Tax,Total,Status,Due Date,Sent At,Paid At,Created At\n";
         invoices.forEach((invoice) => {
-          csvContent += `"${invoice.id}","${invoice.number}","${invoice.title}","${invoice.organization.name}","${invoice.project?.name || "N/A"}","${invoice.amount}","${invoice.tax}","${invoice.total}","${invoice.status}","${invoice.dueDate.toISOString()}","${invoice.sentAt?.toISOString() || ""}","${invoice.paidAt?.toISOString() || ""}","${invoice.createdAt.toISOString()}"\n`;
+          // Calculate subtotal from items
+          const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+          const total = Number(invoice.total);
+          const tax = total - subtotal;
+          
+          csvContent += `"${invoice.id}","${invoice.number}","${invoice.title}","${invoice.organization.name}","${invoice.project?.name || "N/A"}","${subtotal}","${tax}","${total}","${invoice.status}","${invoice.dueDate.toISOString()}","${invoice.sentAt?.toISOString() || ""}","${invoice.paidAt?.toISOString() || ""}","${invoice.createdAt.toISOString()}"\n`;
         });
 
         filename = `invoices-export-${new Date().toISOString().split("T")[0]}.csv`;

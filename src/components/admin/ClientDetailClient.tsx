@@ -3,10 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Building, Mail, Phone, DollarSign, Folder, FileText, Users, Calendar, MapPin, Globe, TrendingUp, Check, X, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, Building, Mail, Phone, DollarSign, Folder, FileText, Users, Calendar, MapPin, Globe, TrendingUp, Check, X, AlertCircle, Loader2, Clock } from "lucide-react";
 import Link from "next/link";
 import type { CurrentUser } from "@/lib/auth/requireRole";
 import { useDialogContext } from "@/lib/dialog";
+import { ClientHoursManager } from "@/components/admin/ClientHoursManager";
 
 interface ClientDetailClientProps {
   clientData: {
@@ -235,6 +236,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             <TabsTrigger value="projects">Projects ({totalProjects})</TabsTrigger>
             <TabsTrigger value="invoices">Invoices ({totalInvoices})</TabsTrigger>
             <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+            <TabsTrigger value="hours">Hours & Packages</TabsTrigger>
             <TabsTrigger value="contacts">Contacts</TabsTrigger>
           </TabsList>
 
@@ -642,6 +644,18 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                 </div>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="hours" className="mt-6">
+            <ClientHoursManager
+              clientId={clientData.id}
+              clientName={clientName}
+              projects={projects.map((p: any) => ({
+                id: p.id,
+                name: p.name,
+                status: p.status,
+              }))}
+            />
           </TabsContent>
 
           <TabsContent value="contacts" className="mt-6">

@@ -32,17 +32,27 @@ export default async function AdminProjectsPage() {
   const clients = clientsResult.success ? clientsResult.clients : [];
   const admins = adminsResult.success ? adminsResult.admins : [];
 
-  const rows: ProjectRow[] = projects.map((project: any) => ({
-    id: project.id,
-    name: project.name,
-    client: project.organization?.name ?? project.lead?.company ?? "Unassigned",
-    status: String(project.status ?? ""),
-    budget: project.budget != null ? Number(project.budget) : null,
-    dueDate: project.endDate ? new Date(project.endDate).toISOString() : null,
-    assignee:
-      project.assignee?.name ?? project.assignee?.email ?? project.assignedToRole ?? "Unassigned",
-    progress: project.progress ?? 0,
-  }));
+  const rows: ProjectRow[] = projects.map((project: any) => {
+    // Calculate progress from milestones if available
+    let calculatedProgress = project.progress ?? 0;
+    
+    if (project.milestones && project.milestones.length > 0) {
+      const completedCount = project.milestones.filter((m: any) => m.completed).length;
+      calculatedProgress = Math.round((completedCount / project.milestones.length) * 100);
+    }
+    
+    return {
+      id: project.id,
+      name: project.name,
+      client: project.organization?.name ?? project.lead?.company ?? "Unassigned",
+      status: String(project.status ?? ""),
+      budget: project.budget != null ? Number(project.budget) : null,
+      dueDate: project.endDate ? new Date(project.endDate).toISOString() : null,
+      assignee:
+        project.assignee?.name ?? project.assignee?.email ?? "Unassigned",
+      progress: calculatedProgress,
+    };
+  });
 
   const totalBudget = rows.reduce((sum, project) => sum + (project.budget ?? 0), 0);
   const activeProjects = rows.filter(

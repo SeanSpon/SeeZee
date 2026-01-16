@@ -284,8 +284,6 @@ async function handleCheckoutSessionCompleted(
           number: invoiceNumber,
           title: 'Project Payment',
           description: `Full payment for ${selectedService} project`,
-          amount: paymentAmount,
-          tax: new Prisma.Decimal(0),
           total: paymentAmount,
           status: InvoiceStatus.PAID,
           organizationId: organizationId,
@@ -294,6 +292,9 @@ async function handleCheckoutSessionCompleted(
           sentAt: new Date(),
           paidAt: new Date(),
           dueDate: new Date(),
+          metadata: {
+            invoiceType: "full"
+          },
           items: {
             create: {
               description: `${selectedService} - Full Payment`,

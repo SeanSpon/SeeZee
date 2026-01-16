@@ -1,72 +1,95 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
-import { db } from "@/server/db";
-import { isStaffRole } from "@/lib/role";
-import type { EmailCategory } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth/requireRole";
+import { ROLE } from "@/lib/role";
+import { EmailCategory } from "@prisma/client";
 
-export async function GET(request: NextRequest) {
+/**
+ * GET /api/templates
+ * List all email templates
+ */
+export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const user = await db.user.findUnique({
-      where: { id: session.user.id },
-      select: { role: true },
-    });
-
-    if (!user || !isStaffRole(user.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const searchParams = request.nextUrl.searchParams;
+    const { searchParams } = new URL(req.url);
     const category = searchParams.get("category") as EmailCategory | null;
+    const activeOnly = searchParams.get("active") === "true";
 
-    const templates = await db.emailTemplate.findMany({
-      where: category ? { category, active: true } : { active: true },
-      orderBy: { name: "asc" },
+    const where: any = {};
+    if (category) where.category = category;
+    if (activeOnly) where.active = true;
+
+    const templates = await prisma.emailTemplate.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      include: {
+        campaigns: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ success: true, templates });
-  } catch (error) {
+    return NextResponse.json({
+      success: true,
+      templates,
+    });
+  } catch (error: any) {
     console.error("Error fetching templates:", error);
     return NextResponse.json(
-      { error: "Failed to fetch templates" },
+      { success: false, error: error.message || "Failed to fetch templates" },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: NextRequest) {
+/**
+ * POST /api/templates
+ * Create a new email template
+ */
+export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    const user = await db.user.findUnique({
-      where: { id: session.user.id },
-      select: { role: true },
-    });
-
-    if (!user || !isStaffRole(user.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    const allowedRoles = [ROLE.CEO, ROLE.CFO, ROLE.OUTREACH];
+    if (!allowedRoles.includes(user.role as any)) {
+      return NextResponse.json(
+        { success: false, error: "Insufficient permissions" },
+        { status: 403 }
+      );
     }
 
-    const body = await request.json();
+    const body = await req.json();
     const { name, category, subject, htmlContent, textContent, variables, active } = body;
 
+    // Validation
     if (!name || !category || !subject || !htmlContent) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const template = await db.emailTemplate.create({
+    // Check if template name already exists
+    const existing = await prisma.emailTemplate.findUnique({
+      where: { name },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { success: false, error: "Template with this name already exists" },
+        { status: 400 }
+      );
+    }
+
+    const template = await prisma.emailTemplate.create({
       data: {
         name,
         category,
@@ -74,23 +97,19 @@ export async function POST(request: NextRequest) {
         htmlContent,
         textContent: textContent || null,
         variables: variables || [],
-        active: active ?? true,
+        active: active !== undefined ? active : true,
       },
     });
 
-    return NextResponse.json({ success: true, template });
+    return NextResponse.json({
+      success: true,
+      template,
+    });
   } catch (error: any) {
     console.error("Error creating template:", error);
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        { error: "A template with this name already exists" },
-        { status: 400 }
-      );
-    }
     return NextResponse.json(
-      { error: "Failed to create template" },
+      { success: false, error: error.message || "Failed to create template" },
       { status: 500 }
     );
   }
 }
-

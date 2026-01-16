@@ -209,7 +209,6 @@ export async function getExecutiveMetrics() {
     const invoices = await db.invoice.findMany({
       select: {
         total: true,
-        amount: true,
         status: true,
         paidAt: true,
       },
@@ -233,7 +232,7 @@ export async function getExecutiveMetrics() {
     });
 
     const activeProjects = projects.filter((p) =>
-      ["IN_PROGRESS", "PLANNING"].includes(p.status)
+      ["ACTIVE", "IN_PROGRESS", "PLANNING"].includes(p.status)
     ).length;
 
     const completedProjects = projects.filter(
@@ -270,6 +269,8 @@ export async function getExecutiveMetrics() {
     // Recent revenue trend (last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
     const recentRevenue = invoices
       .filter(
@@ -278,11 +279,21 @@ export async function getExecutiveMetrics() {
       )
       .reduce((sum, inv) => sum + Number(inv.total), 0);
 
-    const previousRevenue = totalRevenue - recentRevenue;
+    // Compare to previous 30 days (30-60 days ago)
+    const previousPeriodRevenue = invoices
+      .filter(
+        (inv) =>
+          inv.status === "PAID" && 
+          inv.paidAt && 
+          inv.paidAt >= sixtyDaysAgo && 
+          inv.paidAt < thirtyDaysAgo
+      )
+      .reduce((sum, inv) => sum + Number(inv.total), 0);
+
     const revenueTrend =
-      previousRevenue > 0
-        ? ((recentRevenue - previousRevenue) / previousRevenue) * 100
-        : 0;
+      previousPeriodRevenue > 0
+        ? ((recentRevenue - previousPeriodRevenue) / previousPeriodRevenue) * 100
+        : recentRevenue > 0 ? 100 : 0;
 
     // Generate revenue over time (last 6 months)
     const revenueOverTime: { month: string; revenue: number }[] = [];

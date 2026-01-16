@@ -61,12 +61,17 @@ export async function GET(
       );
     }
 
+    // Calculate subtotal from items
+    const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const total = Number(invoice.total);
+    const tax = total - subtotal;
+    
     return NextResponse.json({
       invoice: {
         ...invoice,
-        amount: Number(invoice.amount),
-        tax: Number(invoice.tax || 0),
-        total: Number(invoice.total),
+        amount: subtotal,
+        tax: tax,
+        total: total,
         items: invoice.items.map((item) => ({
           ...item,
           rate: Number(item.rate),
@@ -192,12 +197,17 @@ export async function PATCH(
       },
     });
 
+    // Calculate subtotal from items
+    const subtotal = invoice!.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const total = Number(invoice!.total);
+    const tax = total - subtotal;
+    
     return NextResponse.json({
       invoice: {
         ...invoice,
-        amount: Number(invoice.amount),
-        tax: Number(invoice.tax || 0),
-        total: Number(invoice.total),
+        amount: subtotal,
+        tax: tax,
+        total: total,
       },
     });
   } catch (error: any) {

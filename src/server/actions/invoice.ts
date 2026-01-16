@@ -89,16 +89,8 @@ export async function createStripeInvoice(invoiceId: string) {
       });
     }
 
-    // Add tax if applicable
-    if (invoice.tax && Number(invoice.tax) > 0) {
-      await stripe.invoiceItems.create({
-        customer: stripeCustomerId,
-        invoice: stripeInvoice.id,
-        description: 'Tax',
-        amount: Math.round(Number(invoice.tax)),
-        currency: invoice.currency.toLowerCase(),
-      });
-    }
+    // Note: Tax is now included in the line items, not as a separate field
+    // Tax metadata can be found in invoice.metadata if needed
 
     // Finalize the invoice
     const finalizedInvoice = await stripe.invoices.finalizeInvoice(stripeInvoice.id);
@@ -388,11 +380,10 @@ export async function createAndSendInvoice(data: {
         status: 'DRAFT',
         organizationId: data.organizationId,
         projectId: data.projectId,
-        amount,
-        tax,
         total,
         currency: 'USD',
         dueDate: data.dueDate,
+        metadata: tax > 0 ? { tax } : undefined,
         items: {
           create: data.items.map((item) => ({
             description: item.description,

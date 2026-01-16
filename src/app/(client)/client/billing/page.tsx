@@ -42,6 +42,9 @@ export default async function ClientBillingPage() {
                 orderBy: {
                   createdAt: 'desc',
                 },
+                include: {
+                  items: true,
+                },
               },
             },
           },
@@ -68,18 +71,25 @@ export default async function ClientBillingPage() {
             monthlyPrice: monthlyPrice ? Number(monthlyPrice) : 0,
             // hourPacks cost is Int, not Decimal, so no conversion needed
           },
-          invoices: project.invoices.map((invoice) => ({
-            id: invoice.id,
-            number: invoice.number,
-            title: invoice.title,
-            amount: Number(invoice.amount),
-            tax: Number(invoice.tax || 0),
-            total: Number(invoice.total),
-            status: invoice.status,
-            dueDate: invoice.dueDate.toISOString(),
-            paidAt: invoice.paidAt?.toISOString() || null,
-            createdAt: invoice.createdAt.toISOString(),
-          })),
+          invoices: project.invoices.map((invoice) => {
+            // Calculate subtotal from items
+            const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+            const total = Number(invoice.total);
+            const tax = total - subtotal;
+            
+            return {
+              id: invoice.id,
+              number: invoice.number,
+              title: invoice.title,
+              amount: subtotal,
+              tax: tax,
+              total: total,
+              status: invoice.status,
+              dueDate: invoice.dueDate.toISOString(),
+              paidAt: invoice.paidAt?.toISOString() || null,
+              createdAt: invoice.createdAt.toISOString(),
+            };
+          }),
         };
       })
   );

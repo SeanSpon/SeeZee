@@ -129,42 +129,49 @@ export async function GET(req: NextRequest) {
     };
 
     const response = NextResponse.json({
-      invoices: invoices.map((inv) => ({
-        id: inv.id,
-        number: inv.number || inv.id.slice(0, 8),
-        title: inv.title,
-        description: inv.description,
-        amount: Number(inv.amount),
-        tax: Number(inv.tax || 0),
-        total: Number(inv.total),
-        currency: inv.currency,
-        status: inv.status,
-        createdAt: inv.createdAt,
-        updatedAt: inv.updatedAt,
-        dueDate: inv.dueDate,
-        paidAt: inv.paidAt,
-        sentAt: inv.sentAt,
-        project: inv.project,
-        items: inv.items.map((item) => ({
-          id: item.id,
-          description: item.description,
-          quantity: item.quantity,
-          rate: Number(item.rate),
-          amount: Number(item.amount),
-        })),
-        payments: inv.payments.map((p) => ({
-          id: p.id,
-          amount: Number(p.amount),
-          status: p.status,
-          method: p.method,
-          createdAt: p.createdAt,
-          processedAt: p.processedAt,
-        })),
-        payUrl:
-          inv.status === "SENT" && inv.stripeInvoiceId
-            ? `https://invoice.stripe.com/i/${inv.stripeInvoiceId}`
-            : null,
-      })),
+      invoices: invoices.map((inv) => {
+        // Calculate subtotal from items
+        const subtotal = inv.items.reduce((sum, item) => sum + Number(item.amount), 0);
+        const totalAmount = Number(inv.total);
+        const taxAmount = totalAmount - subtotal;
+        
+        return {
+          id: inv.id,
+          number: inv.number || inv.id.slice(0, 8),
+          title: inv.title,
+          description: inv.description,
+          amount: subtotal,
+          tax: taxAmount,
+          total: totalAmount,
+          currency: inv.currency,
+          status: inv.status,
+          createdAt: inv.createdAt,
+          updatedAt: inv.updatedAt,
+          dueDate: inv.dueDate,
+          paidAt: inv.paidAt,
+          sentAt: inv.sentAt,
+          project: inv.project,
+          items: inv.items.map((item) => ({
+            id: item.id,
+            description: item.description,
+            quantity: item.quantity,
+            rate: Number(item.rate),
+            amount: Number(item.amount),
+          })),
+          payments: inv.payments.map((p) => ({
+            id: p.id,
+            amount: Number(p.amount),
+            status: p.status,
+            method: p.method,
+            createdAt: p.createdAt,
+            processedAt: p.processedAt,
+          })),
+          payUrl:
+            inv.status === "SENT" && inv.stripeInvoiceId
+              ? `https://invoice.stripe.com/i/${inv.stripeInvoiceId}`
+              : null,
+        };
+      }),
       stats: {
         ...stats,
         totalSpent,

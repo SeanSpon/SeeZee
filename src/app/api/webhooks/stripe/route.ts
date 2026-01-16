@@ -852,7 +852,6 @@ async function handleHourPackPurchase(session: Stripe.Checkout.Session) {
             number: invoiceNumber,
             title: `Hour Pack - ${packNames[packId as keyof typeof packNames] || packId}`,
             description: `${pack.hours} support hours${pack.expirationDays ? ` (valid for ${pack.expirationDays} days)` : ' (never expires)'}`,
-            amount: new Prisma.Decimal(amountTotal / 100), // Convert cents to dollars
             total: new Prisma.Decimal(amountTotal / 100),
             currency: 'USD',
             status: 'PAID',
@@ -861,7 +860,9 @@ async function handleHourPackPurchase(session: Stripe.Checkout.Session) {
             projectId: project?.id || null,
             stripeInvoiceId: session.invoice as string || session.id, // Use session ID as fallback
             paidAt: new Date(),
-            invoiceType: 'hour-pack',
+            metadata: {
+              invoiceType: 'hour-pack'
+            },
             items: {
               create: {
                 description: `${packNames[packId as keyof typeof packNames] || packId} - ${pack.hours} hours`,
@@ -972,8 +973,6 @@ async function handleInvoicePaid(stripeInvoice: Stripe.Invoice) {
             number: invoiceNumber,
             title: `Maintenance Plan - ${maintenancePlan.tier}`,
             description: `Monthly subscription for ${maintenancePlan.tier} tier`,
-            amount: new Prisma.Decimal(stripeInvoice.amount_paid / 100),
-            tax: new Prisma.Decimal((stripeInvoice.tax || 0) / 100),
             total: new Prisma.Decimal(stripeInvoice.total / 100),
             currency: stripeInvoice.currency.toUpperCase(),
             status: 'PAID',
@@ -983,7 +982,10 @@ async function handleInvoicePaid(stripeInvoice: Stripe.Invoice) {
             stripeInvoiceId: stripeInvoice.id,
             sentAt: new Date(),
             paidAt: new Date(stripeInvoice.status_transitions.paid_at! * 1000),
-            invoiceType: 'subscription',
+            metadata: {
+              invoiceType: 'subscription',
+              tax: (stripeInvoice.tax || 0) / 100
+            },
             items: {
               create: stripeInvoice.lines.data.map((line) => ({
                 description: line.description || `Subscription - ${maintenancePlan.tier}`,
@@ -1283,8 +1285,6 @@ async function handleInvoiceFinalized(stripeInvoice: Stripe.Invoice) {
             number: invoiceNumber,
             title: `Maintenance Plan - ${maintenancePlan.tier}`,
             description: `Monthly subscription for ${maintenancePlan.tier} tier`,
-            amount: new Prisma.Decimal(stripeInvoice.amount_due / 100),
-            tax: new Prisma.Decimal((stripeInvoice.tax || 0) / 100),
             total: new Prisma.Decimal(stripeInvoice.total / 100),
             currency: stripeInvoice.currency.toUpperCase(),
             status: stripeInvoice.status === 'paid' ? 'PAID' : 'SENT',
@@ -1296,7 +1296,10 @@ async function handleInvoiceFinalized(stripeInvoice: Stripe.Invoice) {
             paidAt: stripeInvoice.status === 'paid' && stripeInvoice.status_transitions.paid_at
               ? new Date(stripeInvoice.status_transitions.paid_at * 1000)
               : null,
-            invoiceType: 'subscription',
+            metadata: {
+              invoiceType: 'subscription',
+              tax: (stripeInvoice.tax || 0) / 100
+            },
             items: {
               create: stripeInvoice.lines.data.map((line) => ({
                 description: line.description || `Subscription - ${maintenancePlan.tier}`,

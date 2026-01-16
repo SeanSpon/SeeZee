@@ -111,6 +111,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/finance", label: "Finance", icon: FiDollarSign, description: "Revenue metrics and financial overview" },
       { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices, payments, and subscriptions" },
       { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Track Vercel, Cursor, and other costs" },
+      { href: "/admin/hours", label: "Hours & Packages", icon: FiClock, description: "Manage client hours and packages" },
       { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance schedules and change requests" },
     ],
     []

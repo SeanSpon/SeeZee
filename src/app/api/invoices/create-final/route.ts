@@ -34,6 +34,9 @@ export async function POST(req: NextRequest) {
             invoiceType: "deposit",
             status: "PAID",
           } as any,
+          include: {
+            items: true,
+          },
         },
         questionnaire: true,
       },
@@ -68,7 +71,11 @@ export async function POST(req: NextRequest) {
 
     // Calculate remaining balance
     const totalPaid = project.invoices.reduce(
-      (sum, inv) => sum + Number(inv.amount),
+      (sum, inv) => {
+        // Calculate subtotal from items
+        const invoiceAmount = (inv as any).items?.reduce((itemSum: number, item: any) => itemSum + Number(item.amount), 0) || 0;
+        return sum + invoiceAmount;
+      },
       0
     );
 
@@ -111,12 +118,13 @@ export async function POST(req: NextRequest) {
         number: invoiceNumber,
         title: `Final Payment - ${project.name}`,
         description: `Final payment for completed project: ${project.name}. Total project cost: $${totalProjectCost.toFixed(2)}. Amount paid: $${totalPaid.toFixed(2)}. Remaining balance: $${remainingBalance.toFixed(2)}.`,
-        amount: remainingBalance,
         total: remainingBalance,
         currency: "USD",
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         status: "DRAFT",
-        invoiceType: "final",
+        metadata: {
+          invoiceType: "final"
+        },
         organizationId: project.organizationId,
         projectId: project.id,
         items: {
@@ -127,7 +135,7 @@ export async function POST(req: NextRequest) {
             amount: remainingBalance,
           },
         },
-      } as any,
+      },
       include: {
         items: true,
         organization: true,
@@ -142,7 +150,6 @@ export async function POST(req: NextRequest) {
         number: invoice.number,
         title: invoice.title,
         description: invoice.description,
-        amount: invoice.amount,
         total: invoice.total,
         items: invoice.items,
         dueDate: invoice.dueDate,

@@ -66,37 +66,44 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json({
-      invoices: invoices.map((i) => ({
-        id: i.id,
-        number: i.number,
-        title: i.title,
-        description: i.description,
-        status: i.status,
-        amount: Number(i.amount),
-        tax: Number(i.tax || 0),
-        total: Number(i.total),
-        currency: i.currency,
-        dueDate: i.dueDate,
-        paidAt: i.paidAt,
-        sentAt: i.sentAt,
-        createdAt: i.createdAt,
-        updatedAt: i.updatedAt,
-        organization: i.organization,
-        project: i.project,
-        items: i.items.map((item) => ({
-          id: item.id,
-          description: item.description,
-          quantity: item.quantity,
-          rate: Number(item.rate),
-          amount: Number(item.amount),
-        })),
-        payments: i.payments.map((p) => ({
-          id: p.id,
-          amount: Number(p.amount),
-          status: p.status,
-          createdAt: p.createdAt,
-        })),
-      })),
+      invoices: invoices.map((i) => {
+        // Calculate subtotal from items
+        const subtotal = i.items.reduce((sum, item) => sum + Number(item.amount), 0);
+        const total = Number(i.total);
+        const tax = total - subtotal;
+        
+        return {
+          id: i.id,
+          number: i.number,
+          title: i.title,
+          description: i.description,
+          status: i.status,
+          amount: subtotal,
+          tax: tax,
+          total: total,
+          currency: i.currency,
+          dueDate: i.dueDate,
+          paidAt: i.paidAt,
+          sentAt: i.sentAt,
+          createdAt: i.createdAt,
+          updatedAt: i.updatedAt,
+          organization: i.organization,
+          project: i.project,
+          items: i.items.map((item) => ({
+            id: item.id,
+            description: item.description,
+            quantity: item.quantity,
+            rate: Number(item.rate),
+            amount: Number(item.amount),
+          })),
+          payments: i.payments.map((p) => ({
+            id: p.id,
+            amount: Number(p.amount),
+            status: p.status,
+            createdAt: p.createdAt,
+          })),
+        };
+      }),
       stats: {
         ...stats,
         totalAmount: Number(stats.totalAmount._sum.total || 0),
@@ -159,8 +166,6 @@ export async function POST(req: NextRequest) {
         number: invoiceNumber,
         title,
         description: description || null,
-        amount: calculatedAmount,
-        tax: calculatedTax,
         total: calculatedTotal,
         currency,
         status: "DRAFT",
@@ -194,12 +199,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Calculate subtotal from items
+    const invoiceSubtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const invoiceTotal = Number(invoice.total);
+    const invoiceTax = invoiceTotal - invoiceSubtotal;
+    
     return NextResponse.json({
       invoice: {
         ...invoice,
-        amount: Number(invoice.amount),
-        tax: Number(invoice.tax || 0),
-        total: Number(invoice.total),
+        amount: invoiceSubtotal,
+        tax: invoiceTax,
+        total: invoiceTotal,
       },
     });
   } catch (error: any) {

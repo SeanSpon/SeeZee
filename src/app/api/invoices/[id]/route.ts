@@ -177,12 +177,17 @@ export async function GET(
       }
     }
 
+    // Calculate subtotal from items
+    const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const total = Number(invoice.total);
+    const tax = total - subtotal;
+    
     return NextResponse.json({
       invoice: {
         ...invoice,
-        amount: Number(invoice.amount),
-        total: Number(invoice.total),
-        tax: invoice.tax ? Number(invoice.tax) : 0,
+        amount: subtotal,
+        total: total,
+        tax: tax,
       },
       paymentUrl,
       stripeInvoiceUrl,

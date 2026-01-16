@@ -262,20 +262,20 @@ async function main() {
         title: `Invoice for ${project.name}`,
         description: `Payment for ${project.name} development services`,
         status,
-        amount,
-        tax,
         total,
         currency: 'USD',
         dueDate: randomFutureDate(30),
         organizationId: org.id,
         projectId: project.id,
-        invoiceType: randomElement(['deposit', 'final', 'subscription', 'custom']),
-        isFirstInvoice: i < 5,
         sentAt: status !== InvoiceStatus.DRAFT ? randomPastDate(20) : null,
         paidAt: status === InvoiceStatus.PAID ? randomPastDate(10) : null,
-        customerApprovedAt: status === InvoiceStatus.PAID ? randomPastDate(15) : null,
-        adminApprovedAt: status === InvoiceStatus.PAID ? randomPastDate(20) : null,
         createdAt: randomPastDate(30),
+        metadata: {
+          invoiceType: randomElement(['deposit', 'final', 'subscription', 'custom']),
+          isFirstInvoice: i < 5,
+          customerApprovedAt: status === InvoiceStatus.PAID ? randomPastDate(15) : null,
+          adminApprovedAt: status === InvoiceStatus.PAID ? randomPastDate(20) : null,
+        },
         items: {
           create: [
             {

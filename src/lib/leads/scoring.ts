@@ -15,6 +15,8 @@ export interface LeadForScoring {
   phone?: string | null;
   emailsSent?: number;
   convertedAt?: Date | null;
+  googleRating?: number | null;
+  googleReviews?: number | null;
 }
 
 // Priority categories for SeeZee (nonprofits we specialize in)
@@ -43,18 +45,18 @@ export function calculateLeadScore(lead: LeadForScoring): number {
   let score = 0;
 
   // ═══════════════════════════════════════
-  // WEBSITE QUALITY (0-30 points)
+  // WEBSITE QUALITY (0-20 points)
   // Most important factor - no website = highest opportunity
   // ═══════════════════════════════════════
   if (!lead.hasWebsite) {
-    score += 30; // No website = highest priority
+    score += 20; // No website = highest priority
   } else {
     switch (lead.websiteQuality) {
       case "POOR":
-        score += 25; // Bad website = high priority
+        score += 18; // Bad website = high priority
         break;
       case "FAIR":
-        score += 15; // Mediocre = medium priority
+        score += 12; // Mediocre = medium priority
         break;
       case "GOOD":
         score += 5; // Good = low priority
@@ -63,12 +65,12 @@ export function calculateLeadScore(lead: LeadForScoring): number {
         score += 0; // Excellent = don't bother
         break;
       default:
-        score += 20; // Unknown quality = assume decent opportunity
+        score += 15; // Unknown quality = assume decent opportunity
     }
   }
 
   // ═══════════════════════════════════════
-  // REVENUE (0-25 points)
+  // REVENUE POTENTIAL (0-25 points)
   // Higher revenue = can afford our services
   // ═══════════════════════════════════════
   if (lead.annualRevenue) {
@@ -88,7 +90,7 @@ export function calculateLeadScore(lead: LeadForScoring): number {
   }
 
   // ═══════════════════════════════════════
-  // CATEGORY FIT (0-20 points)
+  // CATEGORY FIT (0-25 points)
   // Priority categories align with SeeZee's mission
   // ═══════════════════════════════════════
   if (lead.category) {
@@ -98,12 +100,12 @@ export function calculateLeadScore(lead: LeadForScoring): number {
         cat.toLowerCase().includes(lead.category?.toLowerCase() || "")
     );
     if (isPriority) {
-      score += 20; // Perfect fit for SeeZee mission
+      score += 25; // Perfect fit for SeeZee mission
     } else {
-      score += 10; // Other nonprofits still viable
+      score += 12; // Other nonprofits still viable
     }
   } else {
-    score += 10; // Unknown category = default to mid-tier
+    score += 12; // Unknown category = default to mid-tier
   }
 
   // ═══════════════════════════════════════
@@ -124,7 +126,7 @@ export function calculateLeadScore(lead: LeadForScoring): number {
   }
 
   // ═══════════════════════════════════════
-  // EMPLOYEE COUNT (0-10 points)
+  // ORGANIZATION SIZE (0-10 points)
   // Larger orgs = more complex needs = higher project value
   // ═══════════════════════════════════════
   if (lead.employeeCount) {
@@ -142,17 +144,25 @@ export function calculateLeadScore(lead: LeadForScoring): number {
   }
 
   // ═══════════════════════════════════════
-  // BONUS POINTS
+  // GOOGLE RATING & REVIEWS (0-5 points)
+  // Good ratings = established, professional organization
   // ═══════════════════════════════════════
-  // Has contact info (easier to reach)
-  if (lead.email || lead.phone) score += 5;
-
-  // ═══════════════════════════════════════
-  // PENALTIES
-  // ═══════════════════════════════════════
-  // Already contacted but never converted = lower priority
-  if (lead.emailsSent && lead.emailsSent > 0 && !lead.convertedAt) {
-    score -= 10;
+  if (lead.googleRating && lead.googleReviews) {
+    if (lead.googleRating >= 4.5 && lead.googleReviews >= 50) {
+      score += 5; // Excellent rating + many reviews = very credible
+    } else if (lead.googleRating >= 4.0 && lead.googleReviews >= 20) {
+      score += 4; // Good rating + decent reviews
+    } else if (lead.googleRating >= 3.5 && lead.googleReviews >= 10) {
+      score += 3; // Average rating
+    } else if (lead.googleReviews >= 5) {
+      score += 2; // Has some presence
+    } else {
+      score += 1; // Minimal presence
+    }
+  } else if (lead.googleRating && lead.googleRating >= 4.0) {
+    score += 3; // Good rating but unknown review count
+  } else if (lead.googleRating) {
+    score += 1; // Has rating
   }
 
   // Ensure score is between 0-100
@@ -212,6 +222,7 @@ export interface ScoreBreakdown {
     categoryScore: number;
     locationScore: number;
     sizeScore: number;
+    googleScore: number;
   };
   recommendation: string;
 }
@@ -221,7 +232,7 @@ export function calculateLeadScoreDetailed(lead: LeadForScoring): ScoreBreakdown
   if (lead.convertedAt) {
     return {
       total: 0,
-      breakdown: { websiteScore: 0, revenueScore: 0, categoryScore: 0, locationScore: 0, sizeScore: 0 },
+      breakdown: { websiteScore: 0, revenueScore: 0, categoryScore: 0, locationScore: 0, sizeScore: 0, googleScore: 0 },
       recommendation: "Already converted to client"
     };
   }
@@ -231,17 +242,18 @@ export function calculateLeadScoreDetailed(lead: LeadForScoring): ScoreBreakdown
   let categoryScore = 0;
   let locationScore = 0;
   let sizeScore = 0;
+  let googleScore = 0;
 
-  // Website score (0-30)
+  // Website score (0-20)
   if (!lead.hasWebsite) {
-    websiteScore = 30;
+    websiteScore = 20;
   } else {
     switch (lead.websiteQuality) {
-      case "POOR": websiteScore = 25; break;
-      case "FAIR": websiteScore = 15; break;
+      case "POOR": websiteScore = 18; break;
+      case "FAIR": websiteScore = 12; break;
       case "GOOD": websiteScore = 5; break;
       case "EXCELLENT": websiteScore = 0; break;
-      default: websiteScore = 20;
+      default: websiteScore = 15;
     }
   }
 
@@ -256,16 +268,16 @@ export function calculateLeadScoreDetailed(lead: LeadForScoring): ScoreBreakdown
     revenueScore = 12;
   }
 
-  // Category score (0-20)
+  // Category score (0-25)
   if (lead.category) {
     const isPriority = PRIORITY_CATEGORIES.some(
       (cat) =>
         lead.category?.toLowerCase().includes(cat.toLowerCase()) ||
         cat.toLowerCase().includes(lead.category?.toLowerCase() || "")
     );
-    categoryScore = isPriority ? 20 : 10;
+    categoryScore = isPriority ? 25 : 12;
   } else {
-    categoryScore = 10;
+    categoryScore = 12;
   }
 
   // Location score (0-15)
@@ -291,23 +303,42 @@ export function calculateLeadScoreDetailed(lead: LeadForScoring): ScoreBreakdown
     sizeScore = 5;
   }
 
-  const total = Math.min(100, Math.max(0, websiteScore + revenueScore + categoryScore + locationScore + sizeScore));
+  // Google rating score (0-5)
+  if (lead.googleRating && lead.googleReviews) {
+    if (lead.googleRating >= 4.5 && lead.googleReviews >= 50) {
+      googleScore = 5;
+    } else if (lead.googleRating >= 4.0 && lead.googleReviews >= 20) {
+      googleScore = 4;
+    } else if (lead.googleRating >= 3.5 && lead.googleReviews >= 10) {
+      googleScore = 3;
+    } else if (lead.googleReviews >= 5) {
+      googleScore = 2;
+    } else {
+      googleScore = 1;
+    }
+  } else if (lead.googleRating && lead.googleRating >= 4.0) {
+    googleScore = 3;
+  } else if (lead.googleRating) {
+    googleScore = 1;
+  }
+
+  const total = Math.min(100, Math.max(0, websiteScore + revenueScore + categoryScore + locationScore + sizeScore + googleScore));
 
   // Generate recommendation
   let recommendation = "";
   if (total >= 80) {
-    recommendation = "High priority - reach out immediately";
+    recommendation = "🔥 High priority - reach out immediately";
   } else if (total >= 60) {
-    recommendation = "Good prospect - add to outreach queue";
+    recommendation = "⭐ Good prospect - add to outreach queue";
   } else if (total >= 40) {
-    recommendation = "Worth pursuing - gather more info";
+    recommendation = "☀️ Worth pursuing - gather more info";
   } else {
-    recommendation = "Lower priority - may not be ideal fit";
+    recommendation = "❄️ Lower priority - may not be ideal fit";
   }
 
   return {
     total,
-    breakdown: { websiteScore, revenueScore, categoryScore, locationScore, sizeScore },
+    breakdown: { websiteScore, revenueScore, categoryScore, locationScore, sizeScore, googleScore },
     recommendation,
   };
 }
