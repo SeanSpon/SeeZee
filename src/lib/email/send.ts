@@ -30,7 +30,7 @@ export interface EmailOptions {
  */
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; error?: string }> {  try {
     // Default from address - use RESEND_FROM_EMAIL env var or fallback to verified domain
-    const defaultFrom = process.env.RESEND_FROM_EMAIL || "noreply@see-zee.com";
+    const defaultFrom = process.env.RESEND_FROM_EMAIL || "noreply@seezeestudios.com";
     const from = options.from || `SeeZee Studio <${defaultFrom}>`;
     
     // Get Resend instance (lazy initialization)

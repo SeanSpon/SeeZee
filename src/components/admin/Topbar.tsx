@@ -4,6 +4,7 @@
  * Admin Topbar with breadcrumbs and actions
  */
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NotificationsBell } from "./NotificationsBell";
 import { Command } from "lucide-react";
@@ -20,6 +21,21 @@ interface TopbarProps {
 export function Topbar({ user }: TopbarProps) {
   const pathname = usePathname();
   const { open } = useCommandPalette();
+  const [userImage, setUserImage] = useState<string | null>(user.image || null);
+
+  // Fetch user image (since it's removed from session to prevent cookie bloat)
+  useEffect(() => {
+    fetch('/api/user/me')
+      .then(res => res.json())
+      .then((data) => {
+        if (data?.image) {
+          setUserImage(data.image);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch user image:', err);
+      });
+  }, []);
 
   // Generate breadcrumbs from pathname
   const segments = pathname.split("/").filter(Boolean);
@@ -77,9 +93,9 @@ export function Topbar({ user }: TopbarProps) {
         <NotificationsBell />
 
         {/* User avatar */}
-        {user.image ? (
+        {userImage ? (
           <img
-            src={user.image}
+            src={userImage}
             alt={user.name || "User"}
             className="w-8 h-8 rounded-full border border-white/10"
           />

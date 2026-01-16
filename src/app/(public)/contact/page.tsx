@@ -123,10 +123,10 @@ function ContactForm() {
             </div>
             <h3 className="font-semibold text-white mb-2">Email</h3>
             <a
-              href="mailto:seezee.enterprises@gmail.com"
+              href="mailto:contact@seezeestudios.com"
               className="text-sm text-gray-400 hover:text-[#dc2626] transition-colors"
             >
-              seezee.enterprises@gmail.com
+              contact@seezeestudios.com
             </a>
           </motion.div>
 

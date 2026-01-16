@@ -104,6 +104,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
   const pathname = usePathname();
   const [pendingTaskCount, setPendingTaskCount] = useState(0);
   const [upcomingMeetingCount, setUpcomingMeetingCount] = useState(0);
+  const [userImage, setUserImage] = useState<string | null>(user.image || null);
   
   // Generate breadcrumbs from pathname
   const segments = pathname.split("/").filter(Boolean);
@@ -111,6 +112,19 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
     segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ')
   );
   const pageTitle = breadcrumbs.slice(-1)[0] || "Dashboard";
+
+  // Fetch user image (since it's removed from session to prevent cookie bloat)
+  useEffect(() => {
+    fetchJson<any>('/api/user/me')
+      .then((data) => {
+        if (data?.image) {
+          setUserImage(data.image);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch user image:', err);
+      });
+  }, []);
 
   // Fetch pending task count and upcoming meetings
   useEffect(() => {
@@ -212,7 +226,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
       <div className="flex-shrink-0 p-4 border-t border-white/5">
         <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-[background-color] duration-150 ease-in-out cursor-pointer">
           <img
-            src={user.image || "/default-avatar.png"}
+            src={userImage || "/default-avatar.png"}
             alt={user.name || "User"}
             className="w-9 h-9 rounded-full border-2 border-cyan-500/30"
           />

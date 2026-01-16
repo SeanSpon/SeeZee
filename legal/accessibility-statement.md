@@ -34,7 +34,7 @@ Accessibility is an ongoing process. We regularly review and improve our site as
 
 If you experience difficulty accessing any part of our website or need accommodations, please contact us. We take accessibility feedback seriously and will work with you to provide the information or service you need.
 
-**Email:** seezee.enterprises@gmail.com  
+**Email:** contact@seezeestudios.com  
 **Location:** Louisville, Kentucky
 
 ## Feedback

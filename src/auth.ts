@@ -192,7 +192,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           // CEO whitelist - auto-setup CEO users
-          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
+          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "contact@seezeestudios.com"];
           const isCEO = CEO_EMAILS.includes((credentials.email as string).toLowerCase());
 
           // Auto-verify CEO email if not already verified
@@ -264,7 +264,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
         if (CEO_EMAILS.includes(user.email!)) {
           await retryDatabaseOperation(async () => {
             return await prisma.user.update({
@@ -478,7 +478,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
         const isCEO = CEO_EMAILS.includes(email as string);
         
         // Always fetch latest user data from database to catch onboarding completion and role changes

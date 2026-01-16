@@ -86,8 +86,8 @@ export default function TermsPage() {
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">Contact</h2>
               <p className="text-gray-300 mb-2 leading-relaxed">
                 <strong>Email:</strong>{' '}
-                <a href="mailto:seezee.enterprises@gmail.com" className="text-[#DC143C] hover:underline">
-                  seezee.enterprises@gmail.com
+                <a href="mailto:contact@seezeestudios.com" className="text-[#DC143C] hover:underline">
+                  contact@seezeestudios.com
                 </a>
               </p>
               <p className="text-gray-300 leading-relaxed"><strong>Location:</strong> Louisville, Kentucky</p>

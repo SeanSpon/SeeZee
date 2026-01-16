@@ -23,6 +23,7 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
   const [themeMode, setThemeMode] = useState<"light" | "dark" | "system">("dark");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [userImage, setUserImage] = useState<string | null>(user?.image || null);
 
   const isCEO = user?.role === "CEO";
   const isAdmin = user?.role === "CFO" || ["FRONTEND", "BACKEND", "OUTREACH"].includes(user?.role || "") || user?.role === "CEO";
@@ -38,6 +39,22 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
     if (role === "OUTREACH") return "Outreach Specialist";
     return "Client";
   };
+
+  // Fetch user image (since it's removed from session to prevent cookie bloat)
+  useEffect(() => {
+    if (!user) return;
+    
+    fetch('/api/user/me')
+      .then(res => res.json())
+      .then((data) => {
+        if (data?.image) {
+          setUserImage(data.image);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch user image:', err);
+      });
+  }, [user]);
 
   // Detect system theme preference and load saved theme mode
   useEffect(() => {
@@ -141,8 +158,8 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
           aria-label="Profile menu"
           aria-expanded={open}
         >
-          {user.image ? (
-            <img src={user.image} alt={user.name || "User"} className="h-full w-full object-cover" />
+          {userImage ? (
+            <img src={userImage} alt={user.name || "User"} className="h-full w-full object-cover" />
           ) : (
             <span className="text-xs font-bold text-white">{getInitials()}</span>
           )}

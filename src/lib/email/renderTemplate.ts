@@ -138,7 +138,7 @@ function wrapInEmailLayout(content: string): string {
       <p>
         SeeZee Studio<br>
         Louisville, KY<br>
-        <a href="mailto:seezee.enterprises@gmail.com">seezee.enterprises@gmail.com</a> | (502) 435-2986
+        <a href="mailto:contact@seezeestudios.com">contact@seezeestudios.com</a> | (502) 435-2986
       </p>
       <p style="margin-top: 16px;">
         <a href="https://see-zee.com">see-zee.com</a>

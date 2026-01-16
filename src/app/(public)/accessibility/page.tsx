@@ -66,8 +66,8 @@ export default function AccessibilityPage() {
               </p>
               <p className="text-gray-300 mb-2 leading-relaxed">
                 <strong>Email:</strong>{' '}
-                <a href="mailto:seezee.enterprises@gmail.com" className="text-[#DC143C] hover:underline">
-                  seezee.enterprises@gmail.com
+                <a href="mailto:contact@seezeestudios.com" className="text-[#DC143C] hover:underline">
+                  contact@seezeestudios.com
                 </a>
               </p>
               <p className="text-gray-300 leading-relaxed"><strong>Location:</strong> Louisville, Kentucky</p>

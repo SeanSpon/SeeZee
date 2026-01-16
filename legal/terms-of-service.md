@@ -38,7 +38,7 @@ We may update these Terms at any time. Continued use of the site constitutes acc
 
 ## Contact
 
-**Email:** seezee.enterprises@gmail.com  
+**Email:** contact@seezeestudios.com  
 **Location:** Louisville, Kentucky
 
 ---
