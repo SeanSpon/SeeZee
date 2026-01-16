@@ -103,24 +103,29 @@ export function CEODashboardClient({
   const totalProjectsCount = projects?.length || 0;
   const avgProjectValue = metrics?.projects?.avgValue || 0;
   
-  const conversionRate = metrics?.leads?.conversionRate || 0;
-  const completionRate = metrics?.tasks?.completionRate || 0;
-  
-  const activeTeamMembers = users?.length || 0;
-  const teamUtilization = utilization?.users?.utilization || 0;
-  
   const newLeadsCount = leads?.filter((l: any) => l?.status === "NEW").length || 0;
   const totalLeadsCount = leads?.length || 0;
   const qualifiedLeadsCount = leads?.filter((l: any) => l?.status === "QUALIFIED").length || 0;
+  const convertedLeadsCount = leads?.filter((l: any) => l?.status === "CONVERTED").length || 0;
+  
+  // Calculate conversion rate from actual data if metrics don't have it
+  const conversionRate = metrics?.leads?.conversionRate || (totalLeadsCount > 0 ? (convertedLeadsCount / totalLeadsCount) * 100 : 0);
+  
+  const activeTasks = (taskStats?.todo || 0) + (taskStats?.inProgress || 0);
+  const overdueTasks = taskStats?.overdue || 0;
+  const completedTasks = taskStats?.done || 0;
+  const totalTasks = taskStats?.total || (activeTasks + completedTasks);
+  
+  // Calculate completion rate from actual data if metrics don't have it
+  const completionRate = metrics?.tasks?.completionRate || (totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0);
+  
+  const activeTeamMembers = users?.length || 0;
+  const teamUtilization = utilization?.users?.utilization || 0;
   
   const overdueInvoices = invoices?.filter((i: any) => i?.status === "OVERDUE").length || 0;
   const pendingInvoices = invoices?.filter((i: any) => i?.status === "SENT").length || 0;
   const paidInvoices = invoices?.filter((i: any) => i?.status === "PAID").length || 0;
   const totalInvoices = invoices?.length || 0;
-  
-  const activeTasks = (taskStats?.todo || 0) + (taskStats?.inProgress || 0);
-  const overdueTasks = taskStats?.overdue || 0;
-  const completedTasks = taskStats?.done || 0;
 
   // Calculate Business Health Metrics
   // Revenue Health: Based on whether we have revenue and positive trend
@@ -460,7 +465,7 @@ export function CEODashboardClient({
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link
             href="/admin/invoices"
             className="group p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 transition-all"
@@ -474,7 +479,7 @@ export function CEODashboardClient({
           </Link>
 
           <Link
-            href="/admin/ceo/finances"
+            href="/admin/finance"
             className="group p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-slate-900 border border-blue-500/20 hover:border-blue-500/40 transition-all"
           >
             <div className="flex items-center justify-between mb-2">
@@ -483,6 +488,18 @@ export function CEODashboardClient({
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Financial Reports</h3>
             <p className="text-sm text-slate-400">Detailed analytics</p>
+          </Link>
+
+          <Link
+            href="/admin/finance/expenses"
+            className="group p-4 rounded-xl bg-gradient-to-br from-red-500/10 to-slate-900 border border-red-500/20 hover:border-red-500/40 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <DollarSign className="w-6 h-6 text-red-400" />
+              <ArrowUpRight className="w-4 h-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Expenses</h3>
+            <p className="text-sm text-slate-400">Track spending</p>
           </Link>
 
           <Link
@@ -754,19 +771,19 @@ export function CEODashboardClient({
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-slate-400">Learning Resources</span>
-                  <span className="text-sm text-white font-medium">{utilization?.resources?.learning || 0}</span>
+                  <span className="text-sm text-white font-medium">{availableResources?.length || utilization?.resources?.learning || 0}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style={{width: '75%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style={{width: availableResources?.length ? '75%' : '0%'}} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-slate-400">Tools Available</span>
-                  <span className="text-sm text-white font-medium">{utilization?.resources?.tools || 0}</span>
+                  <span className="text-sm text-white font-medium">{availableTools?.length || utilization?.resources?.tools || 0}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style={{width: '85%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style={{width: availableTools?.length ? '85%' : '0%'}} />
                 </div>
               </div>
               <div>
@@ -775,7 +792,7 @@ export function CEODashboardClient({
                   <span className="text-sm text-white font-medium">{utilization?.resources?.automations || 0}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{width: '60%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{width: utilization?.resources?.automations ? '60%' : '0%'}} />
                 </div>
               </div>
             </div>
@@ -956,7 +973,7 @@ export function CEODashboardClient({
         <QuickAccessCard
           title="Finances"
           description="Revenue & invoicing"
-          href="/admin/ceo/finances"
+          href="/admin/finance"
           icon={DollarSign}
           color="emerald"
           stats={formatCurrency(totalRevenue)}
