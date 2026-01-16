@@ -431,7 +431,7 @@ export async function POST(req: NextRequest) {
       // Build absolute URLs for success/cancel (required by Stripe)
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
                       process.env.NEXTAUTH_URL || 
-                      'https://see-zee.com';
+                      'https://seezeestudios.com';
       
       // Ensure URL is absolute (has protocol)
       const absoluteBaseUrl = baseUrl.startsWith('http') 

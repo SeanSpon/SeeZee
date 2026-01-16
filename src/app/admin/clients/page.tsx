@@ -38,7 +38,7 @@ export default async function AdminClientsPage() {
   // Only include organizations that have a valid email address
   organizations.forEach((org: any) => {
     // Skip organizations without email or with placeholder email
-    if (!org.email || org.email === "not-provided@see-zee.com") {
+    if (!org.email || org.email === "not-provided@seezeestudios.com") {
       return;
     }
 
@@ -79,7 +79,7 @@ export default async function AdminClientsPage() {
       const email = organization.email ?? lead.email ?? project.clientEmail;
 
       // Skip if no valid email
-      if (!email || email === "not-provided@see-zee.com") {
+      if (!email || email === "not-provided@seezeestudios.com") {
         return;
       }
 
@@ -118,7 +118,7 @@ export default async function AdminClientsPage() {
       const email = organization.email ?? project.clientEmail;
 
       // Skip if no valid email
-      if (!email || email === "not-provided@see-zee.com") {
+      if (!email || email === "not-provided@seezeestudios.com") {
         return;
       }
 

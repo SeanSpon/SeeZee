@@ -113,7 +113,7 @@ export function renderReceiptEmail({
         <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
           <li style="margin-bottom: 8px;"><strong>${hours} hours</strong> have been added to your account</li>
           <li style="margin-bottom: 8px;">${expirationText}</li>
-          <li style="margin-bottom: 8px;">You can view your available hours in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/client/hours`}" style="color: #3b82f6; text-decoration: underline;">client dashboard</a></li>
+          <li style="margin-bottom: 8px;">You can view your available hours in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/client/hours`}" style="color: #3b82f6; text-decoration: underline;">client dashboard</a></li>
         </ul>
       </div>
     `;
@@ -129,7 +129,7 @@ export function renderReceiptEmail({
         <ul style="margin: 0; padding-left: 20px; color: #065f46;">
           ${subscriptionTier ? `<li style="margin-bottom: 8px;"><strong>Plan:</strong> ${subscriptionTier}</li>` : ''}
           ${nextBillingText ? `<li style="margin-bottom: 8px;">${nextBillingText}</li>` : ''}
-          <li style="margin-bottom: 8px;">You can manage your subscription in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/client/subscriptions`}" style="color: #10b981; text-decoration: underline;">client dashboard</a></li>
+          <li style="margin-bottom: 8px;">You can manage your subscription in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/client/subscriptions`}" style="color: #10b981; text-decoration: underline;">client dashboard</a></li>
         </ul>
       </div>
     `;
@@ -153,7 +153,7 @@ export function renderReceiptEmail({
         <ul style="margin: 0; padding-left: 20px; color: #065f46;">
           <li style="margin-bottom: 8px;">Our team will review your project request within 24 hours</li>
           <li style="margin-bottom: 8px;">You'll receive an email with next steps and project details</li>
-          <li style="margin-bottom: 8px;">Track your project progress in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/client`}" style="color: #10b981; text-decoration: underline;">client dashboard</a></li>
+          <li style="margin-bottom: 8px;">Track your project progress in your <a href="${dashboardUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/client`}" style="color: #10b981; text-decoration: underline;">client dashboard</a></li>
         </ul>
       </div>
     `;
@@ -247,9 +247,9 @@ export function renderReceiptEmail({
         If you have any questions about this receipt or your purchase, please don't hesitate to contact us:
       </p>
       <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 14px;">
-        <li style="margin-bottom: 4px;">Email: <a href="mailto:support@see-zee.com" style="color: #dc2626; text-decoration: none;">support@see-zee.com</a></li>
+        <li style="margin-bottom: 4px;">Email: <a href="mailto:support@seezeestudios.com" style="color: #dc2626; text-decoration: none;">support@seezeestudios.com</a></li>
         <li style="margin-bottom: 4px;">Phone: <a href="tel:5024352986" style="color: #dc2626; text-decoration: none;">(502) 435-2986</a></li>
-        <li style="margin-bottom: 4px;">Visit: <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/contact" style="color: #dc2626; text-decoration: none;">Contact Us</a></li>
+        <li style="margin-bottom: 4px;">Visit: <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/contact" style="color: #dc2626; text-decoration: none;">Contact Us</a></li>
       </ul>
     </div>
     
@@ -286,9 +286,9 @@ ${invoiceUrl ? `View Invoice: ${invoiceUrl}\n` : ''}
 
 Need Help?
 If you have any questions about this receipt or your purchase, please contact us:
-- Email: support@see-zee.com
+- Email: support@seezeestudios.com
 - Phone: (502) 435-2986
-- Visit: ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/contact
+- Visit: ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/contact
 
 This is an automated receipt. Please save this email for your records.
 

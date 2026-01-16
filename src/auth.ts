@@ -66,7 +66,7 @@ const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
 if (!AUTH_URL && !NEXTAUTH_URL) {
   const error = new Error(
     "AUTH_URL or NEXTAUTH_URL is required for OAuth to work. " +
-    "Set AUTH_URL to your production domain (e.g., https://see-zee.com) or " +
+    "Set AUTH_URL to your production domain (e.g., https://seezeestudios.com) or " +
     "NEXTAUTH_URL for NextAuth compatibility."
   );
   console.error("❌ Auth configuration error:", error.message);
@@ -131,7 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         secure: process.env.NODE_ENV === 'production',
         // CRITICAL: Don't set domain in production - let browser handle it
         // Setting domain explicitly can cause cookie issues with subdomains
-        // domain: process.env.NODE_ENV === 'production' ? '.see-zee.com' : undefined,
+        // domain: process.env.NODE_ENV === 'production' ? '.seezeestudios.com' : undefined,
       },
     },
   },

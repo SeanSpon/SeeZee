@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       }],
       hours: 5,
       expirationDays: 60,
-      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/client/hours`,
+      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/client/hours`,
     });
 
     const result = await sendEmail({

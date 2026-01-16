@@ -155,7 +155,7 @@ export async function processDripCampaigns(): Promise<{
 
         // Send email via Resend
         const emailResult = await resend.emails.send({
-          from: "SeeZee Studio <outreach@see-zee.com>",
+          from: "SeeZee Studio <outreach@seezeestudios.com>",
           to: enrollment.prospect.email,
           subject,
           html: htmlContent,
@@ -169,7 +169,7 @@ export async function processDripCampaigns(): Promise<{
         await prisma.sentEmail.create({
           data: {
             prospectId: enrollment.prospect.id,
-            from: "outreach@see-zee.com",
+            from: "outreach@seezeestudios.com",
             to: enrollment.prospect.email,
             subject,
             body: htmlContent,

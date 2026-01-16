@@ -141,7 +141,7 @@ function wrapInEmailLayout(content: string): string {
         <a href="mailto:contact@seezeestudios.com">contact@seezeestudios.com</a> | (502) 435-2986
       </p>
       <p style="margin-top: 16px;">
-        <a href="https://see-zee.com">see-zee.com</a>
+        <a href="https://seezeestudios.com">seezeestudios.com</a>
       </p>
     </div>
   </div>

@@ -86,7 +86,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
       error: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
       to: options.to,
-      from: options.from || process.env.RESEND_FROM_EMAIL || "noreply@see-zee.com",
+      from: options.from || process.env.RESEND_FROM_EMAIL || "noreply@seezeestudios.com",
       subject: options.subject,
       hasApiKey: !!process.env.RESEND_API_KEY,
       apiKeyLength: process.env.RESEND_API_KEY?.length || 0,
@@ -199,7 +199,7 @@ export function renderEmailLayout(content: string): string {
 <body>
   <div class="container">
     <div class="header">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}" class="logo">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}" class="logo">
         SeeZee Studio
       </a>
     </div>
@@ -212,9 +212,9 @@ export function renderEmailLayout(content: string): string {
         Accessible web development for nonprofits & mental health organizations
       </p>
       <p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/privacy">Privacy Policy</a> | 
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/terms">Terms of Service</a> | 
-        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/contact">Contact Us</a>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/privacy">Privacy Policy</a> | 
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/terms">Terms of Service</a> | 
+        <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/contact">Contact Us</a>
       </p>
       <p style="font-size: 12px; color: #9ca3af;">
         &copy; ${new Date().getFullYear()} SeeZee Studio. All rights reserved.

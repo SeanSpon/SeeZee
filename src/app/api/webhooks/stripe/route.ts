@@ -167,7 +167,7 @@ async function sendReceiptEmail(
     }
 
     // Build dashboard URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com';
     let dashboardUrl: string | undefined;
     let invoiceUrl: string | undefined;
 

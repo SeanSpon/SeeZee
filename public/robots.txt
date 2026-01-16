@@ -1,5 +1,5 @@
 # robots.txt for SeeZee Studio
-# https://see-zee.com
+# https://seezeestudios.com
 
 User-agent: *
 Allow: /
@@ -32,7 +32,7 @@ Allow: /projects
 Allow: /start
 
 # Sitemap location
-Sitemap: https://see-zee.com/sitemap.xml
+Sitemap: https://seezeestudios.com/sitemap.xml
 
 
 

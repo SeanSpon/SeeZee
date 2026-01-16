@@ -9,8 +9,8 @@ import { checkDatabaseHealth } from "@/lib/prisma";
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://see-zee.com",
-  "https://www.see-zee.com",
+  "https://seezeestudios.com",
+  "https://www.seezeestudios.com",
 ];
 
 // Helper function to add CORS headers to a response

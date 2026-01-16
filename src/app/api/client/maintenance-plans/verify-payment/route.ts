@@ -328,7 +328,7 @@ export async function POST(req: NextRequest) {
                   }],
                   subscriptionTier: maintenancePlanWithDetails.tier,
                   nextBillingDate: periodEnd,
-                  dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com'}/client/subscriptions`,
+                  dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com'}/client/subscriptions`,
                 });
 
                 const emailResult = await sendEmail({

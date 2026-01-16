@@ -131,7 +131,7 @@ Generate a personalized outreach email for this organization. Focus on their spe
 
   // Ensure body includes signature
   if (!body.includes('Sean McCulloch') && !body.includes('SeeZee Studio')) {
-    body += `\n\nBest regards,\nSean McCulloch\nSeeZee Studio\nLouisville, KY\n(502) 435-2986\nsean@see-zee.com`;
+    body += `\n\nBest regards,\nSean McCulloch\nSeeZee Studio\nLouisville, KY\n(502) 435-2986\nsean@seezeestudios.com`;
   }
 
   return { subject, body };
@@ -169,7 +169,7 @@ Sean McCulloch
 SeeZee Studio
 Louisville, KY
 (502) 435-2986
-sean@see-zee.com`;
+sean@seezeestudios.com`;
   } else {
     body = `Hi there,
 
@@ -186,7 +186,7 @@ Sean McCulloch
 SeeZee Studio
 Louisville, KY
 (502) 435-2986
-sean@see-zee.com`;
+sean@seezeestudios.com`;
   }
 
   return { subject, body };

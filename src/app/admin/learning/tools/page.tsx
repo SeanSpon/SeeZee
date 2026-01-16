@@ -19,7 +19,7 @@ export default async function ToolsPage() {
     ROLE.OUTREACH,
   ]);
 
-  // Fetch tools directly from the database (see-zee.com database)
+  // Fetch tools directly from the database (seezeestudios.com database)
   const tools = await prisma.toolEntry.findMany({
     orderBy: { name: "asc" },
   });

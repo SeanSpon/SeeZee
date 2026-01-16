@@ -275,7 +275,7 @@ async function notifyTeam(conversationId: string, lastMessage: string) {
   
   // Could use Resend to send email:
   // await resend.emails.send({
-  //   from: 'SeeZee Bot <bot@see-zee.com>',
+  //   from: 'SeeZee Bot <bot@seezeestudios.com>',
   //   to: 'contact@seezeestudios.com',
   //   subject: '🚨 Chat Handoff Request',
   //   html: `A visitor wants to speak with someone. <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/chat/${conversationId}">View Conversation</a>`

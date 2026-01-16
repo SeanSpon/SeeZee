@@ -136,8 +136,8 @@ export async function POST(
       nextBillingDate,
       invoiceUrl: invoice.stripeInvoiceId
         ? `https://invoice.stripe.com/i/${invoice.stripeInvoiceId}`
-        : `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com'}/client/invoices/${invoice.id}`,
-      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com'}/client/invoices`,
+        : `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com'}/client/invoices/${invoice.id}`,
+      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com'}/client/invoices`,
     });
 
     // #region agent log

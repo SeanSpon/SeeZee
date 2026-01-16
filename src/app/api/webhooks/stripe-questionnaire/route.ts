@@ -327,7 +327,7 @@ async function handleCheckoutSessionCompleted(
     // Send receipt email after transaction commits
     // Do this outside the transaction to avoid issues
     if (receiptEmailData.paymentAmountCents > 0) {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com';
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com';
       const dashboardUrl = `${baseUrl}/client`;
       
       try {

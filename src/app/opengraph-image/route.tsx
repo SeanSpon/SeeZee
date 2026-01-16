@@ -108,7 +108,7 @@ export async function GET() {
             color: '#9CA3AF',
           }}
         >
-          see-zee.com
+          seezeestudios.com
         </div>
       </div>
     ),

@@ -28,7 +28,7 @@ export const SEEZEE_COMPREHENSIVE_KNOWLEDGE = {
           "Accessible UI/UX design"
         ],
         contact: {
-          email: "sean@see-zee.com",
+          email: "sean@seezeestudios.com",
           phone: "(502) 435-2986",
           github: "https://github.com/SeanSpon",
           linkedin: "https://www.linkedin.com/in/sean-mcculloch-58a3761a9/",
@@ -434,11 +434,11 @@ export const SEEZEE_COMPREHENSIVE_KNOWLEDGE = {
   // ============================================================================
   contact: {
     primary: {
-      email: "sean@see-zee.com",
+      email: "sean@seezeestudios.com",
       phone: "(502) 435-2986"
     },
     location: "Louisville, KY",
-    website: "https://see-zee.com",
+    website: "https://seezeestudios.com",
     note: "We're local to Louisville but serve clients anywhere."
   },
 

@@ -151,7 +151,7 @@ export function AIChatWidget() {
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
         role: "assistant",
-        content: "I'm having trouble connecting right now. Please try again or reach out to us directly at sean@see-zee.com!",
+        content: "I'm having trouble connecting right now. Please try again or reach out to us directly at sean@seezeestudios.com!",
         createdAt: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);

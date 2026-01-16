@@ -221,7 +221,7 @@ Check out our full portfolio at **/portfolio**, or let me know what kind of proj
 
     contact: `I'd love to connect you with our team! Here are your options:
 
-• **Email**: sean@see-zee.com
+• **Email**: sean@seezeestudios.com
 • **Schedule a call**: Visit /contact
 • **Start a project**: Visit /start
 

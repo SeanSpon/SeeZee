@@ -57,7 +57,7 @@ export function renderPasswordChangedEmail({
     </div>
     
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/settings/security" class="button" style="background: #dc2626; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; display: inline-block; font-weight: 600;">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/settings/security" class="button" style="background: #dc2626; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; display: inline-block; font-weight: 600;">
         Review Security Settings
       </a>
     </div>
@@ -65,7 +65,7 @@ export function renderPasswordChangedEmail({
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
     
     <p style="margin: 0; font-size: 14px; color: #6b7280;">
-      Need help? <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support" style="color: #dc2626; text-decoration: none;">Contact our support team</a>
+      Need help? <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support" style="color: #dc2626; text-decoration: none;">Contact our support team</a>
     </p>
   `);
   
@@ -84,9 +84,9 @@ ${deviceInfo ? `Device: ${deviceInfo}` : ''}
 
 If you didn't make this change, your account may be compromised. Please contact our support team immediately and consider enabling two-factor authentication.
 
-Review your security settings: ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/settings/security
+Review your security settings: ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/settings/security
 
-Need help? Contact support at ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support
+Need help? Contact support at ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support
 
 --
 SeeZee Studio

@@ -45,7 +45,7 @@ export function renderVerificationEmail({
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
     
     <p style="margin: 0; font-size: 14px; color: #6b7280;">
-      Need help? <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support" style="color: #dc2626; text-decoration: none;">Contact our support team</a>
+      Need help? <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support" style="color: #dc2626; text-decoration: none;">Contact our support team</a>
     </p>
   `);
   
@@ -60,7 +60,7 @@ ${verificationUrl}
 
 This link will expire in ${expiresIn}. If you didn't create an account with SeeZee Studio, you can safely ignore this email.
 
-Need help? Contact our support team at ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support
+Need help? Contact our support team at ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support
 
 --
 SeeZee Studio
