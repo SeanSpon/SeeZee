@@ -190,8 +190,8 @@ export async function deleteUser(userId: string) {
 
     // Leads - reassign to null or keep orphaned (depends on schema)
     await db.lead.updateMany({
-      where: { sourceUserId: userId },
-      data: { sourceUserId: null },
+      where: { userId },
+      data: { userId: null },
     });
 
     // Project requests - keep but orphan
@@ -217,7 +217,7 @@ export async function deleteUser(userId: string) {
 
     // Delete chat messages
     await db.chatMessage.deleteMany({
-      where: { userId },
+      where: { authorId: userId },
     });
 
     // Delete completions
@@ -227,18 +227,12 @@ export async function deleteUser(userId: string) {
 
     // Unassign todos
     await db.todo.updateMany({
-      where: { assigneeId: userId },
-      data: { assigneeId: null },
+      where: { assignedToId: userId },
+      data: { assignedToId: null },
     });
 
     // Delete todos created by user
-    await db.todo.updateMany({
-      where: { createdById: userId },
-      data: { createdById: null },
-    });
-
-    // Delete resources created
-    await db.resource.deleteMany({
+    await db.todo.deleteMany({
       where: { createdById: userId },
     });
 
@@ -257,24 +251,23 @@ export async function deleteUser(userId: string) {
       where: { userId },
     });
 
-    // Delete trainings created
-    await db.training.updateMany({
-      where: { createdById: userId },
-      data: { createdById: null },
-    });
-
+    // Trainings and resources will cascade automatically (onDelete: Cascade)
+    
     // Delete revenue splits
     await db.revenueSplit.deleteMany({
       where: { createdById: userId },
     });
 
-    // Delete client tasks
+    // Nullify client tasks created by user
     await db.clientTask.updateMany({
       where: { createdById: userId },
       data: { createdById: null },
     });
 
-    // These should cascade automatically but double-check:
+    // These will cascade automatically:
+    // - trainings (has onDelete: Cascade)
+    // - resources (has onDelete: Cascade)
+    // - assignments (has onDelete: Cascade)
     // - notifications (has onDelete: Cascade)
     // - sessions (has onDelete: Cascade)
     // - accounts (has onDelete: Cascade)
