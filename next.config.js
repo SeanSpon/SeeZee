@@ -125,7 +125,7 @@ const nextConfig = {
         destination: 'https://seezeestudios.com/:path*',
         permanent: true,
       },
-      // Redirect old domain to new domain
+      // Redirect see-zee.com to primary domain (seezeestudios.com)
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'see-zee.com' }],

@@ -8,6 +8,8 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://seezeestudios.com",
   "https://www.seezeestudios.com",
+  "https://see-zee.com",
+  "https://www.see-zee.com",
 ];
 
 function getCorsHeaders(origin: string | null) {
