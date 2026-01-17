@@ -108,7 +108,7 @@ export async function PATCH(
     // Check if invoice exists
     const existingInvoice = await db.invoice.findUnique({
       where: { id },
-      select: { id: true, status: true, paidAt: true },
+      select: { id: true, status: true, paidAt: true, items: true },
     });
 
     if (!existingInvoice) {
@@ -141,8 +141,8 @@ export async function PATCH(
     if (data.notes !== undefined) updateData.notes = data.notes;
 
     // Update amounts if items are provided
-    if (data.items && Array.isArray(data.items)) {
-      // Delete existing items
+    if (data.items && Array.isArray(data.items) && data.items.length > 0) {
+      // Delete existing items first
       await db.invoiceItem.deleteMany({
         where: { invoiceId: id },
       });
