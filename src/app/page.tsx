@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import ScrollAnimation from '@/components/shared/ScrollAnimation'
 import StickyCTA from '@/components/shared/StickyCTA'
 import ImageLightbox from '@/components/shared/ImageLightbox'
+import { TechStrip } from '@/components/sections/tech-strip'
 import { 
   FiArrowRight, 
   FiCheck, 
@@ -453,7 +454,7 @@ export default function HomePage() {
               style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
             >
               <span className="text-white">Custom Web & App Development</span>
-              <span className="text-white block mt-2">for Nonprofits</span>
+              <span className="text-white block mt-2">That Actually Works</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -463,9 +464,9 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
             >
-              Sean & Zach build accessible platforms for mental health organizations, 
-              recovery centers, and nonprofits that need technology to feel{' '}
-              <span className="text-white font-semibold">simple, trustworthy, and human</span>.
+              Sean & Zach build modern web platforms for businesses and organizations 
+              that need technology to be{' '}
+              <span className="text-white font-semibold">fast, reliable, and professional</span>.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -517,7 +518,7 @@ export default function HomePage() {
                 { icon: <FiCheck className="w-4 h-4" />, text: 'FBLA Competitors' },
                 { icon: <FiEye className="w-4 h-4" />, text: 'Accessibility-First' },
                 { icon: <FiUsers className="w-4 h-4" />, text: '2 Active Projects' },
-                { icon: <FiHeart className="w-4 h-4" />, text: 'Nonprofit Specialists' },
+                { icon: <FiHeart className="w-4 h-4" />, text: 'Full-Stack Development' },
               ].map((badge, index) => (
                 <motion.div
                   key={index}
@@ -605,17 +606,20 @@ export default function HomePage() {
 
               {/* Text */}
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed px-2">
-                <p>
-                  We're Sean and Zach — two developers from Louisville who build calm, trustworthy tech for organizations that don't have a tech team.
+                <p className="text-xl text-white font-semibold">
+                  We're Sean and Zach, a founder-led development team based in Louisville.
                 </p>
                 <p>
-                  Sean's been building systems since middle school. One early mistake (accidentally crashing a school network in 7th grade) taught him fast how powerful technology can be — and pushed him toward building responsibly, not just experimenting. Since then, he's built Raspberry Pi systems, financial tools, and platforms for real organizations.
+                  We build modern web platforms for businesses that need reliable technology without enterprise pricing.
                 </p>
                 <p>
-                  Zach came in with a strong finance and business mindset and quickly became a real builder too — not just planning, but coding and problem-solving alongside Sean.
+                  <span className="text-white font-semibold">Sean leads engineering and system architecture</span>, with hands-on experience building full-stack platforms, automation systems, and production infrastructure for real clients.
                 </p>
                 <p>
-                  We started with Big Red Bus and learned how to build accessible technology that feels simple and human. When you work with SeeZee, you get a real team: we both code, we both stay involved, and we build with you from first draft to long-term support.
+                  <span className="text-white font-semibold">Zach brings a strong business and finance background</span> and works directly in the codebase to make sure what gets built actually supports the business long-term.
+                </p>
+                <p className="pt-2 border-t border-white/10">
+                  We don't outsource. We don't hand projects to juniors. You work directly with the people building your system — from first draft through ongoing support.
                 </p>
                 <p className="text-sm text-gray-400 italic">
                   Gabe (the guy on the right) brings the{' '}
@@ -628,10 +632,7 @@ export default function HomePage() {
                   >
                     muscle
                   </motion.span>
-                  {' '}to the fight — handling the heavy lifting when projects need extra hands.
-                </p>
-                <p className="text-white font-semibold">
-                  We don't just pitch ideas — we show up with drafts, designs, and a clear plan.
+                  {' '}to the team — handling the heavy lifting when projects need extra hands.
                 </p>
               </div>
             </div>
@@ -679,7 +680,7 @@ export default function HomePage() {
                 Who We Build For
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-                We work with organizations that need technology to feel calm, clear, and dependable.
+                We work with businesses and organizations that need powerful technology without the enterprise complexity.
               </p>
             </div>
           </ScrollAnimation>
@@ -688,29 +689,29 @@ export default function HomePage() {
             {[
               {
                 icon: <FiHeart className="w-12 h-12" />,
-                title: 'Mental Health Organizations',
-                description: 'Support groups, recovery programs, therapy centers',
+                title: 'Small to Medium Businesses',
+                description: 'Growing companies that need custom solutions',
                 color: 'text-sky-400',
                 bgColor: 'bg-sky-400/10'
               },
               {
                 icon: <FiUsers className="w-12 h-12" />,
-                title: 'Neuro-Inclusive Communities',
-                description: 'ADHD, autism, cognitive accessibility advocacy',
+                title: 'Service Organizations',
+                description: 'Healthcare, consulting, professional services',
                 color: 'text-indigo-400',
                 bgColor: 'bg-indigo-400/10'
               },
               {
                 icon: <FiHeart className="w-12 h-12" />,
-                title: 'Senior & Community Groups',
-                description: 'Organizations serving older adults who need simple tech',
+                title: 'Startups & Founders',
+                description: 'Early-stage companies building their first platform',
                 color: 'text-emerald-400',
                 bgColor: 'bg-emerald-400/10'
               },
               {
                 icon: <FiShield className="w-12 h-12" />,
-                title: 'Nonprofits & Small Teams',
-                description: '501(c)(3) orgs with limited budgets and big missions',
+                title: 'Community Organizations',
+                description: 'Nonprofits and local groups with real impact',
                 color: 'text-teal-400',
                 bgColor: 'bg-teal-400/10'
               },
@@ -769,22 +770,22 @@ export default function HomePage() {
             {[
               {
                 icon: <FiEye className="w-14 h-14" />,
-                title: 'Accessible Websites',
-                description: 'Clear navigation, large fonts, and clean design. Built so anyone — even non-technical users — can feel confident using your site. No training videos required.',
+                title: 'Modern Web Applications',
+                description: 'Full-stack platforms with user authentication, real-time features, and scalable architecture. Built with Next.js, React, and TypeScript for speed and maintainability.',
                 color: 'text-sky-400',
                 borderColor: 'border-t-sky-400'
               },
               {
                 icon: <FiCalendar className="w-14 h-14" />,
-                title: 'Donation & Event Systems',
-                description: 'Secure donation processing, event scheduling, and support group management that actually works the way you need it to. Simple for your team, reliable for your community.',
+                title: 'Custom Business Systems',
+                description: 'Payment processing, booking systems, CRM integrations, and automation workflows tailored to your specific needs. No bloated enterprise software required.',
                 color: 'text-emerald-400',
                 borderColor: 'border-t-emerald-400'
               },
               {
                 icon: <FiTool className="w-14 h-14" />,
-                title: 'Admin Dashboards',
-                description: 'Simple admin tools that don\'t require a tech degree. Update your site, manage events, track donations — all in one place that makes sense.',
+                title: 'Admin Dashboards & APIs',
+                description: 'Powerful admin tools for managing your platform. Track metrics, manage users, and control your content — all with clean interfaces and robust APIs.',
                 color: 'text-indigo-400',
                 borderColor: 'border-t-indigo-400'
               },
@@ -811,6 +812,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Tech Stack Section */}
+      <TechStrip />
 
       {/* Featured Project - Big Red Bus */}
       <section className="py-12 sm:py-20 bg-[#0a1128] relative overflow-hidden">
@@ -975,22 +979,22 @@ export default function HomePage() {
             {[
               {
                 emoji: '🧠',
-                title: 'Accessible by Design',
-                description: 'Built for cognitive clarity, not complexity. Clear navigation, large fonts, minimal distractions — the same principles we used when building Big Red Bus and every project since.',
+                title: 'Built for Performance',
+                description: 'Fast load times, clean code, and intuitive interfaces. We build platforms that are easy to use and even easier to scale as your business grows.',
                 bgColor: 'bg-sky-400/10',
                 titleColor: 'text-sky-300'
               },
               {
                 emoji: '❤️',
-                title: 'Community First',
-                description: 'We work with both well-funded partners and small nonprofits scraping by. We genuinely believe in making technology affordable for organizations doing important work — because impact matters more than budget size.',
+                title: 'Transparent Process',
+                description: 'No hidden fees, no surprise costs. You see working prototypes early, track progress in real-time, and know exactly what you\'re paying for at every stage.',
                 bgColor: 'bg-rose-400/10',
                 titleColor: 'text-rose-300'
               },
               {
                 emoji: '🛠️',
-                title: 'Long-Term Support',
-                description: 'We don\'t disappear after launch. When something breaks, changes, or stops fitting your needs, we\'re here to fix it or rebuild it better. Your success matters to us beyond the initial project.',
+                title: 'Long-Term Partnership',
+                description: 'We don\'t disappear after launch. When something breaks, changes, or needs enhancement, we\'re here to maintain and evolve your platform as your business grows.',
                 bgColor: 'bg-slate-400/10',
                 titleColor: 'text-slate-300'
               },
@@ -1025,14 +1029,14 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold mb-4 sm:mb-6 text-white">
-                Your mission shouldn't be held back by confusing technology.
+                Your business shouldn't be held back by outdated technology.
               </h2>
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed mb-8 sm:mb-10">
                 <p>
-                  Most nonprofits and community organizations are juggling outdated websites, broken donation tools, and software that nobody knows how to use.
+                  Most growing businesses are stuck with slow websites, clunky systems, and platforms that break when they need them most.
                 </p>
                 <p>
-                  We step in, simplify everything, and take the technical stress off your plate — so you can focus on your mission, not your systems.
+                  We build modern, scalable solutions that work — so you can focus on growing your business, not fighting with your tech stack.
                 </p>
               </div>
             </div>
@@ -1048,10 +1052,10 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center px-2">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 sm:mb-6 text-white">
-                Ready to build something meaningful?
+                Ready to build something powerful?
               </h2>
               <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-12 leading-relaxed">
-                Tell us what you're trying to build. We'll show you what's possible — no pressure, no tech jargon, no BS.
+                Tell us what you need to build. We'll show you what's possible — no pressure, no tech jargon, no BS.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -1065,10 +1069,10 @@ export default function HomePage() {
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
-                    href="/start/nonprofit-tiers"
+                    href="/projects"
                     className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 border-2 border-white text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-semibold text-base sm:text-lg backdrop-blur min-h-[48px] w-full sm:w-auto"
                   >
-                    View Nonprofit Packages
+                    View Our Work
                   </Link>
                 </motion.div>
               </div>

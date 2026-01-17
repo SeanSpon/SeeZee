@@ -33,7 +33,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto"
               >
-                We're just getting started. Here's real work we're actively developing and what we've already shipped.
+                Real projects, real production systems, real results. Here's what we've built and shipped.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -429,9 +429,9 @@ export default function ProjectsPage() {
               Why This Matters
             </h2>
             <p className="text-lg text-gray-300 leading-relaxed">
-              We don't list fake projects or inflate results. Every project here represents real work, real learning, and real responsibility.
+              We don't list fake projects or inflate results. Every project here represents real production systems handling real users and real transactions.
               <br /><br />
-              We're early-stage, but we take the work seriously.
+              These platforms are live, maintained, and actually being used.
             </p>
           </ScrollAnimation>
         </div>
@@ -447,7 +447,7 @@ export default function ProjectsPage() {
               Your Project Could Be Next
             </h2>
             <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Whether you're a nonprofit, community organization, or small business — let's create something meaningful together.
+              Whether you're a startup, growing business, or organization that needs custom technology — let's build something powerful together.
             </p>
             <Link
               href="/start"

@@ -37,7 +37,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-6 leading-tight"
               >
-                Built by Sean and Zach — two developers who care about doing this right.
+                Built by Sean and Zach — two developers who build systems that work.
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -45,7 +45,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
               >
-                SeeZee Studio is a small team from Louisville building accessible, community-focused technology — starting with projects rooted in FBLA competition work and nonprofit initiatives.
+                SeeZee Studio is a development team from Louisville building modern web platforms for businesses that need reliable technology without enterprise complexity.
               </motion.p>
             </div>
           </ScrollAnimation>
@@ -64,39 +64,39 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee didn't begin as a typical web agency.
+                  SeeZee didn't start as a typical web agency.
                 </p>
                 <p>
-                  SeeZee started with two high school friends — Sean and Zach — building websites for FBLA competitions and community projects. We helped local businesses, nonprofits, and community organizations get online — fast, simple, and affordable.
+                  We began with two high school friends — Sean and Zach — building websites for FBLA competitions and real client projects. We learned fast by working on complex systems with real requirements: payment processing, user management, automated workflows, and scalable architecture.
                 </p>
                 <p className="text-xl text-white font-semibold pt-4">
-                  But we kept noticing the same problem:
+                  But we kept seeing the same problem:
                 </p>
                 <p>
-                  The people who needed websites the most — mental health organizations, support groups, senior communities, small nonprofits — were either being ignored by big agencies or stuck with confusing, outdated platforms.
+                  Growing businesses and service organizations needed custom platforms, but traditional agencies were charging $50k+ and taking months just to deliver a basic MVP.
                 </p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>Traditional agencies wanted $10,000+ and months of meetings.</span>
+                    <span>Enterprise agencies wanted huge budgets and endless meetings.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>DIY website builders were too complicated for non-technical users.</span>
+                    <span>DIY platforms couldn't handle custom business logic.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>And nobody was designing with cognitive accessibility in mind.</span>
+                    <span>And freelancers would build it, then disappear.</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
                   So we built SeeZee differently.
                 </p>
                 <p>
-                  We focus on the organizations and communities that get overlooked. We build systems that actually work for people who struggle with technology. We design with empathy, clarity, and purpose.
+                  We build fast, we price transparently, and we stick around. Modern tech stack, clean code, and real support — without the enterprise price tag.
                 </p>
                 <p>
-                  And we don't disappear after launch — we maintain, support, and improve your site as your organization grows.
+                  We don't disappear after launch — we maintain, optimize, and scale your platform as your business grows.
                 </p>
               </div>
             </ScrollAnimation>
@@ -116,19 +116,19 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee was born at <span className="text-white font-semibold">Trinity High School</span>, where Sean and Zach first discovered their passion for building technology that serves others.
+                  SeeZee was born at <span className="text-white font-semibold">Trinity High School</span>, where Sean and Zach first discovered their passion for building technology that actually works.
                 </p>
                 <p>
-                  Through our involvement with <span className="text-white font-semibold">FBLA (Future Business Leaders of America)</span>, we learned that business and service go hand in hand. This organization taught us the importance of leadership, community engagement, and using our skills to make a real difference.
+                  Through our involvement with <span className="text-white font-semibold">FBLA (Future Business Leaders of America)</span>, we learned how to build professional systems under pressure. FBLA competitions taught us to scope projects realistically, deliver on tight deadlines, and present technical work clearly to non-technical stakeholders.
                 </p>
                 <p>
-                  Our early projects — websites built for FBLA competitions, community service initiatives, and local nonprofits — showed us that there was a gap in the market. Organizations that needed help the most were being overlooked by traditional agencies.
+                  Our early projects — full-stack platforms built for FBLA competitions and real clients — showed us there was a gap in the market. Growing businesses needed custom solutions but couldn't afford enterprise agencies.
                 </p>
                 <p className="text-xl text-white font-semibold pt-4">
-                  That's when SeeZee became more than a school project — it became our mission.
+                  That's when SeeZee became more than a school project — it became a real business.
                 </p>
                 <p>
-                  Today, we continue to partner with FBLA chapters, offering students real-world experience by working on projects for nonprofits and community organizations. This creates a cycle of impact: students learn valuable skills, communities get the support they need, and organizations receive professional websites at affordable rates.
+                  Today, we build production-ready platforms for clients who need reliable technology fast. We've worked on donation systems processing real payments, user management platforms serving hundreds of people, and custom business tools that actually get used daily.
                 </p>
               </div>
             </ScrollAnimation>
@@ -287,13 +287,13 @@ export default function AboutPage() {
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Director</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Sean builds the systems that power SeeZee — but more importantly, he builds with empathy.
+                      Sean builds the systems that power SeeZee — full-stack platforms with clean architecture and scalable design.
                     </p>
                     <p>
-                      He specializes in cognitive accessibility: creating websites and platforms that work for people with memory challenges, processing differences, anxiety, or sensory sensitivities.
+                      He specializes in modern web development: Next.js, React, TypeScript, PostgreSQL, and building systems that are fast, maintainable, and actually work under real-world conditions.
                     </p>
                     <p className="text-white font-semibold">
-                      Every system he designs follows one principle: "If someone can't use it easily, it's not done."
+                      Every system he builds follows one principle: "If it's not production-ready, it's not done."
                     </p>
                   </div>
                   <div className="mb-6">
@@ -425,13 +425,13 @@ export default function AboutPage() {
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Client Experience Director</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Zach makes SeeZee human.
+                      Zach handles the business side and client experience.
                     </p>
                     <p>
-                      He works directly with clients who feel overwhelmed by technology, guiding them through the process with patience, clarity, and genuine care.
+                      He works directly with clients to scope projects realistically, set clear expectations, and translate business requirements into technical specifications that Sean can build.
                     </p>
                     <p>
-                      He also leads SeeZee's community partnerships with FBLA, Beta Club, and local service organizations — connecting students with real projects that help nonprofits and community groups.
+                      He also codes — contributing to frontend development, content management systems, and ensuring every project ships on time and on budget.
                     </p>
                   </div>
                   <div className="mb-6">
@@ -439,11 +439,15 @@ export default function AboutPage() {
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Client communication & onboarding</span>
+                        <span>Client communication & project scoping</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Project planning & timelines</span>
+                        <span>Project management & timelines</span>
+                      </li>
+                      <li className="flex items-start">
+                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <span>Frontend development & UI</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
@@ -451,20 +455,16 @@ export default function AboutPage() {
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Community partnerships</span>
+                        <span>Business development</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Nonprofit discount coordination</span>
-                      </li>
-                      <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Long-term client relationships</span>
+                        <span>Long-term client partnerships</span>
                       </li>
                     </ul>
                   </div>
                   <p className="text-gray-300 italic mb-4">
-                    Zach makes every client feel capable — even if they've never touched a computer before.
+                    Zach ensures every project ships on time, on budget, and actually solves the problem it was built to solve.
                   </p>
                   <div className="flex flex-wrap gap-3">
                     <motion.a
@@ -523,33 +523,33 @@ export default function AboutPage() {
               {[
                 {
                   icon: <FiEye className="w-8 h-8" />,
-                  title: 'Technology Should Be Accessible — Cognitively, Not Just Structurally',
-                  description: 'We design websites for people with memory issues, processing differences, anxiety, sensory sensitivities, and other cognitive challenges. Clear navigation. Large text. Predictable flows. No jargon. No clutter. Accessibility isn\'t a checklist — it\'s our foundation.',
+                  title: 'Clean Code, Fast Performance',
+                  description: 'We build with modern tools and best practices: Next.js for performance, TypeScript for reliability, and PostgreSQL for data integrity. Every system is built to scale as your business grows.',
                 },
                 {
                   icon: <FiUsers className="w-8 h-8" />,
-                  title: 'People Deserve Dignity Online — Even If They Struggle With Tech',
-                  description: 'If someone can\'t code, can\'t manage complex dashboards, or gets overwhelmed by standard interfaces — they shouldn\'t be left behind. We build systems that are genuinely easy to use for everyone, not just tech-savvy users.',
+                  title: 'Transparent Pricing, Real Timelines',
+                  description: 'No hidden fees. No surprise invoices. You know exactly what you\'re paying for, and we deliver on the timeline we promise. Hour-based billing means you only pay for actual work done.',
                 },
                 {
                   icon: <FiHeart className="w-8 h-8" />,
-                  title: 'We Build for the People Big Agencies Overlook',
-                  description: 'Mental health organizations. Support groups. Senior communities. Small nonprofits. Neuro-inclusive advocacy groups. These are the people who need digital tools the most — and the ones traditional agencies ignore. We don\'t.',
+                  title: 'Built for Real-World Use',
+                  description: 'We don\'t build MVPs that fall apart under real traffic. We build production-ready platforms with proper error handling, security, testing, and monitoring from day one.',
                 },
                 {
                   icon: <FiShield className="w-8 h-8" />,
                   title: 'Support Doesn\'t Disappear After Launch',
-                  description: 'Most agencies take your money, build a site, and vanish. We\'re committed to staying involved long-term. We maintain, update, fix, improve, and evolve your systems as your organization grows. Long-term partnerships, not one-time projects.',
+                  description: 'Most developers build it and vanish. We stick around. Maintenance plans, quarterly check-ins, and ongoing support — because your platform needs to evolve as your business grows.',
                 },
                 {
                   icon: <FiHeart className="w-8 h-8" />,
-                  title: 'Relationships Matter More Than Contracts',
-                  description: 'We aim to build relationships that last for years — not because clients are locked in by a contract, but because they genuinely like working with us. We talk like humans. We keep things simple. We deliver more than we promise.',
+                  title: 'Partnerships, Not Projects',
+                  description: 'We build relationships that last years — not because you\'re locked into a contract, but because we deliver quality work and actually respond when you need us.',
                 },
                 {
                   icon: <FiAward className="w-8 h-8" />,
-                  title: 'We Give Back Through Community & Education',
-                  description: 'Through partnerships with FBLA, Beta Club, and local schools, we help students gain real-world experience by building websites for nonprofits and community organizations. This creates a cycle of impact: students learn, communities grow, and organizations get the support they deserve.',
+                  title: 'Proven Under Pressure',
+                  description: 'Our FBLA competition background taught us to build fast, present clearly, and deliver under tight deadlines. That competitive edge shows up in every client project we ship.',
                 },
               ].map((value, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
@@ -583,12 +583,12 @@ export default function AboutPage() {
             </ScrollAnimation>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { emoji: '🧠', title: 'Mental Health Organizations', desc: 'Support groups, therapy centers, recovery programs, crisis services' },
-                { emoji: '🌈', title: 'Neuro-Inclusive Communities', desc: 'ADHD, autism, cognitive accessibility, neurodivergent advocacy' },
-                { emoji: '👴', title: 'Senior & Community Groups', desc: 'Organizations serving older adults who need simple, usable technology' },
-                { emoji: '💙', title: 'Nonprofits & Small Teams', desc: '501(c)(3) organizations with limited budgets and big missions' },
-                { emoji: '🎓', title: 'Student & Youth Programs', desc: 'Schools, service clubs, and youth-led community projects' },
-                { emoji: '❤️', title: 'Support & Recovery Groups', desc: 'AA, NA, Al-Anon, mental health peer support, 12-step programs' },
+                { emoji: '🚀', title: 'Growing Businesses', desc: 'SMBs that need custom platforms without enterprise pricing' },
+                { emoji: '🏥', title: 'Service Organizations', desc: 'Healthcare, consulting, professional services, legal firms' },
+                { emoji: '🎯', title: 'Startups & Founders', desc: 'Early-stage companies building their first scalable platform' },
+                { emoji: '💼', title: 'B2B Companies', desc: 'Businesses that need internal tools, CRMs, or client portals' },
+                { emoji: '🏢', title: 'Local Businesses', desc: 'Louisville-area companies ready to modernize their web presence' },
+                { emoji: '❤️', title: 'Community Organizations', desc: 'Nonprofits and local groups doing meaningful work' },
               ].map((group, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
@@ -679,41 +679,41 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee exists because we believe the internet should include everyone.
+                  SeeZee exists because growing businesses deserve reliable technology without enterprise complexity.
                 </p>
                 <p>
-                  Too many people — especially those with cognitive challenges, mental health needs, or limited tech experience — are excluded from digital spaces because websites are too complicated, too confusing, or too expensive to access.
+                  Too many companies are stuck between overpriced agencies that take forever, and cheap freelancers who disappear. You need a development partner who can build fast, price transparently, and actually stick around.
                 </p>
                 <p className="text-xl text-white font-semibold">
-                  We're working to change that.
+                  That's what we do.
                 </p>
                 <p>We build:</p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Accessible platforms for mental health and support organizations</span>
+                    <span>Full-stack platforms with modern tech stacks</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Simple admin tools for people who aren't tech-savvy</span>
+                    <span>Custom business systems that actually scale</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Affordable solutions for nonprofits with limited budgets</span>
+                    <span>Production-ready code with proper testing and documentation</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Long-term partnerships that don't end after launch</span>
+                    <span>Long-term partnerships with ongoing support</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
                   We're not just building websites.
                 </p>
                 <p className="text-2xl text-trinity-red font-bold">
-                  We're building access. We're building dignity. We're building community.
+                  We're building systems that grow with your business.
                 </p>
                 <p className="text-lg text-gray-300 pt-4">
-                  And we're working to prove that technology, when designed with empathy, can lift people up instead of leaving them behind.
+                  And we're proving that you don't need a $100k budget to get professional, scalable technology.
                 </p>
               </div>
             </ScrollAnimation>
@@ -728,10 +728,10 @@ export default function AboutPage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-6">
-                Let's Build Something Meaningful Together
+                Let's Build Something Powerful Together
               </h2>
               <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed">
-                Whether you're a nonprofit, support group, community organization, or small team trying to make a difference — we'd love to help.
+                Whether you're a startup, growing business, service organization, or company that needs custom technology — we'd love to help.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

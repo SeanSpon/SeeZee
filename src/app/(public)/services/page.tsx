@@ -38,7 +38,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-6 leading-tight"
               >
-                Professional Web Development
+                Modern Web Development
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -46,7 +46,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-[#cbd5e1] leading-relaxed mb-8"
               >
-                Simple, transparent hour-based pricing. Choose your project type and get started.
+                Transparent hour-based pricing. Fast delivery. Production-ready code.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -79,7 +79,7 @@ export default function ServicesPage() {
           </div>
 
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {/* Marketing Website */}
+            {/* Marketing Website - Featured with cyan border */}
             <ScrollAnimation delay={0.1}>
               <div className="bg-white/5 border-2 border-[#22d3ee] rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl mb-4">🌐</div>
@@ -211,6 +211,45 @@ export default function ServicesPage() {
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-[#dc2626] hover:bg-[#dc2626] transition-all duration-200 font-semibold text-sm"
                 >
                   Get Started
+                </Link>
+              </div>
+            </ScrollAnimation>
+
+            {/* Maintenance Plan */}
+            <ScrollAnimation delay={0.5}>
+              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden">
+                <div className="absolute top-4 right-4">
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-xs font-bold rounded-full uppercase shadow-lg">
+                    Popular
+                  </span>
+                </div>
+                <div className="text-4xl mb-4">🔧</div>
+                <h3 className="text-xl font-heading font-bold text-white mb-2">
+                  Maintenance Plan
+                </h3>
+                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
+                  $2k/quarter
+                </div>
+                <p className="text-white/70 mb-4 text-sm">30 hours included per quarter</p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-start text-white/80 text-sm">
+                    <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
+                    <span>Priority 24hr support</span>
+                  </li>
+                  <li className="flex items-start text-white/80 text-sm">
+                    <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
+                    <span>Security & backups</span>
+                  </li>
+                  <li className="flex items-start text-white/80 text-sm">
+                    <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
+                    <span>Unlimited change requests</span>
+                  </li>
+                </ul>
+                <Link
+                  href="/start"
+                  className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#dc2626] text-white rounded-lg hover:bg-[#b91c1c] transition-all duration-200 font-semibold text-sm"
+                >
+                  Learn More
                 </Link>
               </div>
             </ScrollAnimation>
@@ -468,8 +507,8 @@ export default function ServicesPage() {
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiUsers className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Real Support</h4>
-                <p className="text-white/70">We're students who care about our work. You get direct access to developers.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Direct Access</h4>
+                <p className="text-white/70">Work directly with the developers building your platform. No account managers or middlemen.</p>
               </div>
             </ScrollAnimation>
 
@@ -478,8 +517,8 @@ export default function ServicesPage() {
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiAward className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Proven Track Record</h4>
-                <p className="text-white/70">FBLA competitors with real client projects. Check our portfolio.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Battle-Tested</h4>
+                <p className="text-white/70">FBLA competition background + real production systems serving hundreds of users.</p>
               </div>
             </ScrollAnimation>
           </div>
@@ -512,8 +551,8 @@ export default function ServicesPage() {
 
             <ScrollAnimation delay={0.3}>
               <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
-                <h4 className="text-xl font-semibold text-white mb-3">Do you work with nonprofits?</h4>
-                <p className="text-white/70">Yes! We offer 40% discounts for verified 501(c)(3) nonprofit organizations.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Do you offer payment plans?</h4>
+                <p className="text-white/70">Yes! We offer flexible payment schedules for larger projects. Typically 50% upfront, 50% on delivery.</p>
               </div>
             </ScrollAnimation>
 
