@@ -7,7 +7,16 @@
 
 ## Work Completed
 
-### 1. Documentation Cleanup
+### 1. Build Fix (AUTH_URL Error)
+
+Fixed the Vercel build failure caused by `src/auth.ts` throwing an error when `AUTH_URL`/`NEXTAUTH_URL` isn't set at build time.
+
+**Before:** Build failed with "AUTH_URL or NEXTAUTH_URL is required for OAuth to work"
+**After:** Build succeeds with a warning - actual errors surface at runtime when auth is used
+
+This allows Vercel preview deployments to succeed even without all environment variables configured.
+
+### 2. Documentation Cleanup
 
 **56 implementation docs archived** to `docs/archive/`
 
@@ -90,12 +99,16 @@ The deployment failure is due to **missing environment variables** (`AUTH_URL`/`
 
 ---
 
-## Files Changed in This Branch
+## Commits in This Branch
 
-```
-57 files changed
-- 56 files moved from root to docs/archive/
-- 1 file modified (docs/archive/IMPLEMENTATION_COMPLETE.md)
-```
+1. `chore: clean up root directory - archive 56 implementation docs`
+2. `docs: add main branch hygiene summary with PR recommendations`
+3. `fix: don't throw on missing AUTH_URL during build`
+
+## Files Changed
+
+- **56 docs moved** from root to `docs/archive/`
+- **1 file fixed**: `src/auth.ts` - removed build-time error for missing AUTH_URL
+- **1 file added**: `MAIN_BRANCH_HYGIENE_SUMMARY.md`
 
 All archived documentation preserved for reference in `docs/archive/`.
