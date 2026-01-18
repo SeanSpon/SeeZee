@@ -63,18 +63,18 @@ const AUTH_URL = process.env.AUTH_URL;
 const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
 
 // Validate URL configuration - this is critical for OAuth to work
+// NOTE: Don't throw at build time - only warn. The error will surface at runtime
+// when auth operations are actually performed. This allows builds to succeed
+// even when env vars aren't configured (e.g., Vercel preview deployments).
 if (!AUTH_URL && !NEXTAUTH_URL) {
-  const error = new Error(
-    "AUTH_URL or NEXTAUTH_URL is required for OAuth to work. " +
-    "Set AUTH_URL to your production domain (e.g., https://see-zee.com) or " +
+  console.warn(
+    "⚠️ AUTH_URL or NEXTAUTH_URL is not set. " +
+    "OAuth sign-in may not work correctly. " +
+    "Set AUTH_URL to your production domain (e.g., https://seezeestudios.com) or " +
     "NEXTAUTH_URL for NextAuth compatibility."
   );
-  console.error("❌ Auth configuration error:", error.message);
-  console.error("❌ This will cause 'Configuration' errors when signing in with Google");
-  // Don't throw in development to allow local testing, but warn heavily
-  if (process.env.NODE_ENV === "production") {
-    throw error;
-  }
+  // Only warn during build - runtime errors will be caught by NextAuth
+  // Don't throw - this breaks Vercel preview builds that may not have all env vars
 }
 
 // URL configuration validated (logs removed to prevent console spam)
