@@ -71,8 +71,11 @@ if (!AUTH_URL && !NEXTAUTH_URL) {
   );
   console.error("❌ Auth configuration error:", error.message);
   console.error("❌ This will cause 'Configuration' errors when signing in with Google");
-  // Don't throw in development to allow local testing, but warn heavily
-  if (process.env.NODE_ENV === "production") {
+  // Don't throw during build time (Vercel sets VERCEL=1 during builds)
+  // Don't throw in development to allow local testing
+  // Only throw at runtime in production when actually used
+  const isBuildTime = process.env.VERCEL === "1" || process.env.CI === "true";
+  if (process.env.NODE_ENV === "production" && !isBuildTime) {
     throw error;
   }
 }
