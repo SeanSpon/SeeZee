@@ -74,7 +74,7 @@ if (!AUTH_URL && !NEXTAUTH_URL) {
   // Don't throw during build time (Vercel sets VERCEL=1 during builds)
   // Don't throw in development to allow local testing
   // Only throw at runtime in production when actually used
-  const isBuildTime = process.env.VERCEL === "1" || process.env.CI === "true";
+  const isBuildTime = !!process.env.VERCEL || !!process.env.CI;
   if (process.env.NODE_ENV === "production" && !isBuildTime) {
     throw error;
   }
