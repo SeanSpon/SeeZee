@@ -29,33 +29,34 @@ interface CaseStudy {
   websiteUrl?: string
 }
 
-// Client-side image component with fallback
-function ClientImageWithFallback({ 
-  src, 
-  alt, 
-  className,
-  fallbackSrc = '/avatar-placeholder.svg'
+// Professional avatar component with gradient fallback
+function PartnerAvatar({ 
+  name,
+  imageUrl,
+  className = ""
 }: { 
-  src: string
-  alt: string
+  name: string
+  imageUrl?: string
   className?: string
-  fallbackSrc?: string
 }) {
-  const [imgSrc, setImgSrc] = useState(src)
   const [hasError, setHasError] = useState(false)
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+
+  if (!imageUrl || hasError) {
+    return (
+      <div className={`w-full h-full bg-gradient-to-br from-[#22d3ee] via-[#0ea5e9] to-[#0284c7] flex items-center justify-center ${className}`}>
+        <span className="text-5xl lg:text-7xl font-bold text-white/90 drop-shadow-lg">{initials}</span>
+      </div>
+    )
+  }
 
   return (
     <Image
-      src={hasError ? fallbackSrc : imgSrc}
-      alt={alt}
+      src={imageUrl}
+      alt={name}
       fill
-      className={className}
-      onError={() => {
-        if (!hasError) {
-          setHasError(true)
-          setImgSrc(fallbackSrc)
-        }
-      }}
+      className={`object-cover ${className}`}
+      onError={() => setHasError(true)}
     />
   )
 }
@@ -146,12 +147,8 @@ export default function PartnersPage() {
               >
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
                   {/* Partner Image */}
-                  <div className="relative w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-[#22d3ee]/30 shadow-2xl shadow-[#22d3ee]/10 flex-shrink-0">
-                    <ClientImageWithFallback
-                      src="/michael-building-1.png"
-                      alt="Michael Robards - Licensed Clinical Social Worker"
-                      className="object-cover"
-                    />
+                  <div className="relative w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-[#22d3ee]/30 shadow-2xl shadow-[#22d3ee]/20 flex-shrink-0 ring-4 ring-[#22d3ee]/10 ring-offset-4 ring-offset-[#1a2332]">
+                    <PartnerAvatar name="Michael Robards" />
                   </div>
 
                   {/* Partner Info */}
@@ -181,57 +178,75 @@ export default function PartnersPage() {
                       </p>
                     </div>
 
-                    {/* Social & Website Links */}
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                      <a
+                    {/* Social Media Links */}
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-6">
+                      <motion.a
                         href="https://www.instagram.com/thehumanequation"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-opacity"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white rounded-xl hover:shadow-lg hover:shadow-pink-500/25 transition-all duration-300"
                       >
                         <FaInstagram className="w-5 h-5" />
-                        <span className="text-sm font-medium">Instagram</span>
-                      </a>
-                      <a
+                        <span className="text-sm font-semibold">Instagram</span>
+                      </motion.a>
+                      <motion.a
                         href="https://www.facebook.com/thehumanequation"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
                       >
                         <FaFacebookF className="w-4 h-4" />
-                        <span className="text-sm font-medium">Facebook</span>
-                      </a>
-                      <a
+                        <span className="text-sm font-semibold">Facebook</span>
+                      </motion.a>
+                      <motion.a
                         href="https://www.tiktok.com/@thehumanequation"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:opacity-90 transition-opacity border border-white/20"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-xl border border-white/20 hover:shadow-lg hover:shadow-white/10 transition-all duration-300"
                       >
                         <FaTiktok className="w-4 h-4" />
-                        <span className="text-sm font-medium">TikTok</span>
-                      </a>
+                        <span className="text-sm font-semibold">TikTok</span>
+                      </motion.a>
                     </div>
 
-                    {/* Website Links */}
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-4">
-                      <a
+                    {/* Website Links - Redesigned as prominent buttons */}
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3">
+                      <motion.a
                         href="https://humanequation.live"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[#22d3ee] hover:text-white transition-colors"
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="group flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] text-[#0a1128] rounded-xl font-bold shadow-lg hover:shadow-xl hover:shadow-[#22d3ee]/30 transition-all duration-300"
                       >
-                        <FiExternalLink className="w-4 h-4" />
-                        <span className="text-sm font-medium">humanequation.live</span>
-                      </a>
-                      <a
+                        <span className="text-lg">🌐</span>
+                        <div className="flex flex-col items-start">
+                          <span className="text-sm font-bold">Visit The Human Equation</span>
+                          <span className="text-xs opacity-75">humanequation.live</span>
+                        </div>
+                        <FiExternalLink className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </motion.a>
+                      <motion.a
                         href="https://michaelarobards.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[#22d3ee] hover:text-white transition-colors"
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="group flex items-center justify-center gap-3 px-6 py-3.5 bg-white/10 border-2 border-[#22d3ee]/50 text-white rounded-xl font-bold hover:bg-[#22d3ee]/20 hover:border-[#22d3ee] hover:shadow-lg hover:shadow-[#22d3ee]/20 transition-all duration-300"
                       >
-                        <FiExternalLink className="w-4 h-4" />
-                        <span className="text-sm font-medium">michaelarobards.com</span>
-                      </a>
+                        <span className="text-lg">👤</span>
+                        <div className="flex flex-col items-start">
+                          <span className="text-sm font-bold">Michael's Personal Site</span>
+                          <span className="text-xs text-gray-400">michaelarobards.com</span>
+                        </div>
+                        <FiExternalLink className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </motion.a>
                     </div>
                   </div>
                 </div>
