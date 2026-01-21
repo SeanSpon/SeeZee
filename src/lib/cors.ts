@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
+  "https://seezeestudios.com",
+  "https://www.seezeestudios.com",
   "https://see-zee.com",
   "https://www.see-zee.com",
 ];

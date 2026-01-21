@@ -160,6 +160,12 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
     submissionNotes: t.submissionNotes || null,
     createdAt: t.createdAt,
   }));
+  const statusLabel =
+    statusOptions.find((option) => option.value === status)?.label || status;
+  const createdLabel = new Date(project.createdAt).toLocaleDateString();
+  const budgetLabel = project.budget
+    ? formatCurrency(Number(project.budget))
+    : "Not set";
 
   const handleStatusChange = async (newStatus: string) => {
     setUpdating(true);
@@ -516,96 +522,114 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-white">{project.name}</h1>
-            <p className="text-sm text-slate-400 mt-1">
-              {project.organization?.name || "No organization"}
-            </p>
+      <div className="glass rounded-2xl border border-white/10 p-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-start gap-4">
+            <button
+              onClick={() => router.back()}
+              className="mt-1 rounded-full border border-white/10 bg-white/5 p-2 transition hover:bg-white/10"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold text-white">
+                  {project.name}
+                </h1>
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide ${
+                    statusColors[status] || statusColors.LEAD
+                  }`}
+                >
+                  {statusLabel}
+                </span>
+              </div>
+              <div className="text-sm text-slate-400">
+                {project.organization?.name || "No organization"} • Created{" "}
+                {createdLabel}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-          {/* Status Selector */}
-          <select
-            value={status}
-            onChange={(e) => handleStatusChange(e.target.value)}
-            disabled={updating}
-            className={`
-              px-4 py-2 rounded-lg text-sm font-medium border
-              bg-slate-900 cursor-pointer
-              ${statusColors[status] || statusColors.LEAD}
-              ${updating ? "opacity-50 cursor-wait" : ""}
-              text-white
-            `}
-            style={{
-              color: 'white',
-            }}
-          >
-            {statusOptions.map((opt) => (
-              <option 
-                key={opt.value} 
-                value={opt.value}
-                style={{
-                  backgroundColor: '#1e293b',
-                  color: 'white',
-                }}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/60 px-3 py-2">
+              <Settings className="h-4 w-4 text-slate-400" />
+              <select
+                value={status}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                disabled={updating}
+                className={`
+                  bg-transparent text-sm font-medium text-white outline-none
+                  ${updating ? "opacity-60 cursor-wait" : "cursor-pointer"}
+                `}
+                style={{ color: "white" }}
               >
-                {opt.label}
-              </option>
-            ))}
-          </select>
+                {statusOptions.map((opt) => (
+                  <option
+                    key={opt.value}
+                    value={opt.value}
+                    style={{ backgroundColor: "#1e293b", color: "white" }}
+                  >
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Delete Project Button */}
-          <button
-            onClick={handleDeleteProject}
-            disabled={deletingProject}
-            className={`
-              px-4 py-2 rounded-lg text-sm font-medium border
-              bg-red-600/20 border-red-500/30 text-red-400
-              hover:bg-red-600/30 hover:border-red-500/50
-              transition-colors
-              ${deletingProject ? "opacity-50 cursor-wait" : "cursor-pointer"}
-              inline-flex items-center gap-2
-            `}
-            title="Delete Project"
-          >
-            <Trash className="w-4 h-4" />
-            {deletingProject ? "Deleting..." : "Delete Project"}
-          </button>
+            <button
+              onClick={handleDeleteProject}
+              disabled={deletingProject}
+              className={`
+                inline-flex items-center gap-2 rounded-full border
+                border-red-500/40 bg-red-600/20 px-4 py-2 text-sm font-medium text-red-300
+                transition hover:border-red-500/70 hover:bg-red-600/30
+                ${deletingProject ? "opacity-50 cursor-wait" : "cursor-pointer"}
+              `}
+              title="Delete Project"
+            >
+              <Trash className="h-4 w-4" />
+              {deletingProject ? "Deleting..." : "Delete Project"}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {project.lead && (
-          <div className="glass p-4 rounded-lg">
-            <div className="text-slate-400 text-xs mb-1">Lead Contact</div>
-            <div className="font-medium text-white">{project.lead.name}</div>
-            <div className="text-sm text-slate-400">{project.lead.email}</div>
+          <div className="glass rounded-2xl border border-white/5 p-5">
+            <div className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Lead Contact
+            </div>
+            <div className="mt-3 space-y-1">
+              <div className="text-base font-semibold text-white">
+                {project.lead.name}
+              </div>
+              <div className="text-sm text-slate-400">
+                {project.lead.email}
+              </div>
+              {project.lead.phone && (
+                <div className="text-sm text-slate-400">
+                  {project.lead.phone}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* Assignee Card - Editable */}
-        <div className="glass p-4 rounded-lg">
-          <div className="text-slate-400 text-xs mb-1 flex items-center gap-1">
-            <User className="w-3 h-3" /> Assigned To
+        <div className="glass rounded-2xl border border-white/5 p-5">
+          <div className="text-xs font-semibold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+            <User className="h-3.5 w-3.5" /> Assigned To
           </div>
           {editingAssignee ? (
-            <div className="space-y-2">
+            <div className="mt-3 space-y-3">
               <select
                 value={selectedAssigneeId}
                 onChange={(e) => setSelectedAssigneeId(e.target.value)}
-                className="w-full px-2 py-1.5 rounded border border-gray-700 bg-gray-900 text-white text-sm focus:outline-none focus:border-trinity-red"
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
               >
                 <option value="">Unassigned</option>
                 {admins.map((admin) => (
@@ -618,60 +642,62 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
                 <button
                   onClick={handleSaveAssignee}
                   disabled={savingAssignee}
-                  className="flex-1 px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded disabled:opacity-50"
+                  className="flex-1 rounded-lg bg-green-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
                 >
                   {savingAssignee ? "Saving..." : "Save"}
                 </button>
                 <button
                   onClick={handleCancelAssignee}
                   disabled={savingAssignee}
-                  className="flex-1 px-2 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded disabled:opacity-50"
+                  className="flex-1 rounded-lg bg-gray-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-gray-700 disabled:opacity-50"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <>
-              <div className="font-medium text-white">
+            <div className="mt-3 space-y-1">
+              <div className="text-base font-semibold text-white">
                 {project.assignee?.name || "Unassigned"}
               </div>
               {project.assignee && (
-                <div className="text-sm text-slate-400">{project.assignee.email}</div>
+                <div className="text-sm text-slate-400">
+                  {project.assignee.email}
+                </div>
               )}
               <button
                 onClick={() => setEditingAssignee(true)}
-                className="mt-2 text-xs text-blue-400 hover:text-blue-300"
+                className="text-xs font-semibold text-blue-400 hover:text-blue-300"
               >
                 {project.assignee ? "Reassign" : "Assign"}
               </button>
-            </>
+            </div>
           )}
         </div>
 
-        <div className="glass p-4 rounded-lg">
-          <div className="text-slate-400 text-xs mb-1 flex items-center gap-1">
-            <DollarSign className="w-3 h-3" /> Budget
+        <div className="glass rounded-2xl border border-white/5 p-5">
+          <div className="text-xs font-semibold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+            <DollarSign className="h-3.5 w-3.5" /> Budget
           </div>
-          <div className="text-xl font-bold text-green-400">
-            {project.budget ? `$${Number(project.budget).toLocaleString()}` : "Not set"}
+          <div className="mt-3 text-2xl font-semibold text-green-400">
+            {budgetLabel}
           </div>
           {!project.budget && (
             <button
               onClick={() => setEditingBudget(true)}
-              className="mt-2 text-xs text-blue-400 hover:text-blue-300"
+              className="mt-2 text-xs font-semibold text-blue-400 hover:text-blue-300"
             >
               Set budget
             </button>
           )}
         </div>
 
-        <div className="glass p-4 rounded-lg">
-          <div className="text-slate-400 text-xs mb-1 flex items-center gap-1">
-            <Calendar className="w-3 h-3" /> Created
+        <div className="glass rounded-2xl border border-white/5 p-5">
+          <div className="text-xs font-semibold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+            <Calendar className="h-3.5 w-3.5" /> Created
           </div>
-          <div className="font-medium text-white">
-            {new Date(project.createdAt).toLocaleDateString()}
+          <div className="mt-3 text-base font-semibold text-white">
+            {createdLabel}
           </div>
         </div>
       </div>

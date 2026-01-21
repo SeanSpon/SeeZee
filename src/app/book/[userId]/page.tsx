@@ -85,7 +85,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
         <div className="text-center mt-6">
           <p className="text-slate-500 text-sm">
             Powered by{" "}
-            <a href="https://see-zee.com" className="text-cyan-400 hover:underline">
+            <a href="https://seezeestudios.com" className="text-cyan-400 hover:underline">
               SeeZee Studio
             </a>
           </p>

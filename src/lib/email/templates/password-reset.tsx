@@ -54,7 +54,7 @@ export function renderPasswordResetEmail({
     </ol>
     
     <p style="font-size: 14px; color: #6b7280; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-      Need help? Contact us at <a href="mailto:support@see-zee.com" style="color: #dc2626; text-decoration: none;">support@see-zee.com</a>
+      Need help? Contact us at <a href="mailto:support@seezeestudios.com" style="color: #dc2626; text-decoration: none;">support@seezeestudios.com</a>
     </p>
   `;
 
@@ -75,7 +75,7 @@ To reset your password:
 2. Create a new strong password
 3. You'll be logged out of all devices for security
 
-Need help? Contact us at support@see-zee.com
+Need help? Contact us at support@seezeestudios.com
 
 ---
 SeeZee Studio

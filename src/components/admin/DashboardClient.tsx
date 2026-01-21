@@ -471,20 +471,36 @@ export function DashboardClient({
               </div>
             </div>
             <div className="mt-6 rounded-xl border border-white/10 bg-[#0f172a]/60 p-4">
-              <p className="text-xs uppercase tracking-[0.25em] text-slate-500 font-semibold">
-                Recent Leads
-              </p>
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-500 font-semibold">
+                  Recent Leads
+                </p>
+                <Link
+                  href="/admin/leads"
+                  className="text-[10px] text-[#22d3ee] hover:text-[#06b6d4] transition uppercase tracking-wider font-medium"
+                >
+                  View All
+                </Link>
+              </div>
               <div className="mt-3 space-y-2">
                 {recentLeads.length > 0 ? (
                   recentLeads.map((lead) => (
-                    <div
+                    <Link
                       key={lead.id}
-                      className="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-3 py-2.5 text-xs"
+                      href={`/admin/leads/${lead.id}`}
+                      className="flex items-center justify-between gap-2 rounded-lg border border-white/5 bg-white/5 px-3 py-2.5 text-xs hover:bg-white/10 hover:border-white/10 transition-colors group"
                     >
-                      <div className="flex-1 truncate text-white">
-                        {lead.company || lead.name || "Unknown"}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-medium truncate group-hover:text-[#22d3ee] transition">
+                          {lead.company || lead.name || "Unknown Lead"}
+                        </p>
+                        {lead.name && lead.company && (
+                          <p className="text-slate-500 text-[10px] truncate mt-0.5">
+                            {lead.name}
+                          </p>
+                        )}
                       </div>
-                      <span className={`ml-3 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide font-medium ${
+                      <span className={`shrink-0 ml-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide font-medium ${
                         lead.status === "NEW" 
                           ? "bg-[#22d3ee]/20 text-[#22d3ee]" 
                           : lead.status === "QUALIFIED"
@@ -493,10 +509,18 @@ export function DashboardClient({
                       }`}>
                         {lead.status ?? "NEW"}
                       </span>
-                    </div>
+                    </Link>
                   ))
                 ) : (
-                  <p className="text-xs text-slate-500">No recent leads</p>
+                  <div className="text-center py-6">
+                    <p className="text-xs text-slate-500">No recent leads</p>
+                    <Link
+                      href="/admin/leads"
+                      className="inline-block mt-2 text-xs text-[#22d3ee] hover:text-[#06b6d4] transition font-medium"
+                    >
+                      Add your first lead →
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>
@@ -511,21 +535,43 @@ export function DashboardClient({
                 <FiDollarSign className="h-5 w-5 text-[#10b981]" />
               </div>
               <div>
-                <h2 className="text-xl font-heading font-semibold text-white">Revenue Pulse</h2>
-                <p className="text-sm text-slate-400">Track your earnings</p>
+                <h2 className="text-xl font-heading font-semibold text-white">Financial Snapshot</h2>
+                <p className="text-sm text-slate-400">This month's overview</p>
               </div>
             </div>
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Paid this month</p>
+                <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Revenue (This Month)</p>
                 <p className="text-3xl font-bold text-[#10b981]">
-                  {currencyFormatter.format(stats.totalRevenue ?? 0)}
+                  {currencyFormatter.format(stats.thisMonthRevenue ?? stats.totalRevenue ?? 0)}
                 </p>
               </div>
+              {stats.thisMonthExpenses !== undefined && (
+                <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                  <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Expenses (This Month)</p>
+                  <p className="text-2xl font-bold text-[#ef4444]">
+                    -{currencyFormatter.format(stats.thisMonthExpenses)}
+                  </p>
+                </div>
+              )}
+              {stats.netProfit !== undefined && (
+                <div className="p-4 rounded-xl bg-gradient-to-br from-[#22d3ee]/20 to-[#06b6d4]/10 border border-[#22d3ee]/30">
+                  <p className="text-xs uppercase tracking-wider text-[#22d3ee] mb-1 font-semibold">Net Profit (This Month)</p>
+                  <p className={`text-3xl font-bold ${stats.netProfit >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
+                    {currencyFormatter.format(stats.netProfit)}
+                  </p>
+                </div>
+              )}
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <span className="text-slate-400">Open invoices</span>
                 <span className="font-bold text-lg text-white">{stats.unpaidInvoices ?? 0}</span>
               </div>
+              <Link 
+                href="/admin/finance"
+                className="block w-full text-center py-2 rounded-lg bg-[#22d3ee]/10 border border-[#22d3ee]/30 text-[#22d3ee] hover:bg-[#22d3ee]/20 transition-colors text-sm font-medium"
+              >
+                View Full Finance Dashboard →
+              </Link>
             </div>
           </section>
         </div>

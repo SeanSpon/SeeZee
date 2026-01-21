@@ -98,7 +98,6 @@ async function createFinalInvoice(projectId: string, projectTotal: number) {
         number: `INV-${Date.now()}-FINAL`,
         title: `Final Payment - ${project.name}`,
         description: `Final Payment (50%) - ${project.name}`,
-        amount: finalAmount,
         total: finalAmount,
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         status: "SENT",
@@ -106,6 +105,9 @@ async function createFinalInvoice(projectId: string, projectTotal: number) {
         projectId: project.id,
         stripeInvoiceId: finalizedInvoice.id,
         sentAt: new Date(),
+        metadata: {
+          invoiceType: "final"
+        },
         items: {
           create: {
             description: `Final Payment (50%) - ${project.name}`,

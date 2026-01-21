@@ -213,6 +213,7 @@ export async function POST(req: NextRequest) {
         const categoryFit = detailedScore.breakdown.categoryScore;
         const locationScore = detailedScore.breakdown.locationScore;
         const organizationSize = detailedScore.breakdown.sizeScore;
+        const googleScore = detailedScore.breakdown.googleScore;
 
         // Create new prospect (not a lead yet - user must click "Reach Out" to convert)
         const prospect = await prisma.prospect.create({
@@ -248,6 +249,7 @@ export async function POST(req: NextRequest) {
             categoryFit,
             locationScore,
             organizationSize,
+            googleScore,
             urgencyLevel: analysis.urgencyLevel,
             category: analysis.category,
             

@@ -363,6 +363,7 @@ export async function getProjects() {
         maintenanceStatus: true,
         nextBillingDate: true,
         githubRepo: true,
+        progress: true,
         organization: true,
         assignee: {
           select: {
@@ -373,6 +374,12 @@ export async function getProjects() {
           },
         },
         lead: true,
+        milestones: {
+          select: {
+            id: true,
+            completed: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -402,9 +409,11 @@ export async function getProjects() {
       maintenanceStatus: project.maintenanceStatus,
       nextBillingDate: project.nextBillingDate,
       githubRepo: project.githubRepo,
+      progress: project.progress,
       organization: project.organization,
       assignee: project.assignee,
       lead: project.lead,
+      milestones: project.milestones,
     }));
 
     return { success: true, projects: serializedProjects };
@@ -444,8 +453,6 @@ export async function createInvoiceFromProject(projectId: string, data: {
         number: invoiceNumber,
         title: data.title,
         description: data.description,
-        amount: data.amount,
-        tax: data.amount * 0.0, // Add tax calculation if needed
         total: data.amount,
         status: "DRAFT",
         dueDate: data.dueDate,
@@ -528,15 +535,17 @@ export async function createInvoiceWithLineItems(data: {
         number: invoiceNumber,
         title: data.title,
         description: data.description,
-        amount: subtotal,
-        tax: taxAmount,
         total: total,
         status: "SENT",
         dueDate: data.dueDate,
         organizationId: data.organizationId,
         projectId: data.projectId,
-        invoiceType: data.invoiceType || "custom",
         sentAt: new Date(),
+        metadata: {
+          invoiceType: data.invoiceType || "custom",
+          tax: taxAmount,
+          isFirstInvoice: data.isFirstInvoice
+        },
         items: {
           create: data.items.map((item) => ({
             description: item.description,

@@ -69,7 +69,8 @@ export function CreateInvoiceModal({
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/invoices", {
+      // Use the admin API endpoint
+      const res = await fetch("/api/admin/invoices", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -85,6 +86,8 @@ export function CreateInvoiceModal({
       });
 
       if (res.ok) {
+        const data = await res.json();
+        // Refresh the page or call a success callback
         window.location.reload();
       } else {
         const data = await res.json();
@@ -92,7 +95,7 @@ export function CreateInvoiceModal({
       }
     } catch (error) {
       console.error("Failed to create invoice:", error);
-      alert("Failed to create invoice");
+      alert("Failed to create invoice. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

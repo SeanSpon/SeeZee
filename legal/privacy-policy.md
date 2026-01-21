@@ -62,7 +62,7 @@ To make a request, contact us using the information below.
 
 ## Contact
 
-**Email:** seezee.enterprises@gmail.com  
+**Email:** contact@seezeestudios.com  
 **Location:** Louisville, Kentucky
 
 ---

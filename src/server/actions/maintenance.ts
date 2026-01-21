@@ -280,14 +280,31 @@ export async function getMaintenanceClients() {
       },
     });
 
-    // Convert Decimal to number for client components
+    // Convert Decimal to number and Date to string for client components
     const serializedClients = clients.map(client => ({
       ...client,
+      budget: client.budget ? client.budget.toNumber() : null,
+      startDate: client.startDate?.toISOString() || null,
+      endDate: client.endDate?.toISOString() || null,
+      createdAt: client.createdAt.toISOString(),
+      updatedAt: client.updatedAt.toISOString(),
+      designApprovedAt: client.designApprovedAt?.toISOString() || null,
+      launchedAt: client.launchedAt?.toISOString() || null,
+      nextBillingDate: client.nextBillingDate?.toISOString() || null,
+      subscriptions: client.subscriptions.map(sub => ({
+        ...sub,
+        currentPeriodEnd: sub.currentPeriodEnd?.toISOString() || null,
+      })),
       maintenancePlanRel: client.maintenancePlanRel ? {
         ...client.maintenancePlanRel,
         monthlyPrice: client.maintenancePlanRel.monthlyPrice.toNumber(),
         supportHoursUsed: Number(client.maintenancePlanRel.supportHoursUsed),
+        createdAt: client.maintenancePlanRel.createdAt.toISOString(),
       } : null,
+      maintenanceSchedules: client.maintenanceSchedules.map(schedule => ({
+        ...schedule,
+        scheduledFor: schedule.scheduledFor.toISOString(),
+      })),
     }));
 
     return { success: true, clients: serializedClients };

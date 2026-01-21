@@ -77,6 +77,11 @@ export async function GET(
     fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:35',message:'Raw invoice from Prisma',data:{invoiceKeys:Object.keys(invoice),hasItems:!!invoice.items,itemsCount:invoice.items?.length,hasOrg:!!invoice.organization,hasProject:!!invoice.project},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
     // #endregion
 
+    // Calculate subtotal from items
+    const subtotal = invoice.items.reduce((sum, item) => sum + Number(item.amount), 0);
+    const total = Number(invoice.total);
+    const tax = total - subtotal;
+    
     // Format invoice data for PDF generation
     const invoiceData = {
       number: String(invoice.number || ''),
@@ -86,9 +91,9 @@ export async function GET(
       createdAt: invoice.createdAt.toISOString(),
       dueDate: invoice.dueDate.toISOString(),
       paidAt: invoice.paidAt?.toISOString() || null,
-      amount: Number(invoice.amount) || 0,
-      tax: Number(invoice.tax || 0),
-      total: Number(invoice.total) || 0,
+      amount: subtotal,
+      tax: tax,
+      total: total,
       currency: String(invoice.currency || 'USD'),
       items: invoice.items.map((item) => ({
         description: String(item.description || ''),

@@ -45,6 +45,7 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("edit");
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteError, setDeleteError] = useState<string>("");
 
   useEffect(() => {
     if (searchQuery) {
@@ -79,12 +80,19 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
   };
 
   const handleDeleteClient = async (client: ClientRow) => {
+    if (!confirm(`Are you sure you want to delete ${client.name}? This action cannot be undone.`)) {
+      return;
+    }
+
     const result = await deleteClient(client.id);
     if (result.success) {
       setRows((prev) => prev.filter((c) => c.id !== client.id));
       setFilteredRows((prev) => prev.filter((c) => c.id !== client.id));
+      setDeleteError("");
     } else {
-      alert(result.error || "Failed to delete client");
+      setDeleteError(result.error || "Failed to delete client");
+      // Auto-hide error after 5 seconds
+      setTimeout(() => setDeleteError(""), 5000);
     }
   };
 
@@ -190,6 +198,33 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
           Unified view of every client engagement, including project load, billing cadence, and payment velocity.
         </p>
       </header>
+
+      {/* Delete Error Notification */}
+      {deleteError && (
+        <div className="fixed top-4 right-4 z-50 max-w-md animate-in slide-in-from-top-2">
+          <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-4 backdrop-blur-xl shadow-2xl">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-semibold text-red-200 mb-1">Failed to Delete Client</h4>
+                <p className="text-xs text-red-300/80">{deleteError}</p>
+              </div>
+              <button
+                onClick={() => setDeleteError("")}
+                className="text-red-400/60 hover:text-red-300 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <EnhancedStatCard

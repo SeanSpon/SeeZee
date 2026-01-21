@@ -15,6 +15,9 @@ export interface AdminStats {
   totalRevenue?: number;
   totalClients?: number;
   unpaidInvoices?: number;
+  thisMonthRevenue?: number;
+  thisMonthExpenses?: number;
+  netProfit?: number;
 }
 
 interface StatsCardsProps {

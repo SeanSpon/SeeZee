@@ -199,8 +199,8 @@ function formatPlainTextAsHTML(text: string): string {
   <p style="color: #666; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; margin-top: 40px;">
     <strong>Sean McCulloch</strong><br>
     Co-Founder, SeeZee Studio<br>
-    <a href="mailto:sean@see-zee.com" style="color: #06b6d4;">sean@see-zee.com</a><br>
-    <a href="https://see-zee.com" style="color: #06b6d4;">see-zee.com</a><br>
+    <a href="mailto:sean@seezeestudios.com" style="color: #06b6d4;">sean@seezeestudios.com</a><br>
+    <a href="https://seezeestudios.com" style="color: #06b6d4;">seezeestudios.com</a><br>
     Louisville, Kentucky
   </p>
 </body>
@@ -275,8 +275,8 @@ export async function sendBulkEmails(params: BulkEmailParams): Promise<BulkEmail
     bodyTemplate,
     useAI = false,
     aiParams = {},
-    sendFrom = process.env.RESEND_FROM_EMAIL || 'sean@see-zee.com',
-    replyTo = 'sean@see-zee.com',
+    sendFrom = process.env.RESEND_FROM_EMAIL || 'sean@seezeestudios.com',
+    replyTo = 'sean@seezeestudios.com',
     rateLimit = 10, // 10 emails per minute by default
   } = params;
 

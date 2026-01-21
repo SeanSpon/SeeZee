@@ -19,253 +19,292 @@ import {
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AnalyticsPage() {
-  const user = await getCurrentUser();
+  try {
+    const user = await getCurrentUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+    if (!user) {
+      redirect("/login");
+    }
 
-  // Only CEO/CFO can access analytics
-  const allowedRoles = [ROLE.CEO, ROLE.CFO];
-  if (!allowedRoles.includes(user.role as any)) {
-    redirect("/admin");
-  }
+    // Only CEO/CFO can access analytics
+    const allowedRoles = [ROLE.CEO, ROLE.CFO];
+    if (!allowedRoles.includes(user.role as any)) {
+      redirect("/admin");
+    }
 
-  // Get date ranges
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    // Get date ranges
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
-  // Revenue this month
-  const revenueThisMonth = await prisma.invoice.aggregate({
-    where: {
-      status: "PAID",
-      paidAt: { gte: startOfMonth },
-    },
-    _sum: { total: true },
-  });
+    // Fetch all data in parallel with error handling
+    const [
+      revenueThisMonth,
+      revenueLastMonth,
+      leadsThisMonth,
+      leadsLastMonth,
+      activeProjects,
+      completedProjects,
+      totalClients,
+      newClients,
+      tasksCompleted,
+      tasksPending,
+      chatConversations,
+      emailCampaigns,
+    ] = await Promise.all([
+      // Revenue this month
+      prisma.invoice.aggregate({
+        where: {
+          status: "PAID",
+          paidAt: { gte: startOfMonth },
+        },
+        _sum: { total: true },
+      }).catch(() => ({ _sum: { total: null } })),
 
-  // Revenue last month
-  const revenueLastMonth = await prisma.invoice.aggregate({
-    where: {
-      status: "PAID",
-      paidAt: { gte: startOfLastMonth, lte: endOfLastMonth },
-    },
-    _sum: { total: true },
-  });
+      // Revenue last month
+      prisma.invoice.aggregate({
+        where: {
+          status: "PAID",
+          paidAt: { gte: startOfLastMonth, lte: endOfLastMonth },
+        },
+        _sum: { total: true },
+      }).catch(() => ({ _sum: { total: null } })),
 
-  // New leads this month
-  const leadsThisMonth = await prisma.lead.count({
-    where: { createdAt: { gte: startOfMonth } },
-  });
+      // New leads this month
+      prisma.lead.count({
+        where: { createdAt: { gte: startOfMonth } },
+      }).catch(() => 0),
 
-  // Leads last month
-  const leadsLastMonth = await prisma.lead.count({
-    where: { createdAt: { gte: startOfLastMonth, lte: endOfLastMonth } },
-  });
+      // Leads last month
+      prisma.lead.count({
+        where: { createdAt: { gte: startOfLastMonth, lte: endOfLastMonth } },
+      }).catch(() => 0),
 
-  // Active projects
-  const activeProjects = await prisma.project.count({
-    where: { status: { in: ["ACTIVE", "DEPOSIT_PAID", "REVIEW"] } },
-  });
+      // Active projects
+      prisma.project.count({
+        where: { status: { in: ["ACTIVE", "DEPOSIT_PAID", "REVIEW"] } },
+      }).catch(() => 0),
 
-  // Completed projects this month
-  const completedProjects = await prisma.project.count({
-    where: {
-      status: "COMPLETED",
-      updatedAt: { gte: startOfMonth },
-    },
-  });
+      // Completed projects this month
+      prisma.project.count({
+        where: {
+          status: "COMPLETED",
+          updatedAt: { gte: startOfMonth },
+        },
+      }).catch(() => 0),
 
-  // Total clients
-  const totalClients = await prisma.user.count({
-    where: { role: "CLIENT" },
-  });
+      // Total clients
+      prisma.user.count({
+        where: { role: "CLIENT" },
+      }).catch(() => 0),
 
-  // New clients this month
-  const newClients = await prisma.user.count({
-    where: {
-      role: "CLIENT",
-      createdAt: { gte: startOfMonth },
-    },
-  });
+      // New clients this month
+      prisma.user.count({
+        where: {
+          role: "CLIENT",
+          createdAt: { gte: startOfMonth },
+        },
+      }).catch(() => 0),
 
-  // Tasks stats
-  const tasksCompleted = await prisma.todo.count({
-    where: {
-      status: "DONE",
-      updatedAt: { gte: startOfMonth },
-    },
-  });
+      // Tasks completed
+      prisma.todo.count({
+        where: {
+          status: "DONE",
+          updatedAt: { gte: startOfMonth },
+        },
+      }).catch(() => 0),
 
-  const tasksPending = await prisma.todo.count({
-    where: { status: { not: "DONE" } },
-  });
+      // Tasks pending
+      prisma.todo.count({
+        where: { status: { not: "DONE" } },
+      }).catch(() => 0),
 
-  // AI Conversations
-  const chatConversations = await prisma.aIConversation.count({
-    where: { createdAt: { gte: startOfMonth } },
-  });
+      // AI Conversations
+      prisma.aIConversation.count({
+        where: { createdAt: { gte: startOfMonth } },
+      }).catch(() => 0),
 
-  // Email campaigns stats
-  const emailCampaigns = await prisma.emailCampaign.aggregate({
-    where: { createdAt: { gte: startOfMonth } },
-    _sum: {
-      totalSent: true,
-      opened: true,
-      clicked: true,
-    },
-  });
+      // Email campaigns stats
+      prisma.emailCampaign.aggregate({
+        where: { createdAt: { gte: startOfMonth } },
+        _sum: {
+          totalSent: true,
+          opened: true,
+          clicked: true,
+        },
+      }).catch(() => ({ _sum: { totalSent: null, opened: null, clicked: null } })),
+    ]);
 
-  // Calculate changes
-  const revenueChange = calculateChange(
-    Number(revenueThisMonth._sum.total || 0),
-    Number(revenueLastMonth._sum.total || 0)
-  );
-  const leadsChange = calculateChange(leadsThisMonth, leadsLastMonth);
+    // Calculate changes
+    const revenueChange = calculateChange(
+      Number(revenueThisMonth._sum.total || 0),
+      Number(revenueLastMonth._sum.total || 0)
+    );
+    const leadsChange = calculateChange(leadsThisMonth, leadsLastMonth);
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <BarChart3 className="w-8 h-8 text-cyan-400" />
-            Analytics Dashboard
-          </h1>
-          <p className="text-slate-400 mt-1">
-            Business performance and metrics overview
-          </p>
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <BarChart3 className="w-8 h-8 text-cyan-400" />
+              Analytics Dashboard
+            </h1>
+            <p className="text-slate-400 mt-1">
+              Business performance and metrics overview
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button className="px-4 py-2 bg-slate-800 border border-white/10 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              This Month
+            </button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button className="px-4 py-2 bg-slate-800 border border-white/10 text-white rounded-lg hover:bg-slate-700 transition-colors">
-            This Month
-          </button>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <MetricCard
+            label="Revenue"
+            value={`$${(Number(revenueThisMonth._sum.total || 0) / 100).toLocaleString()}`}
+            change={revenueChange}
+            icon={DollarSign}
+            color="green"
+          />
+          <MetricCard
+            label="New Leads"
+            value={leadsThisMonth.toString()}
+            change={leadsChange}
+            icon={Users}
+            color="blue"
+          />
+          <MetricCard
+            label="Active Projects"
+            value={activeProjects.toString()}
+            subtext={`${completedProjects} completed this month`}
+            icon={Briefcase}
+            color="purple"
+          />
+          <MetricCard
+            label="Total Clients"
+            value={totalClients.toString()}
+            subtext={`+${newClients} this month`}
+            icon={Users}
+            color="amber"
+          />
         </div>
-      </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <MetricCard
-          label="Revenue"
-          value={`$${(Number(revenueThisMonth._sum.total || 0) / 100).toLocaleString()}`}
-          change={revenueChange}
-          icon={DollarSign}
-          color="green"
-        />
-        <MetricCard
-          label="New Leads"
-          value={leadsThisMonth.toString()}
-          change={leadsChange}
-          icon={Users}
-          color="blue"
-        />
-        <MetricCard
-          label="Active Projects"
-          value={activeProjects.toString()}
-          subtext={`${completedProjects} completed this month`}
-          icon={Briefcase}
-          color="purple"
-        />
-        <MetricCard
-          label="Total Clients"
-          value={totalClients.toString()}
-          subtext={`+${newClients} this month`}
-          icon={Users}
-          color="amber"
-        />
-      </div>
+        {/* Charts Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Revenue Chart Placeholder */}
+          <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-green-400" />
+              Revenue Trend
+            </h3>
+            <div className="h-64 flex items-center justify-center text-slate-500">
+              <div className="text-center">
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                <p>Revenue chart visualization</p>
+                <p className="text-sm">Add Recharts for interactive charts</p>
+              </div>
+            </div>
+          </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Chart Placeholder */}
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-green-400" />
-            Revenue Trend
-          </h3>
-          <div className="h-64 flex items-center justify-center text-slate-500">
-            <div className="text-center">
-              <BarChart3 className="w-16 h-16 mx-auto mb-4 opacity-30" />
-              <p>Revenue chart visualization</p>
-              <p className="text-sm">Add Recharts for interactive charts</p>
+          {/* Leads Funnel */}
+          <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5 text-blue-400" />
+              Lead Funnel
+            </h3>
+            <div className="space-y-3">
+              <LeadFunnel />
             </div>
           </div>
         </div>
 
-        {/* Leads Funnel */}
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-400" />
-            Lead Funnel
-          </h3>
-          <div className="space-y-3">
-            {await getLeadFunnel()}
+        {/* Secondary Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <SmallMetricCard
+            label="Tasks Completed"
+            value={tasksCompleted}
+            subtext="This month"
+            icon={CheckCircle}
+          />
+          <SmallMetricCard
+            label="Tasks Pending"
+            value={tasksPending}
+            subtext="Total open"
+            icon={Clock}
+          />
+          <SmallMetricCard
+            label="AI Chats"
+            value={chatConversations}
+            subtext="This month"
+            icon={MousePointer}
+          />
+          <SmallMetricCard
+            label="Emails Sent"
+            value={emailCampaigns._sum.totalSent || 0}
+            subtext={`${emailCampaigns._sum.opened || 0} opened`}
+            icon={Send}
+          />
+        </div>
+
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Projects */}
+          <div className="bg-slate-900/50 border border-white/10 rounded-xl overflow-hidden">
+            <div className="p-4 border-b border-white/10">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-purple-400" />
+                Recent Projects
+              </h3>
+            </div>
+            <div className="divide-y divide-white/5">
+              <RecentProjects />
+            </div>
+          </div>
+
+          {/* Recent Leads */}
+          <div className="bg-slate-900/50 border border-white/10 rounded-xl overflow-hidden">
+            <div className="p-4 border-b border-white/10">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-400" />
+                Recent Leads
+              </h3>
+            </div>
+            <div className="divide-y divide-white/5">
+              <RecentLeads />
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Secondary Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <SmallMetricCard
-          label="Tasks Completed"
-          value={tasksCompleted}
-          subtext="This month"
-          icon={CheckCircle}
-        />
-        <SmallMetricCard
-          label="Tasks Pending"
-          value={tasksPending}
-          subtext="Total open"
-          icon={Clock}
-        />
-        <SmallMetricCard
-          label="AI Chats"
-          value={chatConversations}
-          subtext="This month"
-          icon={MousePointer}
-        />
-        <SmallMetricCard
-          label="Emails Sent"
-          value={emailCampaigns._sum.totalSent || 0}
-          subtext={`${emailCampaigns._sum.opened || 0} opened`}
-          icon={Send}
-        />
-      </div>
-
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Projects */}
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-white/10">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-purple-400" />
-              Recent Projects
-            </h3>
-          </div>
-          <div className="divide-y divide-white/5">
-            {await getRecentProjects()}
-          </div>
-        </div>
-
-        {/* Recent Leads */}
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-white/10">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <Users className="w-5 h-5 text-blue-400" />
-              Recent Leads
-            </h3>
-          </div>
-          <div className="divide-y divide-white/5">
-            {await getRecentLeads()}
-          </div>
+    );
+  } catch (error) {
+    console.error("Error loading analytics page:", error);
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <BarChart3 className="w-16 h-16 mx-auto mb-4 text-red-400 opacity-50" />
+          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Analytics</h2>
+          <p className="text-slate-400 mb-4">
+            There was an error loading the analytics data.
+          </p>
+          <Link
+            href="/admin"
+            className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors inline-block"
+          >
+            Back to Dashboard
+          </Link>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 // Helper function to calculate percentage change
@@ -358,142 +397,181 @@ function SmallMetricCard({
 }
 
 // Get lead funnel data
-async function getLeadFunnel() {
-  const stages = await prisma.lead.groupBy({
-    by: ["status"],
-    _count: { id: true },
-  });
+async function LeadFunnel() {
+  try {
+    const stages = await prisma.lead.groupBy({
+      by: ["status"],
+      _count: { id: true },
+    });
 
-  const stageLabels: Record<string, { label: string; color: string }> = {
-    NEW: { label: "New Leads", color: "bg-blue-500" },
-    CONTACTED: { label: "Contacted", color: "bg-amber-500" },
-    QUALIFIED: { label: "Qualified", color: "bg-purple-500" },
-    CONVERTED: { label: "Converted", color: "bg-green-500" },
-    LOST: { label: "Lost", color: "bg-slate-500" },
-  };
+    const stageLabels: Record<string, { label: string; color: string }> = {
+      NEW: { label: "New Leads", color: "bg-blue-500" },
+      CONTACTED: { label: "Contacted", color: "bg-amber-500" },
+      QUALIFIED: { label: "Qualified", color: "bg-purple-500" },
+      CONVERTED: { label: "Converted", color: "bg-green-500" },
+      LOST: { label: "Lost", color: "bg-slate-500" },
+    };
 
-  const total = stages.reduce((sum, s) => sum + s._count.id, 0) || 1;
+    const total = stages.reduce((sum, s) => sum + s._count.id, 0) || 1;
 
-  return stages.map((stage) => {
-    const info = stageLabels[stage.status] || { label: stage.status, color: "bg-slate-500" };
-    const percentage = Math.round((stage._count.id / total) * 100);
-
-    return (
-      <div key={stage.status} className="space-y-1">
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-400">{info.label}</span>
-          <span className="text-white font-medium">{stage._count.id}</span>
+    if (stages.length === 0) {
+      return (
+        <div className="p-8 text-center text-slate-500">
+          <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+          <p>No leads data yet</p>
         </div>
-        <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${info.color} transition-all`}
-            style={{ width: `${percentage}%` }}
-          />
+      );
+    }
+
+    return stages.map((stage) => {
+      const info = stageLabels[stage.status] || { label: stage.status, color: "bg-slate-500" };
+      const percentage = Math.round((stage._count.id / total) * 100);
+
+      return (
+        <div key={stage.status} className="space-y-1">
+          <div className="flex justify-between text-sm">
+            <span className="text-slate-400">{info.label}</span>
+            <span className="text-white font-medium">{stage._count.id}</span>
+          </div>
+          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className={`h-full ${info.color} transition-all`}
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
         </div>
-      </div>
-    );
-  });
-}
-
-// Get recent projects
-async function getRecentProjects() {
-  const projects = await prisma.project.findMany({
-    take: 5,
-    orderBy: { updatedAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      status: true,
-      updatedAt: true,
-    },
-  });
-
-  if (projects.length === 0) {
-    return (
-      <div className="p-8 text-center text-slate-500">
-        <Briefcase className="w-8 h-8 mx-auto mb-2 opacity-50" />
-        <p>No projects yet</p>
-      </div>
-    );
-  }
-
-  return projects.map((project) => (
-    <Link
-      key={project.id}
-      href={`/admin/projects/${project.id}`}
-      className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
-    >
-      <div>
-        <p className="text-white font-medium">{project.name}</p>
-        <p className="text-sm text-slate-500">
-          Updated {new Date(project.updatedAt).toLocaleDateString()}
-        </p>
-      </div>
-      <span
-        className={`px-2 py-1 text-xs font-medium rounded-full ${
-          project.status === "COMPLETED"
-            ? "bg-green-500/20 text-green-400"
-            : project.status === "ACTIVE" || project.status === "DEPOSIT_PAID" || project.status === "REVIEW"
-            ? "bg-blue-500/20 text-blue-400"
-            : "bg-slate-500/20 text-slate-400"
-        }`}
-      >
-        {project.status}
-      </span>
-    </Link>
-  ));
-}
-
-// Get recent leads
-async function getRecentLeads() {
-  const leads = await prisma.lead.findMany({
-    take: 5,
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      status: true,
-      source: true,
-      createdAt: true,
-    },
-  });
-
-  if (leads.length === 0) {
+      );
+    });
+  } catch (error) {
+    console.error("Error loading lead funnel:", error);
     return (
       <div className="p-8 text-center text-slate-500">
         <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
-        <p>No leads yet</p>
+        <p>Error loading lead funnel</p>
       </div>
     );
   }
+}
 
-  return leads.map((lead) => (
-    <Link
-      key={lead.id}
-      href={`/admin/leads/${lead.id}`}
-      className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
-    >
-      <div>
-        <p className="text-white font-medium">{lead.name || lead.email}</p>
-        <p className="text-sm text-slate-500">
-          {lead.source || "Unknown source"} •{" "}
-          {new Date(lead.createdAt).toLocaleDateString()}
-        </p>
-      </div>
-      <span
-        className={`px-2 py-1 text-xs font-medium rounded-full ${
-          lead.status === "CONVERTED"
-            ? "bg-green-500/20 text-green-400"
-            : lead.status === "NEW"
-            ? "bg-blue-500/20 text-blue-400"
-            : lead.status === "QUALIFIED"
-            ? "bg-purple-500/20 text-purple-400"
-            : "bg-slate-500/20 text-slate-400"
-        }`}
+// Get recent projects
+async function RecentProjects() {
+  try {
+    const projects = await prisma.project.findMany({
+      take: 5,
+      orderBy: { updatedAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        updatedAt: true,
+      },
+    });
+
+    if (projects.length === 0) {
+      return (
+        <div className="p-8 text-center text-slate-500">
+          <Briefcase className="w-8 h-8 mx-auto mb-2 opacity-50" />
+          <p>No projects yet</p>
+        </div>
+      );
+    }
+
+    return projects.map((project) => (
+      <Link
+        key={project.id}
+        href={`/admin/projects/${project.id}`}
+        className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
       >
-        {lead.status}
-      </span>
-    </Link>
-  ));
+        <div>
+          <p className="text-white font-medium">{project.name}</p>
+          <p className="text-sm text-slate-500">
+            Updated {new Date(project.updatedAt).toLocaleDateString()}
+          </p>
+        </div>
+        <span
+          className={`px-2 py-1 text-xs font-medium rounded-full ${
+            project.status === "COMPLETED"
+              ? "bg-green-500/20 text-green-400"
+              : project.status === "ACTIVE" || project.status === "DEPOSIT_PAID" || project.status === "REVIEW"
+              ? "bg-blue-500/20 text-blue-400"
+              : "bg-slate-500/20 text-slate-400"
+          }`}
+        >
+          {project.status}
+        </span>
+      </Link>
+    ));
+  } catch (error) {
+    console.error("Error loading recent projects:", error);
+    return (
+      <div className="p-8 text-center text-slate-500">
+        <Briefcase className="w-8 h-8 mx-auto mb-2 opacity-50" />
+        <p>Error loading projects</p>
+      </div>
+    );
+  }
+}
+
+// Get recent leads
+async function RecentLeads() {
+  try {
+    const leads = await prisma.lead.findMany({
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        source: true,
+        createdAt: true,
+      },
+    });
+
+    if (leads.length === 0) {
+      return (
+        <div className="p-8 text-center text-slate-500">
+          <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+          <p>No leads yet</p>
+        </div>
+      );
+    }
+
+    return leads.map((lead) => (
+      <Link
+        key={lead.id}
+        href={`/admin/leads/${lead.id}`}
+        className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+      >
+        <div>
+          <p className="text-white font-medium">{lead.name || lead.email}</p>
+          <p className="text-sm text-slate-500">
+            {lead.source || "Unknown source"} •{" "}
+            {new Date(lead.createdAt).toLocaleDateString()}
+          </p>
+        </div>
+        <span
+          className={`px-2 py-1 text-xs font-medium rounded-full ${
+            lead.status === "CONVERTED"
+              ? "bg-green-500/20 text-green-400"
+              : lead.status === "NEW"
+              ? "bg-blue-500/20 text-blue-400"
+              : lead.status === "QUALIFIED"
+              ? "bg-purple-500/20 text-purple-400"
+              : "bg-slate-500/20 text-slate-400"
+          }`}
+        >
+          {lead.status}
+        </span>
+      </Link>
+    ));
+  } catch (error) {
+    console.error("Error loading recent leads:", error);
+    return (
+      <div className="p-8 text-center text-slate-500">
+        <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+        <p>Error loading leads</p>
+      </div>
+    );
+  }
 }

@@ -103,7 +103,7 @@ export function CEOSidebar({ userRole }: CEOSidebarProps) {
         },
         {
           label: "Finances",
-          href: "/admin/ceo/finances",
+          href: "/admin/finance",
           icon: <DollarSign className="w-4 h-4" />,
         },
         {

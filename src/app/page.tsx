@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import ScrollAnimation from '@/components/shared/ScrollAnimation'
 import StickyCTA from '@/components/shared/StickyCTA'
 import ImageLightbox from '@/components/shared/ImageLightbox'
+import { TechStrip } from '@/components/sections/tech-strip'
 import { 
   FiArrowRight, 
   FiCheck, 
@@ -46,7 +47,7 @@ export default function HomePage() {
       <section className="bg-black py-20 sm:py-32 lg:py-40 relative overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Multi-layer Animated Background */}
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0520] to-[#150a2e]"
+          className="absolute inset-0 bg-gradient-to-br from-[#0a0f1e] via-[#1a1f35] to-[#0f1419]"
           animate={{
             backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
           }}
@@ -61,10 +62,10 @@ export default function HomePage() {
         {/* Animated Mesh Gradient Overlay */}
         <div className="absolute inset-0">
           <motion.div 
-            className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-red-500/20 via-transparent to-transparent blur-3xl"
+            className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-blue-500/10 via-transparent to-transparent blur-3xl"
             animate={{
               scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
+              opacity: [0.2, 0.35, 0.2],
               x: ['-20%', '20%', '-20%'],
               y: ['-20%', '20%', '-20%'],
             }}
@@ -75,10 +76,10 @@ export default function HomePage() {
             }}
           />
           <motion.div 
-            className="absolute bottom-0 right-0 w-full h-full bg-gradient-radial from-purple-500/20 via-transparent to-transparent blur-3xl"
+            className="absolute bottom-0 right-0 w-full h-full bg-gradient-radial from-cyan-400/8 via-transparent to-transparent blur-3xl"
             animate={{
               scale: [1.2, 1, 1.2],
-              opacity: [0.2, 0.4, 0.2],
+              opacity: [0.15, 0.3, 0.15],
               x: ['20%', '-20%', '20%'],
               y: ['20%', '-20%', '20%'],
             }}
@@ -129,12 +130,12 @@ export default function HomePage() {
           />
         </motion.div>
 
-        {/* AVFY Purple Circle - Bottom Left */}
+        {/* Teal Circle - Bottom Left */}
         <motion.div
-          className="absolute bottom-32 left-[8%] w-64 h-64 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl hidden lg:block"
+          className="absolute bottom-32 left-[8%] w-64 h-64 bg-gradient-to-br from-teal-500/12 to-cyan-500/12 rounded-full blur-3xl hidden lg:block"
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
+            opacity: [0.25, 0.4, 0.25],
           }}
           transition={{
             duration: 10,
@@ -143,12 +144,12 @@ export default function HomePage() {
           }}
         />
 
-        {/* Red Glow - Top Left */}
+        {/* Blue Glow - Top Left */}
         <motion.div
-          className="absolute top-20 left-[5%] w-96 h-96 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-full blur-3xl hidden lg:block"
+          className="absolute top-20 left-[5%] w-96 h-96 bg-gradient-to-br from-blue-500/15 to-indigo-500/12 rounded-full blur-3xl hidden lg:block"
           animate={{
             scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
+            opacity: [0.18, 0.32, 0.18],
           }}
           transition={{
             duration: 12,
@@ -438,10 +439,10 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-cyan-500/10 border border-cyan-500/20 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-blue-500/10 border border-blue-400/25 rounded-full backdrop-blur-sm"
             >
-              <FiMapPin className="w-4 h-4 text-cyan-400" />
-              <span className="text-cyan-400 font-mono text-sm tracking-wide">Louisville, Kentucky</span>
+              <FiMapPin className="w-4 h-4 text-blue-300" />
+              <span className="text-blue-300 font-mono text-sm tracking-wide">Louisville, Kentucky</span>
             </motion.div>
 
             {/* Main Headline - Bold & Dramatic */}
@@ -453,7 +454,7 @@ export default function HomePage() {
               style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
             >
               <span className="text-white">Custom Web & App Development</span>
-              <span className="text-white block mt-2">for Nonprofits</span>
+              <span className="text-white block mt-2">That Actually Works</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -463,9 +464,9 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
             >
-              Sean & Zach build accessible platforms for mental health organizations, 
-              recovery centers, and nonprofits that need technology to feel{' '}
-              <span className="text-white font-semibold">simple, trustworthy, and human</span>.
+              Sean & Zach build modern web platforms for businesses and organizations 
+              that need technology to be{' '}
+              <span className="text-white font-semibold">fast, reliable, and professional</span>.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -517,7 +518,7 @@ export default function HomePage() {
                 { icon: <FiCheck className="w-4 h-4" />, text: 'FBLA Competitors' },
                 { icon: <FiEye className="w-4 h-4" />, text: 'Accessibility-First' },
                 { icon: <FiUsers className="w-4 h-4" />, text: '2 Active Projects' },
-                { icon: <FiHeart className="w-4 h-4" />, text: 'Nonprofit Specialists' },
+                { icon: <FiHeart className="w-4 h-4" />, text: 'Full-Stack Development' },
               ].map((badge, index) => (
                 <motion.div
                   key={index}
@@ -525,9 +526,9 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm hover:border-white/30 transition-all duration-300"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm hover:border-blue-400/40 transition-all duration-300"
                 >
-                  <span className="text-cyan-400">{badge.icon}</span>
+                  <span className="text-blue-400">{badge.icon}</span>
                   <span className="text-gray-300 text-sm font-medium">{badge.text}</span>
                 </motion.div>
               ))}
@@ -550,7 +551,7 @@ export default function HomePage() {
                 className="inline-flex flex-col items-center gap-2 text-gray-500"
               >
                 <span className="text-xs uppercase tracking-wider font-mono">Scroll to explore</span>
-                <div className="w-6 h-10 border-2 border-gray-700 rounded-full p-1">
+                <div className="w-6 h-10 border-2 border-gray-600 rounded-full p-1">
                   <motion.div
                     animate={{ y: [0, 12, 0] }}
                     transition={{
@@ -558,7 +559,7 @@ export default function HomePage() {
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
-                    className="w-1.5 h-3 bg-cyan-500 rounded-full mx-auto"
+                    className="w-1.5 h-3 bg-blue-400 rounded-full mx-auto"
                   />
                 </div>
               </motion.div>
@@ -605,17 +606,20 @@ export default function HomePage() {
 
               {/* Text */}
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed px-2">
-                <p>
-                  We're Sean and Zach — two developers from Louisville who build calm, trustworthy tech for organizations that don't have a tech team.
+                <p className="text-xl text-white font-semibold">
+                  We're Sean and Zach, a founder-led development team based in Louisville.
                 </p>
                 <p>
-                  Sean's been building systems since middle school. One early mistake (accidentally crashing a school network in 7th grade) taught him fast how powerful technology can be — and pushed him toward building responsibly, not just experimenting. Since then, he's built Raspberry Pi systems, financial tools, and platforms for real organizations.
+                  We build modern web platforms for businesses that need reliable technology without enterprise pricing.
                 </p>
                 <p>
-                  Zach came in with a strong finance and business mindset and quickly became a real builder too — not just planning, but coding and problem-solving alongside Sean.
+                  <span className="text-white font-semibold">Sean leads engineering and system architecture</span>, with hands-on experience building full-stack platforms, automation systems, and production infrastructure for real clients.
                 </p>
                 <p>
-                  We started with Big Red Bus and learned how to build accessible technology that feels simple and human. When you work with SeeZee, you get a real team: we both code, we both stay involved, and we build with you from first draft to long-term support.
+                  <span className="text-white font-semibold">Zach brings a strong business and finance background</span> and works directly in the codebase to make sure what gets built actually supports the business long-term.
+                </p>
+                <p className="pt-2 border-t border-white/10">
+                  We don't outsource. We don't hand projects to juniors. You work directly with the people building your system — from first draft through ongoing support.
                 </p>
                 <p className="text-sm text-gray-400 italic">
                   Gabe (the guy on the right) brings the{' '}
@@ -628,10 +632,7 @@ export default function HomePage() {
                   >
                     muscle
                   </motion.span>
-                  {' '}to the fight — handling the heavy lifting when projects need extra hands.
-                </p>
-                <p className="text-white font-semibold">
-                  We don't just pitch ideas — we show up with drafts, designs, and a clear plan.
+                  {' '}to the team — handling the heavy lifting when projects need extra hands.
                 </p>
               </div>
             </div>
@@ -668,10 +669,10 @@ export default function HomePage() {
       </section>
 
       {/* Who We Serve Section - Enhanced */}
-      <section className="py-12 sm:py-20 bg-gradient-to-b from-black via-[#0a0520] to-[#0a1128] relative overflow-hidden">
+      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#1a2332] via-[#0f1825] to-[#0a1128] relative overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/6 rounded-full blur-3xl"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16 px-2">
@@ -679,7 +680,7 @@ export default function HomePage() {
                 Who We Build For
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-                We work with organizations that need technology to feel calm, clear, and dependable.
+                We work with businesses and organizations that need powerful technology without the enterprise complexity.
               </p>
             </div>
           </ScrollAnimation>
@@ -688,40 +689,40 @@ export default function HomePage() {
             {[
               {
                 icon: <FiHeart className="w-12 h-12" />,
-                title: 'Mental Health Organizations',
-                description: 'Support groups, recovery programs, therapy centers',
-                color: 'text-blue-400',
-                bgColor: 'bg-blue-400/10'
+                title: 'Small to Medium Businesses',
+                description: 'Growing companies that need custom solutions',
+                color: 'text-sky-400',
+                bgColor: 'bg-sky-400/10'
               },
               {
                 icon: <FiUsers className="w-12 h-12" />,
-                title: 'Neuro-Inclusive Communities',
-                description: 'ADHD, autism, cognitive accessibility advocacy',
-                color: 'text-purple-400',
-                bgColor: 'bg-purple-400/10'
+                title: 'Service Organizations',
+                description: 'Healthcare, consulting, professional services',
+                color: 'text-indigo-400',
+                bgColor: 'bg-indigo-400/10'
               },
               {
                 icon: <FiHeart className="w-12 h-12" />,
-                title: 'Senior & Community Groups',
-                description: 'Organizations serving older adults who need simple tech',
-                color: 'text-green-400',
-                bgColor: 'bg-green-400/10'
+                title: 'Startups & Founders',
+                description: 'Early-stage companies building their first platform',
+                color: 'text-emerald-400',
+                bgColor: 'bg-emerald-400/10'
               },
               {
                 icon: <FiShield className="w-12 h-12" />,
-                title: 'Nonprofits & Small Teams',
-                description: '501(c)(3) orgs with limited budgets and big missions',
-                color: 'text-orange-400',
-                bgColor: 'bg-orange-400/10'
+                title: 'Community Organizations',
+                description: 'Nonprofits and local groups with real impact',
+                color: 'text-teal-400',
+                bgColor: 'bg-teal-400/10'
               },
             ].map((group, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -12, scale: 1.03 }}
-                  className="group p-8 rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a2332]/70 via-[#0a1128]/60 to-[#1a2332]/70 backdrop-blur-xl hover:border-[#ef4444]/60 transition-all duration-500 hover:shadow-2xl hover:shadow-[#ef4444]/20 relative overflow-hidden"
+                  className="group p-8 rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a2332]/70 via-[#0a1128]/60 to-[#1a2332]/70 backdrop-blur-xl hover:border-blue-400/40 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 relative overflow-hidden"
                 >
                   {/* Inner glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                   <div className="relative z-10">
                   <div className={`${group.color} ${group.bgColor} w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-transform duration-300 hover:scale-110`}>
                     {group.icon}
@@ -741,16 +742,16 @@ export default function HomePage() {
       </section>
 
       {/* What We Build Section - Enhanced */}
-      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#0a1128] via-[#150a2e] to-[#0a1128] relative overflow-hidden">
+      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#0a1128] via-[#0f1825] to-[#0a1128] relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
-          className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-br from-cyan-500/8 to-blue-500/8 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-1/4 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
+          className="absolute bottom-1/4 left-0 w-96 h-96 bg-gradient-to-br from-indigo-500/8 to-teal-500/8 rounded-full blur-3xl"
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.18, 0.35, 0.18] }}
           transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -769,24 +770,24 @@ export default function HomePage() {
             {[
               {
                 icon: <FiEye className="w-14 h-14" />,
-                title: 'Accessible Websites',
-                description: 'Clear navigation, large fonts, and clean design. Built so anyone — even non-technical users — can feel confident using your site. No training videos required.',
-                color: 'text-blue-400',
-                borderColor: 'border-t-blue-400'
+                title: 'Modern Web Applications',
+                description: 'Full-stack platforms with user authentication, real-time features, and scalable architecture. Built with Next.js, React, and TypeScript for speed and maintainability.',
+                color: 'text-sky-400',
+                borderColor: 'border-t-sky-400'
               },
               {
                 icon: <FiCalendar className="w-14 h-14" />,
-                title: 'Donation & Event Systems',
-                description: 'Secure donation processing, event scheduling, and support group management that actually works the way you need it to. Simple for your team, reliable for your community.',
-                color: 'text-green-400',
-                borderColor: 'border-t-green-400'
+                title: 'Custom Business Systems',
+                description: 'Payment processing, booking systems, CRM integrations, and automation workflows tailored to your specific needs. No bloated enterprise software required.',
+                color: 'text-emerald-400',
+                borderColor: 'border-t-emerald-400'
               },
               {
                 icon: <FiTool className="w-14 h-14" />,
-                title: 'Admin Dashboards',
-                description: 'Simple admin tools that don\'t require a tech degree. Update your site, manage events, track donations — all in one place that makes sense.',
-                color: 'text-purple-400',
-                borderColor: 'border-t-purple-400'
+                title: 'Admin Dashboards & APIs',
+                description: 'Powerful admin tools for managing your platform. Track metrics, manage users, and control your content — all with clean interfaces and robust APIs.',
+                color: 'text-indigo-400',
+                borderColor: 'border-t-indigo-400'
               },
             ].map((item, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
@@ -812,15 +813,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Tech Stack Section */}
+      <TechStrip />
+
       {/* Featured Project - Big Red Bus */}
       <section className="py-12 sm:py-20 bg-[#0a1128] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1128] to-[#1a1a40]/50 opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1128] to-[#1a2332]/50 opacity-50"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <ScrollAnimation>
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-full text-red-300 text-sm font-semibold mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/15 border border-blue-400/30 rounded-full text-blue-300 text-sm font-semibold mb-6">
                     <FiHeart className="w-4 h-4" />
                     <span>Featured Project</span>
                   </div>
@@ -842,21 +846,21 @@ export default function HomePage() {
                       'Simple navigation, large fonts, minimal distractions'
                     ].map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3 text-gray-300">
-                        <FiCheck className="w-5 h-5 text-[#DC143C] flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                         <span className="leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     href="/case-studies/big-red-bus"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-[#ef4444]/50 transform hover:scale-105"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-blue-600/50 transform hover:scale-105"
                   >
                     Read the Full Story
                     <FiArrowRight className="w-5 h-5" />
                   </Link>
                 </div>
-                <div className="rounded-2xl p-8 bg-[#1a2332]/50 border border-white/10 shadow-2xl hover:shadow-[#ef4444]/20 transition-all duration-300 transform hover:-rotate-1">
-                  <div className="aspect-video bg-gradient-to-br from-[#ef4444]/20 to-[#dc2626]/20 rounded-xl flex items-center justify-center border border-[#ef4444]/30 p-6">
+                <div className="rounded-2xl p-8 bg-[#1a2332]/50 border border-white/10 shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-rotate-1">
+                  <div className="aspect-video bg-gradient-to-br from-slate-700/30 to-slate-800/30 rounded-xl flex items-center justify-center border border-slate-600/40 p-6">
                     <ImageLightbox
                       src="/logos/Stylized Red Bus Logo with Integrated Text.png"
                       alt="Big Red Bus Platform"
@@ -879,7 +883,7 @@ export default function HomePage() {
 
       {/* Featured Project 2: A Vision For You */}
       <section className="py-12 sm:py-20 bg-[#1a2332] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2332] to-[#2d1b69]/30 opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2332] to-[#1e2a45]/40 opacity-50"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <ScrollAnimation>
             <div className="max-w-6xl mx-auto">
@@ -888,7 +892,7 @@ export default function HomePage() {
                 <div className="order-2 lg:order-1">
                   <div className="space-y-4">
                     {/* Main Screenshot */}
-                    <div className="rounded-2xl overflow-hidden border-2 border-[#7f3d8b]/50 shadow-2xl hover:shadow-[#7f3d8b]/40 transition-all duration-300">
+                    <div className="rounded-2xl overflow-hidden border-2 border-indigo-500/40 shadow-2xl hover:shadow-indigo-500/30 transition-all duration-300">
                       <ImageLightbox 
                         src="/avfy-home.png" 
                         alt="A Vision For You Recovery Platform"
@@ -900,13 +904,13 @@ export default function HomePage() {
                     </div>
                     {/* Mini Gallery */}
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="rounded-lg overflow-hidden border border-[#7f3d8b]/30">
+                      <div className="rounded-lg overflow-hidden border border-indigo-500/30">
                         <ImageLightbox src="/avfy-programs.png" alt="Programs" width={300} height={200} className="w-full h-auto" caption="Recovery Programs Directory" />
                       </div>
-                      <div className="rounded-lg overflow-hidden border border-[#7f3d8b]/30">
+                      <div className="rounded-lg overflow-hidden border border-indigo-500/30">
                         <ImageLightbox src="/avfy-donate.png" alt="Donation System" width={300} height={200} className="w-full h-auto" caption="Stripe Donation System" />
                       </div>
-                      <div className="rounded-lg overflow-hidden border border-[#7f3d8b]/30">
+                      <div className="rounded-lg overflow-hidden border border-indigo-500/30">
                         <ImageLightbox src="/avfy-contact.png" alt="Contact" width={300} height={200} className="w-full h-auto" caption="Contact & Support" />
                       </div>
                     </div>
@@ -915,7 +919,7 @@ export default function HomePage() {
 
                 {/* Content */}
                 <div className="order-1 lg:order-2">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm font-semibold mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/15 border border-indigo-400/30 rounded-full text-indigo-300 text-sm font-semibold mb-6">
                     <FiHeart className="w-4 h-4" />
                     <span>Launching December 20, 2024</span>
                   </div>
@@ -938,14 +942,14 @@ export default function HomePage() {
                       'Admin dashboard for staff operations'
                     ].map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3 text-gray-300">
-                        <FiCheck className="w-5 h-5 text-[#b6e41f] flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                         <span className="leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     href="/projects"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-[#7f3d8b] text-white rounded-lg hover:bg-[#6a3374] transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-[#7f3d8b]/50 transform hover:scale-105"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-indigo-600/50 transform hover:scale-105"
                   >
                     View Full Project Details
                     <FiArrowRight className="w-5 h-5" />
@@ -975,30 +979,30 @@ export default function HomePage() {
             {[
               {
                 emoji: '🧠',
-                title: 'Accessible by Design',
-                description: 'Built for cognitive clarity, not complexity. Clear navigation, large fonts, minimal distractions — the same principles we used when building Big Red Bus and every project since.',
-                bgColor: 'bg-blue-400/10',
-                titleColor: 'text-blue-300'
+                title: 'Built for Performance',
+                description: 'Fast load times, clean code, and intuitive interfaces. We build platforms that are easy to use and even easier to scale as your business grows.',
+                bgColor: 'bg-sky-400/10',
+                titleColor: 'text-sky-300'
               },
               {
                 emoji: '❤️',
-                title: 'Community First',
-                description: 'We work with both well-funded partners and small nonprofits scraping by. We genuinely believe in making technology affordable for organizations doing important work — because impact matters more than budget size.',
-                bgColor: 'bg-pink-400/10',
-                titleColor: 'text-pink-300'
+                title: 'Transparent Process',
+                description: 'No hidden fees, no surprise costs. You see working prototypes early, track progress in real-time, and know exactly what you\'re paying for at every stage.',
+                bgColor: 'bg-rose-400/10',
+                titleColor: 'text-rose-300'
               },
               {
                 emoji: '🛠️',
-                title: 'Long-Term Support',
-                description: 'We don\'t disappear after launch. When something breaks, changes, or stops fitting your needs, we\'re here to fix it or rebuild it better. Your success matters to us beyond the initial project.',
-                bgColor: 'bg-gray-400/10',
-                titleColor: 'text-gray-300'
+                title: 'Long-Term Partnership',
+                description: 'We don\'t disappear after launch. When something breaks, changes, or needs enhancement, we\'re here to maintain and evolve your platform as your business grows.',
+                bgColor: 'bg-slate-400/10',
+                titleColor: 'text-slate-300'
               },
             ].map((principle, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -8 }}
-                  className="p-8 rounded-xl border border-white/10 bg-[#0a1128]/50 backdrop-blur hover:border-[#ef4444]/50 transition-all duration-300 hover:shadow-2xl text-center"
+                  className="p-8 rounded-xl border border-white/10 bg-[#0a1128]/50 backdrop-blur hover:border-blue-400/40 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 text-center"
                 >
                   <motion.div 
                     whileHover={{ scale: 1.1 }}
@@ -1025,14 +1029,14 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold mb-4 sm:mb-6 text-white">
-                Your mission shouldn't be held back by confusing technology.
+                Your business shouldn't be held back by outdated technology.
               </h2>
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed mb-8 sm:mb-10">
                 <p>
-                  Most nonprofits and community organizations are juggling outdated websites, broken donation tools, and software that nobody knows how to use.
+                  Most growing businesses are stuck with slow websites, clunky systems, and platforms that break when they need them most.
                 </p>
                 <p>
-                  We step in, simplify everything, and take the technical stress off your plate — so you can focus on your mission, not your systems.
+                  We build modern, scalable solutions that work — so you can focus on growing your business, not fighting with your tech stack.
                 </p>
               </div>
             </div>
@@ -1048,10 +1052,10 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center px-2">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 sm:mb-6 text-white">
-                Ready to build something meaningful?
+                Ready to build something powerful?
               </h2>
               <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-12 leading-relaxed">
-                Tell us what you're trying to build. We'll show you what's possible — no pressure, no tech jargon, no BS.
+                Tell us what you need to build. We'll show you what's possible — no pressure, no tech jargon, no BS.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -1065,10 +1069,10 @@ export default function HomePage() {
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
-                    href="/start/nonprofit-tiers"
+                    href="/projects"
                     className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 border-2 border-white text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-semibold text-base sm:text-lg backdrop-blur min-h-[48px] w-full sm:w-auto"
                   >
-                    View Nonprofit Packages
+                    View Our Work
                   </Link>
                 </motion.div>
               </div>

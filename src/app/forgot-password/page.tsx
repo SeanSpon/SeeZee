@@ -145,7 +145,7 @@ export default function ForgotPasswordPage() {
               {/* Help Text */}
               <p className="text-center text-sm text-gray-500 mt-6">
                 Need help?{" "}
-                <a href="mailto:support@see-zee.com" className="text-bus-red hover:text-bus-red-light transition-colors">
+                <a href="mailto:support@seezeestudios.com" className="text-bus-red hover:text-bus-red-light transition-colors">
                   Contact support
                 </a>
               </p>

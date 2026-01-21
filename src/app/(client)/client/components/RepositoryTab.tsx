@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 interface RepositoryTabProps {
   projectId: string;
+  isAdmin?: boolean;
 }
 
 interface RepositoryData {
@@ -27,7 +28,7 @@ interface RepositoryData {
   error?: string;
 }
 
-export function RepositoryTab({ projectId }: RepositoryTabProps) {
+export function RepositoryTab({ projectId, isAdmin = false }: RepositoryTabProps) {
   const [repository, setRepository] = useState<RepositoryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,12 @@ export function RepositoryTab({ projectId }: RepositoryTabProps) {
   useEffect(() => {
     const fetchRepository = async () => {
       try {
-        const response = await fetch(`/api/projects/${projectId}/repository`);
+        // Use admin endpoint if user is admin, otherwise use client endpoint
+        const endpoint = isAdmin 
+          ? `/api/admin/projects/${projectId}/repository`
+          : `/api/projects/${projectId}/repository`;
+        
+        const response = await fetch(endpoint);
         if (!response.ok) {
           throw new Error("Failed to fetch repository information");
         }
@@ -49,7 +55,7 @@ export function RepositoryTab({ projectId }: RepositoryTabProps) {
     };
 
     fetchRepository();
-  }, [projectId]);
+  }, [projectId, isAdmin]);
 
   if (loading) {
     return (

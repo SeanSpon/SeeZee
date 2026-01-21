@@ -8,6 +8,7 @@ import { getPipeline, getProjects, getInvoices } from "@/server/actions/pipeline
 import { getTaskStats, getTasks } from "@/server/actions/tasks";
 import { getActivityFeed } from "@/server/actions/activity";
 import { getLearningResources, getTools } from "@/server/actions/learning";
+import { getExpenses, getFinancialSummary, getCashFlowAnalysis } from "@/server/actions/finance";
 import { CEODashboardClient } from "@/components/ceo/CEODashboardClient";
 import { db } from "@/server/db";
 import { requireRole } from "@/lib/auth/requireRole";
@@ -31,6 +32,9 @@ export default async function CEODashboardPage() {
     tasksResult,
     resourcesResult,
     toolsResult,
+    expensesResult,
+    financialSummaryResult,
+    cashFlowResult,
     usersResult,
   ] = await Promise.all([
     getExecutiveMetrics(),
@@ -44,6 +48,9 @@ export default async function CEODashboardPage() {
     getTasks({ status: "TODO" }),
     getLearningResources(),
     getTools(),
+    getExpenses(),
+    getFinancialSummary(),
+    getCashFlowAnalysis(),
     // Get all team users directly (CEO has access)
     db.user.findMany({
       where: {
@@ -71,6 +78,10 @@ export default async function CEODashboardPage() {
   const tasks = tasksResult.success ? (tasksResult.tasks || []) : [];
   const resources = resourcesResult.success ? (resourcesResult.resources || []) : [];
   const tools = toolsResult.success ? (toolsResult.tools || []) : [];
+  const expenses = expensesResult.success ? expensesResult.expenses : [];
+  const expenseStats = expensesResult.success ? expensesResult.stats : null;
+  const financialSummary = financialSummaryResult.success ? financialSummaryResult.summary : null;
+  const cashFlow = cashFlowResult.success ? cashFlowResult.cashFlow : null;
   const users = usersResult || [];
 
   return (
@@ -86,6 +97,10 @@ export default async function CEODashboardPage() {
       availableTasks={tasks}
       availableResources={resources}
       availableTools={tools}
+      expenses={expenses}
+      expenseStats={expenseStats}
+      financialSummary={financialSummary}
+      cashFlow={cashFlow}
       users={users}
     />
   );

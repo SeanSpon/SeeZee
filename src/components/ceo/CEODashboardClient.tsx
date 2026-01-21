@@ -69,6 +69,10 @@ interface CEODashboardClientProps {
   availableTasks?: any[];
   availableResources?: any[];
   availableTools?: any[];
+  expenses?: any[];
+  expenseStats?: any;
+  financialSummary?: any;
+  cashFlow?: any;
   users?: any[];
 }
 
@@ -86,6 +90,10 @@ export function CEODashboardClient({
   availableTasks = [],
   availableResources = [],
   availableTools = [],
+  expenses = [],
+  expenseStats = null,
+  financialSummary = null,
+  cashFlow = null,
   users = [],
 }: CEODashboardClientProps) {
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
@@ -103,23 +111,56 @@ export function CEODashboardClient({
   const totalProjectsCount = projects?.length || 0;
   const avgProjectValue = metrics?.projects?.avgValue || 0;
   
-  const conversionRate = metrics?.leads?.conversionRate || 0;
-  const completionRate = metrics?.tasks?.completionRate || 0;
-  
-  const activeTeamMembers = users?.length || 0;
-  const teamUtilization = utilization?.users?.utilization || 0;
-  
   const newLeadsCount = leads?.filter((l: any) => l?.status === "NEW").length || 0;
   const totalLeadsCount = leads?.length || 0;
   const qualifiedLeadsCount = leads?.filter((l: any) => l?.status === "QUALIFIED").length || 0;
+  const convertedLeadsCount = leads?.filter((l: any) => l?.status === "CONVERTED").length || 0;
   
-  const overdueInvoices = invoices?.filter((i: any) => i?.status === "OVERDUE").length || 0;
-  const pendingInvoices = invoices?.filter((i: any) => i?.status === "SENT").length || 0;
-  const paidInvoices = invoices?.filter((i: any) => i?.status === "PAID").length || 0;
+  // Calculate conversion rate from actual data if metrics don't have it
+  const conversionRate = metrics?.leads?.conversionRate || (totalLeadsCount > 0 ? (convertedLeadsCount / totalLeadsCount) * 100 : 0);
   
   const activeTasks = (taskStats?.todo || 0) + (taskStats?.inProgress || 0);
   const overdueTasks = taskStats?.overdue || 0;
   const completedTasks = taskStats?.done || 0;
+  const totalTasks = taskStats?.total || (activeTasks + completedTasks);
+  
+  // Calculate completion rate from actual data if metrics don't have it
+  const completionRate = metrics?.tasks?.completionRate || (totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0);
+  
+  const activeTeamMembers = users?.length || 0;
+  const teamUtilization = utilization?.users?.utilization || 0;
+  
+  const overdueInvoices = invoices?.filter((i: any) => i?.status === "OVERDUE").length || 0;
+  const pendingInvoices = invoices?.filter((i: any) => i?.status === "SENT").length || 0;
+  const paidInvoices = invoices?.filter((i: any) => i?.status === "PAID").length || 0;
+  const totalInvoices = invoices?.length || 0;
+
+  // Calculate Business Health Metrics
+  // Revenue Health: Based on whether we have revenue and positive trend
+  const revenueHealth = totalRevenue > 0 ? (revenueTrend >= 0 ? 85 : 65) : 30;
+  const revenueStatus = revenueHealth >= 75 ? "Healthy" : revenueHealth >= 50 ? "Fair" : "Needs Attention";
+  const revenueHealthColor = revenueHealth >= 75 ? "emerald" : revenueHealth >= 50 ? "amber" : "red";
+  
+  // Pipeline Health: Based on conversion rate and active leads
+  const pipelineHealth = totalLeadsCount > 0 
+    ? Math.min(conversionRate * 3 + (qualifiedLeadsCount / totalLeadsCount) * 30, 100)
+    : activeProjectsCount > 0 ? 50 : 20;
+  const pipelineStatus = pipelineHealth >= 70 ? "Strong" : pipelineHealth >= 40 ? "Moderate" : "Weak";
+  const pipelineHealthColor = pipelineHealth >= 70 ? "blue" : pipelineHealth >= 40 ? "amber" : "red";
+  
+  // Team Capacity Health: Based on team utilization
+  const capacityHealth = teamUtilization;
+  const capacityStatus = capacityHealth >= 60 ? "Optimal" : capacityHealth >= 30 ? "Moderate" : "Low";
+  const capacityHealthColor = capacityHealth >= 60 && capacityHealth <= 90 ? "purple" : "amber";
+  
+  // Client Satisfaction: Based on invoice payment rate and project completion
+  const invoicePaymentRate = totalInvoices > 0 ? (paidInvoices / totalInvoices) * 100 : 50;
+  const clientSatisfaction = Math.min(
+    invoicePaymentRate * 0.6 + (completedProjectsCount / Math.max(totalProjectsCount, 1)) * 40,
+    100
+  );
+  const satisfactionStatus = clientSatisfaction >= 80 ? "Excellent" : clientSatisfaction >= 60 ? "Good" : "Fair";
+  const satisfactionColor = clientSatisfaction >= 80 ? "amber" : clientSatisfaction >= 60 ? "emerald" : "orange";
 
   // Navigation tabs configuration
   const tabs = [
@@ -323,6 +364,16 @@ export function CEODashboardClient({
 
   // Financials Tab Content
   function renderFinancialsTab() {
+    const totalExpenses = expenseStats?.total || 0;
+    const totalOneTimeExpenses = expenseStats?.totalOneTime || 0;
+    const totalRecurringExpenses = expenseStats?.totalRecurring || 0;
+    const monthlyRecurringCost = expenseStats?.monthlyRecurringCost || 0;
+    const recentExpenses = expenseStats?.recent || 0;
+    const expenseTrend = expenseStats?.trend || 0;
+    const grossProfit = financialSummary?.profit?.gross || (totalRevenue - totalExpenses);
+    const profitMargin = financialSummary?.profit?.margin || 0;
+    const expensesByCategory = expenseStats?.byCategory || {};
+    
     return (
       <div className="space-y-6">
         {/* Financial KPIs */}
@@ -336,36 +387,36 @@ export function CEODashboardClient({
             color="emerald"
           />
           <FinancialKPICard
-            title="Pending Revenue"
-            value={formatCurrency(pendingRevenue)}
-            subtitle={`${pendingInvoices + overdueInvoices} invoices`}
-            icon={Clock}
-            color="amber"
-            alert={overdueInvoices > 0}
+            title="Total Expenses"
+            value={formatCurrency(totalExpenses)}
+            trend={expenseTrend}
+            subtitle={`${expenseStats?.oneTimeCount || 0} purchases + ${expenseStats?.recurringCount || 0} recurring`}
+            icon={CreditCard}
+            color="red"
           />
           <FinancialKPICard
-            title="Recent Revenue"
-            value={formatCurrency(recentRevenue)}
-            subtitle="Last 30 days"
+            title="Gross Profit"
+            value={formatCurrency(grossProfit)}
+            subtitle={`${Math.round(profitMargin)}% margin`}
             icon={TrendingUp}
             color="blue"
           />
           <FinancialKPICard
-            title="Avg Project Value"
-            value={formatCurrency(avgProjectValue)}
-            subtitle="Per project"
-            icon={Target}
+            title="Monthly Recurring"
+            value={formatCurrency(monthlyRecurringCost)}
+            subtitle="Ongoing costs/month"
+            icon={Clock}
             color="purple"
           />
         </div>
 
-        {/* Revenue Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SectionCard title="Revenue Distribution">
+        {/* Profit & Loss Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SectionCard title="Revenue vs Expenses">
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-slate-400">Paid</span>
+                  <span className="text-sm text-slate-400">Revenue (Paid)</span>
                   <span className="text-sm text-emerald-400 font-semibold">
                     {formatCurrency(totalRevenue)}
                   </span>
@@ -374,7 +425,7 @@ export function CEODashboardClient({
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ 
-                      width: `${(totalRevenue / (totalRevenue + pendingRevenue)) * 100}%`
+                      width: totalRevenue > 0 ? "100%" : "0%"
                     }}
                     transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
                     className="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"
@@ -383,22 +434,102 @@ export function CEODashboardClient({
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-slate-400">Pending</span>
-                  <span className="text-sm text-amber-400 font-semibold">
-                    {formatCurrency(pendingRevenue)}
+                  <span className="text-sm text-slate-400">Expenses</span>
+                  <span className="text-sm text-red-400 font-semibold">
+                    {formatCurrency(totalExpenses)}
                   </span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-3 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ 
-                      width: `${(pendingRevenue / (totalRevenue + pendingRevenue)) * 100}%`
+                      width: totalRevenue > 0 ? `${(totalExpenses / totalRevenue) * 100}%` : "0%"
                     }}
                     transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full"
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-500 to-rose-500 rounded-full"
                   />
                 </div>
               </div>
+              <div className="pt-2 border-t border-white/10">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-slate-300">Net Profit</span>
+                  <span className={`text-lg font-bold ${grossProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatCurrency(grossProfit)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Expense Types">
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-slate-400">One-Time Purchases</span>
+                  <span className="text-sm text-orange-400 font-semibold">
+                    {formatCurrency(totalOneTimeExpenses)}
+                  </span>
+                </div>
+                <div className="relative w-full bg-slate-800/50 rounded-full h-2.5">
+                  <div 
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
+                    style={{ width: totalExpenses > 0 ? `${(totalOneTimeExpenses / totalExpenses) * 100}%` : "0%" }}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm text-slate-400">Recurring Costs</span>
+                  <span className="text-sm text-purple-400 font-semibold">
+                    {formatCurrency(totalRecurringExpenses)}
+                  </span>
+                </div>
+                <div className="relative w-full bg-slate-800/50 rounded-full h-2.5">
+                  <div 
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full"
+                    style={{ width: totalExpenses > 0 ? `${(totalRecurringExpenses / totalExpenses) * 100}%` : "0%" }}
+                  />
+                </div>
+              </div>
+              <div className="pt-2 border-t border-white/10">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-slate-500">Monthly Recurring Rate</span>
+                  <span className="text-sm font-bold text-purple-400">
+                    {formatCurrency(monthlyRecurringCost)}/mo
+                  </span>
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Category Breakdown">
+            <div className="space-y-3">
+              {Object.keys(expensesByCategory).length > 0 ? (
+                Object.entries(expensesByCategory)
+                  .sort(([, a], [, b]) => (b as number) - (a as number))
+                  .slice(0, 5)
+                  .map(([category, amount]) => {
+                    const percentage = totalExpenses > 0 ? ((amount as number) / totalExpenses) * 100 : 0;
+                    return (
+                      <div key={category}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-xs text-slate-400 capitalize">{category.toLowerCase()}</span>
+                          <span className="text-xs text-white font-medium">{formatCurrency(amount as number)}</span>
+                        </div>
+                        <div className="relative w-full bg-slate-800/50 rounded-full h-2">
+                          <div 
+                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-full"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })
+              ) : (
+                <div className="text-center py-6 text-slate-500 text-sm">
+                  No expenses recorded
+                </div>
+              )}
             </div>
           </SectionCard>
 
@@ -432,7 +563,7 @@ export function CEODashboardClient({
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link
             href="/admin/invoices"
             className="group p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 transition-all"
@@ -446,7 +577,7 @@ export function CEODashboardClient({
           </Link>
 
           <Link
-            href="/admin/ceo/finances"
+            href="/admin/finance"
             className="group p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-slate-900 border border-blue-500/20 hover:border-blue-500/40 transition-all"
           >
             <div className="flex items-center justify-between mb-2">
@@ -455,6 +586,18 @@ export function CEODashboardClient({
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Financial Reports</h3>
             <p className="text-sm text-slate-400">Detailed analytics</p>
+          </Link>
+
+          <Link
+            href="/admin/finance/expenses"
+            className="group p-4 rounded-xl bg-gradient-to-br from-red-500/10 to-slate-900 border border-red-500/20 hover:border-red-500/40 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <DollarSign className="w-6 h-6 text-red-400" />
+              <ArrowUpRight className="w-4 h-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Expenses</h3>
+            <p className="text-sm text-slate-400">Track spending</p>
           </Link>
 
           <Link
@@ -475,6 +618,11 @@ export function CEODashboardClient({
 
   // Operations Tab Content
   function renderOperationsTab() {
+    // Calculate team workload stats
+    const totalActiveTasks = workload.reduce((sum, member) => sum + (member.activeTasks || 0), 0);
+    const totalHighPriorityTasks = workload.reduce((sum, member) => sum + (member.highPriorityTasks || 0), 0);
+    const avgTasksPerMember = activeTeamMembers > 0 ? totalActiveTasks / activeTeamMembers : 0;
+    
     return (
       <div className="space-y-6">
         {/* Operations KPIs */}
@@ -489,7 +637,7 @@ export function CEODashboardClient({
           <OperationsKPICard
             title="Completed Projects"
             value={completedProjectsCount}
-            subtitle={`${Math.round((completedProjectsCount / totalProjectsCount) * 100) || 0}% completion rate`}
+            subtitle={`${Math.round((completedProjectsCount / Math.max(totalProjectsCount, 1)) * 100)}% completion rate`}
             icon={CheckCircle2}
             color="emerald"
           />
@@ -509,6 +657,53 @@ export function CEODashboardClient({
             color="purple"
           />
         </div>
+
+        {/* Team Workload Distribution */}
+        <SectionCard title="Team Workload Distribution">
+          <div className="space-y-3">
+            {workload.length > 0 ? (
+              workload.map((member) => (
+                <div key={member.userId} className="p-4 rounded-lg bg-slate-800/30 border border-white/5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white font-bold">
+                        {member.name?.charAt(0) || '?'}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{member.name}</p>
+                        <p className="text-xs text-slate-400 capitalize">{member.role?.toLowerCase() || 'Team'}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-white">{member.activeTasks || 0}</p>
+                      <p className="text-xs text-slate-400">active tasks</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div className="p-2 rounded bg-amber-500/10 text-center">
+                      <p className="font-semibold text-amber-400">{member.highPriorityTasks || 0}</p>
+                      <p className="text-slate-400">High Priority</p>
+                    </div>
+                    <div className="p-2 rounded bg-blue-500/10 text-center">
+                      <p className="font-semibold text-blue-400">{member.activeProjects || 0}</p>
+                      <p className="text-slate-400">Projects</p>
+                    </div>
+                    <div className="p-2 rounded bg-emerald-500/10 text-center">
+                      <p className="font-semibold text-emerald-400">
+                        {member.activeTasks > 8 ? 'High' : member.activeTasks > 4 ? 'Med' : 'Low'}
+                      </p>
+                      <p className="text-slate-400">Load</p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-slate-500 text-sm">
+                No team workload data available
+              </div>
+            )}
+          </div>
+        </SectionCard>
 
         {/* Project & Task Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -656,6 +851,12 @@ export function CEODashboardClient({
 
   // Analytics Tab Content
   function renderAnalyticsTab() {
+    const totalExpenses = expenseStats?.total || 0;
+    const grossProfit = totalRevenue - totalExpenses;
+    const profitMargin = totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
+    const avgRevenuePerProject = totalProjectsCount > 0 ? totalRevenue / totalProjectsCount : 0;
+    const avgRevenuePerLead = totalLeadsCount > 0 ? totalRevenue / totalLeadsCount : 0;
+    
     return (
       <div className="space-y-6">
         {/* Analytics KPIs */}
@@ -668,11 +869,11 @@ export function CEODashboardClient({
             color="purple"
           />
           <AnalyticsKPICard
-            title="Completion Rate"
-            value={`${Math.round(completionRate)}%`}
-            subtitle="Task efficiency"
-            icon={CheckCircle2}
-            color="emerald"
+            title="Profit Margin"
+            value={`${Math.round(profitMargin)}%`}
+            subtitle="Net profitability"
+            icon={Percent}
+            color={profitMargin >= 50 ? "emerald" : profitMargin >= 30 ? "amber" : "red"}
           />
           <AnalyticsKPICard
             title="Team Utilization"
@@ -691,7 +892,7 @@ export function CEODashboardClient({
         </div>
 
         {/* Performance Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <SectionCard title="Business Performance">
             <div className="space-y-4">
               <MetricRow
@@ -721,38 +922,85 @@ export function CEODashboardClient({
             </div>
           </SectionCard>
 
+          <SectionCard title="Financial Efficiency">
+            <div className="space-y-3">
+              <div className="p-3 rounded-lg bg-slate-800/30">
+                <p className="text-xs text-slate-400 mb-1">Avg Revenue/Project</p>
+                <p className="text-xl font-bold text-white">{formatCurrency(avgRevenuePerProject)}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-800/30">
+                <p className="text-xs text-slate-400 mb-1">Avg Revenue/Lead</p>
+                <p className="text-xl font-bold text-white">{formatCurrency(avgRevenuePerLead)}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-800/30">
+                <p className="text-xs text-slate-400 mb-1">Gross Profit</p>
+                <p className={`text-xl font-bold ${grossProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {formatCurrency(grossProfit)}
+                </p>
+              </div>
+            </div>
+          </SectionCard>
+
           <SectionCard title="Resource Utilization">
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-slate-400">Learning Resources</span>
-                  <span className="text-sm text-white font-medium">{utilization?.resources?.learning || 0}</span>
+                  <span className="text-sm text-white font-medium">{availableResources?.length || 0}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style={{width: '75%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style={{width: availableResources?.length ? '75%' : '0%'}} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm text-slate-400">Tools Available</span>
-                  <span className="text-sm text-white font-medium">{utilization?.resources?.tools || 0}</span>
+                  <span className="text-sm text-white font-medium">{availableTools?.length || 0}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style={{width: '85%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style={{width: availableTools?.length ? '85%' : '0%'}} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm text-slate-400">Active Automations</span>
-                  <span className="text-sm text-white font-medium">{utilization?.resources?.automations || 0}</span>
+                  <span className="text-sm text-slate-400">Active Team Members</span>
+                  <span className="text-sm text-white font-medium">{activeTeamMembers}</span>
                 </div>
                 <div className="relative w-full bg-slate-800/50 rounded-full h-2">
-                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{width: '60%'}} />
+                  <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{width: activeTeamMembers > 0 ? `${Math.min((activeTeamMembers / 10) * 100, 100)}%` : '0%'}} />
                 </div>
               </div>
             </div>
           </SectionCard>
         </div>
+
+        {/* Revenue & Expense Trends */}
+        {financialSummary?.monthlyData && financialSummary.monthlyData.length > 0 && (
+          <SectionCard title="Financial Trends (Last 6 Months)">
+            <div className="space-y-4">
+              {financialSummary.monthlyData.map((month: any) => (
+                <div key={month.month} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-400">{month.month}</span>
+                    <div className="flex gap-4 text-xs">
+                      <span className="text-emerald-400">Rev: {formatCurrency(month.revenue)}</span>
+                      <span className="text-red-400">Exp: {formatCurrency(month.expenses)}</span>
+                      <span className={month.profit >= 0 ? 'text-blue-400' : 'text-orange-400'}>
+                        Profit: {formatCurrency(month.profit)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="relative w-full bg-slate-800/50 rounded-full h-2">
+                    <div 
+                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full"
+                      style={{ width: `${Math.min((month.revenue / Math.max(...financialSummary.monthlyData.map((m: any) => m.revenue))) * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        )}
 
         {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -807,9 +1055,16 @@ export function CEODashboardClient({
           title="Total Revenue"
           value={formatCurrency(totalRevenue)}
           trend={revenueTrend}
-          subtitle={`+${formatCurrency(recentRevenue)} this month`}
+          subtitle={`${formatCurrency(recentRevenue)} recent`}
           icon={DollarSign}
           color="emerald"
+        />
+        <ExecutiveKPICard
+          title="Gross Profit"
+          value={formatCurrency(totalRevenue - (expenseStats?.total || 0))}
+          subtitle={`${Math.round(totalRevenue > 0 ? ((totalRevenue - (expenseStats?.total || 0)) / totalRevenue) * 100 : 0)}% margin`}
+          icon={TrendingUp}
+          color="blue"
         />
         <ExecutiveKPICard
           title="Active Projects"
@@ -820,59 +1075,68 @@ export function CEODashboardClient({
           badge={{ text: "Live", icon: Flame }}
         />
         <ExecutiveKPICard
-          title="Conversion Rate"
-          value={`${Math.round(conversionRate)}%`}
-          subtitle="Lead to client"
-          icon={Target}
-          color="purple"
-        />
-        <ExecutiveKPICard
           title="Team Performance"
           value={`${Math.round(completionRate)}%`}
           subtitle={`${activeTeamMembers} members`}
           icon={Users}
-          color="blue"
+          color="purple"
         />
       </div>
 
       {/* Business Health Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <SectionCard title="Business Health">
+          <SectionCard title="Business Health Dashboard">
             <div className="grid grid-cols-2 gap-4">
               <HealthMetric
                 label="Revenue Status"
-                value="Healthy"
-                percentage={85}
-                color="emerald"
+                value={revenueStatus}
+                percentage={revenueHealth}
+                color={revenueHealthColor}
                 icon={DollarSign}
               />
               <HealthMetric
                 label="Pipeline Status"
-                value="Strong"
-                percentage={75}
-                color="blue"
+                value={pipelineStatus}
+                percentage={pipelineHealth}
+                color={pipelineHealthColor}
                 icon={Activity}
               />
               <HealthMetric
                 label="Team Capacity"
-                value="Optimal"
-                percentage={teamUtilization}
-                color="purple"
+                value={capacityStatus}
+                percentage={capacityHealth}
+                color={capacityHealthColor}
                 icon={Users}
               />
               <HealthMetric
                 label="Client Satisfaction"
-                value="Excellent"
-                percentage={92}
-                color="amber"
+                value={satisfactionStatus}
+                percentage={clientSatisfaction}
+                color={satisfactionColor}
                 icon={Star}
               />
+            </div>
+            
+            {/* Quick Stats Row */}
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-3">
+              <div className="text-center">
+                <p className="text-xs text-slate-400">Conversion Rate</p>
+                <p className="text-lg font-bold text-purple-400">{Math.round(conversionRate)}%</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-slate-400">Avg Project Value</p>
+                <p className="text-lg font-bold text-cyan-400">{formatCurrency(avgProjectValue)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-slate-400">Total Expenses</p>
+                <p className="text-lg font-bold text-red-400">{formatCurrency(expenseStats?.total || 0)}</p>
+              </div>
             </div>
           </SectionCard>
         </div>
 
-        <SectionCard title="Critical Alerts">
+        <SectionCard title="Critical Alerts & Updates">
           {overdueInvoices > 0 && (
             <div className="mb-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
               <div className="flex items-start gap-3">
@@ -880,6 +1144,9 @@ export function CEODashboardClient({
                 <div>
                   <p className="text-sm font-medium text-white">Overdue Invoices</p>
                   <p className="text-xs text-slate-400 mt-1">{overdueInvoices} invoices need attention</p>
+                  <Link href="/admin/invoices" className="text-xs text-red-400 hover:text-red-300 mt-1 inline-block">
+                    View invoices →
+                  </Link>
                 </div>
               </div>
             </div>
@@ -891,22 +1158,42 @@ export function CEODashboardClient({
                 <div>
                   <p className="text-sm font-medium text-white">Overdue Tasks</p>
                   <p className="text-xs text-slate-400 mt-1">{overdueTasks} tasks past deadline</p>
+                  <Link href="/admin/tasks" className="text-xs text-amber-400 hover:text-amber-300 mt-1 inline-block">
+                    View tasks →
+                  </Link>
                 </div>
               </div>
             </div>
           )}
           {newLeadsCount > 0 && (
-            <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+            <div className="mb-3 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
               <div className="flex items-start gap-3">
                 <UserCheck className="w-5 h-5 text-green-400 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-white">New Leads</p>
                   <p className="text-xs text-slate-400 mt-1">{newLeadsCount} leads this week</p>
+                  <Link href="/admin/pipeline" className="text-xs text-green-400 hover:text-green-300 mt-1 inline-block">
+                    View pipeline →
+                  </Link>
                 </div>
               </div>
             </div>
           )}
-          {overdueInvoices === 0 && overdueTasks === 0 && newLeadsCount === 0 && (
+          {availableResources.length > 0 && (
+            <div className="mb-3 p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+              <div className="flex items-start gap-3">
+                <BookOpen className="w-5 h-5 text-purple-400 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-white">Learning Resources</p>
+                  <p className="text-xs text-slate-400 mt-1">{availableResources.length} resources available</p>
+                  <button onClick={() => setActiveTab("learning")} className="text-xs text-purple-400 hover:text-purple-300 mt-1 inline-block">
+                    View learning hub →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {overdueInvoices === 0 && overdueTasks === 0 && newLeadsCount === 0 && availableResources.length === 0 && (
             <div className="text-center py-8">
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-2" />
               <p className="text-sm text-slate-400">All systems operational</p>
@@ -928,7 +1215,7 @@ export function CEODashboardClient({
         <QuickAccessCard
           title="Finances"
           description="Revenue & invoicing"
-          href="/admin/ceo/finances"
+          href="/admin/finance"
           icon={DollarSign}
           color="emerald"
           stats={formatCurrency(totalRevenue)}

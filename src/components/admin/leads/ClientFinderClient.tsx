@@ -361,7 +361,7 @@ export function ClientFinderClient({
         body: JSON.stringify({
           subject: emailDraft.subject,
           emailBody: emailDraft.body,
-          fromEmail: "sean@see-zee.com",
+          fromEmail: "sean@seezeestudios.com",
         }),
       });
 

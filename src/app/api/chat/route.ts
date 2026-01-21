@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message:
-          "I'm having trouble connecting right now. Please try again or email us at seezee.enterprises@gmail.com.",
+          "I'm having trouble connecting right now. Please try again or email us at contact@seezeestudios.com.",
         needsHuman: false,
       },
       { status: 200 } // Return 200 to show the error message in chat
@@ -275,8 +275,8 @@ async function notifyTeam(conversationId: string, lastMessage: string) {
   
   // Could use Resend to send email:
   // await resend.emails.send({
-  //   from: 'SeeZee Bot <bot@see-zee.com>',
-  //   to: 'seezee.enterprises@gmail.com',
+  //   from: 'SeeZee Bot <bot@seezeestudios.com>',
+  //   to: 'contact@seezeestudios.com',
   //   subject: '🚨 Chat Handoff Request',
   //   html: `A visitor wants to speak with someone. <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/chat/${conversationId}">View Conversation</a>`
   // });

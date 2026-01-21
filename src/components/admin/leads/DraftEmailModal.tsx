@@ -24,7 +24,7 @@ export function DraftEmailModal({
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [fromEmail] = useState("sean@see-zee.com");
+  const [fromEmail] = useState("sean@seezeestudios.com");
 
   useEffect(() => {
     if (isOpen && prospectId) {

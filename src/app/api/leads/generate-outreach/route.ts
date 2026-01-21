@@ -164,7 +164,7 @@ Would you have 15 minutes this week for a quick call? I'd be happy to share some
 Best,
 Sean McCulloch
 SeeZee Studio
-sean@see-zee.com
+sean@seezeestudios.com
 (502) 435-2986`;
   } else {
     body = `Hi there,
@@ -180,7 +180,7 @@ Would you be open to a brief call to discuss some quick wins for your site?
 Best,
 Sean McCulloch
 SeeZee Studio
-sean@see-zee.com
+sean@seezeestudios.com
 (502) 435-2986`;
   }
 

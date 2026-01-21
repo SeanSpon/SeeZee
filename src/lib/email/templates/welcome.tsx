@@ -43,7 +43,7 @@ export function renderWelcomeEmail({
     
     <p style="margin: 0 0 16px 0; font-size: 14px; color: #6b7280;">
       <strong>Need help getting started?</strong><br>
-      Check out our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/docs" style="color: #dc2626; text-decoration: none;">documentation</a> or <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support" style="color: #dc2626; text-decoration: none;">contact support</a>.
+      Check out our <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/docs" style="color: #dc2626; text-decoration: none;">documentation</a> or <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support" style="color: #dc2626; text-decoration: none;">contact support</a>.
     </p>
   `);
   
@@ -61,7 +61,7 @@ What's Next?
 
 Get started: ${dashboardUrl}
 
-Need help? Check out our documentation at ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/docs or contact support at ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support
+Need help? Check out our documentation at ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/docs or contact support at ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support
 
 --
 SeeZee Studio

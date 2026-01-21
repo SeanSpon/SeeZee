@@ -184,6 +184,7 @@ export async function deleteClient(clientId: string) {
       include: {
         projects: true,
         invoices: true,
+        members: true,
       },
     });
 
@@ -191,33 +192,53 @@ export async function deleteClient(clientId: string) {
       return { success: false, error: "Client not found" };
     }
 
-    // Check if client has active projects or unpaid invoices
-    const hasActiveProjects = client.projects.some((p) =>
+    // Check if client has active projects
+    const activeProjects = client.projects.filter((p) =>
       ["IN_PROGRESS", "ACTIVE", "DESIGN", "BUILD", "REVIEW", "LEAD"].includes(p.status)
     );
-    const hasUnpaidInvoices = client.invoices.some((i) =>
+    
+    if (activeProjects.length > 0) {
+      return {
+        success: false,
+        error: `Cannot delete client with ${activeProjects.length} active project(s). Please complete or archive projects first.`,
+      };
+    }
+
+    // Check for unpaid invoices
+    const unpaidInvoices = client.invoices.filter((i) =>
       ["DRAFT", "SENT", "OVERDUE"].includes(i.status)
     );
 
-    if (hasActiveProjects) {
+    if (unpaidInvoices.length > 0) {
       return {
         success: false,
-        error: `Cannot delete client with ${client.projects.length} project(s). Please delete or complete projects first.`,
+        error: `Cannot delete client with ${unpaidInvoices.length} unpaid invoice(s). Please resolve invoices first.`,
       };
     }
 
-    if (hasUnpaidInvoices) {
-      return {
-        success: false,
-        error: `Cannot delete client with unpaid invoices. Please resolve invoices first.`,
-      };
-    }
-
-    // Delete associated leads first (if any) to avoid FK constraint violation
+    // Delete all related data in the correct order to avoid FK constraints
+    
+    // 1. Delete leads associated with this organization
     await db.lead.deleteMany({
       where: { organizationId: clientId },
     });
 
+    // 2. Delete organization members
+    await db.organizationMember.deleteMany({
+      where: { organizationId: clientId },
+    });
+
+    // 3. Delete completed/archived projects (if any remain)
+    await db.project.deleteMany({
+      where: { organizationId: clientId },
+    });
+
+    // 4. Delete paid/cancelled invoices (if any remain)
+    await db.invoice.deleteMany({
+      where: { organizationId: clientId },
+    });
+
+    // 6. Finally, delete the organization itself
     await db.organization.delete({
       where: { id: clientId },
     });
@@ -235,9 +256,10 @@ export async function deleteClient(clientId: string) {
 
     revalidatePath("/admin/clients");
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to delete client:", error);
-    return { success: false, error: "Failed to delete client" };
+    const errorMessage = error?.message || "Failed to delete client";
+    return { success: false, error: errorMessage };
   }
 }
 

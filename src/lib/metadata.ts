@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-const baseUrl = 'https://see-zee.com'
+const baseUrl = 'https://seezeestudios.com'
 
 interface PageMetadataProps {
   title: string

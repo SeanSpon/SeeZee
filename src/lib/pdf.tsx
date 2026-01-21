@@ -340,7 +340,7 @@ const InvoicePDF = ({ invoice }: { invoice: InvoiceData }) => {
         <View style={styles.header}>
           <Text style={styles.companyName}>SeeZee Enterprises</Text>
           <Text style={styles.companyDetails}>Professional Web Development Services</Text>
-          <Text style={styles.companyDetails}>seanpm1007@gmail.com</Text>
+          <Text style={styles.companyDetails}>contact@seezeestudios.com</Text>
         </View>
 
         {/* Invoice Title and Number */}
@@ -460,7 +460,7 @@ const InvoicePDF = ({ invoice }: { invoice: InvoiceData }) => {
         <View style={styles.footer}>
           <Text>Thank you for your business!</Text>
           <Text style={{ marginTop: 5 }}>
-            For questions about this invoice, please contact us at seanpm1007@gmail.com
+            For questions about this invoice, please contact us at contact@seezeestudios.com
           </Text>
         </View>
       </Page>

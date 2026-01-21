@@ -10,7 +10,7 @@ export const contentType = 'image/png'
 export default async function Icon() {
   // Try to fetch the logo image from the public folder
   // Try production URL first, then fallback to localhost for dev
-  const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://see-zee.com'
+  const productionUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://seezeestudios.com'
   const localhostUrl = 'http://localhost:3000'
   
   // Try production first, then localhost

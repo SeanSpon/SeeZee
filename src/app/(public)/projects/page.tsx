@@ -33,13 +33,13 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto"
               >
-                We're just getting started. Here's real work we're actively developing and what we've already shipped.
+                Real projects, real production systems, real results. Here's what we've built and shipped.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-sm text-[#22d3ee] font-mono mt-4"
+                className="text-sm text-cyan-400 font-mono mt-4"
               >
                 Updated December 2024
               </motion.p>
@@ -61,19 +61,19 @@ export default function ProjectsPage() {
             <div className="bg-white/[0.03] border border-white/10 rounded-[24px] overflow-hidden">
               
               {/* SECTION 1: HEADER */}
-              <div className="bg-gradient-to-br from-[#7f3d8b] to-[#5c2c66] p-8 rounded-t-[24px]">
+              <div className="bg-gradient-to-br from-[#3d5a7a] to-[#2d4a66] p-8 rounded-t-[24px]">
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="px-3 py-1.5 text-xs border border-white/30 text-white/90 rounded-full bg-white/10">
+                  <span className="px-3 py-1.5 text-xs border border-blue-300/30 text-blue-200 rounded-full bg-blue-500/10">
                     Client Project
                   </span>
-                  <span className="px-3 py-1.5 text-xs border border-white/30 text-white/90 rounded-full bg-white/10">
+                  <span className="px-3 py-1.5 text-xs border border-blue-300/30 text-blue-200 rounded-full bg-blue-500/10">
                     501(c)(3) Nonprofit
                   </span>
                 </div>
                 
                 {/* Status Badge */}
-                <div className="inline-block px-4 py-2 bg-green-500/20 border border-green-500/40 text-green-300 rounded-full text-sm font-medium mt-2 mb-6">
+                <div className="inline-block px-4 py-2 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-sm font-medium mt-2 mb-6">
                   🚀 Launching December 20, 2024
                 </div>
                 
@@ -83,7 +83,7 @@ export default function ProjectsPage() {
                 </h2>
                 
                 {/* Subtitle */}
-                <p className="text-xl text-[#b6e41f] mb-2">
+                <p className="text-xl text-cyan-300 mb-2">
                   Recovery Center Management Platform
                 </p>
                 
@@ -94,7 +94,7 @@ export default function ProjectsPage() {
               </div>
 
               {/* SECTION 2: MISSION */}
-              <div className="bg-black/30 border-l-4 border-[#b6e41f] p-8">
+              <div className="bg-black/30 border-l-4 border-cyan-400 p-8">
                 <p className="text-lg text-white/90 italic leading-relaxed">
                   "To empower the homeless, addicted, maladjusted, and mentally ill to lead productive lives through housing, education, self-help, treatment, or any other available resource."
                 </p>
@@ -159,7 +159,7 @@ export default function ProjectsPage() {
                         'Role-Based Access'
                       ].map((feature, idx) => (
                         <div key={idx} className="flex items-center gap-2 text-gray-300">
-                          <FiCheck className="text-[#b6e41f] flex-shrink-0 w-4 h-4" />
+                          <FiCheck className="text-emerald-400 flex-shrink-0 w-4 h-4" />
                           <span className="text-sm">{feature}</span>
                         </div>
                       ))}
@@ -186,7 +186,7 @@ export default function ProjectsPage() {
               </div>
 
               {/* SECTION 4: IMPACT STATS */}
-              <div className="bg-gradient-to-br from-[#0a1128] to-[#7f3d8b]/20 p-8">
+              <div className="bg-gradient-to-br from-[#0a1128] to-[#2d4a66]/20 p-8">
                 <h3 className="text-xl font-bold text-white text-center mb-6">
                   Designed To:
                 </h3>
@@ -200,7 +200,7 @@ export default function ProjectsPage() {
                     { number: '25', label: 'Database Models', sublabel: 'Full platform architecture' }
                   ].map((stat, idx) => (
                     <div key={idx} className="text-center">
-                      <div className="text-4xl font-bold text-[#b6e41f] mb-2">
+                      <div className="text-4xl font-bold text-cyan-400 mb-2">
                         {stat.number}
                       </div>
                       <div className="text-sm font-medium text-white mb-1">
@@ -227,8 +227,8 @@ export default function ProjectsPage() {
                     { src: '/avfy-programs.png', label: '📊 Programs', alt: 'Programs Dashboard' },
                     { src: '/avfy-donate.png', label: '💳 Donations', alt: 'Donation System' }
                   ].map((screenshot, idx) => (
-                    <div key={idx} className="rounded-xl overflow-hidden border-2 border-[#b6e41f]/30 hover:border-[#b6e41f]/60 transition-colors duration-300">
-                      <div className="relative aspect-video bg-gradient-to-br from-[#7f3d8b]/20 to-[#b6e41f]/10">
+                    <div key={idx} className="rounded-xl overflow-hidden border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-colors duration-300">
+                      <div className="relative aspect-video bg-gradient-to-br from-slate-700/20 to-cyan-500/10">
                         <ImageLightbox
                           src={screenshot.src}
                           alt={screenshot.alt}
@@ -269,13 +269,13 @@ export default function ProjectsPage() {
             <div className="bg-white/[0.03] border border-white/10 rounded-[24px] overflow-hidden">
               
               {/* SECTION 1: HEADER */}
-              <div className="bg-gradient-to-br from-[#0a1128] to-[#ef4444]/30 p-8 rounded-t-[24px]">
+              <div className="bg-gradient-to-br from-[#2d4a66] to-[#3d5a7a] p-8 rounded-t-[24px]">
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="px-3 py-1.5 text-xs border border-white/30 text-white/90 rounded-full bg-white/10">
+                  <span className="px-3 py-1.5 text-xs border border-blue-300/30 text-blue-200 rounded-full bg-blue-500/10">
                     FBLA Competition
                   </span>
-                  <span className="px-3 py-1.5 text-xs border border-white/30 text-white/90 rounded-full bg-white/10">
+                  <span className="px-3 py-1.5 text-xs border border-blue-300/30 text-blue-200 rounded-full bg-blue-500/10">
                     Nonprofit Initiative
                   </span>
                 </div>
@@ -286,7 +286,7 @@ export default function ProjectsPage() {
                 </h2>
                 
                 {/* Subtitle */}
-                <p className="text-xl text-[#22d3ee]">
+                <p className="text-xl text-cyan-300">
                   Community Platform for Mental Health & Recovery Organizations
                 </p>
               </div>
@@ -343,7 +343,7 @@ export default function ProjectsPage() {
                     'Mobile-first responsive layout'
                   ].map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-gray-300">
-                      <FiCheck className="text-[#22d3ee] flex-shrink-0 w-4 h-4" />
+                      <FiCheck className="text-emerald-400 flex-shrink-0 w-4 h-4" />
                       <span className="text-sm">{feature}</span>
                     </div>
                   ))}
@@ -382,7 +382,7 @@ export default function ProjectsPage() {
                   ].map((screenshot, idx) => (
                     <div 
                       key={idx} 
-                      className="rounded-xl overflow-hidden border-2 border-[#ef4444]/30 hover:border-[#ef4444]/60 transition-colors duration-300"
+                      className="rounded-xl overflow-hidden border-2 border-blue-500/30 hover:border-blue-400/60 transition-colors duration-300"
                     >
                       <ImageLightbox
                         src={screenshot.src}
@@ -403,13 +403,13 @@ export default function ProjectsPage() {
                   href="https://fbla-coding-and-programming-web.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 border border-[#22d3ee] text-[#22d3ee] rounded-lg hover:bg-[#22d3ee] hover:text-[#0a1128] transition-all duration-300 font-medium text-base w-full sm:w-auto text-center"
+                  className="px-6 py-3 border-2 border-cyan-400 text-cyan-300 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-300 font-medium text-base w-full sm:w-auto text-center"
                 >
                   View Live Platform
                 </a>
                 <Link
                   href="/case-studies/big-red-bus"
-                  className="px-6 py-3 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-all duration-300 font-medium text-base w-full sm:w-auto text-center"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium text-base w-full sm:w-auto text-center shadow-lg hover:shadow-blue-600/30"
                 >
                   Read Full Case Study
                 </Link>
@@ -429,9 +429,9 @@ export default function ProjectsPage() {
               Why This Matters
             </h2>
             <p className="text-lg text-gray-300 leading-relaxed">
-              We don't list fake projects or inflate results. Every project here represents real work, real learning, and real responsibility.
+              We don't list fake projects or inflate results. Every project here represents real production systems handling real users and real transactions.
               <br /><br />
-              We're early-stage, but we take the work seriously.
+              These platforms are live, maintained, and actually being used.
             </p>
           </ScrollAnimation>
         </div>
@@ -440,18 +440,18 @@ export default function ProjectsPage() {
       {/* ========================================
           FINAL CTA SECTION
           ======================================== */}
-      <section className="bg-[#ef4444] py-20">
+      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <ScrollAnimation>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Your Project Could Be Next
             </h2>
             <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Whether you're a nonprofit, community organization, or small business — let's create something meaningful together.
+              Whether you're a startup, growing business, or organization that needs custom technology — let's build something powerful together.
             </p>
             <Link
               href="/start"
-              className="inline-block px-8 py-4 bg-white text-[#ef4444] rounded-lg hover:scale-105 transition-all duration-300 font-semibold text-lg shadow-lg"
+              className="inline-block px-8 py-4 bg-white text-blue-700 rounded-lg hover:scale-105 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl"
             >
               Start Your Project
             </Link>

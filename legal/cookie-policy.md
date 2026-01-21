@@ -46,7 +46,7 @@ This data is aggregated and anonymous. We cannot identify individual users from 
 
 If you have questions about our use of cookies or analytics:
 
-**Email:** seezee.enterprises@gmail.com  
+**Email:** contact@seezeestudios.com  
 **Location:** Louisville, Kentucky
 
 ---

@@ -53,7 +53,7 @@ export async function POST(
       );
     }
 
-    const fromAddress = fromEmail || process.env.RESEND_FROM_EMAIL || 'sean@see-zee.com';
+    const fromAddress = fromEmail || process.env.RESEND_FROM_EMAIL || 'sean@seezeestudios.com';
 
     // Create SentEmail record with QUEUED status
     const sentEmail = await prisma.sentEmail.create({

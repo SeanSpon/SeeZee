@@ -47,6 +47,7 @@ interface Prospect {
   categoryFit?: number | null;
   locationScore?: number | null;
   organizationSize?: number | null;
+  googleScore?: number | null;
   urgencyLevel?: string | null;
   opportunities?: string[];
   redFlags?: string[];
@@ -158,8 +159,19 @@ export function ProspectCard({
                   )}
                 </div>
               )}
-              {prospect.hasWebsite && (
-                <span className="text-green-400">✓ Website</span>
+              {prospect.websiteUrl ? (
+                <a
+                  href={prospect.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-400 hover:text-green-300 flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  <span className="truncate max-w-[150px]">{prospect.websiteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                </a>
+              ) : (
+                <span className="text-red-400">❌ No Website</span>
               )}
               {prospect.opportunities && prospect.opportunities.length > 0 && (
                 <span className="text-purple-400 truncate max-w-[250px]" title={prospect.opportunities[0]}>
@@ -226,7 +238,8 @@ export function ProspectCard({
                 prospect.revenuePotential !== null ||
                 prospect.categoryFit !== null ||
                 prospect.locationScore !== null ||
-                prospect.organizationSize !== null) && (
+                prospect.organizationSize !== null ||
+                prospect.googleScore !== null) && (
                 <div>
                   <h4 className="text-sm font-semibold text-white mb-2">
                     📊 Score Breakdown
@@ -317,6 +330,24 @@ export function ProspectCard({
                             className="bg-yellow-500 h-2 rounded-full"
                             style={{
                               width: `${((prospect.organizationSize || 0) / 10) * 100}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {prospect.googleScore !== null && (
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-400">Google Rating</span>
+                          <span className="text-white">
+                            {prospect.googleScore}/5
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-800 rounded-full h-2">
+                          <div
+                            className="bg-pink-500 h-2 rounded-full"
+                            style={{
+                              width: `${((prospect.googleScore || 0) / 5) * 100}%`,
                             }}
                           />
                         </div>

@@ -50,7 +50,7 @@ export async function PATCH(
     const updateData: any = {};
 
     if (data.name !== undefined) updateData.name = data.name;
-    if (data.description !== undefined) updateData.description = data.description;
+    if (data.description !== undefined) updateData.description = data.description || null;
     if (data.amount !== undefined) updateData.amount = Math.round(data.amount * 100);
     if (data.currency !== undefined) updateData.currency = data.currency;
     if (data.category !== undefined) updateData.category = data.category;
@@ -60,9 +60,16 @@ export async function PATCH(
         updateData.paidAt = new Date();
       }
     }
-    if (data.vendor !== undefined) updateData.vendor = data.vendor;
-    if (data.isRecurring !== undefined) updateData.isRecurring = data.isRecurring;
-    if (data.frequency !== undefined) updateData.frequency = data.frequency;
+    if (data.vendor !== undefined) updateData.vendor = data.vendor || null;
+    if (data.isRecurring !== undefined) {
+      updateData.isRecurring = data.isRecurring;
+      // Clear frequency if not recurring
+      if (!data.isRecurring) {
+        updateData.frequency = null;
+        updateData.nextDueDate = null;
+      }
+    }
+    if (data.frequency !== undefined) updateData.frequency = data.frequency || null;
     if (data.nextDueDate !== undefined) {
       updateData.nextDueDate = data.nextDueDate ? new Date(data.nextDueDate) : null;
     }
@@ -72,8 +79,8 @@ export async function PATCH(
     if (data.paidAt !== undefined) {
       updateData.paidAt = data.paidAt ? new Date(data.paidAt) : null;
     }
-    if (data.receiptUrl !== undefined) updateData.receiptUrl = data.receiptUrl;
-    if (data.notes !== undefined) updateData.notes = data.notes;
+    if (data.receiptUrl !== undefined) updateData.receiptUrl = data.receiptUrl || null;
+    if (data.notes !== undefined) updateData.notes = data.notes || null;
     if (data.tags !== undefined) updateData.tags = data.tags;
 
     const expense = await db.businessExpense.update({

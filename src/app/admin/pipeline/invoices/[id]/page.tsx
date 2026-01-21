@@ -48,6 +48,18 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch organizations for editing
+  const organizations = await prisma.organization.findMany({
+    select: {
+      id: true,
+      name: true,
+      stripeCustomerId: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+
   // Get payment link if invoice is unpaid
   let paymentUrl: string | null = null;
   
@@ -178,6 +190,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
   }
 
   const plainInvoice = toPlain(invoice);
+  const plainOrganizations = toPlain(organizations);
 
   return (
     <InvoiceDetailClient
@@ -198,6 +211,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
       }}
       paymentUrl={paymentUrl}
       stripeInvoiceUrl={stripeInvoiceUrl}
+      organizations={plainOrganizations}
     />
   );
 }

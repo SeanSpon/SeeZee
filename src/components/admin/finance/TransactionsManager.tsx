@@ -21,6 +21,7 @@ import {
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { RecordTransactionModal } from "./RecordTransactionModal";
+import { CreateInvoiceModal } from "./CreateInvoiceModal";
 
 interface Invoice {
   id: string;
@@ -179,6 +180,124 @@ export function TransactionsManager({
   };
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
+
+  // Invoice action handlers
+  const handleEditInvoice = (invoiceId: string) => {
+    window.location.href = `/admin/pipeline/invoices/${invoiceId}`;
+  };
+
+  const handleSendInvoice = async (invoiceId: string) => {
+    if (!confirm("Mark this invoice as sent?")) return;
+    
+    try {
+      const res = await fetch(`/api/admin/invoices/${invoiceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "SENT" }),
+      });
+
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to send invoice");
+      }
+    } catch (error) {
+      console.error("Failed to send invoice:", error);
+      alert("Failed to send invoice. Please try again.");
+    }
+  };
+
+  const handleDeleteInvoice = async (invoiceId: string) => {
+    if (!confirm("Are you sure you want to delete this invoice? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/admin/invoices/${invoiceId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete invoice");
+      }
+    } catch (error) {
+      console.error("Failed to delete invoice:", error);
+      alert("Failed to delete invoice. Please try again.");
+    }
+  };
+
+  const handleExportData = () => {
+    let dataToExport: any[] = [];
+    let filename = "";
+
+    if (activeTab === "invoices") {
+      dataToExport = filteredInvoices.map(inv => ({
+        "Invoice Number": inv.number,
+        "Client": inv.organizationName,
+        "Project": inv.projectName || "N/A",
+        "Amount": inv.total,
+        "Status": inv.status,
+        "Due Date": inv.dueDate ? new Date(inv.dueDate).toLocaleDateString() : "N/A",
+        "Created": new Date(inv.createdAt).toLocaleDateString(),
+      }));
+      filename = "invoices_export.csv";
+    } else if (activeTab === "payments") {
+      dataToExport = filteredPayments.map(payment => ({
+        "Date": new Date(payment.createdAt).toLocaleDateString(),
+        "Client": payment.clientName,
+        "Invoice": payment.invoiceNumber,
+        "Amount": payment.amount,
+        "Method": payment.paymentMethod || "N/A",
+        "Status": payment.status,
+      }));
+      filename = "payments_export.csv";
+    } else if (activeTab === "subscriptions") {
+      dataToExport = filteredSubscriptions.map(sub => ({
+        "Client": sub.clientName,
+        "Project": sub.projectName,
+        "Monthly Price": sub.monthlyPrice,
+        "Status": sub.status,
+        "Start Date": new Date(sub.startDate).toLocaleDateString(),
+      }));
+      filename = "subscriptions_export.csv";
+    }
+
+    // Convert to CSV
+    if (dataToExport.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    const headers = Object.keys(dataToExport[0]);
+    const csvContent = [
+      headers.join(","),
+      ...dataToExport.map(row => 
+        headers.map(header => {
+          const value = row[header];
+          // Escape commas and quotes
+          if (typeof value === "string" && (value.includes(",") || value.includes('"'))) {
+            return `"${value.replace(/"/g, '""')}"`;
+          }
+          return value;
+        }).join(",")
+      ),
+    ].join("\n");
+
+    // Download file
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Filter data based on search and status
   const filteredInvoices = invoices.filter(inv => {
@@ -468,7 +587,10 @@ export function TransactionsManager({
             </>
           )}
         </select>
-        <button className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-2">
+        <button 
+          onClick={handleExportData}
+          className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-2"
+        >
           <FiDownload className="w-4 h-4" />
           Export
         </button>
@@ -533,15 +655,31 @@ export function TransactionsManager({
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="p-2 hover:bg-white/10 rounded transition-colors text-gray-400 hover:text-white">
+                          <button 
+                            onClick={() => handleEditInvoice(invoice.id)}
+                            className="p-2 hover:bg-white/10 rounded transition-colors text-gray-400 hover:text-white"
+                            title="Edit Invoice"
+                          >
                             <FiEdit className="w-4 h-4" />
                           </button>
-                          <button className="p-2 hover:bg-white/10 rounded transition-colors text-gray-400 hover:text-white">
-                            <FiSend className="w-4 h-4" />
-                          </button>
-                          <button className="p-2 hover:bg-red-500/20 rounded transition-colors text-gray-400 hover:text-red-400">
-                            <FiTrash2 className="w-4 h-4" />
-                          </button>
+                          {invoice.status === "DRAFT" && (
+                            <button 
+                              onClick={() => handleSendInvoice(invoice.id)}
+                              className="p-2 hover:bg-blue-500/20 rounded transition-colors text-gray-400 hover:text-blue-400"
+                              title="Mark as Sent"
+                            >
+                              <FiSend className="w-4 h-4" />
+                            </button>
+                          )}
+                          {invoice.status === "DRAFT" && (
+                            <button 
+                              onClick={() => handleDeleteInvoice(invoice.id)}
+                              className="p-2 hover:bg-red-500/20 rounded transition-colors text-gray-400 hover:text-red-400"
+                              title="Delete Invoice"
+                            >
+                              <FiTrash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -693,14 +831,6 @@ export function TransactionsManager({
                   <button className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
                     View Details
                   </button>
-
-      {/* Record Transaction Modal */}
-      <RecordTransactionModal
-        isOpen={showRecordTransaction}
-        onClose={() => setShowRecordTransaction(false)}
-        onSuccess={handleTransactionSuccess}
-        organizations={organizations}
-      />
                   <button className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
                     <FiEdit className="w-4 h-4" />
                   </button>
@@ -715,6 +845,22 @@ export function TransactionsManager({
         <div className="text-center py-12 text-gray-400 bg-white/5 border border-white/10 rounded-xl">
           No subscriptions found
         </div>
+      )}
+
+      {/* Record Transaction Modal */}
+      <RecordTransactionModal
+        isOpen={showRecordTransaction}
+        onClose={() => setShowRecordTransaction(false)}
+        onSuccess={handleTransactionSuccess}
+        organizations={organizations}
+      />
+
+      {/* Create Invoice Modal */}
+      {showCreateInvoice && (
+        <CreateInvoiceModal
+          organizations={organizations}
+          onClose={() => setShowCreateInvoice(false)}
+        />
       )}
     </div>
   );

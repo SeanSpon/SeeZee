@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -70,6 +70,21 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const isUserCEO = isCEO(user.role);
+  const [userImage, setUserImage] = useState<string | undefined>(user.image ?? undefined);
+
+  // Fetch user image (since it's removed from session to prevent cookie bloat)
+  useEffect(() => {
+    fetch('/api/user/me')
+      .then(res => res.json())
+      .then((data) => {
+        if (data?.image) {
+          setUserImage(data.image);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch user image:', err);
+      });
+  }, []);
 
   // Quick Access - Most frequently used pages
   const quickAccessItems = useMemo<NavItem[]>(
@@ -111,6 +126,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/finance", label: "Finance", icon: FiDollarSign, description: "Revenue metrics and financial overview" },
       { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices, payments, and subscriptions" },
       { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Track Vercel, Cursor, and other costs" },
+      { href: "/admin/hours", label: "Hours & Packages", icon: FiClock, description: "Manage client hours and packages" },
       { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance schedules and change requests" },
     ],
     []
@@ -331,7 +347,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 <>
                   <div className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3">
                     <Avatar
-                      src={user.image ?? undefined}
+                      src={userImage}
                       alt={user.name ?? "Admin"}
                       size={40}
                       fallbackText={user.name ?? undefined}
@@ -363,7 +379,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 <div className="flex flex-col items-center gap-3">
                   <div title={`${user.name ?? "Admin"} - ${user.email ?? ""}`}>
                     <Avatar
-                      src={user.image ?? undefined}
+                      src={userImage}
                       alt={user.name ?? "Admin"}
                       size={40}
                       fallbackText={user.name ?? undefined}

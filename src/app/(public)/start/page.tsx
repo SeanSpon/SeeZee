@@ -170,8 +170,8 @@ export default function StartProjectPage() {
                 Start Your Project
               </h1>
               <p className="text-xl text-gray-300 mb-6">
-                We build with a simple hour-based system. Pick your project type, 
-                and we'll help you estimate the hours needed.
+                Transparent hour-based pricing. Fast turnaround. Production-ready platforms. 
+                Pick your project type and get started.
               </p>
               
               {/* Hour-Based System Explainer */}
@@ -181,8 +181,8 @@ export default function StartProjectPage() {
                   <div className="text-left">
                     <p className="font-semibold">How Our Pricing Works</p>
                     <p className="text-sm text-gray-300">
-                      Projects are billed at <strong>$75/hour</strong> for development time. 
-                      Most websites take 40-80 hours, web apps take 100-200+ hours.
+                      Projects billed at <strong>$75/hour</strong>. Marketing sites: 40-80 hours. 
+                      Web apps: 100-200+ hours. You only pay for actual development time.
                     </p>
                   </div>
                 </div>
@@ -535,11 +535,11 @@ export default function StartProjectPage() {
               transition={{ duration: 0.6, delay: 1.0 }}
             >
               <h2 className="text-3xl font-bold text-white mb-4">
-                Questions About Pricing?
+                Have Questions?
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                We're happy to walk you through our hour-based system and help 
-                you understand what your project might cost. No pressure, just clarity.
+                We're happy to discuss your project, explain our process, and give you 
+                a realistic estimate. No pressure, just straight answers.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link

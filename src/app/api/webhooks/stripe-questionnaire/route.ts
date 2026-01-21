@@ -284,8 +284,6 @@ async function handleCheckoutSessionCompleted(
           number: invoiceNumber,
           title: 'Project Payment',
           description: `Full payment for ${selectedService} project`,
-          amount: paymentAmount,
-          tax: new Prisma.Decimal(0),
           total: paymentAmount,
           status: InvoiceStatus.PAID,
           organizationId: organizationId,
@@ -294,6 +292,9 @@ async function handleCheckoutSessionCompleted(
           sentAt: new Date(),
           paidAt: new Date(),
           dueDate: new Date(),
+          metadata: {
+            invoiceType: "full"
+          },
           items: {
             create: {
               description: `${selectedService} - Full Payment`,
@@ -326,7 +327,7 @@ async function handleCheckoutSessionCompleted(
     // Send receipt email after transaction commits
     // Do this outside the transaction to avoid issues
     if (receiptEmailData.paymentAmountCents > 0) {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com';
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com';
       const dashboardUrl = `${baseUrl}/client`;
       
       try {

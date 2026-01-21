@@ -50,7 +50,7 @@ export function renderEmailChangedEmail({
     </div>
     
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support" class="button" style="background: #dc2626; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; display: inline-block; font-weight: 600;">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support" class="button" style="background: #dc2626; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; display: inline-block; font-weight: 600;">
         Contact Support
       </a>
     </div>
@@ -77,7 +77,7 @@ All future communications will be sent to ${newEmail}.
 
 If you didn't make this change, please contact our support team immediately to secure your account.
 
-Contact Support: ${process.env.NEXT_PUBLIC_APP_URL || 'https://see-zee.com'}/support
+Contact Support: ${process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com'}/support
 
 This notification was sent to your old email address for security purposes.
 

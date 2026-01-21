@@ -89,16 +89,8 @@ export async function createStripeInvoice(invoiceId: string) {
       });
     }
 
-    // Add tax if applicable
-    if (invoice.tax && Number(invoice.tax) > 0) {
-      await stripe.invoiceItems.create({
-        customer: stripeCustomerId,
-        invoice: stripeInvoice.id,
-        description: 'Tax',
-        amount: Math.round(Number(invoice.tax)),
-        currency: invoice.currency.toLowerCase(),
-      });
-    }
+    // Note: Tax is now included in the line items, not as a separate field
+    // Tax metadata can be found in invoice.metadata if needed
 
     // Finalize the invoice
     const finalizedInvoice = await stripe.invoices.finalizeInvoice(stripeInvoice.id);
@@ -269,8 +261,8 @@ export async function sendInvoiceReceiptEmail(invoiceId: string) {  console.log(
       nextBillingDate,
       invoiceUrl: invoice.stripeInvoiceId
         ? `https://invoice.stripe.com/i/${invoice.stripeInvoiceId}`
-        : `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com'}/client/invoices/${invoice.id}`,
-      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://see-zee.com'}/client/invoices`,
+        : `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com'}/client/invoices/${invoice.id}`,
+      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://seezeestudios.com'}/client/invoices`,
     });
 
     console.log(`[INVOICE RECEIPT] Email template rendered, calling sendEmail...`);    const result = await sendEmail({
@@ -388,11 +380,10 @@ export async function createAndSendInvoice(data: {
         status: 'DRAFT',
         organizationId: data.organizationId,
         projectId: data.projectId,
-        amount,
-        tax,
         total,
         currency: 'USD',
         dueDate: data.dueDate,
+        metadata: tax > 0 ? { tax } : undefined,
         items: {
           create: data.items.map((item) => ({
             description: item.description,

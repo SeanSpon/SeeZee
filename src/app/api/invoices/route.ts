@@ -127,7 +127,6 @@ export async function POST(req: NextRequest) {
         number: `INV-${Date.now()}`,
         title: description || `${label === "deposit" ? "Deposit" : "Final Payment"} - ${project.name}`,
         description: description || `${label === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${project.name}`,
-        amount: amountCents / 100, // Convert to dollars
         total: amountCents / 100,
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
         status: "SENT",
@@ -135,6 +134,9 @@ export async function POST(req: NextRequest) {
         projectId: project.id,
         stripeInvoiceId: finalizedInvoice.id,
         sentAt: new Date(),
+        metadata: {
+          invoiceType: label
+        },
         items: {
           create: {
             description: `${label === "deposit" ? "50% Deposit" : "Final Payment (50%)"} - ${project.name}`,

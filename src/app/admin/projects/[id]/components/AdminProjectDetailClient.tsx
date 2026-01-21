@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileText, Target, ListTodo, Folder, MessageSquare, Send, CreditCard, Github, Settings, Plus } from "lucide-react";
+import { ArrowLeft, FileText, Target, ListTodo, Folder, MessageSquare, Send, CreditCard, Github, Settings, Plus, ExternalLink, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AdminProjectTasks } from "./AdminProjectTasks";
 import { RepositoryTab } from "@/app/(client)/client/components/RepositoryTab";
@@ -102,6 +102,43 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
         return (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
+              {/* Live Preview Card */}
+              {project.vercelUrl && (
+                <div className="p-6 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl border border-cyan-500/30">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Globe className="w-5 h-5 text-cyan-400" />
+                        <h3 className="text-lg font-bold text-white">Live Preview</h3>
+                      </div>
+                      <p className="text-sm text-white/70">
+                        Your project is deployed and live! Click below to view the current version.
+                      </p>
+                    </div>
+                  </div>
+                  <a
+                    href={project.vercelUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50"
+                  >
+                    <ExternalLink className="w-5 h-5" />
+                    Open Live Site
+                  </a>
+                  <div className="mt-4 p-3 bg-black/20 rounded-lg">
+                    <p className="text-xs text-white/60 mb-1">Deployment URL:</p>
+                    <a 
+                      href={project.vercelUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-cyan-300 hover:text-cyan-200 break-all font-mono"
+                    >
+                      {project.vercelUrl}
+                    </a>
+                  </div>
+                </div>
+              )}
+              
               <div>
                 <h3 className="text-lg font-bold text-white mb-4">Project Details</h3>
                 <div className="space-y-3">
@@ -146,6 +183,48 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
             </div>
 
             <div className="space-y-4">
+              {/* Quick Links Card */}
+              {(project.githubRepo || project.vercelUrl) && (
+                <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                  <div className="flex items-center gap-2 text-sm text-white/60 mb-4">
+                    <ExternalLink className="w-4 h-4" />
+                    <span>Quick Links</span>
+                  </div>
+                  <div className="space-y-3">
+                    {project.vercelUrl && (
+                      <a
+                        href={project.vercelUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 hover:from-cyan-500/20 hover:to-blue-500/20 rounded-lg border border-cyan-500/20 hover:border-cyan-500/40 transition-all group"
+                      >
+                        <Globe className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white">Live Site</p>
+                          <p className="text-xs text-white/60 truncate">View deployment</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-cyan-400 transition-colors" />
+                      </a>
+                    )}
+                    {project.githubRepo && (
+                      <a
+                        href={project.githubRepo.startsWith('http') ? project.githubRepo : `https://github.com/${project.githubRepo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 hover:border-gray-600 transition-all group"
+                      >
+                        <Github className="w-5 h-5 text-white/60 group-hover:scale-110 transition-transform" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white">Repository</p>
+                          <p className="text-xs text-white/60 truncate">View code</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {project.assignee && (
                 <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
                   <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
@@ -353,7 +432,7 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
         );
 
       case "repository":
-        return <RepositoryTab projectId={project.id} />;
+        return <RepositoryTab projectId={project.id} isAdmin={true} />;
 
       case "settings":
         return (
@@ -388,14 +467,26 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
           Back to Projects
         </Link>
 
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{project.name}</h1>
             {project.description && (
-              <p className="text-white/60 text-sm max-w-2xl">{project.description}</p>
+              <p className="text-white/60 text-sm max-w-2xl mb-3">{project.description}</p>
+            )}
+            {project.vercelUrl && (
+              <a
+                href={project.vercelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
+              >
+                <Globe className="w-4 h-4" />
+                View Live Preview
+                <ExternalLink className="w-4 h-4" />
+              </a>
             )}
           </div>
-          <span className={`inline-flex px-4 py-2 rounded-full text-sm font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}>
+          <span className={`inline-flex px-4 py-2 rounded-full text-sm font-semibold border ${badge.bg} ${badge.text} ${badge.border} shrink-0`}>
             {badge.label}
           </span>
         </div>

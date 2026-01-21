@@ -13,6 +13,7 @@ import { HoursBank } from "@/components/client/HoursBank";
 import { MaintenancePlanManager } from "@/components/client/MaintenancePlanManager";
 import type { ComprehensiveDashboardData } from "@/lib/dashboard-helpers";
 import type { HoursBalanceData } from "../actions/hours";
+import { ClientFinancialOverview } from "@/components/client/ClientFinancialOverview";
 import { 
   FiArrowRight, 
   FiFolder, 
@@ -437,6 +438,17 @@ export default function ComprehensiveDashboardClient({
           </div>
         )}
       </div>
+
+      {/* Financial Overview */}
+      {data.financialData && (
+        <div className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-white">Financial Overview</h2>
+            <p className="text-gray-400 mt-1">Your spending and payment history</p>
+          </div>
+          <ClientFinancialOverview data={data.financialData} />
+        </div>
+      )}
 
       {/* Activity Feed */}
       {data.recentActivity.length > 0 && (

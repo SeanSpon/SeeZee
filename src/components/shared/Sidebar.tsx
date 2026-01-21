@@ -39,6 +39,7 @@ export default function Sidebar() {
   const router = useRouter()
   const { data: session } = useSession()
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+  const [userImage, setUserImage] = useState<string | null>(null)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -88,6 +89,21 @@ export default function Sidebar() {
                   ['FRONTEND', 'BACKEND', 'OUTREACH', 'ADMIN'].includes(userRole || '')
   const [hasActiveRequest, setHasActiveRequest] = useState(false)
   const [checkingRequests, setCheckingRequests] = useState(true)
+
+  // Fetch user image (since it's removed from session to prevent cookie bloat)
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    fetchJson<any>('/api/user/me')
+      .then((data) => {
+        if (data?.image) {
+          setUserImage(data.image)
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch user image:', err)
+      })
+  }, [isAuthenticated])
 
   // Check for active project requests (only for clients)
   useEffect(() => {
@@ -435,9 +451,9 @@ export default function Sidebar() {
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {/* Avatar */}
                       <div className={`w-9 h-9 ${roleBadge.color} rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-lg overflow-hidden`}>
-                        {user?.image ? (
+                        {userImage ? (
                           <img 
-                            src={user.image} 
+                            src={userImage} 
                             alt={user?.name || 'User'} 
                             className="w-full h-full object-cover"
                           />
@@ -525,9 +541,9 @@ export default function Sidebar() {
                     title={`${user?.name || 'User'} (${roleBadge.label})`}
                   >
                     <div className={`w-11 h-11 ${roleBadge.color} rounded-full flex items-center justify-center text-white font-bold shadow-lg ${roleBadge.glow} overflow-hidden`}>
-                      {user?.image ? (
+                      {userImage ? (
                         <img 
-                          src={user.image} 
+                          src={userImage} 
                           alt={user?.name || 'User'} 
                           className="w-full h-full object-cover"
                         />

@@ -66,7 +66,7 @@ const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
 if (!AUTH_URL && !NEXTAUTH_URL) {
   const error = new Error(
     "AUTH_URL or NEXTAUTH_URL is required for OAuth to work. " +
-    "Set AUTH_URL to your production domain (e.g., https://see-zee.com) or " +
+    "Set AUTH_URL to your production domain (e.g., https://seezeestudios.com) or " +
     "NEXTAUTH_URL for NextAuth compatibility."
   );
   console.error("❌ Auth configuration error:", error.message);
@@ -131,7 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         secure: process.env.NODE_ENV === 'production',
         // CRITICAL: Don't set domain in production - let browser handle it
         // Setting domain explicitly can cause cookie issues with subdomains
-        // domain: process.env.NODE_ENV === 'production' ? '.see-zee.com' : undefined,
+        // domain: process.env.NODE_ENV === 'production' ? '.seezeestudios.com' : undefined,
       },
     },
   },
@@ -192,7 +192,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           // CEO whitelist - auto-setup CEO users
-          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
+          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "contact@seezeestudios.com"];
           const isCEO = CEO_EMAILS.includes((credentials.email as string).toLowerCase());
 
           // Auto-verify CEO email if not already verified
@@ -264,7 +264,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
         if (CEO_EMAILS.includes(user.email!)) {
           await retryDatabaseOperation(async () => {
             return await prisma.user.update({
@@ -478,7 +478,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
         const isCEO = CEO_EMAILS.includes(email as string);
         
         // Always fetch latest user data from database to catch onboarding completion and role changes

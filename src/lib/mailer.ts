@@ -112,7 +112,7 @@ export async function sendInviteEmail({
   `;
 
   // Use RESEND_FROM_EMAIL or fallback to verified domain
-  const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@see-zee.com";
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@seezeestudios.com";
   
   await resend.emails.send({
     from: `SeeZee Team <${fromEmail}>`,
@@ -198,7 +198,7 @@ export async function sendWelcomeEmail({
               <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 16px 0 0 0;">
                 - Sean & Zach<br>
                 <span style="color: #94a3b8;">SeeZee Studio</span><br>
-                <a href="https://see-zee.com" style="color: #ef4444; text-decoration: none;">see-zee.com</a>
+                <a href="https://seezeestudios.com" style="color: #ef4444; text-decoration: none;">seezeestudios.com</a>
               </p>
             </div>
           </div>
@@ -215,7 +215,7 @@ export async function sendWelcomeEmail({
   `;
 
   // Use RESEND_FROM_EMAIL or fallback to verified domain
-  const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@see-zee.com";
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@seezeestudios.com";
   
   const result = await resend.emails.send({
     from: fromEmail,

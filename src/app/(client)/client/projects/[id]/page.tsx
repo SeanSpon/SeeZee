@@ -120,10 +120,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               number: true,
               status: true,
               total: true,
-              amount: true,
               dueDate: true,
               paidAt: true,
               createdAt: true,
+            },
+            include: {
+              items: true,
             },
           },
         },
@@ -213,17 +215,24 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   })) || [];
 
   // Transform invoices (convert Decimal to number and Date to ISO string)
-  const transformedInvoices = (project as any).invoices?.map((invoice: any) => ({
-    id: invoice.id,
-    number: invoice.number,
-    status: invoice.status,
-    total: invoice.total ? Number(invoice.total) : 0,
-    amount: invoice.amount ? Number(invoice.amount) : 0,
-    tax: invoice.tax ? Number(invoice.tax) : 0,
-    dueDate: invoice.dueDate?.toISOString() || null,
-    paidAt: invoice.paidAt?.toISOString() || null,
-    createdAt: invoice.createdAt?.toISOString() || null,
-  })) || [];
+  const transformedInvoices = (project as any).invoices?.map((invoice: any) => {
+    // Calculate subtotal from items
+    const subtotal = invoice.items?.reduce((sum: number, item: any) => sum + Number(item.amount), 0) || 0;
+    const total = invoice.total ? Number(invoice.total) : 0;
+    const tax = total - subtotal;
+    
+    return {
+      id: invoice.id,
+      number: invoice.number,
+      status: invoice.status,
+      total: total,
+      amount: subtotal,
+      tax: tax,
+      dueDate: invoice.dueDate?.toISOString() || null,
+      paidAt: invoice.paidAt?.toISOString() || null,
+      createdAt: invoice.createdAt?.toISOString() || null,
+    };
+  }) || [];
 
   return (
     <ProjectDetailClient

@@ -23,6 +23,7 @@ import {
   bulkAddTagsAction,
   exportProspectsAction,
   sendBulkEmailsAction,
+  bulkRecalculateScoresAction,
 } from '@/server/actions/outreach';
 import { Prospect, ProspectStatus } from '@prisma/client';
 import { ProspectFilters } from '@/lib/outreach/bulk-operations';
@@ -123,6 +124,19 @@ export default function ProspectsPage() {
       a.href = url;
       a.download = `prospects-${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
+    }
+  }
+
+  async function handleRecalculateScores() {
+    if (!confirm(`Recalculate lead scores for ${selectedIds.size} prospects?`)) return;
+
+    const result = await bulkRecalculateScoresAction(Array.from(selectedIds));
+    if (result.success) {
+      alert(result.message);
+      setSelectedIds(new Set());
+      loadProspects();
+    } else {
+      alert(`Error: ${result.message}`);
     }
   }
 
@@ -259,6 +273,15 @@ export default function ProspectsPage() {
               Export
             </button>
             <button
+              onClick={handleRecalculateScores}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              Recalculate Scores
+            </button>
+            <button
               onClick={handleBulkArchive}
               className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-2"
             >
@@ -291,7 +314,10 @@ export default function ProspectsPage() {
                   />
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Name/Company</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Category</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Website</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Location</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Google</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Score</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Status</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-slate-300">Contact</th>
@@ -301,13 +327,13 @@ export default function ProspectsPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
+                  <td colSpan={10} className="px-4 py-8 text-center text-slate-400">
                     Loading prospects...
                   </td>
                 </tr>
               ) : prospects.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
+                  <td colSpan={10} className="px-4 py-8 text-center text-slate-400">
                     No prospects found. Try discovering some!
                   </td>
                 </tr>
@@ -324,12 +350,47 @@ export default function ProspectsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-white font-medium">{prospect.name}</div>
-                      <div className="text-slate-400 text-sm">{prospect.company || prospect.category}</div>
+                      {prospect.company && <div className="text-slate-400 text-sm">{prospect.company}</div>}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="text-slate-300 text-sm">{prospect.category || '-'}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {prospect.websiteUrl ? (
+                        <a
+                          href={prospect.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-cyan-400 hover:text-cyan-300 text-sm flex items-center gap-1"
+                        >
+                          <span className="max-w-[150px] truncate">{prospect.websiteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="text-red-400 text-sm">❌ No Website</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-slate-300 text-sm">
-                        {[prospect.city, prospect.state].filter(Boolean).join(', ')}
+                        {[prospect.city, prospect.state].filter(Boolean).join(', ') || '-'}
                       </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {prospect.googleRating ? (
+                        <div className="text-sm">
+                          <div className="flex items-center gap-1 text-yellow-400">
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span className="font-medium text-white">{prospect.googleRating}</span>
+                          </div>
+                          <div className="text-slate-400 text-xs">{prospect.googleReviews} reviews</div>
+                        </div>
+                      ) : (
+                        <span className="text-slate-500 text-sm">-</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -354,7 +415,7 @@ export default function ProspectsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-slate-300 text-sm">{prospect.email || 'No email'}</div>
-                      <div className="text-slate-500 text-xs">{prospect.phone || ''}</div>
+                      {prospect.phone && <div className="text-slate-500 text-xs">{prospect.phone}</div>}
                     </td>
                     <td className="px-4 py-3">
                       <button className="p-2 hover:bg-slate-700 rounded transition-colors">

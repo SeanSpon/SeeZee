@@ -19,9 +19,27 @@ export default async function MaintenancePage() {
     getMaintenancePlans(),
   ]);
 
-  const schedules = schedulesResult.success ? schedulesResult.schedules : [];
+  // Serialize dates and other non-serializable types for client components
+  const schedules = schedulesResult.success ? schedulesResult.schedules.map(s => ({
+    ...s,
+    scheduledFor: s.scheduledFor.toISOString(),
+    completedAt: s.completedAt?.toISOString() || null,
+    createdAt: s.createdAt.toISOString(),
+    updatedAt: s.updatedAt.toISOString(),
+  })) : [];
+  
   const clients = clientsResult.success ? clientsResult.clients : [];
-  const plans = plansResult.success ? plansResult.plans : [];
+  
+  const plans = plansResult.success ? plansResult.plans.map(p => ({
+    ...p,
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
+    cancelledAt: p.cancelledAt?.toISOString() || null,
+    currentPeriodStart: p.currentPeriodStart?.toISOString() || null,
+    currentPeriodEnd: p.currentPeriodEnd?.toISOString() || null,
+    lastRequestDate: p.lastRequestDate?.toISOString() || null,
+    project: p.project || null,
+  })) : [];
   const maintenanceStats = statsResult.success ? statsResult.stats : {
     total: 0,
     upcoming: 0,
@@ -32,7 +50,7 @@ export default async function MaintenancePage() {
   };
 
   // Fetch change requests
-  const changeRequests = await prisma.changeRequest.findMany({
+  const changeRequestsRaw = await prisma.changeRequest.findMany({
     include: {
       project: {
         select: {
@@ -59,6 +77,14 @@ export default async function MaintenancePage() {
       createdAt: "desc",
     },
   });
+
+  // Serialize dates for client components
+  const changeRequests = changeRequestsRaw.map(cr => ({
+    ...cr,
+    createdAt: cr.createdAt.toISOString(),
+    updatedAt: cr.updatedAt.toISOString(),
+    completedAt: cr.completedAt?.toISOString() || null,
+  }));
 
   // Calculate stats - include MaintenancePlan count and change requests
   const activePlansCount = plans.filter((p: any) => p.status === "ACTIVE" || p.status === "PENDING").length;

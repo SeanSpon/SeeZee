@@ -235,8 +235,8 @@ function SettingsContent() {
     try {
       const res = await fetch("/api/settings/notifications");
       const data = await res.json();
-      if (data) {
-        setNotifications(prev => ({ ...prev, ...data }));
+      if (data.preferences) {
+        setNotifications(prev => ({ ...prev, ...data.preferences }));
       }
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
@@ -247,8 +247,8 @@ function SettingsContent() {
     try {
       const res = await fetch("/api/settings/preferences");
       const data = await res.json();
-      if (data) {
-        setPreferences(prev => ({ ...prev, ...data }));
+      if (data.preferences) {
+        setPreferences(prev => ({ ...prev, ...data.preferences }));
       }
     } catch (error) {
       console.error("Failed to fetch preferences:", error);
