@@ -20,6 +20,7 @@ import {
   FiShield,
   FiBook,
   FiPlus,
+  FiHeart,
 } from 'react-icons/fi'
 import LogoHeader from './LogoHeader'
 import { fetchJson } from '@/lib/client-api'
@@ -65,6 +66,7 @@ export default function TopBar() {
     { path: '/', label: 'Home', icon: FiHome },
     { path: '/services', label: 'Services', icon: FiBriefcase },
     { path: '/projects', label: 'Projects', icon: FiFileText },
+    { path: '/partners', label: 'Partners', icon: FiHeart },
     { path: '/philosophy', label: 'Philosophy', icon: FiBook },
     { path: '/about', label: 'About', icon: FiInfo },
   ]
