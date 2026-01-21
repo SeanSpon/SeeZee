@@ -88,6 +88,7 @@ export function Navbar() {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/services">Services</NavLink>
             <NavLink href="/projects">Projects</NavLink>
+            <NavLink href="/partners">Partners</NavLink>
             <NavLink href="/about">About</NavLink>
           </nav>
 
