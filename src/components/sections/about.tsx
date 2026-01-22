@@ -140,7 +140,7 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              We're young developers, designers, and builders from Louisville, KY.
+              We're your local technology partners from Louisville, KY.
             </motion.p>
             <motion.p 
               className="text-lg text-gray-400 leading-relaxed"
@@ -149,7 +149,7 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              We started SeeZee to make powerful tech accessible to small businesses, creators, and anyone chasing something big.
+              We started SeeZee to help community organizations get the technology support they deserve — schools, nonprofits, and local groups doing meaningful work.
             </motion.p>
             <motion.p 
               className="text-lg text-gray-400 leading-relaxed"
@@ -158,7 +158,7 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
-              No agency markup. No outsourcing. Just real work, fast.
+              Hands-on support. Clear communication. Long-term partnership.
             </motion.p>
           </motion.div>
           <motion.p 

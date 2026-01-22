@@ -453,8 +453,8 @@ export default function HomePage() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-black mb-6 sm:mb-8 leading-[1.1] px-2"
               style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
             >
-              <span className="text-white">Custom Web & App Development</span>
-              <span className="text-white block mt-2">That Actually Works</span>
+              <span className="text-white">Your Community</span>
+              <span className="text-white block mt-2">Technology Partner</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -464,9 +464,8 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
             >
-              Sean & Zach build modern web platforms for businesses and organizations 
-              that need technology to be{' '}
-              <span className="text-white font-semibold">fast, reliable, and professional</span>.
+              Technical support, consulting, web development, and automation solutions for schools, nonprofits, and community organizations that need technology to be{' '}
+              <span className="text-white font-semibold">reliable, accessible, and human</span>.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -515,10 +514,10 @@ export default function HomePage() {
               className="flex flex-wrap gap-4 justify-center max-w-3xl mx-auto"
             >
               {[
-                { icon: <FiCheck className="w-4 h-4" />, text: 'FBLA Competitors' },
+                { icon: <FiTool className="w-4 h-4" />, text: 'Hands-On Support' },
                 { icon: <FiEye className="w-4 h-4" />, text: 'Accessibility-First' },
-                { icon: <FiUsers className="w-4 h-4" />, text: '2 Active Projects' },
-                { icon: <FiHeart className="w-4 h-4" />, text: 'Full-Stack Development' },
+                { icon: <FiUsers className="w-4 h-4" />, text: 'Community Focused' },
+                { icon: <FiHeart className="w-4 h-4" />, text: 'Long-Term Partnerships' },
               ].map((badge, index) => (
                 <motion.div
                   key={index}
@@ -607,19 +606,19 @@ export default function HomePage() {
               {/* Text */}
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed px-2">
                 <p className="text-xl text-white font-semibold">
-                  We're Sean and Zach, a founder-led development team based in Louisville.
+                  We're Sean and Zach — your local technology partners based in Louisville.
                 </p>
                 <p>
-                  We build modern web platforms for businesses that need reliable technology without enterprise pricing.
+                  We provide hands-on technical support, consulting, and custom solutions for organizations that need technology to work for real people.
                 </p>
                 <p>
-                  <span className="text-white font-semibold">Sean leads engineering and system architecture</span>, with hands-on experience building full-stack platforms, automation systems, and production infrastructure for real clients.
+                  <span className="text-white font-semibold">Sean leads technical support and system development</span>, with experience solving real-world technology problems, building accessible platforms, and providing on-site and remote support.
                 </p>
                 <p>
-                  <span className="text-white font-semibold">Zach brings a strong business and finance background</span> and works directly in the codebase to make sure what gets built actually supports the business long-term.
+                  <span className="text-white font-semibold">Zach handles consulting and client relationships</span>, helping organizations make smart technology decisions and ensuring every solution actually fits their needs.
                 </p>
                 <p className="pt-2 border-t border-white/10">
-                  We don't outsource. We don't hand projects to juniors. You work directly with the people building your system — from first draft through ongoing support.
+                  We don't disappear after setup. We provide ongoing support, answer questions when you need help, and treat your organization like a long-term partner — not a one-time project.
                 </p>
                 <p className="text-sm text-gray-400 italic">
                   Gabe (the guy on the right) brings the{' '}
@@ -640,9 +639,9 @@ export default function HomePage() {
             {/* Stats Cards - Enhanced */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
               {[
-                { icon: '🚀', title: '2 Active Projects', subtitle: 'Serving 500+ people annually' },
+                { icon: '🤝', title: 'Community Focused', subtitle: 'Serving schools & nonprofits' },
                 { icon: '⚡', title: '<24 Hour', subtitle: 'Average response time' },
-                { icon: '✅', title: 'Open For Business', subtitle: 'Accepting new clients now' }
+                { icon: '✅', title: 'Available Now', subtitle: 'Accepting new partners' }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -677,10 +676,10 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16 px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold mb-4 sm:mb-6 text-white">
-                Who We Build For
+                Who We Partner With
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-                We work with businesses and organizations that need powerful technology without the enterprise complexity.
+                We work with community-focused organizations that need a trusted technology partner — not just a one-time vendor.
               </p>
             </div>
           </ScrollAnimation>
@@ -688,30 +687,30 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto px-4">
             {[
               {
-                icon: <FiHeart className="w-12 h-12" />,
-                title: 'Small to Medium Businesses',
-                description: 'Growing companies that need custom solutions',
+                icon: <FiBook className="w-12 h-12" />,
+                title: 'Schools & Education',
+                description: 'Technology support and systems for learning environments',
                 color: 'text-sky-400',
                 bgColor: 'bg-sky-400/10'
               },
               {
-                icon: <FiUsers className="w-12 h-12" />,
-                title: 'Service Organizations',
-                description: 'Healthcare, consulting, professional services',
+                icon: <FiHeart className="w-12 h-12" />,
+                title: 'Nonprofits',
+                description: 'Accessible solutions for mission-driven organizations',
                 color: 'text-indigo-400',
                 bgColor: 'bg-indigo-400/10'
               },
               {
-                icon: <FiHeart className="w-12 h-12" />,
-                title: 'Startups & Founders',
-                description: 'Early-stage companies building their first platform',
+                icon: <FiUsers className="w-12 h-12" />,
+                title: 'Local Organizations',
+                description: 'Community groups that need reliable technology help',
                 color: 'text-emerald-400',
                 bgColor: 'bg-emerald-400/10'
               },
               {
                 icon: <FiShield className="w-12 h-12" />,
-                title: 'Community Organizations',
-                description: 'Nonprofits and local groups with real impact',
+                title: 'Community Businesses',
+                description: 'Local businesses serving their neighborhoods',
                 color: 'text-teal-400',
                 bgColor: 'bg-teal-400/10'
               },
@@ -741,7 +740,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* What We Build Section - Enhanced */}
+      {/* What We Provide Section - Enhanced */}
       <section className="py-12 sm:py-20 bg-gradient-to-b from-[#0a1128] via-[#0f1825] to-[#0a1128] relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
@@ -758,10 +757,10 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16 px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold mb-4 sm:mb-6 text-white">
-                What We Build
+                How We Help
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-                Complete digital platforms designed for accessibility and ease of use.
+                From hands-on support to custom software — technology solutions that actually work for your organization.
               </p>
             </div>
           </ScrollAnimation>
@@ -769,23 +768,23 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto px-4">
             {[
               {
-                icon: <FiEye className="w-14 h-14" />,
-                title: 'Modern Web Applications',
-                description: 'Full-stack platforms with user authentication, real-time features, and scalable architecture. Built with Next.js, React, and TypeScript for speed and maintainability.',
+                icon: <FiTool className="w-14 h-14" />,
+                title: 'Technical Support & Consulting',
+                description: 'On-site and remote support for your technology needs. We help you make smart decisions, troubleshoot problems, and keep your systems running smoothly.',
                 color: 'text-sky-400',
                 borderColor: 'border-t-sky-400'
               },
               {
-                icon: <FiCalendar className="w-14 h-14" />,
-                title: 'Custom Business Systems',
-                description: 'Payment processing, booking systems, CRM integrations, and automation workflows tailored to your specific needs. No bloated enterprise software required.',
+                icon: <FiEye className="w-14 h-14" />,
+                title: 'Web Development & Systems',
+                description: 'Custom websites, platforms, and business systems designed for accessibility and ease of use. Built with modern tools that are maintainable long-term.',
                 color: 'text-emerald-400',
                 borderColor: 'border-t-emerald-400'
               },
               {
-                icon: <FiTool className="w-14 h-14" />,
-                title: 'Admin Dashboards & APIs',
-                description: 'Powerful admin tools for managing your platform. Track metrics, manage users, and control your content — all with clean interfaces and robust APIs.',
+                icon: <FiCalendar className="w-14 h-14" />,
+                title: 'Automation & AI Solutions',
+                description: 'Practical tools that save time and reduce manual work. Automated workflows, smart integrations, and AI-powered solutions built on trust and real-world needs.',
                 color: 'text-indigo-400',
                 borderColor: 'border-t-indigo-400'
               },
@@ -970,7 +969,7 @@ export default function HomePage() {
                 Our Approach
               </h2>
               <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-                Three principles that guide everything we build.
+                Three principles that guide how we work with every organization.
               </p>
             </div>
           </ScrollAnimation>
@@ -978,23 +977,23 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto px-4">
             {[
               {
-                emoji: '🧠',
-                title: 'Built for Performance',
-                description: 'Fast load times, clean code, and intuitive interfaces. We build platforms that are easy to use and even easier to scale as your business grows.',
+                emoji: '🤝',
+                title: 'Support First',
+                description: 'We start by understanding your real needs and providing hands-on help. Technology solutions work best when built on trust and genuine problem-solving.',
                 bgColor: 'bg-sky-400/10',
                 titleColor: 'text-sky-300'
               },
               {
-                emoji: '❤️',
-                title: 'Transparent Process',
-                description: 'No hidden fees, no surprise costs. You see working prototypes early, track progress in real-time, and know exactly what you\'re paying for at every stage.',
+                emoji: '💬',
+                title: 'Clear Communication',
+                description: 'No tech jargon, no confusing proposals. We explain everything in plain language and make sure you understand what we\'re doing and why it matters.',
                 bgColor: 'bg-rose-400/10',
                 titleColor: 'text-rose-300'
               },
               {
                 emoji: '🛠️',
                 title: 'Long-Term Partnership',
-                description: 'We don\'t disappear after launch. When something breaks, changes, or needs enhancement, we\'re here to maintain and evolve your platform as your business grows.',
+                description: 'We don\'t disappear after setup. We provide ongoing support, answer questions when you need help, and evolve your systems as your organization grows.',
                 bgColor: 'bg-slate-400/10',
                 titleColor: 'text-slate-300'
               },
@@ -1029,14 +1028,14 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold mb-4 sm:mb-6 text-white">
-                Your business shouldn't be held back by outdated technology.
+                Your organization deserves technology that actually works.
               </h2>
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed mb-8 sm:mb-10">
                 <p>
-                  Most growing businesses are stuck with slow websites, clunky systems, and platforms that break when they need them most.
+                  Too many schools, nonprofits, and community organizations struggle with unreliable systems, confusing technology, and vendors who disappear after the sale.
                 </p>
                 <p>
-                  We build modern, scalable solutions that work — so you can focus on growing your business, not fighting with your tech stack.
+                  We provide hands-on support, practical solutions, and long-term partnership — so you can focus on your mission, not your technology problems.
                 </p>
               </div>
             </div>
@@ -1052,10 +1051,10 @@ export default function HomePage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center px-2">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 sm:mb-6 text-white">
-                Ready to build something powerful?
+                Ready for a technology partner you can trust?
               </h2>
               <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-12 leading-relaxed">
-                Tell us what you need to build. We'll show you what's possible — no pressure, no tech jargon, no BS.
+                Tell us about your organization. We'll listen, ask good questions, and show you how we can help — no pressure, no jargon, no sales pitch.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

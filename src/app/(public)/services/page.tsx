@@ -38,7 +38,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-6 leading-tight"
               >
-                Modern Web Development
+                Technology Services & Solutions
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -46,7 +46,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-[#cbd5e1] leading-relaxed mb-8"
               >
-                Transparent hour-based pricing. Fast delivery. Production-ready code.
+                From hands-on support to custom development. Clear pricing. Real partnership.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -71,10 +71,10 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
-              What We Build
+              What We Offer
             </h2>
             <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-[1.7]">
-              Billed at $75/hour. Pick your project type and we'll estimate the hours needed.
+              Development projects billed at $75/hour. Pick your project type and we'll estimate the hours needed.
             </p>
           </div>
 
@@ -467,7 +467,7 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
-              Why Choose SeeZee Studio?
+              Why Partner With SeeZee?
             </h2>
           </div>
 
@@ -475,20 +475,20 @@ export default function ServicesPage() {
             <ScrollAnimation delay={0.1}>
               <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <FiZap className="w-8 h-8 text-[#22d3ee]" />
+                  <FiUsers className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Fast & Reliable</h4>
-                <p className="text-white/70">We deliver quality work quickly. Most projects done in 2-3 weeks.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Real Partnership</h4>
+                <p className="text-white/70">We treat you like a partner, not a project. Long-term relationships built on trust and results.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
               <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <FiCode className="w-8 h-8 text-[#22d3ee]" />
+                  <FiMessageSquare className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Modern Technology</h4>
-                <p className="text-white/70">Built with Next.js, React, and cutting-edge tools for speed and security.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Clear Communication</h4>
+                <p className="text-white/70">No tech jargon. We explain everything in plain language and respond quickly when you need help.</p>
               </div>
             </ScrollAnimation>
 
@@ -497,18 +497,18 @@ export default function ServicesPage() {
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiDollarSign className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Transparent Process</h4>
-                <p className="text-white/70">Track everything through your dashboard. No surprises, no hidden fees.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Transparent Pricing</h4>
+                <p className="text-white/70">No surprises, no hidden fees. You know exactly what you're paying for at every stage.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.4}>
               <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <FiUsers className="w-8 h-8 text-[#22d3ee]" />
+                  <FiShield className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Direct Access</h4>
-                <p className="text-white/70">Work directly with the developers building your platform. No account managers or middlemen.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Ongoing Support</h4>
+                <p className="text-white/70">We don't disappear after launch. Continuous support, maintenance, and help when you need it.</p>
               </div>
             </ScrollAnimation>
 
@@ -517,8 +517,8 @@ export default function ServicesPage() {
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiAward className="w-8 h-8 text-[#22d3ee]" />
                 </div>
-                <h4 className="text-xl font-semibold text-white mb-3">Battle-Tested</h4>
-                <p className="text-white/70">FBLA competition background + real production systems serving hundreds of users.</p>
+                <h4 className="text-xl font-semibold text-white mb-3">Community Focused</h4>
+                <p className="text-white/70">We prioritize schools, nonprofits, and organizations doing meaningful work in our community.</p>
               </div>
             </ScrollAnimation>
           </div>
@@ -601,13 +601,13 @@ export default function ServicesPage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
-                Ready to Start Your Project?
+                Ready to Get Started?
               </h2>
               <p className="text-xl text-white mb-4 leading-relaxed">
-                Answer a few quick questions and get access to your project portal in minutes.
+                Tell us about your organization. We'll listen, understand your needs, and show you how we can help.
               </p>
               <p className="text-white/80 mb-8 text-lg">
-                No commitment. No credit card required to get started.
+                No pressure. No commitment. Just a conversation about what you need.
               </p>
               <Link
                 href="/start"

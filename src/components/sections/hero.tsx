@@ -72,7 +72,7 @@ export function Hero() {
               variants={itemVariants}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              websites, apps, and databases that ship fast and look sharp.
+              your community technology partner.
             </motion.h1>
             
             <motion.p 
@@ -80,8 +80,8 @@ export function Hero() {
               variants={itemVariants}
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
             >
-              seezee studio builds clean, reliable software for small teams and big ideas.
-              straight to value, no baggage.
+              seezee studio provides hands-on support, consulting, and custom solutions for schools, 
+              nonprofits, and community organizations.
             </motion.p>
 
             {/* Trust badges */}

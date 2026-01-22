@@ -37,7 +37,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-6 leading-tight"
               >
-                Built by Sean and Zach — two developers who build systems that work.
+                Your community technology partner — built on trust and real support.
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -45,7 +45,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
               >
-                SeeZee Studio is a development team from Louisville building modern web platforms for businesses that need reliable technology without enterprise complexity.
+                SeeZee Studio provides hands-on technical support, consulting, and custom solutions for schools, nonprofits, and community organizations in Louisville and beyond.
               </motion.p>
             </div>
           </ScrollAnimation>
@@ -64,39 +64,39 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee didn't start as a typical web agency.
+                  SeeZee started with a simple idea: community organizations deserve better technology support.
                 </p>
                 <p>
-                  We began with two high school friends — Sean and Zach — building websites for FBLA competitions and real client projects. We learned fast by working on complex systems with real requirements: payment processing, user management, automated workflows, and scalable architecture.
+                  We began as two high school friends — Sean and Zach — helping local organizations with their technology needs. Through FBLA competitions and real client projects, we learned how to solve problems, explain technology clearly, and build systems that actually work for real people.
                 </p>
                 <p className="text-xl text-white font-semibold pt-4">
-                  But we kept seeing the same problem:
+                  We kept seeing the same problem:
                 </p>
                 <p>
-                  Growing businesses and service organizations needed custom platforms, but traditional agencies were charging $50k+ and taking months just to deliver a basic MVP.
+                  Schools, nonprofits, and local organizations needed reliable technology help, but their options were limited.
                 </p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>Enterprise agencies wanted huge budgets and endless meetings.</span>
+                    <span>Big IT companies wanted enterprise contracts and didn't understand community needs.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>DIY platforms couldn't handle custom business logic.</span>
+                    <span>DIY solutions led to frustration and wasted time.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-trinity-red mr-3">•</span>
-                    <span>And freelancers would build it, then disappear.</span>
+                    <span>Freelancers would fix one thing and disappear.</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
                   So we built SeeZee differently.
                 </p>
                 <p>
-                  We build fast, we price transparently, and we stick around. Modern tech stack, clean code, and real support — without the enterprise price tag.
+                  We provide hands-on support, clear communication, and long-term partnerships. From fixing everyday problems to building custom solutions, we're here to help community organizations thrive.
                 </p>
                 <p>
-                  We don't disappear after launch — we maintain, optimize, and scale your platform as your business grows.
+                  We don't disappear after setup — we stick around, answer questions, and evolve your systems as your organization grows.
                 </p>
               </div>
             </ScrollAnimation>
@@ -116,19 +116,19 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee was born at <span className="text-white font-semibold">Trinity High School</span>, where Sean and Zach first discovered their passion for building technology that actually works.
+                  SeeZee was born at <span className="text-white font-semibold">Trinity High School</span>, where Sean and Zach first discovered their passion for helping people with technology.
                 </p>
                 <p>
-                  Through our involvement with <span className="text-white font-semibold">FBLA (Future Business Leaders of America)</span>, we learned how to build professional systems under pressure. FBLA competitions taught us to scope projects realistically, deliver on tight deadlines, and present technical work clearly to non-technical stakeholders.
+                  Through our involvement with <span className="text-white font-semibold">FBLA (Future Business Leaders of America)</span>, we learned how to solve real problems under pressure. FBLA competitions taught us to listen carefully, communicate clearly, and deliver solutions that actually work for the people using them.
                 </p>
                 <p>
-                  Our early projects — full-stack platforms built for FBLA competitions and real clients — showed us there was a gap in the market. Growing businesses needed custom solutions but couldn't afford enterprise agencies.
+                  Our early work — helping local organizations with technology challenges — showed us there was a real need. Community organizations wanted a technology partner they could trust, not just a vendor who would take their money and disappear.
                 </p>
                 <p className="text-xl text-white font-semibold pt-4">
-                  That's when SeeZee became more than a school project — it became a real business.
+                  That's when SeeZee became more than a school project — it became a mission.
                 </p>
                 <p>
-                  Today, we build production-ready platforms for clients who need reliable technology fast. We've worked on donation systems processing real payments, user management platforms serving hundreds of people, and custom business tools that actually get used daily.
+                  Today, we provide hands-on support and custom solutions for schools, nonprofits, and community organizations. From everyday technology help to building accessible platforms that serve hundreds of people, we're here to make technology work for our community.
                 </p>
               </div>
             </ScrollAnimation>
@@ -201,16 +201,16 @@ export default function AboutPage() {
                 <ScrollAnimation delay={0.2}>
                   <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                     <p>
-                      We're Sean and Zach — two developers from Louisville who started building together through FBLA competitions at Trinity High School.
+                      We're Sean and Zach — your local technology partners from Louisville who started working together through FBLA at Trinity High School.
                     </p>
                     <p>
-                      What began as school projects quickly became something more serious: a mission to build technology that's calm, accessible, and actually works for people who struggle with typical websites.
+                      What began as school projects became a mission: helping community organizations get the technology support they deserve, with solutions that are accessible, reliable, and built for real people.
                     </p>
                     <p>
-                      Gabe rounds out our team, bringing hands-on problem-solving when projects get complicated.
+                      Gabe rounds out our team, bringing hands-on problem-solving when situations require extra support.
                     </p>
                     <p>
-                      We're early-stage, but we build like professionals. We ship working prototypes, explain everything in plain English, and we're committed to sticking around after launch.
+                      We treat every organization like a long-term partner. We explain everything in plain language, respond quickly when you need help, and we're committed to being there for the long haul.
                     </p>
                   </div>
                 </ScrollAnimation>
@@ -284,16 +284,16 @@ export default function AboutPage() {
                   <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
                     Sean McCulloch
                   </h3>
-                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Director</p>
+                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Lead</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Sean builds the systems that power SeeZee — full-stack platforms with clean architecture and scalable design.
+                      Sean leads technical support and system development for SeeZee — solving real-world problems and building solutions that actually work.
                     </p>
                     <p>
-                      He specializes in modern web development: Next.js, React, TypeScript, PostgreSQL, and building systems that are fast, maintainable, and actually work under real-world conditions.
+                      He provides hands-on support (on-site and remote), builds accessible web platforms, and creates automation tools that save time and reduce frustration.
                     </p>
                     <p className="text-white font-semibold">
-                      Every system he builds follows one principle: "If it's not production-ready, it's not done."
+                      His approach: understand the real problem first, then build the right solution.
                     </p>
                   </div>
                   <div className="mb-6">
@@ -301,32 +301,32 @@ export default function AboutPage() {
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Frontend & backend development</span>
+                        <span>Technical support (on-site & remote)</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Database architecture</span>
+                        <span>System troubleshooting & problem-solving</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Admin dashboard design</span>
+                        <span>Web development & accessible design</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Payment & donation integrations</span>
+                        <span>Automation & workflow tools</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Performance optimization</span>
+                        <span>Database & system architecture</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Accessible UI/UX design</span>
+                        <span>AI-powered solutions</span>
                       </li>
                     </ul>
                   </div>
                   <p className="text-gray-300 italic mb-4">
-                    Sean builds technology that lifts people up — not locks them out.
+                    Sean builds technology that helps people — not confuses them.
                   </p>
                   <div className="flex flex-wrap gap-3">
                     <motion.a
@@ -422,16 +422,16 @@ export default function AboutPage() {
                   <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
                     Zach Robards
                   </h3>
-                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Client Experience Director</p>
+                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Consulting Lead</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Zach handles the business side and client experience.
+                      Zach handles consulting and partner relationships.
                     </p>
                     <p>
-                      He works directly with clients to scope projects realistically, set clear expectations, and translate business requirements into technical specifications that Sean can build.
+                      He works directly with organizations to understand their needs, explain options clearly, and help them make smart technology decisions that fit their budget and goals.
                     </p>
                     <p>
-                      He also codes — contributing to frontend development, content management systems, and ensuring every project ships on time and on budget.
+                      He also contributes to development — ensuring every solution is practical, user-friendly, and actually serves the people who will use it.
                     </p>
                   </div>
                   <div className="mb-6">
@@ -439,32 +439,32 @@ export default function AboutPage() {
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Client communication & project scoping</span>
+                        <span>Technology consulting & decision support</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Project management & timelines</span>
+                        <span>Partner communication & relationship building</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Frontend development & UI</span>
+                        <span>Project planning & coordination</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Content strategy & copywriting</span>
+                        <span>Content & user experience</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Business development</span>
+                        <span>Training & documentation</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Long-term client partnerships</span>
+                        <span>Long-term partnership management</span>
                       </li>
                     </ul>
                   </div>
                   <p className="text-gray-300 italic mb-4">
-                    Zach ensures every project ships on time, on budget, and actually solves the problem it was built to solve.
+                    Zach ensures every organization gets solutions that actually fit their needs and budget.
                   </p>
                   <div className="flex flex-wrap gap-3">
                     <motion.a
@@ -522,34 +522,34 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 {
-                  icon: <FiEye className="w-8 h-8" />,
-                  title: 'Clean Code, Fast Performance',
-                  description: 'We build with modern tools and best practices: Next.js for performance, TypeScript for reliability, and PostgreSQL for data integrity. Every system is built to scale as your business grows.',
+                  icon: <FiTool className="w-8 h-8" />,
+                  title: 'Hands-On Support',
+                  description: 'We provide real technical help — on-site when needed, remote when convenient. When you have a problem, you get a person who cares, not a ticket number.',
                 },
                 {
                   icon: <FiUsers className="w-8 h-8" />,
-                  title: 'Transparent Pricing, Real Timelines',
-                  description: 'No hidden fees. No surprise invoices. You know exactly what you\'re paying for, and we deliver on the timeline we promise. Hour-based billing means you only pay for actual work done.',
+                  title: 'Clear Communication',
+                  description: 'No tech jargon. No confusing proposals. We explain everything in plain language and make sure you understand your options before making decisions.',
                 },
                 {
                   icon: <FiHeart className="w-8 h-8" />,
-                  title: 'Built for Real-World Use',
-                  description: 'We don\'t build MVPs that fall apart under real traffic. We build production-ready platforms with proper error handling, security, testing, and monitoring from day one.',
+                  title: 'Community Focused',
+                  description: 'We prioritize organizations doing meaningful work — schools, nonprofits, and community groups. Technology should help your mission, not get in the way.',
                 },
                 {
                   icon: <FiShield className="w-8 h-8" />,
-                  title: 'Support Doesn\'t Disappear After Launch',
-                  description: 'Most developers build it and vanish. We stick around. Maintenance plans, quarterly check-ins, and ongoing support — because your platform needs to evolve as your business grows.',
+                  title: 'Long-Term Partnership',
+                  description: 'We don\'t disappear after setup. We provide ongoing support, answer questions when you need help, and evolve your systems as your organization grows.',
                 },
                 {
-                  icon: <FiHeart className="w-8 h-8" />,
-                  title: 'Partnerships, Not Projects',
-                  description: 'We build relationships that last years — not because you\'re locked into a contract, but because we deliver quality work and actually respond when you need us.',
+                  icon: <FiEye className="w-8 h-8" />,
+                  title: 'Accessibility First',
+                  description: 'Every solution we build is designed for real people — including those who struggle with typical technology. Clean interfaces, clear navigation, and thoughtful design.',
                 },
                 {
                   icon: <FiAward className="w-8 h-8" />,
-                  title: 'Proven Under Pressure',
-                  description: 'Our FBLA competition background taught us to build fast, present clearly, and deliver under tight deadlines. That competitive edge shows up in every client project we ship.',
+                  title: 'Trust Through Results',
+                  description: 'We build trust by showing up, solving problems, and delivering on our promises. Our FBLA background taught us to work hard and earn every relationship.',
                 },
               ].map((value, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
@@ -583,12 +583,12 @@ export default function AboutPage() {
             </ScrollAnimation>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { emoji: '🚀', title: 'Growing Businesses', desc: 'SMBs that need custom platforms without enterprise pricing' },
-                { emoji: '🏥', title: 'Service Organizations', desc: 'Healthcare, consulting, professional services, legal firms' },
-                { emoji: '🎯', title: 'Startups & Founders', desc: 'Early-stage companies building their first scalable platform' },
-                { emoji: '💼', title: 'B2B Companies', desc: 'Businesses that need internal tools, CRMs, or client portals' },
-                { emoji: '🏢', title: 'Local Businesses', desc: 'Louisville-area companies ready to modernize their web presence' },
-                { emoji: '❤️', title: 'Community Organizations', desc: 'Nonprofits and local groups doing meaningful work' },
+                { emoji: '🏫', title: 'Schools & Education', desc: 'Technology support and systems for learning environments' },
+                { emoji: '❤️', title: 'Nonprofits', desc: 'Accessible solutions for mission-driven organizations' },
+                { emoji: '🏛️', title: 'Community Organizations', desc: 'Local groups that need reliable technology help' },
+                { emoji: '🏪', title: 'Local Businesses', desc: 'Louisville-area businesses serving their communities' },
+                { emoji: '⛪', title: 'Faith-Based Organizations', desc: 'Churches and religious groups building community connections' },
+                { emoji: '🤝', title: 'Service Providers', desc: 'Healthcare, social services, and professional practices' },
               ].map((group, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
@@ -626,24 +626,24 @@ export default function AboutPage() {
             <div className="space-y-6">
               {[
                 {
-                  icon: <FiHeart className="w-8 h-8" />,
-                  title: 'We Design With Empathy First',
-                  description: 'Every website we build is tested for cognitive accessibility. We ask: "Can someone with memory challenges use this? Can someone with anxiety navigate this without stress?" If the answer is no, we redesign it.',
+                  icon: <FiTool className="w-8 h-8" />,
+                  title: 'We Start With Support',
+                  description: 'Before building anything new, we understand your current situation. We provide hands-on help with existing problems and earn trust through real problem-solving.',
                 },
                 {
-                  icon: <FiTool className="w-8 h-8" />,
-                  title: 'We Build Systems, Not Just Websites',
-                  description: 'Donations. Events. RSVPs. Email reminders. Admin dashboards. Analytics. We don\'t just make things look good — we make them work.',
+                  icon: <FiHeart className="w-8 h-8" />,
+                  title: 'We Design For Real People',
+                  description: 'Every solution is tested for accessibility and ease of use. We ask: "Can someone who struggles with technology use this comfortably?" If not, we improve it.',
                 },
                 {
                   icon: <FiMail className="w-8 h-8" />,
                   title: 'We Communicate Clearly & Patiently',
-                  description: 'No jargon. No tech-speak. No assumptions. We explain everything in plain language and walk clients through the process step by step.',
+                  description: 'No jargon. No tech-speak. No assumptions. We explain everything in plain language and make sure you\'re comfortable every step of the way.',
                 },
                 {
                   icon: <FiShield className="w-8 h-8" />,
                   title: 'We Stay With You Long-Term',
-                  description: 'We don\'t build a site and disappear. We\'re committed to maintaining, updating, and supporting your platform as your organization evolves. Your success is our success.',
+                  description: 'We don\'t set up and disappear. We\'re committed to ongoing support, answering questions, and helping your organization grow. Your success is our success.',
                 },
               ].map((principle, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
@@ -679,41 +679,41 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  SeeZee exists because growing businesses deserve reliable technology without enterprise complexity.
+                  SeeZee exists because community organizations deserve a technology partner they can trust.
                 </p>
                 <p>
-                  Too many companies are stuck between overpriced agencies that take forever, and cheap freelancers who disappear. You need a development partner who can build fast, price transparently, and actually stick around.
+                  Too many schools, nonprofits, and local groups are stuck with unreliable technology, confusing systems, and vendors who disappear after the sale. You need a partner who shows up, solves problems, and sticks around.
                 </p>
                 <p className="text-xl text-white font-semibold">
                   That's what we do.
                 </p>
-                <p>We build:</p>
+                <p>We provide:</p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Full-stack platforms with modern tech stacks</span>
+                    <span>Hands-on technical support (on-site and remote)</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Custom business systems that actually scale</span>
+                    <span>Technology consulting and decision support</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Production-ready code with proper testing and documentation</span>
+                    <span>Custom web development and accessible platforms</span>
                   </li>
                   <li className="flex items-start">
                     <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
-                    <span>Long-term partnerships with ongoing support</span>
+                    <span>Automation and AI solutions that save time</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
-                  We're not just building websites.
+                  We're not just a technology vendor.
                 </p>
                 <p className="text-2xl text-trinity-red font-bold">
-                  We're building systems that grow with your business.
+                  We're your community technology partner.
                 </p>
                 <p className="text-lg text-gray-300 pt-4">
-                  And we're proving that you don't need a $100k budget to get professional, scalable technology.
+                  Built on trust, real support, and a genuine commitment to helping your organization succeed.
                 </p>
               </div>
             </ScrollAnimation>
@@ -728,10 +728,10 @@ export default function AboutPage() {
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-6">
-                Let's Build Something Powerful Together
+                Ready for a Technology Partner You Can Trust?
               </h2>
               <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed">
-                Whether you're a startup, growing business, service organization, or company that needs custom technology — we'd love to help.
+                Whether you're a school, nonprofit, community organization, or local business — we'd love to learn about your needs and show you how we can help.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

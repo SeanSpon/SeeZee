@@ -167,22 +167,22 @@ export default function StartProjectPage() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-5xl font-bold text-white mb-4">
-                Start Your Project
+                Let's Work Together
               </h1>
               <p className="text-xl text-gray-300 mb-6">
-                Transparent hour-based pricing. Fast turnaround. Production-ready platforms. 
-                Pick your project type and get started.
+                Whether you need hands-on support or a custom solution, we're here to help. 
+                Tell us about your organization and let's find the right fit.
               </p>
               
-              {/* Hour-Based System Explainer */}
+              {/* Community Partner Explainer */}
               <div className="inline-block bg-cyan-500/10 border border-cyan-500/30 rounded-xl px-6 py-4 mb-4">
                 <div className="flex items-center gap-3 text-cyan-400">
                   <FiInfo className="w-5 h-5 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="font-semibold">How Our Pricing Works</p>
+                    <p className="font-semibold">How We Work</p>
                     <p className="text-sm text-gray-300">
-                      Projects billed at <strong>$75/hour</strong>. Marketing sites: 40-80 hours. 
-                      Web apps: 100-200+ hours. You only pay for actual development time.
+                      Development projects billed at <strong>$75/hour</strong>. We also offer ongoing support and consulting. 
+                      Every engagement starts with understanding your real needs.
                     </p>
                   </div>
                 </div>
@@ -193,10 +193,10 @@ export default function StartProjectPage() {
                   <FiCheck className="text-green-400" /> Transparent Pricing
                 </span>
                 <span className="flex items-center gap-1">
-                  <FiCheck className="text-green-400" /> Pay as You Go
+                  <FiCheck className="text-green-400" /> Long-Term Support
                 </span>
                 <span className="flex items-center gap-1">
-                  <FiCheck className="text-green-400" /> No Hidden Fees
+                  <FiCheck className="text-green-400" /> Community Focused
                 </span>
               </div>
             </motion.div>
@@ -538,8 +538,8 @@ export default function StartProjectPage() {
                 Have Questions?
               </h2>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                We're happy to discuss your project, explain our process, and give you 
-                a realistic estimate. No pressure, just straight answers.
+                We're happy to learn about your organization, understand your challenges, and 
+                discuss how we can help. No pressure, just a real conversation.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link

@@ -7,9 +7,9 @@ export function Services() {
   const services = [
     {
       icon: Zap,
-      title: 'Speed + Quality',
-      description: `We ship in weeks, not months. You'll see progress every day.`,
-      highlight: 'Fast delivery without cutting corners.',
+      title: 'Hands-On Support',
+      description: `Real technical help when you need it. On-site or remote, we solve problems and keep your systems running.`,
+      highlight: 'Your reliable technology partner.',
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/20',
@@ -17,9 +17,9 @@ export function Services() {
     },
     {
       icon: Code,
-      title: 'Low Cost, High Skill',
-      description: `We're students and builders who actually love this. We charge what's fair, not inflated.`,
-      highlight: 'Fair pricing from passionate developers.',
+      title: 'Custom Solutions',
+      description: `Web development, automation, and AI tools built for your specific needs — accessible, reliable, and maintainable.`,
+      highlight: 'Technology that works for real people.',
       color: 'from-green-500 to-emerald-500',
       bgColor: 'bg-green-500/10',
       borderColor: 'border-green-500/20',
@@ -27,9 +27,9 @@ export function Services() {
     },
     {
       icon: BarChart3,
-      title: 'The Dashboard',
-      description: 'Your control center. Track progress, tasks, payments, and chat directly with us — all in one place.',
-      highlight: 'Everything you need, right at your fingertips.',
+      title: 'Long-Term Partnership',
+      description: 'We don\'t disappear after setup. Ongoing support, clear communication, and help when you need it most.',
+      highlight: 'Your success is our success.',
       color: 'from-purple-500 to-pink-500',
       bgColor: 'bg-purple-500/10',
       borderColor: 'border-purple-500/20',
@@ -49,11 +49,11 @@ export function Services() {
         >
           <h2 className="text-5xl md:text-6xl font-black mb-6">
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              What We're About
+              How We Help
             </span>
           </h2>
           <p className="text-3xl md:text-4xl font-bold text-white mb-4">
-            We build like we care.
+            We support like we're part of your team.
           </p>
         </motion.div>
         
