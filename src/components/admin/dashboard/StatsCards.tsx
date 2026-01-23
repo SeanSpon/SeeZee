@@ -43,9 +43,8 @@ export function StatsCards({ stats }: StatsCardsProps) {
       label: "Active Projects",
       value: stats.activeProjects ?? 0,
       Icon: FiFolder,
-      iconBgClass: "bg-[#3b82f6]/20",
-      iconTextClass: "text-[#3b82f6]",
-      borderGlow: "hover:shadow-[#3b82f6]/10",
+      iconBgClass: "bg-sky-500/10",
+      iconTextClass: "text-sky-400",
       trend: "+2",
       trendUp: true,
     },
@@ -53,9 +52,8 @@ export function StatsCards({ stats }: StatsCardsProps) {
       label: "Total Revenue",
       value: currencyFormatter.format(revenueValue),
       Icon: FiDollarSign,
-      iconBgClass: "bg-[#22d3ee]/20",
-      iconTextClass: "text-[#22d3ee]",
-      borderGlow: "hover:shadow-[#22d3ee]/10",
+      iconBgClass: "bg-emerald-500/10",
+      iconTextClass: "text-emerald-400",
       trend: "+23%",
       trendUp: true,
     },
@@ -63,9 +61,8 @@ export function StatsCards({ stats }: StatsCardsProps) {
       label: "Total Clients",
       value: stats.totalClients ?? 0,
       Icon: FiUsers,
-      iconBgClass: "bg-[#10b981]/20",
-      iconTextClass: "text-[#10b981]",
-      borderGlow: "hover:shadow-[#10b981]/10",
+      iconBgClass: "bg-violet-500/10",
+      iconTextClass: "text-violet-400",
       trend: "+5",
       trendUp: true,
     },
@@ -73,32 +70,31 @@ export function StatsCards({ stats }: StatsCardsProps) {
       label: "Unpaid Invoices",
       value: stats.unpaidInvoices ?? 0,
       Icon: FiAlertCircle,
-      iconBgClass: "bg-[#f59e0b]/20",
-      iconTextClass: "text-[#f59e0b]",
-      borderGlow: "hover:shadow-[#f59e0b]/10",
+      iconBgClass: "bg-amber-500/10",
+      iconTextClass: "text-amber-400",
       trend: (stats.unpaidInvoices ?? 0) > 0 ? "Action needed" : "All clear",
       trendUp: (stats.unpaidInvoices ?? 0) === 0,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-      {cards.map(({ label, value, Icon, iconBgClass, iconTextClass, borderGlow, trend, trendUp }, index) => (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {cards.map(({ label, value, Icon, iconBgClass, iconTextClass, trend, trendUp }, index) => (
         <motion.div
           key={label}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
-          whileHover={{ y: -4, scale: 1.02 }}
+          whileHover={{ y: -2 }}
           className={`
-            relative overflow-hidden rounded-2xl 
-            border border-white/10 
-            bg-gradient-to-br from-[#1e293b]/80 to-[#0f172a]/80 
+            relative overflow-hidden rounded-xl 
+            border border-white/[0.08]
+            bg-gradient-to-br from-slate-900/90 to-slate-950/90
             backdrop-blur-xl 
-            p-6 
+            p-5 
             transition-all duration-300 
-            hover:border-white/20 
-            hover:shadow-xl ${borderGlow}
+            hover:border-white/[0.15]
+            hover:shadow-lg hover:shadow-black/20
             group
           `}
         >
@@ -108,14 +104,14 @@ export function StatsCards({ stats }: StatsCardsProps) {
           {/* Content */}
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${iconBgClass} transition-transform group-hover:scale-110`}>
-                <Icon className={`h-6 w-6 ${iconTextClass}`} />
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconBgClass} transition-all duration-300 group-hover:scale-105`}>
+                <Icon className={`h-5 w-5 ${iconTextClass}`} />
               </div>
               {/* Trend indicator */}
-              <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
+              <div className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md ${
                 trendUp 
-                  ? "bg-[#10b981]/10 text-[#10b981]" 
-                  : "bg-[#f59e0b]/10 text-[#f59e0b]"
+                  ? "bg-emerald-500/10 text-emerald-400" 
+                  : "bg-amber-500/10 text-amber-400"
               }`}>
                 {trendUp ? (
                   <FiTrendingUp className="h-3 w-3" />
@@ -126,8 +122,8 @@ export function StatsCards({ stats }: StatsCardsProps) {
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-3xl lg:text-4xl font-heading font-bold text-white tracking-tight">{value}</p>
-              <p className="text-sm text-slate-400 uppercase tracking-wider">{label}</p>
+              <p className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">{value}</p>
+              <p className="text-xs text-slate-400 uppercase tracking-[0.15em] font-medium">{label}</p>
             </div>
           </div>
         </motion.div>

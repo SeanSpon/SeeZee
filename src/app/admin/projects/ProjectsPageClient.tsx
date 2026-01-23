@@ -115,13 +115,13 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
       key: "progress",
       render: (project) => (
         <div className="flex items-center gap-2">
-          <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="w-20 h-1.5 bg-slate-700/50 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-trinity-red to-trinity-maroon"
+              className="h-full bg-sky-500 rounded-full"
               style={{ width: `${project.progress}%` }}
             />
           </div>
-          <span className="text-xs text-gray-300 w-8 text-right">{project.progress}%</span>
+          <span className="text-xs text-slate-400 w-8 text-right">{project.progress}%</span>
         </div>
       ),
     },
@@ -186,56 +186,53 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
   ];
 
   return (
-    <div className="space-y-8">
-      <header className="space-y-3 relative">
+    <div className="space-y-6">
+      <header className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block mb-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 mb-1">
               Delivery Operations
-            </span>
-            <h1 className="text-4xl font-heading font-bold gradient-text">Projects</h1>
+            </p>
+            <h1 className="text-3xl font-semibold text-white">Projects</h1>
           </div>
           <button
             onClick={handleCreateProject}
-            className="inline-flex items-center gap-2 rounded-lg border-2 border-trinity-red/40 bg-trinity-red/10 px-5 py-2.5 text-sm font-medium text-trinity-red transition-all hover:bg-trinity-red hover:text-white hover:shadow-large hover:border-trinity-red"
+            className="inline-flex items-center gap-2 rounded-lg bg-white/[0.08] border border-white/[0.08] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/[0.12] hover:border-white/[0.15]"
           >
             <FiPlus className="h-4 w-4" />
             New Project
           </button>
         </div>
-        <p className="max-w-2xl text-base text-gray-300 leading-relaxed">
+        <p className="max-w-2xl text-sm text-slate-400 leading-relaxed">
           Portfolio view of every active build, including assigned owners and projected revenue impact.
         </p>
       </header>
 
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <EnhancedStatCard
           label="Active Projects"
           value={initialData.activeProjects}
           icon={FiTrendingUp}
-          iconColor="text-trinity-red"
-          iconBgColor="bg-trinity-red/20"
+          variant="primary"
           subtitle="In progress"
         />
         <EnhancedStatCard
           label="Total Budget"
           value={currencyFormatter.format(initialData.totalBudget)}
           icon={FiDollarSign}
-          iconColor="text-green-400"
-          iconBgColor="bg-green-500/20"
+          variant="success"
           subtitle="Revenue pipeline"
         />
         <EnhancedStatCard
           label="Total Projects"
           value={projects.length}
           icon={FiCalendar}
-          iconColor="text-blue-400"
-          iconBgColor="bg-blue-500/20"
+          variant="info"
           subtitle="All time"
         />
       </section>
 
-      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+      <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
         <DataTable
           columns={columns}
           data={projects}
