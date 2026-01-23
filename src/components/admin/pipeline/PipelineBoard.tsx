@@ -96,13 +96,14 @@ export function PipelineBoard({ stages }: PipelineBoardProps) {
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      {/* Mobile: horizontal scroll, Desktop: grid */}
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:snap-none md:grid md:grid-cols-2 lg:grid-cols-5 md:overflow-visible">
         {stages.map((stage) => (
           <div
             key={stage.id}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, stage.id)}
-            className={`rounded-2xl seezee-glass p-4 transition-all ${
+            className={`flex-shrink-0 w-[80vw] max-w-[280px] md:w-auto md:max-w-none snap-center rounded-2xl seezee-glass p-4 transition-all ${
               stageColors[stage.id] || "border-white/10"
             } ${draggingLead ? "ring-2 ring-seezee-red/30" : ""}`}
           >
