@@ -145,7 +145,8 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   // ===========================================
   const ceoItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/ceo", label: "Command Center", icon: FiStar, description: "Executive overview" },
+      { href: "/admin/command-center", label: "Hub", icon: FiLayers, description: "All-in-one access hub" },
+      { href: "/admin/ceo", label: "Overview", icon: FiStar, description: "Executive overview" },
       { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
     ],
@@ -299,7 +300,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                   items={ceoItems}
                   isActive={isActive}
                   onNavigate={handleNavigate}
-                  defaultOpen={pathname.startsWith("/admin/ceo")}
+                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center")}
                   badge="CEO"
                   collapsed={isCollapsed}
                 />

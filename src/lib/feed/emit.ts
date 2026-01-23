@@ -107,4 +107,25 @@ export const feedHelpers = {
       type: "commit.summary",
       payload: { commits, count: commits.length },
     }),
+
+  projectUpdated: (projectId: string, projectName: string) =>
+    emitFeedEvent({
+      projectId,
+      type: "project.status_changed",
+      payload: { projectName, action: "updated" },
+    }),
+
+  milestoneCompleted: (projectId: string, milestoneName: string) =>
+    emitFeedEvent({
+      projectId,
+      type: "milestone.completed",
+      payload: { milestoneName },
+    }),
+
+  fileUploaded: (projectId: string, fileName: string, fileType: string) =>
+    emitFeedEvent({
+      projectId,
+      type: "file.uploaded",
+      payload: { fileName, fileType },
+    }),
 };
