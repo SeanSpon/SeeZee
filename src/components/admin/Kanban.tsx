@@ -42,11 +42,11 @@ export function Kanban({
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 max-w-full">
+    <div className="flex gap-4 overflow-x-auto overflow-y-hidden pb-4 px-1 -mx-1 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none">
       {columns.map((column) => (
         <div
           key={column.id}
-          className="flex-shrink-0 w-80 flex flex-col"
+          className="flex-shrink-0 w-[85vw] max-w-[320px] md:w-80 md:max-w-none flex flex-col snap-center"
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();

@@ -13,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Format currency for display
+ * Format currency for display (expects amount in dollars)
  */
 export function formatCurrency(
   amount: number,
@@ -22,7 +22,41 @@ export function formatCurrency(
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
+}
+
+/**
+ * Format currency from cents (Stripe amounts are in cents)
+ * Use this for any Stripe-related amounts
+ */
+export function formatCents(
+  cents: number,
+  currency: string = "USD"
+): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
+}
+
+/**
+ * Format compact currency for large numbers (e.g., $1.2M, $500K)
+ */
+export function formatCompactCurrency(
+  amount: number,
+  currency: string = "USD"
+): string {
+  if (amount >= 1000000) {
+    return `$${(amount / 1000000).toFixed(1)}M`;
+  }
+  if (amount >= 1000) {
+    return `$${(amount / 1000).toFixed(0)}K`;
+  }
+  return formatCurrency(amount, currency);
 }
 
 /**
