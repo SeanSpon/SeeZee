@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { User, LayoutDashboard, Shield, Crown, CreditCard, Settings, Moon, Sun, Monitor, LogOut } from "lucide-react";
+import { User, LayoutDashboard, Shield, Crown, CreditCard, Settings, Moon, Sun, Monitor, LogOut, Info } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
 
 interface ProfileMenuProps {
@@ -242,6 +242,15 @@ export function ProfileMenu({ user }: ProfileMenuProps) {
               >
                 <Settings className="h-4 w-4 text-slate-400" />
                 Settings
+              </Link>
+
+              <Link
+                href="/accessibility"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-200 hover:bg-white/5 transition-colors"
+              >
+                <Info className="h-4 w-4 text-slate-400" />
+                Accessibility
               </Link>
             </div>
 
