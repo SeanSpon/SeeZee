@@ -51,8 +51,10 @@ import {
   MousePointer,
   Rocket,
   Package,
+  Bug,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useGitOptional } from "@/lib/git/git-context";
 
 // Quick Link Type
 interface QuickLink {
@@ -285,42 +287,98 @@ export default function CommandCenterPage() {
     activeDeployments: 0,
     unreadEmails: 0,
     mrr: "$0",
+    openPRs: 0,
+    openIssues: 0,
   });
 
-  // Fetch all data
+  // Use the global Git context for shared state across admin
+  const gitContext = useGitOptional();
+
+  // Sync Git context data with local state when available
+  useEffect(() => {
+    if (gitContext && !gitContext.isLoading) {
+      // Map Git context activities to local GitEvent format
+      const mappedEvents: GitEvent[] = gitContext.activities.map(a => ({
+        id: a.id,
+        type: a.type === "push" ? "PushEvent" : a.type === "pr" ? "PullRequestEvent" : a.type,
+        action: a.action,
+        details: a.description,
+        repo: a.repo,
+        repoUrl: a.repoUrl,
+        actor: a.actor,
+        createdAt: a.createdAt,
+      }));
+      setGitEvents(mappedEvents);
+      
+      // Map Git context repos
+      const mappedRepos: GitRepo[] = gitContext.repos.map(r => ({
+        name: r.name,
+        fullName: r.fullName,
+        description: r.description,
+        url: r.url,
+        language: r.language,
+        stars: r.stars,
+        forks: r.forks,
+        pushedAt: r.pushedAt,
+        isPrivate: r.isPrivate,
+      }));
+      setGitRepos(mappedRepos);
+      
+      // Update stats from context
+      setStats(prev => ({
+        ...prev,
+        commitsToday: gitContext.stats.commitsToday,
+        openPRs: gitContext.stats.openPRs,
+        openIssues: gitContext.stats.openIssues,
+      }));
+      
+      // Update GitHub service status
+      if (!gitContext.isConfigured) {
+        setServices(prev => prev.map(s => 
+          s.name === "GitHub" ? { ...s, status: "degraded" as const } : s
+        ));
+      } else {
+        setServices(prev => prev.map(s => 
+          s.name === "GitHub" ? { ...s, status: "operational" as const } : s
+        ));
+      }
+    }
+  }, [gitContext?.activities, gitContext?.repos, gitContext?.stats, gitContext?.isLoading, gitContext?.isConfigured]);
+
+  // Fetch all data (non-Git data is still fetched locally)
   useEffect(() => {
     async function fetchAllData() {
       setLoading(true);
       
-      try {
-        // Fetch GitHub activity
-        const gitRes = await fetch("/api/integrations/github/activity");
-        if (gitRes.ok) {
-          const gitData = await gitRes.json();
-          setGitEvents(gitData.events || []);
-          setGitRepos(gitData.repos || []);
-          
-          // Count today's commits
-          const today = new Date().toDateString();
-          const todayCommits = (gitData.events || []).filter(
-            (e: GitEvent) => 
-              e.type === "PushEvent" && 
-              new Date(e.createdAt).toDateString() === today
-          ).length;
-          setStats(prev => ({ ...prev, commitsToday: todayCommits }));
-          
-          // Update GitHub service status
-          if (!gitData.configured) {
-            setServices(prev => prev.map(s => 
-              s.name === "GitHub" ? { ...s, status: "degraded" as const } : s
-            ));
+      // Fallback: Fetch GitHub activity if context not available
+      if (!gitContext) {
+        try {
+          const gitRes = await fetch("/api/integrations/github/activity");
+          if (gitRes.ok) {
+            const gitData = await gitRes.json();
+            setGitEvents(gitData.events || []);
+            setGitRepos(gitData.repos || []);
+            
+            const today = new Date().toDateString();
+            const todayCommits = (gitData.events || []).filter(
+              (e: GitEvent) => 
+                e.type === "PushEvent" && 
+                new Date(e.createdAt).toDateString() === today
+            ).length;
+            setStats(prev => ({ ...prev, commitsToday: todayCommits }));
+            
+            if (!gitData.configured) {
+              setServices(prev => prev.map(s => 
+                s.name === "GitHub" ? { ...s, status: "degraded" as const } : s
+              ));
+            }
           }
+        } catch (e) {
+          console.error("Failed to fetch GitHub data:", e);
+          setServices(prev => prev.map(s => 
+            s.name === "GitHub" ? { ...s, status: "down" as const } : s
+          ));
         }
-      } catch (e) {
-        console.error("Failed to fetch GitHub data:", e);
-        setServices(prev => prev.map(s => 
-          s.name === "GitHub" ? { ...s, status: "down" as const } : s
-        ));
       }
 
       try {
@@ -387,7 +445,7 @@ export default function CommandCenterPage() {
     }
 
     fetchAllData();
-  }, []);
+  }, [gitContext]);
 
   const filteredLinks = (Object.entries(QUICK_LINKS) as [keyof QuickLinksConfig, QuickLink[]][]).reduce((acc, [category, links]) => {
     const filtered = links.filter(
@@ -469,21 +527,35 @@ export default function CommandCenterPage() {
         </p>
       </header>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Quick Stats - Enhanced with Git API integration */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <QuickStat
-          icon={Github}
-          label="Git Commits Today"
+          icon={GitCommit}
+          label="Commits Today"
           value={String(stats.commitsToday)}
-          color="text-white"
-          bgColor="bg-gray-800"
+          color="text-emerald-400"
+          bgColor="bg-emerald-500/20"
+        />
+        <QuickStat
+          icon={GitPullRequest}
+          label="Open PRs"
+          value={String(stats.openPRs)}
+          color="text-purple-400"
+          bgColor="bg-purple-500/20"
+        />
+        <QuickStat
+          icon={Bug}
+          label="Open Issues"
+          value={String(stats.openIssues)}
+          color="text-amber-400"
+          bgColor="bg-amber-500/20"
         />
         <QuickStat
           icon={Globe}
-          label="Active Deployments"
+          label="Deployments"
           value={String(stats.activeDeployments)}
-          color="text-emerald-400"
-          bgColor="bg-emerald-500/20"
+          color="text-cyan-400"
+          bgColor="bg-cyan-500/20"
         />
         <QuickStat
           icon={Mail}
@@ -496,8 +568,8 @@ export default function CommandCenterPage() {
           icon={CreditCard}
           label="MRR"
           value={stats.mrr}
-          color="text-purple-400"
-          bgColor="bg-purple-500/20"
+          color="text-pink-400"
+          bgColor="bg-pink-500/20"
         />
       </div>
 

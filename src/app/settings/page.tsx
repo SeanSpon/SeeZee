@@ -7,7 +7,7 @@ import {
   User, Bell, Lock, Sliders, Plug, CreditCard, Shield,
   Save, CheckCircle, AlertTriangle, Trash2,
   Mail, MapPin, Globe, LogOut, Key, Smartphone, Monitor,
-  Languages, Clock, LayoutGrid, Pencil, X
+  Languages, Clock, LayoutGrid, Pencil, X, Github
 } from "lucide-react";
 
 // Glass components
@@ -23,6 +23,7 @@ import { ThemeSelector } from "@/components/settings/ThemeSelector";
 import { Switch } from "@/components/ui/Switch";
 import { ImageUpload } from "@/components/profile/ImageUpload";
 import { OAuthConnectionCard } from "@/components/profile/OAuthConnectionCard";
+import { GitConfigPanel } from "@/components/admin/git/GitConfigPanel";
 import { useToast } from "@/stores/useToast";
 import { useDialogContext } from "@/lib/dialog";
 
@@ -1152,26 +1153,72 @@ function SettingsContent() {
 
           {/* Integrations Tab */}
           {activeTab === "integrations" && (
-            <GlassCard variant="elevated" padding="lg">
-              <GlassCardHeader
-                icon={<Plug className="w-5 h-5" />}
-                title="Connected Services"
-                description="Manage third-party integrations"
-              />
-              <GlassCardContent>
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
-                    <Plug className="w-8 h-8 text-slate-500" />
+            <div className="space-y-6">
+              {/* GitHub Integration - Only show for admin users */}
+              {!isClient && (
+                <GitConfigPanel showDetails={true} />
+              )}
+
+              {/* Other Integrations */}
+              <GlassCard variant="elevated" padding="lg">
+                <GlassCardHeader
+                  icon={<Plug className="w-5 h-5" />}
+                  title="Other Integrations"
+                  description="Connect additional third-party services"
+                />
+                <GlassCardContent>
+                  <div className="space-y-4">
+                    {/* Vercel Integration Card */}
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center">
+                          <Globe className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-white">Vercel</h4>
+                          <p className="text-sm text-slate-400">Deployments & hosting</p>
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        Connected
+                      </span>
+                    </div>
+
+                    {/* Stripe Integration Card */}
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                          <CreditCard className="w-6 h-6 text-indigo-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-white">Stripe</h4>
+                          <p className="text-sm text-slate-400">Payments & billing</p>
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        Connected
+                      </span>
+                    </div>
+
+                    {/* Resend Integration Card */}
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-slate-600/20 flex items-center justify-center">
+                          <Mail className="w-6 h-6 text-slate-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-white">Resend</h4>
+                          <p className="text-sm text-slate-400">Email delivery</p>
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        Connected
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    No integrations yet
-                  </h3>
-                  <p className="text-slate-400 max-w-sm mx-auto">
-                    Stay tuned! We're working on integrations with popular tools and services.
-                  </p>
-                </div>
-              </GlassCardContent>
-            </GlassCard>
+                </GlassCardContent>
+              </GlassCard>
+            </div>
           )}
 
           {/* Billing Tab */}

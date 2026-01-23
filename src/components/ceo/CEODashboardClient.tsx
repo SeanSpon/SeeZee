@@ -49,7 +49,11 @@ import {
   Phone,
   Star,
   Award,
+  Github,
+  GitCommit,
+  GitPullRequest,
 } from "lucide-react";
+import { GitDashboard } from "@/components/admin/git";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/ui";
 import { TeamManagementClient } from "./TeamManagementClient";
@@ -795,8 +799,19 @@ export function CEODashboardClient({
           </SectionCard>
         </div>
 
+        {/* Git Activity - Full GitHub API Integration */}
+        <SectionCard title="Development Activity" icon={<Github className="w-5 h-5" />}>
+          <GitDashboard 
+            compact={false}
+            showStats={true}
+            showActivity={true}
+            showRepos={true}
+            maxItems={8}
+          />
+        </SectionCard>
+
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Link
             href="/admin/tasks"
             className="group p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-slate-900 border border-blue-500/20 hover:border-blue-500/40 transition-all"
@@ -843,6 +858,18 @@ export function CEODashboardClient({
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Database</h3>
             <p className="text-sm text-slate-400">View all data</p>
+          </Link>
+
+          <Link
+            href="/admin/command-center"
+            className="group p-4 rounded-xl bg-gradient-to-br from-gray-500/10 to-slate-900 border border-gray-500/20 hover:border-gray-500/40 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <Github className="w-6 h-6 text-gray-400" />
+              <ArrowUpRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Command Center</h3>
+            <p className="text-sm text-slate-400">Full Git dashboard</p>
           </Link>
         </div>
       </div>
