@@ -8,6 +8,7 @@ import { ROLE } from "@/lib/role";
 import { db } from "@/server/db";
 import { notFound } from "next/navigation";
 import { TaskDetailClient } from "@/components/admin/TaskDetailClient";
+import { toPlain } from "@/lib/serialize";
 
 export const dynamic = "force-dynamic";
 
@@ -108,10 +109,14 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
     },
   });
 
+  // Serialize data to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
+  const serializedTask = toPlain(task);
+  const serializedActivities = toPlain(activities);
+
   return (
     <TaskDetailClient
-      task={task}
-      activities={activities}
+      task={serializedTask}
+      activities={serializedActivities}
       teamMembers={teamMembers}
       currentUser={{
         id: user.id,

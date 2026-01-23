@@ -38,12 +38,12 @@ type TaskMaterial = {
   fileName: string | null;
   fileSize: number | null;
   mimeType: string | null;
-  dueDate: Date | null;
+  dueDate: Date | string | null;  // Can be string from serialization
   isRequired: boolean;
   order: number;
   createdById: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;  // Can be string from serialization
+  updatedAt: Date | string;  // Can be string from serialization
 };
 
 type Task = {
@@ -52,9 +52,9 @@ type Task = {
   description: string | null;
   status: string;
   priority: string;
-  dueDate: Date | null;
-  completedAt: Date | null;
-  createdAt: Date;
+  dueDate: Date | string | null;  // Can be string from serialization
+  completedAt: Date | string | null;  // Can be string from serialization
+  createdAt: Date | string;  // Can be string from serialization
   materials?: TaskMaterial[];
   assignedTo: {
     id: string;
@@ -77,7 +77,7 @@ type ActivityLog = {
   type: string;
   title: string;
   description: string | null;
-  createdAt: Date;
+  createdAt: Date | string;  // Can be string from serialization
   user: {
     id: string;
     name: string | null;
