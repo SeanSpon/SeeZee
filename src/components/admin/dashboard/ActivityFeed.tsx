@@ -23,30 +23,30 @@ interface ActivityFeedProps {
 
 const iconMap: Record<string, { icon: JSX.Element; bgClass: string }> = {
   project_created: { 
-    icon: <FiFolder className="h-4 w-4 text-[#3b82f6]" />,
-    bgClass: "bg-[#3b82f6]/20"
+    icon: <FiFolder className="h-3.5 w-3.5 text-sky-400" />,
+    bgClass: "bg-sky-500/10"
   },
   payment_received: { 
-    icon: <FiDollarSign className="h-4 w-4 text-[#10b981]" />,
-    bgClass: "bg-[#10b981]/20"
+    icon: <FiDollarSign className="h-3.5 w-3.5 text-emerald-400" />,
+    bgClass: "bg-emerald-500/10"
   },
   milestone_completed: { 
-    icon: <FiCheckCircle className="h-4 w-4 text-[#22d3ee]" />,
-    bgClass: "bg-[#22d3ee]/20"
+    icon: <FiCheckCircle className="h-3.5 w-3.5 text-violet-400" />,
+    bgClass: "bg-violet-500/10"
   },
   request_created: { 
-    icon: <FiMessageSquare className="h-4 w-4 text-[#f59e0b]" />,
-    bgClass: "bg-[#f59e0b]/20"
+    icon: <FiMessageSquare className="h-3.5 w-3.5 text-amber-400" />,
+    bgClass: "bg-amber-500/10"
   },
   client_added: { 
-    icon: <FiUser className="h-4 w-4 text-[#a855f7]" />,
-    bgClass: "bg-[#a855f7]/20"
+    icon: <FiUser className="h-3.5 w-3.5 text-violet-400" />,
+    bgClass: "bg-violet-500/10"
   },
 };
 
 const defaultIcon = {
-  icon: <FiActivity className="h-4 w-4 text-[#22d3ee]" />,
-  bgClass: "bg-[#22d3ee]/20"
+  icon: <FiActivity className="h-3.5 w-3.5 text-sky-400" />,
+  bgClass: "bg-sky-500/10"
 };
 
 function relativeTime(timestamp: string | Date) {
@@ -74,17 +74,17 @@ function relativeTime(timestamp: string | Date) {
 
 export function ActivityFeed({ activities }: ActivityFeedProps) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#1e293b]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-2 rounded-xl bg-[#22d3ee]/20">
-          <FiActivity className="h-5 w-5 text-[#22d3ee]" />
+    <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-2 rounded-lg bg-sky-500/10">
+          <FiActivity className="h-4 w-4 text-sky-400" />
         </div>
         <div>
-          <h3 className="text-xl font-heading font-semibold text-white">Recent Activity</h3>
-          <p className="text-sm text-slate-400">Latest updates across your workspace</p>
+          <h3 className="text-base font-semibold text-white">Recent Activity</h3>
+          <p className="text-xs text-slate-500">Latest updates across your workspace</p>
         </div>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {activities.length > 0 ? (
           activities.map((activity, index) => {
             const iconConfig = iconMap[activity.type ?? ""] ?? defaultIcon;
@@ -95,15 +95,15 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                whileHover={{ x: 4 }}
-                className="flex items-start gap-4 rounded-xl border border-white/5 bg-[#0f172a]/60 p-4 transition-all duration-200 hover:border-white/10 hover:bg-[#1e293b]/40"
+                whileHover={{ x: 2 }}
+                className="flex items-start gap-3 rounded-lg border border-white/[0.04] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.08] hover:bg-white/[0.04]"
               >
-                <div className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${iconConfig.bgClass}`}>
+                <div className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md ${iconConfig.bgClass}`}>
                   {iconConfig.icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-white font-medium leading-relaxed">{activity.message}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="text-sm text-white leading-relaxed">{activity.message}</p>
+                  <p className="mt-1 text-[11px] text-slate-500">
                     {relativeTime(activity.timestamp)}
                   </p>
                 </div>
@@ -111,8 +111,7 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
             );
           })
         ) : (
-          <div className="rounded-xl border border-dashed border-white/10 bg-[#0f172a]/40 p-10 text-center">
-            <div className="text-4xl mb-3">✨</div>
+          <div className="rounded-lg border border-dashed border-white/[0.08] bg-white/[0.02] p-8 text-center">
             <p className="text-sm text-slate-400">No recent activity</p>
             <p className="text-xs text-slate-500 mt-1">Activity will show up here as you work</p>
           </div>

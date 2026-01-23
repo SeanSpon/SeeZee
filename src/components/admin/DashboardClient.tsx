@@ -76,21 +76,21 @@ const coreActions = [
     label: "Pipeline",
     description: "Track deals & conversions",
     icon: FiTrendingUp,
-    accent: "from-trinity-red/20 via-trinity-red/10 to-transparent text-trinity-red",
+    accent: "bg-sky-500/10 text-sky-400",
   },
   {
     href: "/admin/projects",
     label: "Projects",
     description: "Active client work",
     icon: FiFolder,
-    accent: "from-blue-500/20 via-blue-500/10 to-transparent text-blue-400",
+    accent: "bg-violet-500/10 text-violet-400",
   },
   {
     href: "/admin/invoices",
     label: "Invoices",
     description: "Billing & payments",
     icon: FiFileText,
-    accent: "from-emerald-500/20 via-emerald-500/10 to-transparent text-emerald-400",
+    accent: "bg-emerald-500/10 text-emerald-400",
   },
 ];
 
@@ -98,17 +98,17 @@ const coreActions = [
 const marketingActions = [
   {
     href: "/admin/leads",
-    label: "🗺️ Leads & Finder",
+    label: "Leads & Finder",
     description: "Discover prospects",
     icon: FiMapPin,
-    accent: "from-green-500/20 via-green-500/10 to-transparent text-green-400",
+    accent: "bg-amber-500/10 text-amber-400",
   },
   {
     href: "/admin/marketing",
-    label: "📧 Email Hub",
+    label: "Email Hub",
     description: "Campaigns & templates",
     icon: FiMail,
-    accent: "from-purple-500/20 via-purple-500/10 to-transparent text-purple-400",
+    accent: "bg-violet-500/10 text-violet-400",
   },
 ];
 
@@ -116,31 +116,31 @@ const marketingActions = [
 const teamTools = [
   {
     href: "/admin/team",
-    label: "👥 Team",
+    label: "Team",
     description: "Members & workload",
     icon: FiUsers,
-    accent: "from-blue-500/20 via-blue-500/10 to-transparent text-blue-400",
+    accent: "bg-sky-500/10 text-sky-400",
   },
   {
     href: "/admin/tasks",
-    label: "✅ Tasks",
+    label: "Tasks",
     description: "Assignments & to-dos",
     icon: FiCheckCircle,
-    accent: "from-cyan-500/20 via-cyan-500/10 to-transparent text-cyan-400",
+    accent: "bg-emerald-500/10 text-emerald-400",
   },
   {
     href: "/admin/calendar",
-    label: "📅 Calendar",
+    label: "Calendar",
     description: "Schedule & meetings",
     icon: FiCalendar,
-    accent: "from-amber-500/20 via-amber-500/10 to-transparent text-amber-400",
+    accent: "bg-amber-500/10 text-amber-400",
   },
   {
     href: "/admin/recordings",
-    label: "🎙️ Recordings",
+    label: "Recordings",
     description: "AI transcriptions",
     icon: FiMic,
-    accent: "from-pink-500/20 via-pink-500/10 to-transparent text-pink-400",
+    accent: "bg-rose-500/10 text-rose-400",
   },
 ];
 
@@ -241,16 +241,16 @@ export function DashboardClient({
           >
             <Link
               href="/admin/leads"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-lg backdrop-blur-sm"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.08] hover:border-white/[0.12]"
             >
               <FiMapPin className="h-4 w-4" />
               Find Leads
             </Link>
             <Link
               href="/admin/projects"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#ef4444] to-[#dc2626] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#ef4444]/25 transition-all duration-300 hover:shadow-xl hover:shadow-[#ef4444]/40 hover:-translate-y-1 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-sky-400"
             >
-              <FiPlus className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
+              <FiPlus className="h-4 w-4" />
               New Project
             </Link>
           </motion.div>
@@ -266,27 +266,24 @@ export function DashboardClient({
         <div className="space-y-8 lg:col-span-2">
           <ActivityFeed activities={activities} />
 
-          <section className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1e293b]/80 via-[#1e293b]/60 to-[#0f172a]/60 backdrop-blur-xl p-6 transition-all duration-500 hover:border-white/20 hover:shadow-2xl hover:shadow-[#22d3ee]/10 group relative overflow-hidden">
-            {/* Animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#22d3ee]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
-            <div className="relative z-10">
-            <div className="flex items-center justify-between">
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
-                  <FiClipboard className="w-5 h-5 text-[#22d3ee]" />
+                <h2 className="text-base font-semibold text-white flex items-center gap-2">
+                  <FiClipboard className="w-4 h-4 text-sky-400" />
                   Top Tasks
                 </h2>
-                <p className="text-sm text-slate-400 mt-1">High-priority assignments needing attention</p>
+                <p className="text-xs text-slate-500 mt-0.5">High-priority assignments needing attention</p>
               </div>
               <Link
                 href="/admin/tasks"
-                className="text-sm text-[#22d3ee] transition hover:text-[#06b6d4] font-semibold flex items-center gap-1 group/link"
+                className="text-xs text-sky-400 transition hover:text-sky-300 font-medium flex items-center gap-1 group/link"
               >
                 View all 
-                <FiArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                <FiArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
               </Link>
             </div>
-            <div className="mt-5 space-y-3">
+            <div className="space-y-2">
               {topTasks.length > 0 ? (
                 topTasks.map((task) => {
                   const statusLabel =
@@ -299,82 +296,77 @@ export function DashboardClient({
                   return (
                     <motion.div
                       key={task.id}
-                      whileHover={{ y: -6, scale: 1.02 }}
-                      className="group/task flex flex-col gap-3 rounded-xl border border-white/10 bg-gradient-to-br from-[#0f172a]/80 to-[#1e293b]/40 p-4 transition-all duration-300 hover:border-[#22d3ee]/30 hover:bg-[#1e293b]/60 hover:shadow-lg hover:shadow-[#22d3ee]/5 relative overflow-hidden"
+                      whileHover={{ y: -2 }}
+                      className="group/task flex flex-col gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]"
                     >
-                      {/* Hover glow effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#22d3ee]/0 via-[#22d3ee]/5 to-[#22d3ee]/0 opacity-0 group-hover/task:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
                       <div className="flex items-center justify-between">
                         <Link
                           href={`/admin/tasks/${task.id}`}
-                          className="text-sm font-semibold text-white hover:text-[#22d3ee] transition flex items-center gap-2"
+                          className="text-sm font-medium text-white hover:text-sky-400 transition flex items-center gap-2"
                         >
-                          <FiCheckCircle className="w-4 h-4 text-slate-400 group-hover/task:text-[#22d3ee] transition" />
+                          <FiCheckCircle className="w-3.5 h-3.5 text-slate-500 group-hover/task:text-sky-400 transition" />
                           {task.title}
                         </Link>
-                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium border shadow-sm ${
+                        <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                           task.priority === "HIGH" 
-                            ? "bg-[#ef4444]/20 text-[#f87171] border-[#ef4444]/30 shadow-[#ef4444]/20" 
+                            ? "bg-rose-500/10 text-rose-400" 
                             : task.priority === "MEDIUM"
-                            ? "bg-[#f59e0b]/20 text-[#fbbf24] border-[#f59e0b]/30 shadow-[#f59e0b]/20"
-                            : "bg-[#22d3ee]/20 text-[#22d3ee] border-[#22d3ee]/30 shadow-[#22d3ee]/20"
+                            ? "bg-amber-500/10 text-amber-400"
+                            : "bg-sky-500/10 text-sky-400"
                         }`}>
                           {task.priority}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
-                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-slate-300">
-                          <FiClipboard className="h-3.5 w-3.5" />
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+                        <span className="inline-flex items-center gap-1 rounded bg-white/[0.04] px-1.5 py-0.5 text-slate-400">
+                          <FiClipboard className="h-3 w-3" />
                           {statusLabel}
                         </span>
                         {task.dueDate && (
                           <span className="inline-flex items-center gap-1">
-                            <FiCalendar className="h-3.5 w-3.5" />
+                            <FiCalendar className="h-3 w-3" />
                             Due {new Date(task.dueDate).toLocaleDateString()}
                           </span>
                         )}
-                      </div>
                       </div>
                     </motion.div>
                   );
                 })
               ) : (
-                <div className="rounded-xl border border-dashed border-white/10 bg-[#0f172a]/40 p-8 text-center text-sm text-slate-400">
+                <div className="rounded-lg border border-dashed border-white/[0.08] bg-white/[0.02] p-8 text-center text-sm text-slate-500">
                   No active tasks — looks like you're all caught up!
                 </div>
               )}
-            </div>
             </div>
           </section>
         </div>
 
         <div className="space-y-6">
           {/* Core Business Section */}
-          <section className="rounded-2xl border border-white/10 bg-[#1e293b]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
-            <div className="mb-5">
-              <h2 className="text-xl font-heading font-semibold text-white">Core Business</h2>
-              <p className="text-sm text-slate-400">Essential workflows & operations</p>
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="mb-4">
+              <h2 className="text-base font-semibold text-white">Core Business</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Essential workflows & operations</p>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {coreActions.map((action) => {
                 const Icon = action.icon;
                 return (
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group flex items-center gap-3 rounded-xl border border-white/10 bg-[#0f172a]/60 p-4 transition-all duration-200 hover:border-[#ef4444]/40 hover:bg-[#1e293b]/60 hover:-translate-y-1"
+                    className="group flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]"
                   >
-                    <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${action.accent} border border-white/10`}>
-                      <Icon className="h-5 w-5" />
+                    <span className={`grid h-9 w-9 place-items-center rounded-lg ${action.accent}`}>
+                      <Icon className="h-4 w-4" />
                     </span>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-white group-hover:text-[#ef4444] transition">
+                      <p className="text-sm font-medium text-white">
                         {action.label}
                       </p>
-                      <p className="text-xs text-slate-400">{action.description}</p>
+                      <p className="text-[11px] text-slate-500">{action.description}</p>
                     </div>
-                    <FiArrowRight className="h-4 w-4 text-slate-500 transition group-hover:text-[#ef4444] group-hover:translate-x-1" />
+                    <FiArrowRight className="h-4 w-4 text-slate-600 transition group-hover:text-slate-400 group-hover:translate-x-0.5" />
                   </Link>
                 );
               })}
@@ -382,30 +374,30 @@ export function DashboardClient({
           </section>
 
           {/* Marketing & Growth Section */}
-          <section className="rounded-2xl border border-white/10 bg-[#1e293b]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
-            <div className="mb-5">
-              <h2 className="text-xl font-heading font-semibold text-white">Marketing & Growth</h2>
-              <p className="text-sm text-slate-400">Lead generation & campaigns</p>
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="mb-4">
+              <h2 className="text-base font-semibold text-white">Marketing & Growth</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Lead generation & campaigns</p>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {marketingActions.map((action) => {
                 const Icon = action.icon;
                 return (
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="group flex items-center gap-3 rounded-xl border border-white/10 bg-[#0f172a]/60 p-4 transition-all duration-200 hover:border-[#22d3ee]/40 hover:bg-[#1e293b]/60 hover:-translate-y-1"
+                    className="group flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]"
                   >
-                    <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${action.accent} border border-white/10`}>
-                      <Icon className="h-5 w-5" />
+                    <span className={`grid h-9 w-9 place-items-center rounded-lg ${action.accent}`}>
+                      <Icon className="h-4 w-4" />
                     </span>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-white group-hover:text-[#22d3ee] transition">
+                      <p className="text-sm font-medium text-white">
                         {action.label}
                       </p>
-                      <p className="text-xs text-slate-400">{action.description}</p>
+                      <p className="text-[11px] text-slate-500">{action.description}</p>
                     </div>
-                    <FiArrowRight className="h-4 w-4 text-slate-500 transition group-hover:text-[#22d3ee] group-hover:translate-x-1" />
+                    <FiArrowRight className="h-4 w-4 text-slate-600 transition group-hover:text-slate-400 group-hover:translate-x-0.5" />
                   </Link>
                 );
               })}
@@ -413,24 +405,24 @@ export function DashboardClient({
           </section>
 
           {/* Team Tools Grid */}
-          <section className="rounded-2xl border border-white/10 bg-[#1e293b]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
-            <div className="mb-5">
-              <h2 className="text-xl font-heading font-semibold text-white">Team Tools</h2>
-              <p className="text-sm text-slate-400">Collaboration & productivity</p>
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="mb-4">
+              <h2 className="text-base font-semibold text-white">Team Tools</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Collaboration & productivity</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {teamTools.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <Link
                     key={tool.href}
                     href={tool.href}
-                    className="group flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-[#0f172a]/60 p-4 transition-all duration-200 hover:border-white/20 hover:bg-[#1e293b]/60 hover:-translate-y-1 text-center"
+                    className="group flex flex-col items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04] text-center"
                   >
-                    <span className={`grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br ${tool.accent} border border-white/10`}>
-                      <Icon className="h-5 w-5" />
+                    <span className={`grid h-8 w-8 place-items-center rounded-lg ${tool.accent}`}>
+                      <Icon className="h-4 w-4" />
                     </span>
-                    <p className="text-xs font-semibold text-white group-hover:text-cyan-400 transition">
+                    <p className="text-xs font-medium text-white">
                       {tool.label}
                     </p>
                   </Link>
@@ -439,45 +431,45 @@ export function DashboardClient({
             </div>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[#1e293b]/60 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
-            <h2 className="text-xl font-heading font-semibold text-white">Pipeline Snapshot</h2>
-            <div className="mt-4 space-y-4 text-sm">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <h2 className="text-base font-semibold text-white mb-4">Pipeline Snapshot</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
-                  <div className="p-1.5 rounded-lg bg-[#22d3ee]/20">
-                    <FiMessageSquare className="h-4 w-4 text-[#22d3ee]" />
+                  <div className="p-1.5 rounded-md bg-sky-500/10">
+                    <FiMessageSquare className="h-3.5 w-3.5 text-sky-400" />
                   </div>
                   New Leads
                 </span>
-                <span className="font-bold text-xl text-white">{metrics.newLeads}</span>
+                <span className="font-semibold text-lg text-white">{metrics.newLeads}</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
-                  <div className="p-1.5 rounded-lg bg-[#10b981]/20">
-                    <FiCheckCircle className="h-4 w-4 text-[#10b981]" />
+                  <div className="p-1.5 rounded-md bg-emerald-500/10">
+                    <FiCheckCircle className="h-3.5 w-3.5 text-emerald-400" />
                   </div>
                   Active Tasks
                 </span>
-                <span className="font-bold text-xl text-white">{metrics.openTasks}</span>
+                <span className="font-semibold text-lg text-white">{metrics.openTasks}</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
-                  <div className="p-1.5 rounded-lg bg-[#3b82f6]/20">
-                    <FiLayers className="h-4 w-4 text-[#3b82f6]" />
+                  <div className="p-1.5 rounded-md bg-violet-500/10">
+                    <FiLayers className="h-3.5 w-3.5 text-violet-400" />
                   </div>
                   Projects in Pipeline
                 </span>
-                <span className="font-bold text-xl text-white">{metrics.pipelineProjects}</span>
+                <span className="font-semibold text-lg text-white">{metrics.pipelineProjects}</span>
               </div>
             </div>
-            <div className="mt-6 rounded-xl border border-white/10 bg-[#0f172a]/60 p-4">
+            <div className="mt-5 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500 font-semibold">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 font-semibold">
                   Recent Leads
                 </p>
                 <Link
                   href="/admin/leads"
-                  className="text-[10px] text-[#22d3ee] hover:text-[#06b6d4] transition uppercase tracking-wider font-medium"
+                  className="text-[10px] text-sky-400 hover:text-sky-300 transition uppercase tracking-wider font-medium"
                 >
                   View All
                 </Link>
@@ -488,10 +480,10 @@ export function DashboardClient({
                     <Link
                       key={lead.id}
                       href={`/admin/leads/${lead.id}`}
-                      className="flex items-center justify-between gap-2 rounded-lg border border-white/5 bg-white/5 px-3 py-2.5 text-xs hover:bg-white/10 hover:border-white/10 transition-colors group"
+                      className="flex items-center justify-between gap-2 rounded-md border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-xs hover:bg-white/[0.04] hover:border-white/[0.08] transition-colors group"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium truncate group-hover:text-[#22d3ee] transition">
+                        <p className="text-white font-medium truncate group-hover:text-sky-400 transition">
                           {lead.company || lead.name || "Unknown Lead"}
                         </p>
                         {lead.name && lead.company && (
@@ -500,12 +492,12 @@ export function DashboardClient({
                           </p>
                         )}
                       </div>
-                      <span className={`shrink-0 ml-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide font-medium ${
+                      <span className={`shrink-0 ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase tracking-wide font-semibold ${
                         lead.status === "NEW" 
-                          ? "bg-[#22d3ee]/20 text-[#22d3ee]" 
+                          ? "bg-sky-500/10 text-sky-400" 
                           : lead.status === "QUALIFIED"
-                          ? "bg-[#10b981]/20 text-[#10b981]"
-                          : "bg-white/10 text-slate-400"
+                          ? "bg-emerald-500/10 text-emerald-400"
+                          : "bg-white/[0.08] text-slate-400"
                       }`}>
                         {lead.status ?? "NEW"}
                       </span>
@@ -516,7 +508,7 @@ export function DashboardClient({
                     <p className="text-xs text-slate-500">No recent leads</p>
                     <Link
                       href="/admin/leads"
-                      className="inline-block mt-2 text-xs text-[#22d3ee] hover:text-[#06b6d4] transition font-medium"
+                      className="inline-block mt-2 text-xs text-sky-400 hover:text-sky-300 transition font-medium"
                     >
                       Add your first lead →
                     </Link>
@@ -529,46 +521,46 @@ export function DashboardClient({
           {/* Alerts Panel */}
           <AlertsPanel alerts={alerts} isLoading={isLoadingAlerts} />
 
-          <section className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1e293b]/80 to-[#0f172a]/80 backdrop-blur-xl p-6 transition-all duration-300 hover:border-white/20 hover:shadow-xl">
+          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-xl bg-[#10b981]/20">
-                <FiDollarSign className="h-5 w-5 text-[#10b981]" />
+              <div className="p-2 rounded-lg bg-emerald-500/10">
+                <FiDollarSign className="h-4 w-4 text-emerald-400" />
               </div>
               <div>
-                <h2 className="text-xl font-heading font-semibold text-white">Financial Snapshot</h2>
-                <p className="text-sm text-slate-400">This month's overview</p>
+                <h2 className="text-base font-semibold text-white">Financial Snapshot</h2>
+                <p className="text-xs text-slate-500">This month's overview</p>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Revenue (This Month)</p>
-                <p className="text-3xl font-bold text-[#10b981]">
+            <div className="space-y-3">
+              <div className="p-3 rounded-lg bg-white/[0.03]">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Revenue (This Month)</p>
+                <p className="text-2xl font-semibold text-emerald-400">
                   {currencyFormatter.format(stats.thisMonthRevenue ?? stats.totalRevenue ?? 0)}
                 </p>
               </div>
               {stats.thisMonthExpenses !== undefined && (
-                <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                  <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Expenses (This Month)</p>
-                  <p className="text-2xl font-bold text-[#ef4444]">
+                <div className="p-3 rounded-lg bg-white/[0.03]">
+                  <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Expenses (This Month)</p>
+                  <p className="text-xl font-semibold text-rose-400">
                     -{currencyFormatter.format(stats.thisMonthExpenses)}
                   </p>
                 </div>
               )}
               {stats.netProfit !== undefined && (
-                <div className="p-4 rounded-xl bg-gradient-to-br from-[#22d3ee]/20 to-[#06b6d4]/10 border border-[#22d3ee]/30">
-                  <p className="text-xs uppercase tracking-wider text-[#22d3ee] mb-1 font-semibold">Net Profit (This Month)</p>
-                  <p className={`text-3xl font-bold ${stats.netProfit >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
+                <div className="p-3 rounded-lg bg-sky-500/5 border border-sky-500/20">
+                  <p className="text-[11px] uppercase tracking-[0.15em] text-sky-400 mb-1 font-semibold">Net Profit (This Month)</p>
+                  <p className={`text-2xl font-semibold ${stats.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {currencyFormatter.format(stats.netProfit)}
                   </p>
                 </div>
               )}
-              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                <span className="text-slate-400">Open invoices</span>
-                <span className="font-bold text-lg text-white">{stats.unpaidInvoices ?? 0}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
+                <span className="text-slate-400 text-sm">Open invoices</span>
+                <span className="font-semibold text-lg text-white">{stats.unpaidInvoices ?? 0}</span>
               </div>
               <Link 
                 href="/admin/finance"
-                className="block w-full text-center py-2 rounded-lg bg-[#22d3ee]/10 border border-[#22d3ee]/30 text-[#22d3ee] hover:bg-[#22d3ee]/20 transition-colors text-sm font-medium"
+                className="block w-full text-center py-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 hover:bg-sky-500/15 transition-colors text-sm font-medium"
               >
                 View Full Finance Dashboard →
               </Link>
