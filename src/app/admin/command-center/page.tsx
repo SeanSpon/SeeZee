@@ -341,6 +341,19 @@ export default function CommandCenterPage() {
         console.error("Failed to fetch Google Workspace data:", e);
       }
 
+      try {
+        // Fetch Stripe metrics
+        const stripeRes = await fetch("/api/integrations/stripe/metrics");
+        if (stripeRes.ok) {
+          const stripeData = await stripeRes.json();
+          if (stripeData.metrics) {
+            setStats(prev => ({ ...prev, mrr: stripeData.metrics.mrr }));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch Stripe data:", e);
+      }
+
       setLoading(false);
     }
 
@@ -370,6 +383,27 @@ export default function CommandCenterPage() {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     return `${diffDays}d ago`;
+  };
+
+  const getLanguageColor = (language: string): string => {
+    const colors: Record<string, string> = {
+      TypeScript: "bg-blue-400",
+      JavaScript: "bg-yellow-400",
+      Python: "bg-green-500",
+      Rust: "bg-orange-400",
+      Go: "bg-cyan-400",
+      Java: "bg-red-400",
+      Ruby: "bg-red-500",
+      PHP: "bg-purple-400",
+      CSS: "bg-pink-400",
+      HTML: "bg-orange-500",
+      Swift: "bg-orange-400",
+      Kotlin: "bg-purple-500",
+      "C#": "bg-green-600",
+      "C++": "bg-pink-500",
+      C: "bg-gray-400",
+    };
+    return colors[language] || "bg-white/40";
   };
 
   return (
@@ -473,6 +507,74 @@ export default function CommandCenterPage() {
             links={filteredLinks.tools || []}
             color="text-pink-400"
           />
+
+          {/* Git Repositories Panel */}
+          {gitRepos.length > 0 && (
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Github className="w-4 h-4 text-white" />
+                  <h3 className="font-semibold text-white">Repositories</h3>
+                </div>
+                <a
+                  href="https://github.com/SeanSpon?tab=repositories"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-white/40 hover:text-white flex items-center gap-1"
+                >
+                  View All
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                {gitRepos.slice(0, 6).map((repo) => (
+                  <a
+                    key={repo.fullName}
+                    href={repo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        {repo.isPrivate ? (
+                          <Lock className="w-4 h-4 text-amber-400" />
+                        ) : (
+                          <GitBranch className="w-4 h-4 text-white/40" />
+                        )}
+                        <h4 className="font-semibold text-white group-hover:text-[#ef4444] transition-colors truncate">
+                          {repo.name}
+                        </h4>
+                      </div>
+                      <ExternalLink className="w-3 h-3 text-white/20 group-hover:text-white/60 flex-shrink-0" />
+                    </div>
+                    {repo.description && (
+                      <p className="text-xs text-white/40 line-clamp-2 mb-2">
+                        {repo.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-3 text-xs text-white/40">
+                      {repo.language && (
+                        <div className="flex items-center gap-1">
+                          <div className={`w-2 h-2 rounded-full ${getLanguageColor(repo.language)}`} />
+                          <span>{repo.language}</span>
+                        </div>
+                      )}
+                      {repo.stars > 0 && (
+                        <div className="flex items-center gap-1">
+                          <Star className="w-3 h-3" />
+                          <span>{repo.stars}</span>
+                        </div>
+                      )}
+                      <span className="text-white/30">
+                        Updated {formatTimeAgo(repo.pushedAt)}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Sidebar */}
