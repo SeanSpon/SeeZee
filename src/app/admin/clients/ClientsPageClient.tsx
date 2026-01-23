@@ -177,24 +177,24 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
   ];
 
   return (
-    <div className="space-y-8">
-      <header className="space-y-3 relative">
+    <div className="space-y-6">
+      <header className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block mb-2">
-              Client Intelligence
-            </span>
-            <h1 className="text-4xl font-heading font-bold gradient-text">Clients</h1>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 mb-1">
+              Client Management
+            </p>
+            <h1 className="text-3xl font-semibold text-white">Clients</h1>
           </div>
           <button
             onClick={handleCreateClient}
-            className="inline-flex items-center gap-2 rounded-lg border-2 border-trinity-red/40 bg-trinity-red/10 px-5 py-2.5 text-sm font-medium text-trinity-red transition-all hover:bg-trinity-red hover:text-white hover:shadow-large hover:border-trinity-red"
+            className="inline-flex items-center gap-2 rounded-lg bg-white/[0.08] border border-white/[0.08] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/[0.12] hover:border-white/[0.15]"
           >
             <FiPlus className="h-4 w-4" />
             New Client
           </button>
         </div>
-        <p className="max-w-2xl text-base text-gray-300 leading-relaxed">
+        <p className="max-w-2xl text-sm text-slate-400 leading-relaxed">
           Unified view of every client engagement, including project load, billing cadence, and payment velocity.
         </p>
       </header>
@@ -226,37 +226,33 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
         </div>
       )}
 
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <EnhancedStatCard
           label="Total Clients"
           value={rows.length}
           icon={FiUsers}
-          iconColor="text-trinity-red"
-          iconBgColor="bg-trinity-red/20"
+          variant="default"
           subtitle="Organizations"
         />
         <EnhancedStatCard
           label="Active Clients"
           value={initialData.activeClients}
           icon={FiTrendingUp}
-          iconColor="text-green-400"
-          iconBgColor="bg-green-500/20"
+          variant="success"
           subtitle="With active projects"
         />
         <EnhancedStatCard
           label="Total Revenue"
           value={currencyFormatter.format(initialData.totalRevenue)}
           icon={FiDollarSign}
-          iconColor="text-blue-400"
-          iconBgColor="bg-blue-500/20"
+          variant="primary"
           subtitle="Paid invoices"
         />
         <EnhancedStatCard
           label="Avg Revenue"
           value={currencyFormatter.format(rows.length > 0 ? initialData.totalRevenue / rows.length : 0)}
           icon={FiFileText}
-          iconColor="text-purple-400"
-          iconBgColor="bg-purple-500/20"
+          variant="info"
           subtitle="Per client"
         />
       </section>
@@ -266,7 +262,7 @@ export function ClientsPageClient({ user, initialData }: ClientsPageClientProps)
         onSearchChange={setSearchQuery}
       />
 
-      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+      <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
         <DataTable columns={columns} data={filteredRows} emptyMessage="No clients found" />
       </div>
 

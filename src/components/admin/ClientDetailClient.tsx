@@ -26,23 +26,25 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
+// Consistent color palette for invoice status badges
 const invoiceStatusColors: Record<string, string> = {
-  DRAFT: "bg-slate-500/20 text-slate-400 border-slate-500/30",
-  SENT: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  PAID: "bg-green-500/20 text-green-400 border-green-500/30",
-  OVERDUE: "bg-red-500/20 text-red-400 border-red-500/30",
-  CANCELLED: "bg-gray-500/20 text-gray-400 border-gray-500/30",
+  DRAFT: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+  SENT: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+  PAID: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  OVERDUE: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+  CANCELLED: "bg-slate-500/10 text-slate-400 border-slate-500/30",
 };
 
+// Consistent color palette for project status badges
 const projectStatusColors: Record<string, string> = {
-  PLANNING: "bg-slate-500/20 text-slate-400 border-slate-500/30",
-  LEAD: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  PAID: "bg-green-500/20 text-green-400 border-green-500/30",
-  ACTIVE: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  IN_PROGRESS: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  REVIEW: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  COMPLETED: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  CANCELLED: "bg-red-500/20 text-red-400 border-red-500/30",
+  PLANNING: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+  LEAD: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+  PAID: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  ACTIVE: "bg-sky-500/10 text-sky-400 border-sky-500/30",
+  IN_PROGRESS: "bg-sky-500/10 text-sky-400 border-sky-500/30",
+  REVIEW: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+  COMPLETED: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  CANCELLED: "bg-slate-500/10 text-slate-400 border-slate-500/30",
 };
 
 export function ClientDetailClient({ clientData, user }: ClientDetailClientProps) {
@@ -169,13 +171,13 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/[0.08] rounded-lg transition-colors border border-transparent hover:border-white/[0.08]"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-slate-400" />
             </button>
             <div>
-              <h1 className="text-4xl font-heading font-bold gradient-text">{clientName}</h1>
-              <p className="text-sm text-gray-400 mt-1">
+              <h1 className="text-3xl font-semibold text-white">{clientName}</h1>
+              <p className="text-sm text-slate-400 mt-1">
                 {clientData.type === "organization" && "Organization"}
                 {clientData.type === "lead" && "Lead"}
                 {clientData.type === "project" && "Project"}
@@ -187,43 +189,51 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
         </div>
 
         {/* Stats Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Total Projects</span>
-              <Folder className="h-5 w-5 text-blue-400" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium">Total Projects</span>
+              <div className="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center">
+                <Folder className="h-4 w-4 text-sky-400" />
+              </div>
             </div>
-            <div className="text-2xl font-bold text-white">{totalProjects}</div>
-            <div className="text-xs text-gray-500 mt-1">{activeProjects} active</div>
+            <div className="text-2xl font-semibold text-white">{totalProjects}</div>
+            <div className="text-[11px] text-slate-500 mt-1.5">{activeProjects} active</div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Total Invoices</span>
-              <FileText className="h-5 w-5 text-purple-400" />
+          <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium">Total Invoices</span>
+              <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                <FileText className="h-4 w-4 text-violet-400" />
+              </div>
             </div>
-            <div className="text-2xl font-bold text-white">{totalInvoices}</div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-2xl font-semibold text-white">{totalInvoices}</div>
+            <div className="text-[11px] text-slate-500 mt-1.5">
               {invoices.filter((inv: any) => inv.status === "PAID").length} paid
             </div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Total Revenue</span>
-              <DollarSign className="h-5 w-5 text-green-400" />
+          <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium">Total Revenue</span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <DollarSign className="h-4 w-4 text-emerald-400" />
+              </div>
             </div>
-            <div className="text-2xl font-bold text-white">{currencyFormatter.format(totalRevenue)}</div>
-            <div className="text-xs text-gray-500 mt-1">Paid invoices</div>
+            <div className="text-2xl font-semibold text-white">{currencyFormatter.format(totalRevenue)}</div>
+            <div className="text-[11px] text-slate-500 mt-1.5">Paid invoices</div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Leads</span>
-              <TrendingUp className="h-5 w-5 text-yellow-400" />
+          <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium">Leads</span>
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-amber-400" />
+              </div>
             </div>
-            <div className="text-2xl font-bold text-white">{leads.length}</div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-2xl font-semibold text-white">{leads.length}</div>
+            <div className="text-[11px] text-slate-500 mt-1.5">
               {leads.filter((l: any) => l.status === "CONVERTED").length} converted
             </div>
           </div>
@@ -231,7 +241,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="bg-slate-800/50 border border-white/10">
+          <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="projects">Projects ({totalProjects})</TabsTrigger>
             <TabsTrigger value="invoices">Invoices ({totalInvoices})</TabsTrigger>
@@ -241,11 +251,11 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
           </TabsList>
 
           <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Client Information */}
-              <div className="glass-effect rounded-xl border-2 border-gray-700 p-6">
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Building className="w-5 h-5 text-blue-400" />
+              <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5">
+                <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                  <Building className="w-4 h-4 text-sky-400" />
                   Client Information
                 </h3>
                 <div className="space-y-4">
@@ -326,9 +336,9 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
 
               {/* Organization Members */}
               {org?.members && org.members.length > 0 && (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-purple-400" />
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5">
+                  <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-violet-400" />
                     Team Members ({org.members.length})
                   </h3>
                   <div className="space-y-3">
@@ -355,13 +365,13 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
           </TabsContent>
 
           <TabsContent value="projects" className="mt-6">
-            <div className="space-y-4">
+            <div className="space-y-3">
               {projects.length > 0 ? (
                 projects.map((proj: any) => (
                   <Link
                     key={proj.id}
                     href={`/admin/pipeline/projects/${proj.id}`}
-                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all"
+                    className="block rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 hover:border-white/[0.15] transition-all"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -405,22 +415,22 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   </Link>
                 ))
               ) : (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-12 text-center">
-                  <Folder className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">No projects found for this client</p>
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-12 text-center">
+                  <Folder className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-slate-400 text-sm">No projects found for this client</p>
                 </div>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="invoices" className="mt-6">
-            <div className="space-y-4">
+            <div className="space-y-3">
               {invoices.length > 0 ? (
                 invoices.map((invoice: any) => (
                   <Link
                     key={invoice.id}
                     href={`/admin/pipeline/invoices/${invoice.id}`}
-                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all"
+                    className="block rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 hover:border-white/[0.15] transition-all"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -470,16 +480,16 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   </Link>
                 ))
               ) : (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-12 text-center">
-                  <FileText className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">No invoices found for this client</p>
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-12 text-center">
+                  <FileText className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-slate-400 text-sm">No invoices found for this client</p>
                 </div>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="subscriptions" className="mt-6">
-            <div className="space-y-4">
+            <div className="space-y-3">
               {projects.length > 0 ? (
                 projects.map((proj: any) => {
                   const activeSubscription = proj.subscriptions?.find(
@@ -490,7 +500,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   return (
                     <div
                       key={proj.id}
-                      className="glass-effect rounded-xl border-2 border-gray-700 p-6"
+                      className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
@@ -606,23 +616,23 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   );
                 })
               ) : (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-12 text-center">
-                  <Folder className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400 mb-2">No projects found</p>
-                  <p className="text-sm text-gray-500">
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-12 text-center">
+                  <Folder className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-slate-400 text-sm mb-1">No projects found</p>
+                  <p className="text-xs text-slate-500">
                     Create a project first to assign subscriptions
                   </p>
                 </div>
               )}
 
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6 mt-6">
+              <div className="bg-sky-500/5 border border-sky-500/20 rounded-xl p-5 mt-4">
                 <div className="flex items-start gap-4">
-                  <TrendingUp className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+                  <TrendingUp className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-white font-semibold mb-2">
+                    <h4 className="text-white font-medium mb-2 text-sm">
                       About Manual Subscriptions
                     </h4>
-                    <ul className="text-sm text-gray-300 space-y-2">
+                    <ul className="text-sm text-slate-400 space-y-1.5">
                       <li>
                         • Manually assigned subscriptions grant immediate dashboard access
                       </li>
@@ -659,11 +669,11 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
           </TabsContent>
 
           <TabsContent value="contacts" className="mt-6">
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* Organization Members */}
               {org?.members && org.members.length > 0 && (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Team Members</h3>
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5">
+                  <h3 className="text-base font-semibold text-white mb-4">Team Members</h3>
                   <div className="space-y-3">
                     {org.members.map((member: any) => (
                       <div
@@ -689,8 +699,8 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
 
               {/* Lead Contacts */}
               {leads.length > 0 && (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Lead Contacts</h3>
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5">
+                  <h3 className="text-base font-semibold text-white mb-4">Lead Contacts</h3>
                   <div className="space-y-3">
                     {leads.map((l: any) => (
                       <div
@@ -715,9 +725,9 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
               )}
 
               {(!org?.members || org.members.length === 0) && leads.length === 0 && (
-                <div className="glass-effect rounded-xl border-2 border-gray-700 p-12 text-center">
-                  <Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <p className="text-gray-400">No contacts found</p>
+                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-12 text-center">
+                  <Users className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                  <p className="text-slate-400 text-sm">No contacts found</p>
                 </div>
               )}
             </div>

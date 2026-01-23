@@ -56,22 +56,22 @@ export function SearchFilter({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input */}
         <div className="flex-1 relative">
-          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full pl-11 pr-10 py-3 rounded-xl border-2 border-gray-700 bg-gray-800/50 text-white placeholder:text-gray-500 focus:border-trinity-red/50 focus:outline-none transition-colors"
+            className="w-full pl-11 pr-10 py-2.5 rounded-lg border border-white/[0.08] bg-slate-900/50 text-white placeholder:text-slate-500 focus:border-white/[0.15] focus:outline-none transition-colors text-sm"
           />
           {searchQuery && (
             <button
               onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg text-gray-500 hover:text-white hover:bg-gray-700 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded text-slate-500 hover:text-white hover:bg-white/[0.08] transition-colors"
             >
               <FiX className="h-4 w-4" />
             </button>
@@ -82,16 +82,16 @@ export function SearchFilter({
         {filters.length > 0 && (
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl border-2 transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition-all text-sm ${
               showFilters || activeFilterCount > 0
-                ? "border-trinity-red/50 bg-trinity-red/10 text-trinity-red"
-                : "border-gray-700 bg-gray-800/50 text-gray-400 hover:border-gray-600 hover:text-white"
+                ? "border-sky-500/30 bg-sky-500/10 text-sky-400"
+                : "border-white/[0.08] bg-slate-900/50 text-slate-400 hover:border-white/[0.15] hover:text-white"
             }`}
           >
             <FiFilter className="h-4 w-4" />
             <span className="font-medium">Filters</span>
             {activeFilterCount > 0 && (
-              <span className="ml-1 px-2 py-0.5 rounded-full bg-trinity-red text-white text-xs font-semibold">
+              <span className="ml-1 px-1.5 py-0.5 rounded bg-sky-500 text-white text-xs font-semibold">
                 {activeFilterCount}
               </span>
             )}
@@ -108,11 +108,11 @@ export function SearchFilter({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="rounded-xl border-2 border-gray-700 glass-effect p-4">
+            <div className="rounded-lg border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filters.map((filter) => (
                   <div key={filter.id}>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">
                       {filter.label}
                     </label>
                     <select
@@ -120,7 +120,7 @@ export function SearchFilter({
                       onChange={(e) =>
                         onFilterChange?.(filter.id, e.target.value)
                       }
-                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 rounded-lg border border-white/[0.08] bg-slate-900/50 text-white text-sm focus:border-white/[0.15] focus:outline-none transition-colors"
                     >
                       <option value="all">All {filter.label}</option>
                       {filter.options.map((option) => (
@@ -141,7 +141,7 @@ export function SearchFilter({
                       onFilterChange?.(filter.id, "all");
                     });
                   }}
-                  className="mt-4 text-sm text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+                  className="mt-4 text-sm text-sky-400 hover:text-sky-300 transition-colors font-medium"
                 >
                   Clear all filters
                 </button>
