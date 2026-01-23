@@ -514,7 +514,7 @@ function SettingsContent() {
                             </div>
                             <div className="flex items-center gap-4">
                               <span className="text-lg font-bold text-white">
-                                ${(Number(invoice.total) / 100).toFixed(2)}
+                                ${Number(invoice.total).toLocaleString()}
                               </span>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(

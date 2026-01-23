@@ -874,7 +874,7 @@ export default function ClientSettingsPage() {
                           </div>
                           <div className="flex items-center gap-4">
                             <span className="text-lg font-bold text-white">
-                              ${(Number(invoice.total || invoice.amount) / 100).toFixed(2)}
+                              ${Number(invoice.total || invoice.amount).toLocaleString()}
                             </span>
                             <span
                               className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(invoice.status)}`}

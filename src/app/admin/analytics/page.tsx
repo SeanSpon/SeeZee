@@ -170,7 +170,7 @@ export default async function AnalyticsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard
             label="Revenue"
-            value={`$${(Number(revenueThisMonth._sum.total || 0) / 100).toLocaleString()}`}
+            value={`$${Number(revenueThisMonth._sum.total || 0).toLocaleString()}`}
             change={revenueChange}
             icon={DollarSign}
             color="green"

@@ -55,10 +55,10 @@ export default function BillingPage() {
         const invoicesData = await invoicesRes.json();
         setInvoices(invoicesData.invoices || []);
         
-        // Calculate stats
+        // Calculate stats - invoice totals are in dollars
         const total = invoicesData.invoices?.reduce((sum: number, inv: any) => {
           if (inv.status === "paid") {
-            return sum + (Number(inv.total) / 100);
+            return sum + Number(inv.total);
           }
           return sum;
         }, 0) || 0;
@@ -71,14 +71,14 @@ export default function BillingPage() {
             invDate.getMonth() === now.getMonth() &&
             invDate.getFullYear() === now.getFullYear()
           ) {
-            return sum + (Number(inv.total) / 100);
+            return sum + Number(inv.total);
           }
           return sum;
         }, 0) || 0;
 
         const pending = invoicesData.invoices?.reduce((sum: number, inv: any) => {
           if (inv.status === "pending" || inv.status === "overdue") {
-            return sum + (Number(inv.total) / 100);
+            return sum + Number(inv.total);
           }
           return sum;
         }, 0) || 0;
@@ -285,7 +285,7 @@ export default function BillingPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-xl font-bold text-white">
-                          ${(Number(invoice.total) / 100).toFixed(2)}
+                          ${Number(invoice.total).toLocaleString()}
                         </span>
                         <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
                           <Download className="w-4 h-4 text-slate-400" />

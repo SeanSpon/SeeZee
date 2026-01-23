@@ -61,7 +61,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                 #{invoice.id.slice(0, 8)}
               </td>
               <td className="px-6 py-4 text-sm text-white font-semibold">
-                ${(Number(invoice.total) / 100).toFixed(2)}
+                ${Number(invoice.total).toLocaleString()}
               </td>
               <td className="px-6 py-4">
                 <span
