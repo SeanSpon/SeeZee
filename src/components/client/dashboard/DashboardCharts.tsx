@@ -78,9 +78,9 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-xl">
+    <div className="bg-white/5 border border-white/10 rounded-lg p-3 shadow-xl">
       {label && (
-        <p className="text-xs text-gray-400 mb-2">{label}</p>
+        <p className="text-xs text-slate-400 mb-2">{label}</p>
       )}
       {payload.map((entry: any, index: number) => (
         <div key={index} className="flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function DashboardCharts({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6"
+          className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-purple-500/20 rounded-xl">
@@ -204,7 +204,7 @@ export default function DashboardCharts({
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-sm text-gray-400 flex-1">{item.name}</span>
+                  <span className="text-sm text-slate-400 flex-1">{item.name}</span>
                   <span className="text-sm font-semibold text-white">{item.value}</span>
                 </div>
               ))}
@@ -219,7 +219,7 @@ export default function DashboardCharts({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6"
+          className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-cyan-500/20 rounded-xl">
@@ -253,7 +253,7 @@ export default function DashboardCharts({
                 <span className="text-2xl font-bold text-white">
                   {hoursBalance.totalAvailable}
                 </span>
-                <span className="text-xs text-gray-400">hrs total</span>
+                <span className="text-xs text-slate-400">hrs total</span>
               </div>
             </div>
 
@@ -264,7 +264,7 @@ export default function DashboardCharts({
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className={`text-sm flex-1 ${item.name === 'Used' ? 'text-red-400' : 'text-gray-400'}`}>
+                  <span className={`text-sm flex-1 ${item.name === 'Used' ? 'text-red-400' : 'text-slate-400'}`}>
                     {item.name}
                   </span>
                   <span className={`text-sm font-semibold ${item.name === 'Used' ? 'text-red-400' : 'text-white'}`}>
@@ -283,7 +283,7 @@ export default function DashboardCharts({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="lg:col-span-2 bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6"
+          className="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-green-500/20 rounded-xl">

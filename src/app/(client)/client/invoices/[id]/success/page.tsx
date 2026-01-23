@@ -110,7 +110,7 @@ export default async function InvoiceSuccessPage({ params, searchParams }: Succe
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
       <div className="max-w-2xl w-full">
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 md:p-12">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-8 md:p-12">
           {/* Success Icon */}
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center">

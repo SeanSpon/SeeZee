@@ -80,8 +80,8 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-white mb-2">No Organization Found</h2>
-          <p className="text-gray-400">You are not associated with any organization.</p>
-          <p className="text-gray-500 text-sm mt-2">Contact support to set up your organization.</p>
+          <p className="text-slate-400">You are not associated with any organization.</p>
+          <p className="text-slate-500 text-sm mt-2">Contact support to set up your organization.</p>
         </div>
       </div>
     );

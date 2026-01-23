@@ -69,7 +69,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
           
           {/* Subscription Status */}
           {billing.hasActiveSubscription && (
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-slate-400">
               <span className="flex h-2 w-2 rounded-full bg-green-400"></span>
               <span>Active {billing.subscriptionPlan} Plan</span>
             </div>
@@ -164,7 +164,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
             {aiSuggestions.slice(0, 3).map((suggestion) => (
               <div
                 key={suggestion.id}
-                className="rounded-lg border border-white/10 bg-white/5 p-3 transition-all hover:border-gray-700"
+                className="rounded-lg border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20"
               >
                 <div className="mb-2 flex items-start gap-2">
                   <span className="text-lg">{suggestion.icon}</span>

@@ -13,8 +13,8 @@ interface InvoiceTableProps {
 export function InvoiceTable({ invoices }: InvoiceTableProps) {
   if (!invoices || invoices.length === 0) {
     return (
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-        <p className="text-gray-400">No open invoices</p>
+      <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center">
+        <p className="text-slate-400">No open invoices</p>
       </div>
     );
   }
@@ -33,9 +33,9 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+    <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-900 border-b border-gray-800">
+        <thead className="bg-white/5 border-b border-white/10">
           <tr>
             <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
               Invoice
@@ -56,7 +56,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
         </thead>
         <tbody className="divide-y divide-gray-800">
           {invoices.map((invoice) => (
-            <tr key={invoice.id} className="hover:bg-gray-800 transition-colors">
+            <tr key={invoice.id} className="hover:bg-white/10 transition-colors">
               <td className="px-6 py-4 text-sm text-white font-mono">
                 #{invoice.id.slice(0, 8)}
               </td>
@@ -72,7 +72,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   {invoice.status}
                 </span>
               </td>
-              <td className="px-6 py-4 text-sm text-gray-400">
+              <td className="px-6 py-4 text-sm text-slate-400">
                 {invoice.dueAt
                   ? new Date(invoice.dueAt).toLocaleDateString()
                   : "N/A"}

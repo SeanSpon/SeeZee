@@ -383,7 +383,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             <div className="space-y-4">
               {/* Quick Links Card */}
               {(project.githubRepo || project.vercelUrl) && (
-                <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                   <div className="flex items-center gap-2 text-sm text-white/60 mb-4">
                     <ExternalLink className="w-4 h-4" />
                     <span>Quick Links</span>
@@ -409,7 +409,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                         href={project.githubRepo.startsWith('http') ? project.githubRepo : `https://github.com/${project.githubRepo}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 hover:border-gray-600 transition-all group"
+                        className="flex items-center gap-3 p-3 bg-white/10/50 hover:bg-white/10 rounded-lg border border-white/10 hover:border-gray-600 transition-all group"
                       >
                         <Github className="w-5 h-5 text-white/60 group-hover:scale-110 transition-transform" />
                         <div className="flex-1 min-w-0">
@@ -424,7 +424,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               )}
 
               {project.assignee && (
-                <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                   <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
                     <User className="w-4 h-4" />
                     <span>Assigned To</span>
@@ -448,7 +448,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               )}
 
               {project.budget && (
-                <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                   <div className="flex items-center gap-2 text-sm text-white/60 mb-2">
                     <DollarSign className="w-4 h-4" />
                     <span>Budget</span>
@@ -483,7 +483,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 {project.milestones.map((milestone) => (
                   <div
                     key={milestone.id}
-                    className="p-4 bg-gray-900 hover:bg-gray-800 rounded-xl border border-gray-800 transition-all"
+                    className="p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all"
                   >
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
@@ -741,7 +741,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             </div>
             
             {/* Messages Display */}
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 min-h-[400px] max-h-[500px] overflow-y-auto space-y-3">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 min-h-[400px] max-h-[500px] overflow-y-auto space-y-3">
               {messages.length === 0 ? (
                 <div className="text-center py-12">
                   <Send className="w-12 h-12 text-white/20 mx-auto mb-4" />
@@ -755,7 +755,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                     className={`p-3 rounded-lg ${
                       message.role === 'client'
                         ? 'bg-blue-600 ml-auto max-w-[80%]'
-                        : 'bg-gray-800 mr-auto max-w-[80%]'
+                        : 'bg-white/10 mr-auto max-w-[80%]'
                     }`}
                   >
                     <p className="text-sm text-white">{message.content}</p>
@@ -780,7 +780,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   }
                 }}
                 placeholder="Type a message..."
-                className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={handleSendMessage}
@@ -820,9 +820,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 <p className="text-sm text-white/40 mt-2">Invoices for this project will appear here</p>
               </div>
             ) : (
-              <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+              <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-900 border-b border-gray-800">
+                  <thead className="bg-white/5 border-b border-white/10">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
                         Invoice #
@@ -849,7 +849,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                       const badge = getInvoiceStatusBadge(invoice.status);
                       const canPay = invoice.status === 'SENT' && !invoice.paidAt;
                       return (
-                        <tr key={invoice.id} className="hover:bg-gray-800 transition-colors">
+                        <tr key={invoice.id} className="hover:bg-white/10 transition-colors">
                           <td className="px-6 py-4 text-sm text-white font-mono">
                             {invoice.number}
                           </td>
@@ -861,10 +861,10 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                               {invoice.status}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-400">
+                          <td className="px-6 py-4 text-sm text-slate-400">
                             {new Date(invoice.dueDate).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-400">
+                          <td className="px-6 py-4 text-sm text-slate-400">
                             {invoice.paidAt ? new Date(invoice.paidAt).toLocaleDateString() : '-'}
                           </td>
                           <td className="px-6 py-4">
@@ -959,7 +959,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
 
       {/* Package & Timeline Info Bar */}
       {questionnaireData && (
-        <div className="seezee-glass p-4 rounded-2xl">
+        <div className="seezee-glass p-4 rounded-xl">
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-2 text-white/80">
               <span className="text-white/50">Package:</span>
@@ -997,7 +997,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
       )}
 
       {/* Progress Overview */}
-      <div className="seezee-glass p-6 rounded-2xl">
+      <div className="seezee-glass p-6 rounded-xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-cyan-400" />
@@ -1055,7 +1055,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
       </div>
 
       {/* Tabs */}
-      <div className="seezee-glass rounded-2xl overflow-hidden">
+      <div className="seezee-glass rounded-xl overflow-hidden">
         <div className="flex border-b border-white/10 overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;

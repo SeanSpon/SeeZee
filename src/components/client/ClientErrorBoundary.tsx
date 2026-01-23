@@ -31,13 +31,13 @@ export class ClientErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-black flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
+          <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-xl p-8 text-center">
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-8 h-8 text-red-400" />
             </div>
             
             <h2 className="text-2xl font-bold text-white mb-2">Something went wrong</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-slate-400 mb-6">
               We encountered an unexpected error. Please try refreshing the page or return to the dashboard.
             </p>
 

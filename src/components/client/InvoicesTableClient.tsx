@@ -94,7 +94,7 @@ export default function InvoicesTableClient({ invoices }: InvoicesTableClientPro
       header: 'Due Date',
       sortable: true,
       render: (value: string) => (
-        <span className="text-gray-400">
+        <span className="text-slate-400">
           {new Date(value).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
@@ -116,7 +116,7 @@ export default function InvoicesTableClient({ invoices }: InvoicesTableClientPro
                 e.stopPropagation();
                 router.push(`/client/projects/${row.project!.id}?tab=invoices`);
               }}
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
               title="View in Project"
             >
               <FiExternalLink className="w-4 h-4" />

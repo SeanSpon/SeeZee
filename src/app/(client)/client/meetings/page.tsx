@@ -240,7 +240,7 @@ export default function ClientMeetingsPage() {
               </div>
               Meetings
             </h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-slate-400 mt-2">
               Schedule meetings and access recordings from past sessions
             </p>
           </div>
@@ -259,19 +259,19 @@ export default function ClientMeetingsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10">
             <div className="text-2xl font-bold text-white">{upcomingMeetings.length}</div>
-            <div className="text-sm text-gray-400">Upcoming</div>
+            <div className="text-sm text-slate-400">Upcoming</div>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10">
             <div className="text-2xl font-bold text-yellow-400">{pendingRequests.length}</div>
-            <div className="text-sm text-gray-400">Pending Requests</div>
+            <div className="text-sm text-slate-400">Pending Requests</div>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10">
             <div className="text-2xl font-bold text-purple-400">{recordings.length}</div>
-            <div className="text-sm text-gray-400">Recordings</div>
+            <div className="text-sm text-slate-400">Recordings</div>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10">
-            <div className="text-2xl font-bold text-gray-400">{pastMeetings.length}</div>
-            <div className="text-sm text-gray-400">Completed</div>
+            <div className="text-2xl font-bold text-slate-400">{pastMeetings.length}</div>
+            <div className="text-sm text-slate-400">Completed</div>
           </div>
         </div>
 
@@ -282,7 +282,7 @@ export default function ClientMeetingsPage() {
             className={`px-6 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'upcoming'
                 ? 'bg-purple-600 text-white'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
             }`}
           >
             Upcoming & Requests
@@ -292,7 +292,7 @@ export default function ClientMeetingsPage() {
             className={`px-6 py-2 rounded-lg font-medium transition-all ${
               activeTab === 'recordings'
                 ? 'bg-purple-600 text-white'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
             }`}
           >
             Recordings
@@ -303,7 +303,7 @@ export default function ClientMeetingsPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-            <p className="text-gray-400 mt-4">Loading meetings...</p>
+            <p className="text-slate-400 mt-4">Loading meetings...</p>
           </div>
         ) : activeTab === 'upcoming' ? (
           <div className="space-y-6">
@@ -324,8 +324,8 @@ export default function ClientMeetingsPage() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-white">{meeting.title.replace('[Meeting Request] ', '')}</h3>
-                          <p className="text-gray-400 text-sm mt-1">{meeting.description}</p>
-                          <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
+                          <p className="text-slate-400 text-sm mt-1">{meeting.description}</p>
+                          <div className="flex items-center gap-4 mt-3 text-sm text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
                               New Time: {formatDateTime(meeting.startTime)}
@@ -373,8 +373,8 @@ export default function ClientMeetingsPage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="text-lg font-semibold text-white">{meeting.title.replace('[Meeting Request] ', '')}</h3>
-                          <p className="text-gray-400 text-sm mt-1">{meeting.description}</p>
-                          <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
+                          <p className="text-slate-400 text-sm mt-1">{meeting.description}</p>
+                          <div className="flex items-center gap-4 mt-3 text-sm text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
                               Requested: {formatDateTime(meeting.startTime)}
@@ -413,8 +413,8 @@ export default function ClientMeetingsPage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="text-lg font-semibold text-white">{meeting.title}</h3>
-                          <p className="text-gray-400 text-sm mt-1">{meeting.description}</p>
-                          <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
+                          <p className="text-slate-400 text-sm mt-1">{meeting.description}</p>
+                          <div className="flex items-center gap-4 mt-3 text-sm text-slate-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
                               {formatDateTime(meeting.startTime)}
@@ -452,8 +452,8 @@ export default function ClientMeetingsPage() {
 
             {pendingRequests.length === 0 && upcomingMeetings.length === 0 && (
               <div className="text-center py-12 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-                <CalendarDays className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400 mb-4">No upcoming meetings scheduled</p>
+                <CalendarDays className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                <p className="text-slate-400 mb-4">No upcoming meetings scheduled</p>
                 <button
                   onClick={() => setShowRequestModal(true)}
                   className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors"
@@ -468,8 +468,8 @@ export default function ClientMeetingsPage() {
           <div className="space-y-4">
             {recordings.length === 0 ? (
               <div className="text-center py-12 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-                <Video className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No meeting recordings available yet</p>
+                <Video className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                <p className="text-slate-400">No meeting recordings available yet</p>
               </div>
             ) : (
               <>
@@ -497,7 +497,7 @@ export default function ClientMeetingsPage() {
                         )}
                       </div>
                       
-                      <div className="flex items-center gap-4 text-sm text-gray-400">
+                      <div className="flex items-center gap-4 text-sm text-slate-400">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
                           {formatDate(meeting.createdAt)}
@@ -541,7 +541,7 @@ export default function ClientMeetingsPage() {
                           Error
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 px-3 py-1 bg-gray-500/20 text-gray-400 rounded-full text-xs font-medium border border-gray-500/30">
+                        <span className="flex items-center gap-1 px-3 py-1 bg-gray-500/20 text-slate-400 rounded-full text-xs font-medium border border-gray-500/30">
                           <Clock className="w-3 h-3" />
                           Pending
                         </span>
@@ -641,15 +641,15 @@ export default function ClientMeetingsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] overflow-y-auto"
+                className="bg-white/5 border border-white/10 rounded-xl w-full max-w-lg overflow-hidden max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Modal Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                <div className="flex items-center justify-between p-6 border-b border-white/10">
                   <h2 className="text-xl font-bold text-white">Request a Meeting</h2>
                   <button
                     onClick={() => setShowRequestModal(false)}
-                    className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -662,7 +662,7 @@ export default function ClientMeetingsPage() {
                       <CheckCircle2 className="w-8 h-8 text-green-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">Request Submitted!</h3>
-                    <p className="text-gray-400">We'll confirm your meeting time shortly.</p>
+                    <p className="text-slate-400">We'll confirm your meeting time shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleRequestMeeting} className="p-6 space-y-4">
@@ -684,7 +684,7 @@ export default function ClientMeetingsPage() {
                         required
                       >
                         {MEETING_TYPES.map((type) => (
-                          <option key={type.value} value={type.value} className="bg-gray-900">
+                          <option key={type.value} value={type.value} className="bg-white/5">
                             {type.label}
                           </option>
                         ))}
@@ -701,7 +701,7 @@ export default function ClientMeetingsPage() {
                         value={requestForm.title}
                         onChange={(e) => setRequestForm({ ...requestForm, title: e.target.value })}
                         placeholder="e.g., Weekly Progress Check"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         required
                       />
                     </div>
@@ -716,7 +716,7 @@ export default function ClientMeetingsPage() {
                         onChange={(e) => setRequestForm({ ...requestForm, description: e.target.value })}
                         placeholder="Briefly describe what you'd like to cover..."
                         rows={3}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 resize-none"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 resize-none"
                       />
                     </div>
 
@@ -757,10 +757,10 @@ export default function ClientMeetingsPage() {
                         onChange={(e) => setRequestForm({ ...requestForm, duration: e.target.value })}
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                       >
-                        <option value="15" className="bg-gray-900">15 minutes</option>
-                        <option value="30" className="bg-gray-900">30 minutes</option>
-                        <option value="45" className="bg-gray-900">45 minutes</option>
-                        <option value="60" className="bg-gray-900">1 hour</option>
+                        <option value="15" className="bg-white/5">15 minutes</option>
+                        <option value="30" className="bg-white/5">30 minutes</option>
+                        <option value="45" className="bg-white/5">45 minutes</option>
+                        <option value="60" className="bg-white/5">1 hour</option>
                       </select>
                     </div>
 
@@ -775,9 +775,9 @@ export default function ClientMeetingsPage() {
                           onChange={(e) => setRequestForm({ ...requestForm, projectId: e.target.value })}
                           className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         >
-                          <option value="" className="bg-gray-900">No specific project</option>
+                          <option value="" className="bg-white/5">No specific project</option>
                           {projects.map((project) => (
-                            <option key={project.id} value={project.id} className="bg-gray-900">
+                            <option key={project.id} value={project.id} className="bg-white/5">
                               {project.name}
                             </option>
                           ))}

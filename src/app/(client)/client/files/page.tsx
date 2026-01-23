@@ -82,7 +82,7 @@ export default function FilesPage() {
   const getFileIcon = (mimeType: string, type: string) => {
     if (mimeType.startsWith("image/")) return <ImageIcon className="w-5 h-5 text-blue-400" />;
     if (mimeType.startsWith("video/")) return <Video className="w-5 h-5 text-purple-400" />;
-    return <FileText className="w-5 h-5 text-gray-400" />;
+    return <FileText className="w-5 h-5 text-slate-400" />;
   };
 
   const getFileTypeColor = (type: string) => {
@@ -135,7 +135,7 @@ export default function FilesPage() {
 
       {/* Files Grid */}
       {files.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
+        <div className="bg-white/5 border border-white/10 rounded-xl p-12 text-center">
           <Folder className="w-16 h-16 text-white/20 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">No files yet</h3>
           <p className="text-white/60 mb-6">Upload files to get started</p>
@@ -158,7 +158,7 @@ export default function FilesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="bg-gray-900 border border-gray-800 p-6 rounded-xl hover:border-#ef4444/50 transition-all group"
+              className="bg-white/5 border border-white/10 p-6 rounded-xl hover:border-#ef4444/50 transition-all group"
             >
               <div className="flex items-start gap-4 mb-4">
                 <div className="flex-shrink-0 p-3 bg-white/5 rounded-lg">

@@ -51,7 +51,7 @@ const PRIORITIES = [
     label: 'Low', 
     description: 'No rush - within 5-7 business days',
     urgencyFee: 0,
-    color: 'text-gray-400 border-gray-500/30 bg-gray-500/10',
+    color: 'text-slate-400 border-gray-500/30 bg-gray-500/10',
   },
   { 
     value: 'NORMAL', 
@@ -158,7 +158,7 @@ function HoursEstimator({
     <div className="space-y-4">
       <label className="block text-sm font-medium text-white">
         Estimated Hours
-        <span className="text-gray-400 font-normal ml-2">(Optional - we'll confirm before starting)</span>
+        <span className="text-slate-400 font-normal ml-2">(Optional - we'll confirm before starting)</span>
       </label>
       
       {/* Preset buttons */}
@@ -262,7 +262,7 @@ function CategorySelector({
             }`}
           >
             <p className="text-sm font-medium text-white">{category.label}</p>
-            <p className="text-xs text-gray-400 mt-1">{category.description}</p>
+            <p className="text-xs text-slate-400 mt-1">{category.description}</p>
           </button>
         ))}
       </div>
@@ -302,7 +302,7 @@ function PrioritySelector({
                 <span className="text-xs text-yellow-400 font-medium">+${priority.urgencyFee}</span>
               )}
             </div>
-            <p className="text-xs text-gray-400 mt-1">{priority.description}</p>
+            <p className="text-xs text-slate-400 mt-1">{priority.description}</p>
           </button>
         ))}
       </div>
@@ -337,7 +337,7 @@ function FileUpload({
   return (
     <div className="space-y-3">
       <label className="block text-sm font-medium text-white">
-        Attachments <span className="text-gray-400 font-normal">(Optional)</span>
+        Attachments <span className="text-slate-400 font-normal">(Optional)</span>
       </label>
       
       <div
@@ -345,7 +345,7 @@ function FileUpload({
         onDragOver={(e) => e.preventDefault()}
         className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-white/40 transition-colors"
       >
-        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-3" />
+        <Upload className="w-8 h-8 text-slate-400 mx-auto mb-3" />
         <p className="text-sm text-gray-300 mb-1">
           Drag & drop files here, or{' '}
           <label className="text-cyan-400 cursor-pointer hover:underline">
@@ -358,7 +358,7 @@ function FileUpload({
             />
           </label>
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-500">
           Screenshots, documents, or any reference files (max 10MB each)
         </p>
       </div>
@@ -371,9 +371,9 @@ function FileUpload({
               className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <FileText className="w-4 h-4 text-gray-400" />
+                <FileText className="w-4 h-4 text-slate-400" />
                 <span className="text-sm text-white">{file.name}</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-slate-500">
                   ({(file.size / 1024).toFixed(1)}KB)
                 </span>
               </div>
@@ -382,7 +382,7 @@ function FileUpload({
                 onClick={() => removeFile(index)}
                 className="p-1 hover:bg-white/10 rounded"
               >
-                <X className="w-4 h-4 text-gray-400" />
+                <X className="w-4 h-4 text-slate-400" />
               </button>
             </div>
           ))}
@@ -606,7 +606,7 @@ export default function NewChangeRequestPage() {
         <div className="mb-8">
           <Link
             href="/client/requests"
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Requests
@@ -618,7 +618,7 @@ export default function NewChangeRequestPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">New Change Request</h1>
-              <p className="text-gray-400">Describe what you need and we'll get started</p>
+              <p className="text-slate-400">Describe what you need and we'll get started</p>
             </div>
           </div>
         </div>
@@ -659,7 +659,7 @@ export default function NewChangeRequestPage() {
         {/* Hours Balance Banner */}
         {loadingHours ? (
           <div className="mb-8 p-4 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center">
-            <div className="text-sm text-gray-400">Loading hours balance...</div>
+            <div className="text-sm text-slate-400">Loading hours balance...</div>
           </div>
         ) : (
           <div className="mb-8 p-4 bg-white/5 rounded-xl border border-white/10 flex items-center justify-between">
@@ -669,7 +669,7 @@ export default function NewChangeRequestPage() {
                 <p className="text-sm text-white">
                   <strong>{formatHours(getTotalAvailable(hoursBalance))}</strong> hours available
                 </p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-slate-400">
                   {formatHours(getMonthlyRemaining(hoursBalance))} monthly + {formatHours(hoursBalance?.rolloverTotal ?? 0)} rollover + {formatHours(hoursBalance?.packHoursTotal ?? 0)} packs
                 </p>
               </div>
@@ -810,7 +810,7 @@ export default function NewChangeRequestPage() {
               onChange={(e) => setFormData({ ...formData, agreeToTerms: e.target.checked })}
               className="mt-1 w-4 h-4 rounded border-gray-600 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
             />
-            <label htmlFor="terms" className="text-sm text-gray-400">
+            <label htmlFor="terms" className="text-sm text-slate-400">
               I understand this request will be reviewed and may require additional hours beyond my estimate. 
               Final hours will be confirmed before work begins, and I agree to the{' '}
               <Link href="/terms" className="text-cyan-400 hover:underline">terms of service</Link>.

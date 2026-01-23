@@ -52,13 +52,13 @@ export function UpgradeSuccessClient() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-md w-full bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center"
+        className="max-w-md w-full bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center"
       >
         {status === "loading" && (
           <>
             <Loader2 className="w-16 h-16 text-cyan-400 mx-auto mb-4 animate-spin" />
             <h1 className="text-2xl font-bold text-white mb-2">Processing Payment</h1>
-            <p className="text-gray-400">Please wait while we confirm your subscription...</p>
+            <p className="text-slate-400">Please wait while we confirm your subscription...</p>
           </>
         )}
 
@@ -66,8 +66,8 @@ export function UpgradeSuccessClient() {
           <>
             <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Payment Successful!</h1>
-            <p className="text-gray-400 mb-6">{message}</p>
-            <p className="text-sm text-gray-500">Redirecting you to your subscriptions...</p>
+            <p className="text-slate-400 mb-6">{message}</p>
+            <p className="text-sm text-slate-500">Redirecting you to your subscriptions...</p>
             <Link
               href="/client/subscriptions"
               className="mt-4 inline-block text-cyan-400 hover:text-cyan-300 text-sm"
@@ -81,7 +81,7 @@ export function UpgradeSuccessClient() {
           <>
             <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Something went wrong</h1>
-            <p className="text-gray-400 mb-6">{message}</p>
+            <p className="text-slate-400 mb-6">{message}</p>
             <div className="space-y-2">
               <Link
                 href="/client/subscriptions"
@@ -91,7 +91,7 @@ export function UpgradeSuccessClient() {
               </Link>
               <Link
                 href="/client/upgrade"
-                className="block w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                className="block w-full py-2 px-4 bg-white/10 hover:bg-gray-700 text-white rounded-lg transition-colors"
               >
                 Try Again
               </Link>

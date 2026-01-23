@@ -130,11 +130,11 @@ function SettingRow({
     <div className="flex items-start justify-between gap-6 py-4 border-b border-white/5 last:border-0">
       <div className="flex gap-4">
         <div className="p-2 bg-white/5 rounded-lg h-fit">
-          <Icon className="w-5 h-5 text-gray-400" />
+          <Icon className="w-5 h-5 text-slate-400" />
         </div>
         <div>
           <h4 className="text-sm font-medium text-white">{title}</h4>
-          <p className="text-xs text-gray-400 mt-0.5 max-w-sm">{description}</p>
+          <p className="text-xs text-slate-400 mt-0.5 max-w-sm">{description}</p>
           {warning && (
             <p className="text-xs text-yellow-400 mt-2 flex items-center gap-1">
               <AlertTriangle className="w-3 h-3" />
@@ -165,7 +165,7 @@ function SpendCapInput({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-gray-400">$</span>
+      <span className="text-slate-400">$</span>
       <input
         type="number"
         value={value}
@@ -202,7 +202,7 @@ function NumberInput({
         max={max}
         className="w-16 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm text-right focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
       />
-      {suffix && <span className="text-gray-400 text-sm">{suffix}</span>}
+      {suffix && <span className="text-slate-400 text-sm">{suffix}</span>}
     </div>
   );
 }
@@ -217,26 +217,26 @@ function PlanCard({ plan }: { plan: PlanInfo }) {
         </div>
         <div className="text-right">
           <p className="text-3xl font-bold text-white">${plan.monthlyPrice}</p>
-          <p className="text-xs text-gray-400">/month</p>
+          <p className="text-xs text-slate-400">/month</p>
         </div>
       </div>
       
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-black/20 rounded-lg p-3">
-          <p className="text-xs text-gray-400">Hours Included</p>
+          <p className="text-xs text-slate-400">Hours Included</p>
           <p className="text-lg font-bold text-white">
             {plan.isUnlimited ? '∞' : plan.hoursIncluded}
           </p>
         </div>
         <div className="bg-black/20 rounded-lg p-3">
-          <p className="text-xs text-gray-400">Change Requests</p>
+          <p className="text-xs text-slate-400">Change Requests</p>
           <p className="text-lg font-bold text-white">
             {plan.changeRequestsIncluded === -1 ? '∞' : plan.changeRequestsIncluded}
           </p>
         </div>
       </div>
       
-      <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+      <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
         <span>Current Period</span>
         <span>
           {new Date(plan.periodStart).toLocaleDateString()} - {new Date(plan.periodEnd).toLocaleDateString()}
@@ -357,7 +357,7 @@ export default function BillingSettingsPage() {
       <div className="min-h-screen bg-gray-950 py-8 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Loading billing settings...</p>
+          <p className="text-slate-400">Loading billing settings...</p>
         </div>
       </div>
     );
@@ -398,7 +398,7 @@ export default function BillingSettingsPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Billing & Hours Settings</h1>
-              <p className="text-gray-400">Manage your plan, spending limits, and notifications</p>
+              <p className="text-slate-400">Manage your plan, spending limits, and notifications</p>
             </div>
           </div>
         </div>
@@ -421,13 +421,13 @@ export default function BillingSettingsPage() {
         
         <div className="space-y-8">
           {/* On-Demand Billing Section */}
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <Zap className="w-5 h-5 text-yellow-400" />
                 <div>
                   <h3 className="text-lg font-bold text-white">On-Demand Billing</h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-slate-400">
                     Auto-bill overage hours at $75/hour when you exceed your included hours
                   </p>
                 </div>
@@ -506,13 +506,13 @@ export default function BillingSettingsPage() {
           </div>
           
           {/* Rollover Settings */}
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <RefreshCw className="w-5 h-5 text-purple-400" />
                 <div>
                   <h3 className="text-lg font-bold text-white">Rollover Hours</h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-slate-400">
                     Unused hours automatically roll over to the next billing period
                   </p>
                 </div>
@@ -537,7 +537,7 @@ export default function BillingSettingsPage() {
                     <Info className="w-5 h-5 text-purple-400 flex-shrink-0" />
                     <div className="text-sm text-gray-300">
                       <p className="font-medium text-purple-400 mb-1">Rollover Rules</p>
-                      <ul className="list-disc list-inside space-y-1 text-xs text-gray-400">
+                      <ul className="list-disc list-inside space-y-1 text-xs text-slate-400">
                         <li>Maximum rollover: 2x your monthly hours ({plan.hoursIncluded === -1 ? 'Unlimited' : plan.hoursIncluded * 2} hours)</li>
                         <li>Rollover hours expire after 60-90 days depending on your tier</li>
                         <li>Oldest rollover hours are used first (FIFO)</li>
@@ -551,13 +551,13 @@ export default function BillingSettingsPage() {
           </div>
           
           {/* Notification Settings */}
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <AlertTriangle className="w-5 h-5 text-blue-400" />
                 <div>
                   <h3 className="text-lg font-bold text-white">Notifications</h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-slate-400">
                     Get notified about your hours usage and billing
                   </p>
                 </div>
@@ -612,13 +612,13 @@ export default function BillingSettingsPage() {
           </div>
           
           {/* Payment Method */}
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <CreditCard className="w-5 h-5 text-green-400" />
                 <div>
                   <h3 className="text-lg font-bold text-white">Payment Method</h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-slate-400">
                     Manage your payment method for monthly billing
                   </p>
                 </div>
@@ -634,7 +634,7 @@ export default function BillingSettingsPage() {
                     </div>
                     <div>
                       <p className="text-white font-medium">Payment method on file</p>
-                      <p className="text-xs text-gray-400">Managed through Stripe</p>
+                      <p className="text-xs text-slate-400">Managed through Stripe</p>
                     </div>
                   </div>
                   <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-medium rounded">
@@ -645,11 +645,11 @@ export default function BillingSettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl mb-4">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-white/10 rounded-lg">
-                      <CreditCard className="w-6 h-6 text-gray-500" />
+                      <CreditCard className="w-6 h-6 text-slate-500" />
                     </div>
                     <div>
                       <p className="text-white font-medium">No payment method</p>
-                      <p className="text-xs text-gray-400">Add a payment method to enable auto-pay</p>
+                      <p className="text-xs text-slate-400">Add a payment method to enable auto-pay</p>
                     </div>
                   </div>
                 </div>
@@ -682,7 +682,7 @@ export default function BillingSettingsPage() {
               animate={{ opacity: 1, y: 0 }}
               className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
             >
-              <div className="bg-gray-900 border border-white/20 rounded-xl shadow-2xl p-4 flex items-center gap-4">
+              <div className="bg-white/5 border border-white/20 rounded-xl shadow-2xl p-4 flex items-center gap-4">
                 <p className="text-sm text-gray-300">You have unsaved changes</p>
                 <button
                   onClick={handleSave}

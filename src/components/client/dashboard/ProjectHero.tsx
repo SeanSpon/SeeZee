@@ -29,7 +29,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl border border-gray-800 bg-gradient-to-br from-gray-900 to-gray-900/50 p-8 shadow-2xl backdrop-blur-sm"
+      className="rounded-xl border border-white/10 bg-gradient-to-br from-gray-900 to-gray-900/50 p-8 shadow-2xl backdrop-blur-sm"
     >
       {/* Project Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -43,7 +43,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                 {project.name}
               </h1>
               {project.organization && (
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-slate-400">
                   {project.organization.name}
                 </p>
               )}
@@ -59,7 +59,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       {/* Progress Section */}
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-400">
+          <span className="text-sm font-medium text-slate-400">
             Project Progress
           </span>
           <span className="text-lg font-bold text-white">
@@ -70,17 +70,17 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       </div>
       
       {/* Metadata */}
-      <div className="mb-6 flex flex-wrap gap-4 text-sm text-gray-400">
+      <div className="mb-6 flex flex-wrap gap-4 text-sm text-slate-400">
         {estimatedLaunch && (
           <div className="flex items-center gap-2">
-            <span className="text-gray-500">📅</span>
+            <span className="text-slate-500">📅</span>
             <span>
               Estimated Launch: {new Date(estimatedLaunch).toLocaleDateString()}
             </span>
           </div>
         )}
         <div className="flex items-center gap-2">
-          <span className="text-gray-500">✅</span>
+          <span className="text-slate-500">✅</span>
           <span>
             {completedMilestones} of {totalMilestones} milestones completed
           </span>
@@ -91,19 +91,19 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       <div className="flex flex-wrap gap-3">
         <Link
           href={`/client/projects/${project.id}`}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/10/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-white/10"
         >
           📋 View Project
         </Link>
         <Link
           href={`/client/projects/${project.id}?tab=messages`}
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/10/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-white/10"
         >
           💬 Contact Team
         </Link>
         <Link
           href="/client/invoices"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/10/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-white/10"
         >
           💰 View Invoices
         </Link>

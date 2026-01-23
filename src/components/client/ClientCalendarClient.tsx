@@ -112,7 +112,7 @@ export function ClientCalendarClient({
             </div>
             Calendar
           </h1>
-          <p className="text-gray-400">
+          <p className="text-slate-400">
             View your meetings and billing dates
           </p>
         </div>
@@ -124,7 +124,7 @@ export function ClientCalendarClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               eventFilter === "all"
                 ? "bg-purple-500 text-white"
-                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                : "bg-white/10 text-slate-400 hover:bg-gray-700"
             }`}
           >
             All ({events.length})
@@ -134,7 +134,7 @@ export function ClientCalendarClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               eventFilter === "meeting"
                 ? "bg-green-500 text-white"
-                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                : "bg-white/10 text-slate-400 hover:bg-gray-700"
             }`}
           >
             Meetings ({events.filter(e => e.type === 'meeting').length})
@@ -144,7 +144,7 @@ export function ClientCalendarClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               eventFilter === "billing"
                 ? "bg-purple-500 text-white"
-                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                : "bg-white/10 text-slate-400 hover:bg-gray-700"
             }`}
           >
             Billing ({events.filter(e => e.type === 'billing').length})
@@ -154,14 +154,14 @@ export function ClientCalendarClient({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar View */}
-        <div className="lg:col-span-2 bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="lg:col-span-2 bg-white/5/40 border border-white/10 rounded-xl p-6">
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={prevMonth}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-400" />
+              <ChevronLeft className="w-5 h-5 text-slate-400" />
             </button>
             <h2 className="text-xl font-semibold text-white">
               {format(currentMonth, "MMMM yyyy")}
@@ -170,7 +170,7 @@ export function ClientCalendarClient({
               onClick={nextMonth}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              <ChevronRight className="w-5 h-5 text-gray-400" />
+              <ChevronRight className="w-5 h-5 text-slate-400" />
             </button>
           </div>
 
@@ -180,7 +180,7 @@ export function ClientCalendarClient({
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
               <div
                 key={day}
-                className="text-center text-sm font-medium text-gray-400 py-2"
+                className="text-center text-sm font-medium text-slate-400 py-2"
               >
                 {day}
               </div>
@@ -199,7 +199,7 @@ export function ClientCalendarClient({
                   className={`
                     aspect-square p-2 rounded-lg transition-colors text-left
                     ${isCurrentDay ? "bg-red-500/20 border-2 border-red-500" : ""}
-                    ${isSelected ? "bg-purple-500/30 border-2 border-purple-500" : "bg-gray-800/50 border border-white/5"}
+                    ${isSelected ? "bg-purple-500/30 border-2 border-purple-500" : "bg-white/10/50 border border-white/5"}
                     ${!isSameMonth(day, currentMonth) ? "opacity-30" : ""}
                     hover:bg-white/10
                   `}
@@ -215,7 +215,7 @@ export function ClientCalendarClient({
                           key={event.id}
                           className={`
                             text-xs px-1.5 py-0.5 rounded truncate
-                            ${eventTypeColors[event.type] || "bg-gray-500/20 text-gray-400"}
+                            ${eventTypeColors[event.type] || "bg-gray-500/20 text-slate-400"}
                           `}
                           title={event.title}
                         >
@@ -227,7 +227,7 @@ export function ClientCalendarClient({
                       );
                     })}
                     {dayEvents.length > 2 && (
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-slate-400">
                         +{dayEvents.length - 2} more
                       </div>
                     )}
@@ -239,7 +239,7 @@ export function ClientCalendarClient({
         </div>
 
         {/* Event List */}
-        <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
           <h3 className="text-lg font-semibold text-white mb-4">
             {selectedDay
               ? `Events on ${format(selectedDay, "MMM d, yyyy")}`
@@ -256,7 +256,7 @@ export function ClientCalendarClient({
                       key={event.id}
                       className={`
                         p-4 rounded-lg border
-                        ${eventTypeColors[event.type] || "bg-gray-800/50 border-white/5"}
+                        ${eventTypeColors[event.type] || "bg-white/10/50 border-white/5"}
                       `}
                     >
                       <div className="flex items-start gap-3">
@@ -266,11 +266,11 @@ export function ClientCalendarClient({
                             {event.title}
                           </h4>
                           {event.description && (
-                            <p className="text-sm text-gray-400 mb-2">
+                            <p className="text-sm text-slate-400 mb-2">
                               {event.description}
                             </p>
                           )}
-                          <div className="flex items-center gap-4 text-xs text-gray-400">
+                          <div className="flex items-center gap-4 text-xs text-slate-400">
                             <span>{formatTime(event.startTime)}</span>
                             {event.project && (
                               <span className="truncate">
@@ -296,7 +296,7 @@ export function ClientCalendarClient({
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-400">
+              <div className="text-center py-8 text-slate-400">
                 No events on this day
               </div>
             )
@@ -312,7 +312,7 @@ export function ClientCalendarClient({
                       key={event.id}
                       className={`
                         p-4 rounded-lg border
-                        ${eventTypeColors[event.type] || "bg-gray-800/50 border-white/5"}
+                        ${eventTypeColors[event.type] || "bg-white/10/50 border-white/5"}
                       `}
                     >
                       <div className="flex items-start gap-3">
@@ -321,12 +321,12 @@ export function ClientCalendarClient({
                           <h4 className="font-semibold text-white mb-1">
                             {event.title}
                           </h4>
-                          <div className="flex items-center gap-4 text-xs text-gray-400">
+                          <div className="flex items-center gap-4 text-xs text-slate-400">
                             <span>{formatDate(event.startTime)}</span>
                             <span>{formatTime(event.startTime)}</span>
                           </div>
                           {event.project && (
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-slate-500 mt-1">
                               {event.project.name}
                             </div>
                           )}
@@ -341,7 +341,7 @@ export function ClientCalendarClient({
       </div>
 
       {/* Quick Links */}
-      <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+      <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
         <div className="flex flex-wrap gap-3">
           <Link

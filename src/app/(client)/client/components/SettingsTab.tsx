@@ -87,7 +87,7 @@ export function SettingsTab({ project, assignee, isAdmin = false }: SettingsTabP
 
       {/* Project Information */}
       <div className="space-y-4">
-        <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+        <div className="p-4 bg-white/5 rounded-xl border border-white/10">
           <h4 className="text-sm font-semibold text-white/60 mb-4">Project Information</h4>
           <div className="space-y-3">
             <div className="flex justify-between items-center py-2 border-b border-white/5">
@@ -116,7 +116,7 @@ export function SettingsTab({ project, assignee, isAdmin = false }: SettingsTabP
         </div>
 
         {/* Package & Features */}
-        <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+        <div className="p-4 bg-white/5 rounded-xl border border-white/10">
           <div className="flex items-center gap-2 mb-4">
             <Package className="w-4 h-4 text-cyan-400" />
             <h4 className="text-sm font-semibold text-white/60">Package & Features</h4>
@@ -161,7 +161,7 @@ export function SettingsTab({ project, assignee, isAdmin = false }: SettingsTabP
 
         {/* Team Assignment */}
         {assignee && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <div className="flex items-center gap-2 mb-4">
               <User className="w-4 h-4 text-cyan-400" />
               <h4 className="text-sm font-semibold text-white/60">Assigned Team Member</h4>
@@ -188,7 +188,7 @@ export function SettingsTab({ project, assignee, isAdmin = false }: SettingsTabP
 
         {/* Repository Link */}
         {project.githubRepo && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <div className="flex items-center gap-2 mb-4">
               <Github className="w-4 h-4 text-cyan-400" />
               <h4 className="text-sm font-semibold text-white/60">Repository</h4>
@@ -207,7 +207,7 @@ export function SettingsTab({ project, assignee, isAdmin = false }: SettingsTabP
 
         {/* Vercel Deployment Link */}
         {project.vercelUrl && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <div className="flex items-center gap-2 mb-4">
               <Globe className="w-4 h-4 text-cyan-400" />
               <h4 className="text-sm font-semibold text-white/60">Vercel Deployment</h4>

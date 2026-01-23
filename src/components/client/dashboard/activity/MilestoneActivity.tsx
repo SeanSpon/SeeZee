@@ -17,8 +17,8 @@ export default function MilestoneActivity({ activity }: MilestoneActivityProps) 
         <p className="text-white">
           <span className="font-semibold">Milestone reached</span>
         </p>
-        <p className="mt-1 text-sm text-gray-400">{activity.description}</p>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-sm text-slate-400">{activity.description}</p>
+        <p className="mt-1 text-xs text-slate-500">
           {formatActivityTime(activity.createdAt)}
         </p>
       </div>

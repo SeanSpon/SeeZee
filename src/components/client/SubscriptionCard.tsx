@@ -47,7 +47,7 @@ interface SubscriptionCardProps {
 const STATUS_COLORS: Record<string, string> = {
   active: "bg-green-500/20 text-green-400 border-green-500/30",
   past_due: "bg-red-500/20 text-red-400 border-red-500/30",
-  canceled: "bg-gray-500/20 text-gray-400 border-gray-500/30",
+  canceled: "bg-gray-500/20 text-slate-400 border-gray-500/30",
   incomplete: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
 };
 
@@ -165,13 +165,13 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   };
 
   return (
-    <div className="bg-gray-900/40 border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-colors">
+    <div className="bg-white/5/40 border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-colors">
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <h3 className="text-xl font-semibold text-white mb-1">{subscription.projectName}</h3>
-            <p className="text-sm text-gray-400">{subscription.planName}</p>
+            <p className="text-sm text-slate-400">{subscription.planName}</p>
             {pkgInfo && (
               <div className="flex items-center gap-2 mt-2">
                 <Package className="w-4 h-4 text-blue-400" />
@@ -197,12 +197,12 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             </div>
           )}
           {subscription.isAddon && subscription.additionalCost && subscription.additionalCost > 0 && (
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-slate-400">
               + {formatCurrency(subscription.additionalCost)}/mo addon
             </div>
           )}
           {subscription.projectTotalPaid && subscription.projectTotalPaid > 0 && (
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-slate-500">
               Total paid: {formatCurrency(subscription.projectTotalPaid)}
             </div>
           )}
@@ -212,9 +212,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       {/* Billing Info */}
       <div className="p-6 border-b border-white/10 space-y-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-gray-400" />
+          <Calendar className="w-5 h-5 text-slate-400" />
           <div className="flex-1">
-            <div className="text-sm text-gray-400">Next Billing Date</div>
+            <div className="text-sm text-slate-400">Next Billing Date</div>
             <div className="text-white font-medium">{formatDate(subscription.currentPeriodEnd)}</div>
           </div>
           {subscription.currentPeriodEnd && (
@@ -231,9 +231,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <Server className="w-5 h-5 text-gray-400" />
+          <Server className="w-5 h-5 text-slate-400" />
           <div className="flex-1">
-            <div className="text-sm text-gray-400">Hosting & Maintenance</div>
+            <div className="text-sm text-slate-400">Hosting & Maintenance</div>
             <div className="text-white font-medium">
               {subscription.tierName || subscription.planName}
             </div>
@@ -241,9 +241,9 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <CreditCard className="w-5 h-5 text-gray-400" />
+          <CreditCard className="w-5 h-5 text-slate-400" />
           <div className="flex-1">
-            <div className="text-sm text-gray-400">Subscription ID</div>
+            <div className="text-sm text-slate-400">Subscription ID</div>
             <div className="text-white font-mono text-sm">{subscription.stripeId.substring(0, 20)}...</div>
           </div>
         </div>
@@ -258,15 +258,15 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
           </div>
           <div className="text-sm">
             <span className="font-bold text-green-400">Unlimited</span>
-            <span className="text-gray-400"> (tied to available hours)</span>
+            <span className="text-slate-400"> (tied to available hours)</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-500">
           As long as you have support hours available, you can submit change requests.
         </p>
 
         {subscription.resetDate && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-slate-500">
             Resets on {formatDate(subscription.resetDate)}
           </div>
         )}
@@ -297,13 +297,13 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             {subscription.changeRequests.map((cr) => (
               <div
                 key={cr.id}
-                className="bg-gray-800/50 border border-white/5 rounded-lg p-3 text-sm"
+                className="bg-white/10/50 border border-white/5 rounded-lg p-3 text-sm"
               >
                 <div className="flex items-start gap-2">
                   {CHANGE_REQUEST_STATUS_ICONS[cr.status]}
                   <div className="flex-1">
                     <div className="text-white">{cr.description}</div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-slate-500 mt-1">
                       {formatDate(cr.createdAt)}
                       {cr.status === 'completed' && cr.completedAt && (
                         <> • Completed {formatDate(cr.completedAt)}</>

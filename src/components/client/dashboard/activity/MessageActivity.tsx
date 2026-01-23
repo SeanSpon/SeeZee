@@ -20,12 +20,12 @@ export default function MessageActivity({ activity }: MessageActivityProps) {
         <p className="text-white">
           <span className="font-semibold">{senderName}</span> sent a message
         </p>
-        <p className="mt-1 text-sm text-gray-400 line-clamp-2">{message}</p>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-sm text-slate-400 line-clamp-2">{message}</p>
+        <p className="mt-1 text-xs text-slate-500">
           {formatActivityTime(activity.createdAt)}
         </p>
       </div>
-      <button className="flex-shrink-0 rounded-lg border border-gray-700 bg-gray-800/50 px-3 py-1 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800">
+      <button className="flex-shrink-0 rounded-lg border border-white/10 bg-white/10/50 px-3 py-1 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-white/10">
         Reply
       </button>
     </div>

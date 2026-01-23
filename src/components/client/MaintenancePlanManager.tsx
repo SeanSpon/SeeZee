@@ -154,16 +154,16 @@ export function MaintenancePlanManager({
 
   if (loading) {
     return (
-      <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6">
-        <div className="text-center text-gray-400">Loading maintenance plans...</div>
+      <div className="bg-white/5/50 border border-white/10 rounded-xl p-6">
+        <div className="text-center text-slate-400">Loading maintenance plans...</div>
       </div>
     );
   }
 
   if (plans.length === 0) {
     return (
-      <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6">
-        <div className="text-center text-gray-400">No maintenance plans found</div>
+      <div className="bg-white/5/50 border border-white/10 rounded-xl p-6">
+        <div className="text-center text-slate-400">No maintenance plans found</div>
       </div>
     );
   }
@@ -192,10 +192,10 @@ export function MaintenancePlanManager({
         </div>
       )}
 
-      <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6">
+      <div className="bg-white/5/50 border border-white/10 rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-white">Maintenance Plans</h3>
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-slate-400">
             {activePlans.length} active plan{activePlans.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -214,7 +214,7 @@ export function MaintenancePlanManager({
                     ? 'border-cyan-500/50 bg-cyan-500/10'
                     : isActive
                     ? 'border-white/10 bg-white/5'
-                    : 'border-gray-700/50 bg-gray-800/30'
+                    : 'border-white/10/50 bg-white/10/30'
                 }`}
               >
                 <div className="flex items-start justify-between mb-3">
@@ -225,7 +225,7 @@ export function MaintenancePlanManager({
                         className={`px-2 py-0.5 rounded text-xs font-medium ${
                           isActive
                             ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                            : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                            : 'bg-gray-500/20 text-slate-400 border border-gray-500/30'
                         }`}
                       >
                         {plan.status}
@@ -234,7 +234,7 @@ export function MaintenancePlanManager({
                         {plan.tier}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-slate-400">
                       ${(Number(plan.monthlyPrice) / 100).toFixed(0)}/mo
                     </p>
                   </div>
@@ -272,7 +272,7 @@ export function MaintenancePlanManager({
                         </>
                       )}
                       {!isAdmin && (
-                        <div className="p-2 rounded bg-gray-700/50 text-gray-500" title="Only administrators can modify plans">
+                        <div className="p-2 rounded bg-gray-700/50 text-slate-500" title="Only administrators can modify plans">
                           <Lock className="w-4 h-4" />
                         </div>
                       )}
@@ -296,7 +296,7 @@ export function MaintenancePlanManager({
                             supportHoursIncluded: parseInt(e.target.value) || 0,
                           })
                         }
-                        className="w-full px-3 py-2 bg-gray-800 border border-white/10 rounded text-white"
+                        className="w-full px-3 py-2 bg-white/10 border border-white/10 rounded text-white"
                         placeholder="-1 for unlimited"
                       />
                     </div>
@@ -314,7 +314,7 @@ export function MaintenancePlanManager({
                             changeRequestsIncluded: parseInt(e.target.value) || 0,
                           })
                         }
-                        className="w-full px-3 py-2 bg-gray-800 border border-white/10 rounded text-white"
+                        className="w-full px-3 py-2 bg-white/10 border border-white/10 rounded text-white"
                         placeholder="-1 for unlimited"
                       />
                     </div>
@@ -338,7 +338,7 @@ export function MaintenancePlanManager({
                 ) : (
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="flex items-center gap-1 text-gray-400 mb-1">
+                      <div className="flex items-center gap-1 text-slate-400 mb-1">
                         <Clock className="w-4 h-4" />
                         Support Hours
                       </div>

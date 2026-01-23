@@ -149,7 +149,7 @@ function PackCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`relative bg-gray-900/50 backdrop-blur-sm border rounded-2xl overflow-hidden flex flex-col ${
+      className={`relative bg-white/5/50 backdrop-blur-sm border rounded-xl overflow-hidden flex flex-col ${
         pack.popular 
           ? 'border-cyan-500/50 ring-2 ring-cyan-500/20' 
           : 'border-white/10 hover:border-white/20'
@@ -189,14 +189,14 @@ function PackCard({
         </div>
         
         <h3 className="text-xl font-bold text-white mb-1">{pack.name}</h3>
-        <p className="text-sm text-gray-400 mb-4">{pack.description}</p>
+        <p className="text-sm text-slate-400 mb-4">{pack.description}</p>
         
         <div className="flex items-baseline gap-2">
           <span className="text-4xl font-bold text-white">{formatPrice(pack.price)}</span>
-          <span className="text-gray-400">/ {pack.hours} hours</span>
+          <span className="text-slate-400">/ {pack.hours} hours</span>
         </div>
         
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           {pack.expirationDays 
             ? `Valid for ${pack.expirationDays} days` 
             : 'Never expires'
@@ -240,15 +240,15 @@ function ComparisonTable() {
       case 'LARGE':
         return { stars: '★★☆', color: 'text-yellow-300' };
       default:
-        return { stars: '★☆☆', color: 'text-gray-500' };
+        return { stars: '★☆☆', color: 'text-slate-500' };
     }
   };
 
   return (
-    <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+    <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
       <div className="p-6 border-b border-white/10">
         <h3 className="text-xl font-bold text-white mb-1">Pack Comparison</h3>
-        <p className="text-sm text-gray-400">Find the right pack for your needs</p>
+        <p className="text-sm text-slate-400">Find the right pack for your needs</p>
       </div>
       
       <div className="overflow-x-auto">
@@ -607,7 +607,7 @@ export default function HourPacksPage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Hour Packs</h1>
-              <p className="text-gray-400">Purchase additional support hours for your projects</p>
+              <p className="text-slate-400">Purchase additional support hours for your projects</p>
             </div>
           </div>
           
@@ -653,7 +653,7 @@ export default function HourPacksPage() {
                     <CheckCircle className="w-5 h-5 text-green-400" />
                     <div>
                       <div className="text-white font-medium">{currentPlan.tierName || 'COO System'}</div>
-                      <div className="text-sm text-gray-400">Unlimited hours • Unlimited change requests</div>
+                      <div className="text-sm text-slate-400">Unlimited hours • Unlimited change requests</div>
                     </div>
                   </div>
                   <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
@@ -681,39 +681,39 @@ export default function HourPacksPage() {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">Monthly Hours</div>
+                      <div className="text-xs text-slate-500 mb-1">Monthly Hours</div>
                       <div className="text-lg font-bold text-white">
                         {currentPlan.monthlyHours}/month
                       </div>
-                      <div className="text-xs text-gray-500">Resets monthly</div>
+                      <div className="text-xs text-slate-500">Resets monthly</div>
                     </div>
                     {currentPlan.rolloverHours > 0 && (
                       <div>
-                        <div className="text-xs text-gray-500 mb-1">Rollover</div>
+                        <div className="text-xs text-slate-500 mb-1">Rollover</div>
                         <div className="text-lg font-bold text-yellow-400">{currentPlan.rolloverHours}</div>
-                        <div className="text-xs text-gray-500">From last month</div>
+                        <div className="text-xs text-slate-500">From last month</div>
                       </div>
                     )}
                     {currentPlan.hourPacks > 0 && (
                       <div>
-                        <div className="text-xs text-gray-500 mb-1">Hour Packs</div>
+                        <div className="text-xs text-slate-500 mb-1">Hour Packs</div>
                         <div className="text-lg font-bold text-cyan-400">{currentPlan.hourPacks}</div>
-                        <div className="text-xs text-gray-500">Purchased</div>
+                        <div className="text-xs text-slate-500">Purchased</div>
                         {currentPlan.totalSpentOnPacks && currentPlan.totalSpentOnPacks > 0 && (
-                          <div className="text-xs text-gray-400 mt-1">
+                          <div className="text-xs text-slate-400 mt-1">
                             ${(currentPlan.totalSpentOnPacks / 100).toFixed(2)} spent
                           </div>
                         )}
                       </div>
                     )}
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">Total Available</div>
+                      <div className="text-xs text-slate-500 mb-1">Total Available</div>
                       <div className="text-lg font-bold text-green-400">{currentPlan.totalHours}</div>
-                      <div className="text-xs text-gray-500">Right now</div>
+                      <div className="text-xs text-slate-500">Right now</div>
                     </div>
                   </div>
                   <div className="pt-2 border-t border-white/10">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-slate-400">
                       💡 <strong>Need more hours?</strong> Purchase hour packs below to add extra hours on top of your monthly allowance.
                     </p>
                   </div>
@@ -727,16 +727,16 @@ export default function HourPacksPage() {
         <div id="select-plan" className="mb-12 scroll-mt-20">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Quick Start - Maintenance Plans</h2>
-            <p className="text-gray-400">Choose quarterly or annual billing - or build a custom package below</p>
+            <p className="text-slate-400">Choose quarterly or annual billing - or build a custom package below</p>
           </div>
           
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Quarterly Plan */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`bg-gray-800/50 border rounded-xl p-6 relative ${
+                className={`bg-white/10/50 border rounded-xl p-6 relative ${
                   currentPlan?.tier?.toUpperCase() === 'QUARTERLY'
                     ? 'border-cyan-500 ring-2 ring-cyan-500/20'
                     : 'border-cyan-500/30 hover:border-cyan-500/50'
@@ -763,16 +763,16 @@ export default function HourPacksPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white">Quarterly Plan</h3>
-                    <p className="text-sm text-gray-400">3 month commitment</p>
+                    <p className="text-sm text-slate-400">3 month commitment</p>
                   </div>
                 </div>
                 
                 <div className="mb-4">
                   <div className="text-4xl font-bold text-white mb-2">
                     $2,000
-                    <span className="text-lg text-gray-400">/quarter</span>
+                    <span className="text-lg text-slate-400">/quarter</span>
                   </div>
-                  <p className="text-sm text-gray-500">Billed quarterly ($667/month equivalent)</p>
+                  <p className="text-sm text-slate-500">Billed quarterly ($667/month equivalent)</p>
                 </div>
                 
                 <div className="space-y-2 mb-6">
@@ -858,7 +858,7 @@ export default function HourPacksPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className={`bg-gray-800/50 border rounded-xl p-6 relative ${
+                className={`bg-white/10/50 border rounded-xl p-6 relative ${
                   currentPlan?.tier?.toUpperCase() === 'ANNUAL'
                     ? 'border-green-500 ring-2 ring-green-500/20'
                     : 'border-green-500/30 hover:border-green-500/50'
@@ -884,16 +884,16 @@ export default function HourPacksPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white">Annual Plan</h3>
-                    <p className="text-sm text-gray-400">12 month commitment</p>
+                    <p className="text-sm text-slate-400">12 month commitment</p>
                   </div>
                 </div>
                 
                 <div className="mb-4">
                   <div className="text-4xl font-bold text-white mb-2">
                     $6,800
-                    <span className="text-lg text-gray-400">/year</span>
+                    <span className="text-lg text-slate-400">/year</span>
                   </div>
-                  <p className="text-sm text-gray-500">Billed annually ($567/month equivalent)</p>
+                  <p className="text-sm text-slate-500">Billed annually ($567/month equivalent)</p>
                 </div>
                 
                 <div className="space-y-2 mb-6">
@@ -1019,27 +1019,27 @@ export default function HourPacksPage() {
           <div className="mb-12">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">Your Hour Packs</h2>
-              <p className="text-gray-400">Detailed breakdown of all your purchased hour packs</p>
+              <p className="text-slate-400">Detailed breakdown of all your purchased hour packs</p>
             </div>
             
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+            <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
               <div className="p-6">
                 {/* Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6 border-b border-white/10">
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">Total Packs</div>
+                    <div className="text-xs text-slate-400 mb-1">Total Packs</div>
                     <div className="text-2xl font-bold text-white">{currentPlan.hourPacksList.length}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">Total Hours</div>
+                    <div className="text-xs text-slate-400 mb-1">Total Hours</div>
                     <div className="text-2xl font-bold text-cyan-400">{currentPlan.hourPacksList.reduce((sum, p) => sum + p.hours, 0)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">Hours Remaining</div>
+                    <div className="text-xs text-slate-400 mb-1">Hours Remaining</div>
                     <div className="text-2xl font-bold text-green-400">{currentPlan.hourPacksList.reduce((sum, p) => sum + p.hoursRemaining, 0)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">Total Spent</div>
+                    <div className="text-xs text-slate-400 mb-1">Total Spent</div>
                     <div className="text-2xl font-bold text-yellow-400">
                       ${currentPlan.totalSpentOnPacks ? (currentPlan.totalSpentOnPacks / 100).toFixed(2) : currentPlan.hourPacksList.reduce((sum, p) => sum + (p.cost || 0), 0) / 100}
                     </div>
@@ -1064,11 +1064,11 @@ export default function HourPacksPage() {
                     const hourlyRate = cost > 0 && pack.hours > 0 ? cost / pack.hours / 100 : 0;
                     
                     return (
-                      <div key={pack.id} className="bg-gray-800/50 border border-white/10 rounded-xl p-4 hover:border-cyan-500/30 transition-colors">
+                      <div key={pack.id} className="bg-white/10/50 border border-white/10 rounded-xl p-4 hover:border-cyan-500/30 transition-colors">
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <h3 className="text-lg font-semibold text-white mb-1">{packName}</h3>
-                            <p className="text-sm text-gray-400">
+                            <p className="text-sm text-slate-400">
                               Purchased {purchasedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                             </p>
                           </div>
@@ -1076,7 +1076,7 @@ export default function HourPacksPage() {
                             <div className="text-lg font-bold text-yellow-400">
                               ${(cost / 100).toFixed(2)}
                             </div>
-                            <div className="text-xs text-gray-400">
+                            <div className="text-xs text-slate-400">
                               ${hourlyRate.toFixed(0)}/hr
                             </div>
                           </div>
@@ -1084,23 +1084,23 @@ export default function HourPacksPage() {
                         
                         <div className="grid grid-cols-3 gap-4 mb-3">
                           <div>
-                            <div className="text-xs text-gray-400 mb-1">Total Hours</div>
+                            <div className="text-xs text-slate-400 mb-1">Total Hours</div>
                             <div className="text-base font-semibold text-white">{pack.hours}</div>
                           </div>
                           <div>
-                            <div className="text-xs text-gray-400 mb-1">Remaining</div>
+                            <div className="text-xs text-slate-400 mb-1">Remaining</div>
                             <div className="text-base font-semibold text-green-400">{pack.hoursRemaining}</div>
                           </div>
                           <div>
-                            <div className="text-xs text-gray-400 mb-1">Used</div>
-                            <div className="text-base font-semibold text-gray-400">{pack.hours - pack.hoursRemaining}</div>
+                            <div className="text-xs text-slate-400 mb-1">Used</div>
+                            <div className="text-base font-semibold text-slate-400">{pack.hours - pack.hoursRemaining}</div>
                           </div>
                         </div>
 
                         {expiresDate && !pack.neverExpires ? (
                           <div className="pt-3 border-t border-white/10">
                             <div className="flex items-center justify-between">
-                              <span className="text-sm text-gray-400">Expires</span>
+                              <span className="text-sm text-slate-400">Expires</span>
                               <span className={`text-sm font-medium ${daysUntilExpiry && daysUntilExpiry <= 30 ? 'text-red-400' : 'text-gray-300'}`}>
                                 {expiresDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                                 {daysUntilExpiry !== null && daysUntilExpiry > 0 && (
@@ -1114,7 +1114,7 @@ export default function HourPacksPage() {
                         ) : (
                           <div className="pt-3 border-t border-white/10">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-gray-400">Status:</span>
+                              <span className="text-sm text-slate-400">Status:</span>
                               <span className="text-sm font-medium text-green-400">Never expires</span>
                             </div>
                           </div>
@@ -1135,36 +1135,36 @@ export default function HourPacksPage() {
               <Sparkles className="w-6 h-6 text-cyan-400" />
               Build Your Custom Package
             </h2>
-            <p className="text-gray-400">Choose the services and hours that fit your needs perfectly</p>
+            <p className="text-slate-400">Choose the services and hours that fit your needs perfectly</p>
           </div>
 
-          <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-cyan-500/30 rounded-2xl p-8">
+          <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-8">
             <div className="text-center mb-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 rounded-full border border-cyan-500/30 mb-4">
                 <Gift className="w-5 h-5 text-cyan-400" />
                 <span className="text-sm font-medium text-cyan-300">Flexible & Customizable</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Create Your Perfect Plan</h3>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-slate-400 max-w-2xl mx-auto">
                 Select from our pre-built hour packs below or contact us to build a completely custom package with specific services, features, and pricing tailored to your organization.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6 text-center">
+              <div className="bg-white/5/50 border border-white/10 rounded-xl p-6 text-center">
                 <Package className="w-12 h-12 text-cyan-400 mx-auto mb-3" />
                 <h4 className="text-white font-semibold mb-2">Choose Hour Packs</h4>
-                <p className="text-sm text-gray-400">Select from our standard hour packs below to add to your plan</p>
+                <p className="text-sm text-slate-400">Select from our standard hour packs below to add to your plan</p>
               </div>
-              <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6 text-center">
+              <div className="bg-white/5/50 border border-white/10 rounded-xl p-6 text-center">
                 <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-3" />
                 <h4 className="text-white font-semibold mb-2">Custom Services</h4>
-                <p className="text-sm text-gray-400">Need specific features? We'll build a package just for you</p>
+                <p className="text-sm text-slate-400">Need specific features? We'll build a package just for you</p>
               </div>
-              <div className="bg-gray-900/50 border border-white/10 rounded-xl p-6 text-center">
+              <div className="bg-white/5/50 border border-white/10 rounded-xl p-6 text-center">
                 <CreditCard className="w-12 h-12 text-green-400 mx-auto mb-3" />
                 <h4 className="text-white font-semibold mb-2">Flexible Billing</h4>
-                <p className="text-sm text-gray-400">Choose monthly, quarterly, or annual billing that works for you</p>
+                <p className="text-sm text-slate-400">Choose monthly, quarterly, or annual billing that works for you</p>
               </div>
             </div>
 
@@ -1194,10 +1194,10 @@ export default function HourPacksPage() {
         {/* Hour Packs Grid */}
         {currentPlan?.monthlyHours === -1 ? (
           // For unlimited tier, show a message instead
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12 text-center">
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-8 mb-12 text-center">
             <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">You Have Unlimited Hours!</h3>
-            <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+            <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
               Your <strong className="text-white">{currentPlan.tierName || 'COO'}</strong> plan includes unlimited hours every month. 
               You don't need to purchase hour packs - you already have everything you need!
             </p>
@@ -1214,7 +1214,7 @@ export default function HourPacksPage() {
           <>
             <div id="hour-packs" className="mb-6 scroll-mt-20">
               <h2 className="text-2xl font-bold text-white mb-2">Pre-Built Hour Packs</h2>
-              <p className="text-gray-400">Quick and easy - buy extra hours on top of your monthly plan</p>
+              <p className="text-slate-400">Quick and easy - buy extra hours on top of your monthly plan</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {HOUR_PACKS.map((pack, index) => (
@@ -1236,13 +1236,13 @@ export default function HourPacksPage() {
         <ComparisonTable />
         
         {/* FAQ Section */}
-        <div className="mt-12 bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+        <div className="mt-12 bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
           <h3 className="text-lg font-bold text-white mb-6">Frequently Asked Questions</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h4 className="text-white font-medium mb-2">What are hour packs?</h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 Hour packs are extra hours you can buy on top of your monthly plan. They're useful if you need more hours 
                 than your plan includes.
               </p>
@@ -1250,7 +1250,7 @@ export default function HourPacksPage() {
             
             <div>
               <h4 className="text-white font-medium mb-2">How do they work with my monthly hours?</h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 Your monthly hours reset each billing cycle and never expire. Hour packs add extra hours on top. 
                 We use your monthly hours first, then hour packs. Change requests are unlimited - you can submit as many 
                 as you want as long as you have hours available.
@@ -1259,7 +1259,7 @@ export default function HourPacksPage() {
             
             <div>
               <h4 className="text-white font-medium mb-2">What happens when a pack expires?</h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 We'll email you reminders before expiration. Any unused hours from that pack expire at the end of the validity period. 
                 Your monthly hours are never affected - they always reset each month.
               </p>
@@ -1267,7 +1267,7 @@ export default function HourPacksPage() {
             
             <div>
               <h4 className="text-white font-medium mb-2">I have unlimited hours - do I need packs?</h4>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-400">
                 No! If you're on the COO tier with unlimited hours, you don't need hour packs. Your plan already includes 
                 unlimited hours every month.
               </p>
@@ -1277,7 +1277,7 @@ export default function HourPacksPage() {
         
         {/* CTA */}
         <div className="mt-12 text-center">
-          <p className="text-gray-400 mb-4">
+          <p className="text-slate-400 mb-4">
             Not sure which pack is right for you?
           </p>
           <Link
@@ -1295,20 +1295,20 @@ export default function HourPacksPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-gray-900 border border-white/10 rounded-2xl p-6 max-w-md w-full"
+              className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-md w-full"
             >
               <h3 className="text-xl font-bold text-white mb-2">Confirm Purchase</h3>
-              <p className="text-gray-400 mb-6">
+              <p className="text-slate-400 mb-6">
                 You're about to purchase the <strong className="text-white">{selectedPack.name}</strong>
               </p>
               
               <div className="bg-white/5 rounded-xl p-4 mb-6">
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-400">Hours</span>
+                  <span className="text-slate-400">Hours</span>
                   <span className="text-white">{selectedPack.hours}</span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-400">Validity</span>
+                  <span className="text-slate-400">Validity</span>
                   <span className="text-white">
                     {selectedPack.expirationDays ? `${selectedPack.expirationDays} days` : 'Never expires'}
                   </span>
@@ -1346,7 +1346,7 @@ export default function HourPacksPage() {
                 </button>
               </div>
               
-              <p className="text-xs text-gray-500 text-center mt-4 flex items-center justify-center gap-1">
+              <p className="text-xs text-slate-500 text-center mt-4 flex items-center justify-center gap-1">
                 <Shield className="w-3 h-3" />
                 Secure payment via Stripe
               </p>
