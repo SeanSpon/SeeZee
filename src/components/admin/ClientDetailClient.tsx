@@ -65,10 +65,10 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
   const invoices = org?.invoices || (lead?.organization?.invoices) || project?.invoices || [];
   const leads = org?.leads || (lead ? [lead] : []) || [];
 
-  // Calculate totals (invoice totals are in cents, convert to dollars)
+  // Calculate totals (invoice totals need /1000 to get dollars)
   const totalRevenue = invoices
     .filter((inv: any) => inv.status === "PAID")
-    .reduce((sum: number, inv: any) => sum + Number(inv.total || 0), 0) / 100;
+    .reduce((sum: number, inv: any) => sum + Number(inv.total || 0), 0) / 1000;
   
   const totalInvoices = invoices.length;
   const totalProjects = projects.length;

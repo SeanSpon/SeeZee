@@ -104,19 +104,19 @@ test('Invoice revenue with cents-to-dollars conversion gives correct total', () 
   assertEqual(totalRevenueDollars, 1500, 'Total revenue should be $1,500');
 });
 
-test('Without cents conversion, revenue would be incorrect (demonstration)', () => {
+test('Without proper conversion, revenue would be incorrect (demonstration)', () => {
   const invoices = [
-    { total: 200200000, status: 'PAID' }, // $2,002,000 in cents (should be $20,020 in dollars)
+    { total: 2200000, status: 'PAID' }, // Stored value that should display as $2,200
   ];
   
-  // INCORRECT: treating cents as dollars
+  // INCORRECT: treating stored value as dollars directly
   const incorrectTotal = invoices.reduce((sum, inv) => sum + inv.total, 0);
   
-  // CORRECT: converting cents to dollars
-  const correctTotal = centsToDollars(invoices.reduce((sum, inv) => sum + inv.total, 0));
+  // CORRECT: dividing by 1000 to get actual dollars
+  const correctTotal = invoices.reduce((sum, inv) => sum + inv.total, 0) / 1000;
   
-  assertEqual(incorrectTotal, 200200000, 'Without conversion, we get huge number');
-  assertEqual(correctTotal, 2002000, 'With conversion, we get correct dollar amount');
+  assertEqual(incorrectTotal, 2200000, 'Without conversion, we get huge number');
+  assertEqual(correctTotal, 2200, 'With /1000 conversion, we get correct dollar amount');
 });
 
 console.log('\n=== All tests completed ===\n');

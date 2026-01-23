@@ -45,9 +45,8 @@ export default async function AdminDashboardPage() {
   ).length;
 
   const paidInvoices = invoices.filter((inv) => inv.status === "PAID");
-  // Invoice totals may be serialized as strings from Decimal, ensure Number conversion
-  // Note: If invoices are stored in cents, divide by 100; if in dollars, remove / 100
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 100;
+  // Invoice totals stored with extra precision, divide by 1000 to get dollars
+  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 1000;
 
   // Get unique clients from invoices and projects
   const clientIds = new Set<string>();
@@ -90,10 +89,10 @@ export default async function AdminDashboardPage() {
   const thisMonthExpenseCalc = calculateCurrentMonthExpenses(expenseItems);
   const totalExpenses = thisMonthExpenseCalc.total; // Already in cents
   
-  // Calculate this month's revenue (ensure Number conversion, then cents to dollars)
+  // Calculate this month's revenue (divide by 1000 to get dollars)
   const thisMonthRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
-    .reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 100;
+    .reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 1000;
   
   const netProfit = thisMonthRevenue - (totalExpenses / 100); // Convert cents to dollars
 
