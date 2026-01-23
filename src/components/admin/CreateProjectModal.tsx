@@ -169,7 +169,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
             type="submit"
             form="project-form"
             disabled={loading}
-            className="px-6 py-2 rounded-lg border-2 border-trinity-red/50 bg-trinity-red text-white hover:bg-trinity-maroon transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-6 py-2 rounded-lg border-2 border-#ef4444/50 bg-#ef4444 text-white hover:bg-#dc2626 transition-colors disabled:opacity-50 inline-flex items-center gap-2"
           >
             {loading && <FiLoader className="w-4 h-4 animate-spin" />}
             {loading ? "Creating..." : "Create Project"}
@@ -200,7 +200,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., E-commerce Platform Redesign"
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-#ef4444 transition-colors"
               />
             </div>
 
@@ -213,7 +213,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="organizationId"
                 value={formData.organizationId}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               >
                 <option value="">Select a client...</option>
                 {clients.map((client) => (
@@ -234,7 +234,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="assigneeId"
                 value={formData.assigneeId}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               >
                 <option value="">Unassigned</option>
                 {admins.map((admin) => (
@@ -254,7 +254,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               >
                 {projectTypes.map((type) => (
                   <option key={type} value={type}>
@@ -273,7 +273,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               >
                 {projectStatuses.map((status) => (
                   <option key={status} value={status}>
@@ -304,7 +304,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                   placeholder="5000.00"
                   step="0.01"
                   min="0"
-                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-trinity-red transition-colors"
+                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-#ef4444 transition-colors"
                 />
               </div>
             </div>
@@ -319,7 +319,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               />
             </div>
 
@@ -333,7 +333,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="estimatedCompletion"
                 value={formData.estimatedCompletion}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               />
             </div>
 
@@ -346,7 +346,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 name="priority"
                 value={formData.priority}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-#ef4444 transition-colors"
               >
                 {priorityLevels.map((priority) => (
                   <option key={priority} value={priority}>
@@ -369,7 +369,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
             onChange={handleChange}
             placeholder="Project details, scope, and notes..."
             rows={4}
-            className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-trinity-red transition-colors resize-none"
+            className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-#ef4444 transition-colors resize-none"
           />
         </div>
       </form>

@@ -145,12 +145,12 @@ export default function QuestionnaireReceipt({ data }: QuestionnaireReceiptProps
       transition={{ delay: 0.8 }}
       className="w-full max-w-4xl mx-auto"
     >
-      <div id="receipt-content" className="glass-container rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-large">
+      <div id="receipt-content" className="glass-container rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 p-8 shadow-large">
         {/* Header */}
         <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-700">
           <div>
             <h2 className="text-3xl font-heading font-bold gradient-text mb-2 flex items-center gap-3">
-              <FileText className="w-8 h-8 text-trinity-red" />
+              <FileText className="w-8 h-8 text-#ef4444" />
               Project Request Receipt
             </h2>
             <p className="text-white/60 text-sm">Submitted on {submittedDate}</p>
@@ -176,7 +176,7 @@ export default function QuestionnaireReceipt({ data }: QuestionnaireReceiptProps
         {/* Client Information */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <User className="w-6 h-6 text-trinity-red" />
+            <User className="w-6 h-6 text-#ef4444" />
             <h3 className="text-xl font-heading font-bold text-white">Client Information</h3>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700 space-y-3">
@@ -218,7 +218,7 @@ export default function QuestionnaireReceipt({ data }: QuestionnaireReceiptProps
         {/* Project Details */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <Target className="w-6 h-6 text-trinity-red" />
+            <Target className="w-6 h-6 text-#ef4444" />
             <h3 className="text-xl font-heading font-bold text-white">Project Details</h3>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700 space-y-4">
@@ -229,7 +229,7 @@ export default function QuestionnaireReceipt({ data }: QuestionnaireReceiptProps
                   {data.projectType.map((type, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1.5 bg-trinity-red/20 text-trinity-red border border-trinity-red/30 rounded-lg text-sm font-medium"
+                      className="px-3 py-1.5 bg-#ef4444/20 text-#ef4444 border border-#ef4444/30 rounded-lg text-sm font-medium"
                     >
                       {type}
                     </span>
@@ -264,7 +264,7 @@ export default function QuestionnaireReceipt({ data }: QuestionnaireReceiptProps
         {/* Additional Information */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <MessageSquare className="w-6 h-6 text-trinity-red" />
+            <MessageSquare className="w-6 h-6 text-#ef4444" />
             <h3 className="text-xl font-heading font-bold text-white">Additional Information</h3>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700 space-y-3">

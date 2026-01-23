@@ -129,7 +129,7 @@ export function LeadsList({ leads, selectedLead, onSelectLead }: LeadsListProps)
                 onClick={() => onSelectLead(lead)}
                 className={`cursor-pointer transition-colors ${
                   selectedLead?.id === lead.id
-                    ? "bg-trinity-red/10"
+                    ? "bg-#ef4444/10"
                     : "hover:bg-[#1a2235]"
                 }`}
               >

@@ -62,12 +62,12 @@ export default function InvoicesTableClient({ invoices }: InvoicesTableClientPro
               e.stopPropagation();
               router.push(`/client/projects/${row.project!.id}?tab=invoices`);
             }}
-            className="text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+            className="text-[#ef4444] hover:text-[#dc2626] transition-colors font-medium"
           >
             {row.project.name}
           </button>
         ) : (
-          <span className="text-gray-500">-</span>
+          <span className="text-slate-500">-</span>
         )
       ),
     },

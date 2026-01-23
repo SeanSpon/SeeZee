@@ -259,7 +259,7 @@ export default function ClientDashboardClient() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trinity-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-#ef4444"></div>
       </div>
     );
   }
@@ -469,9 +469,9 @@ export default function ClientDashboardClient() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
                   whileHover={{ y: -6, scale: 1.02 }}
-                  className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-trinity-red/50 hover:shadow-xl hover:shadow-trinity-red/10 transition-all duration-300 overflow-hidden group"
+                  className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-#ef4444/50 hover:shadow-xl hover:shadow-#ef4444/10 transition-all duration-300 overflow-hidden group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
@@ -486,7 +486,7 @@ export default function ClientDashboardClient() {
                     </p>
                     <button
                       onClick={(e) => handleProjectClick(project.id, e)}
-                      className="inline-flex items-center gap-2 text-trinity-red hover:text-white hover:gap-3 transition-all font-semibold group/link"
+                      className="inline-flex items-center gap-2 text-#ef4444 hover:text-white hover:gap-3 transition-all font-semibold group/link"
                     >
                       View Details
                       <FiArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
@@ -656,7 +656,7 @@ export default function ClientDashboardClient() {
         animate={{ opacity: 1, y: 0 }}
         className="relative bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 rounded-xl border border-gray-800 p-8 overflow-hidden shadow-lg"
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-trinity-red/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-#ef4444/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
         <div className="relative z-10">
           <h1 className="text-4xl font-heading font-bold text-white mb-3 tracking-tight">
             Welcome back, {session?.user?.name || 'User'}!
@@ -674,13 +674,13 @@ export default function ClientDashboardClient() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           whileHover={{ y: -4, scale: 1.02 }}
-          className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-trinity-red/50 hover:shadow-lg hover:shadow-trinity-red/10 transition-all duration-300 overflow-hidden group"
+          className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-#ef4444/50 hover:shadow-lg hover:shadow-#ef4444/10 transition-all duration-300 overflow-hidden group"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-trinity-red/10 rounded-lg group-hover:bg-trinity-red/20 transition-colors duration-300">
-                <FiFolder className="w-8 h-8 text-trinity-red drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+              <div className="p-3 bg-#ef4444/10 rounded-lg group-hover:bg-#ef4444/20 transition-colors duration-300">
+                <FiFolder className="w-8 h-8 text-#ef4444 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
               </div>
               <StatusBadge status="active" size="sm" />
             </div>
@@ -755,7 +755,7 @@ export default function ClientDashboardClient() {
           <h2 className="text-2xl font-heading font-bold text-white">Active Projects</h2>
           <Link
             href="/client/projects"
-            className="flex items-center gap-2 text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+            className="flex items-center gap-2 text-#ef4444 hover:text-#dc2626 transition-colors font-medium"
           >
             View All
             <FiArrowRight className="w-4 h-4" />
@@ -770,9 +770,9 @@ export default function ClientDashboardClient() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -6, scale: 1.02 }}
-                className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-trinity-red/50 hover:shadow-xl hover:shadow-trinity-red/10 transition-all duration-300 overflow-hidden group"
+                className="relative bg-gradient-to-br from-gray-900 to-gray-900/80 rounded-xl border border-gray-800 p-6 hover:border-#ef4444/50 hover:shadow-xl hover:shadow-#ef4444/10 transition-all duration-300 overflow-hidden group"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -790,7 +790,7 @@ export default function ClientDashboardClient() {
                   )}
                   <button
                     onClick={(e) => handleProjectClick(project.id, e)}
-                    className="inline-flex items-center gap-2 text-trinity-red hover:text-white hover:gap-3 transition-all font-semibold group/link"
+                    className="inline-flex items-center gap-2 text-#ef4444 hover:text-white hover:gap-3 transition-all font-semibold group/link"
                   >
                     View Details
                     <FiArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
@@ -805,7 +805,7 @@ export default function ClientDashboardClient() {
             animate={{ opacity: 1, scale: 1 }}
             className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl border border-gray-800 p-12 text-center overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-700/5 via-transparent to-trinity-red/5" />
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-700/5 via-transparent to-#ef4444/5" />
             <div className="relative z-10">
               <div className="w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-full flex items-center justify-center">
                 <FiFolder className="w-8 h-8 text-gray-500" />
@@ -827,7 +827,7 @@ export default function ClientDashboardClient() {
               ) : (
                 <Link
                   href="/start"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-trinity-red to-red-700 hover:from-trinity-maroon hover:to-red-800 text-white rounded-lg transition-all shadow-lg hover:shadow-trinity-red/25 font-semibold"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-#ef4444 to-red-700 hover:from-#dc2626 hover:to-red-800 text-white rounded-lg transition-all shadow-lg hover:shadow-#ef4444/25 font-semibold"
                 >
                   <FiPlus className="w-5 h-5" />
                   Start a New Project
@@ -860,7 +860,7 @@ export default function ClientDashboardClient() {
             </h3>
             <Link
               href="/client/requests"
-              className="text-sm text-trinity-red hover:text-white transition-colors font-medium hover:underline"
+              className="text-sm text-#ef4444 hover:text-white transition-colors font-medium hover:underline"
             >
               View All
             </Link>
@@ -916,7 +916,7 @@ export default function ClientDashboardClient() {
             </h3>
             <Link
               href="/client/messages"
-              className="text-sm text-trinity-red hover:text-white transition-colors font-medium hover:underline"
+              className="text-sm text-#ef4444 hover:text-white transition-colors font-medium hover:underline"
             >
               View All
             </Link>

@@ -208,7 +208,7 @@ export function KanbanBoardClient({
             <ArrowLeft className="w-5 h-5 text-gray-400" />
           </Link>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
               {project.organization.name}
             </span>
             <h1 className="text-3xl font-heading font-bold text-white">
@@ -218,7 +218,7 @@ export function KanbanBoardClient({
         </div>
         <button
           onClick={() => handleCreateClick("todo")}
-          className="inline-flex items-center gap-2 rounded-lg bg-trinity-red px-4 py-2.5 text-sm font-medium text-white hover:bg-trinity-maroon transition"
+          className="inline-flex items-center gap-2 rounded-lg bg-#ef4444 px-4 py-2.5 text-sm font-medium text-white hover:bg-#dc2626 transition"
         >
           <Plus className="w-4 h-4" />
           Add Task

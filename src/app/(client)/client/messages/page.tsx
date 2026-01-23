@@ -90,7 +90,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trinity-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-#ef4444"></div>
       </div>
     );
   }

@@ -140,7 +140,7 @@ export function CalendarView({
             setSelectedSlot(null);
             setShowCreateModal(true);
           }}
-          className="px-4 py-2 rounded-lg bg-trinity-red text-white hover:bg-trinity-maroon transition text-sm font-medium"
+          className="px-4 py-2 rounded-lg bg-#ef4444 text-white hover:bg-#dc2626 transition text-sm font-medium"
         >
           + New Event
         </button>

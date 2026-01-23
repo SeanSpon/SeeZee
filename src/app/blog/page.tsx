@@ -52,7 +52,7 @@ export default async function BlogPage() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className="bg-trinity-red text-white px-4 py-2 rounded-full text-sm font-semibold">
+                      <span className="bg-#ef4444 text-white px-4 py-2 rounded-full text-sm font-semibold">
                         Featured
                       </span>
                     </div>
@@ -73,7 +73,7 @@ export default async function BlogPage() {
                       {featuredPost.author.name || featuredPost.author.email}
                     </div>
                   </div>
-                  <h2 className="font-heading text-3xl font-bold text-white mb-4 hover:text-trinity-red transition-colors">
+                  <h2 className="font-heading text-3xl font-bold text-white mb-4 hover:text-#ef4444 transition-colors">
                     {featuredPost.title}
                   </h2>
                   {featuredPost.excerpt && (
@@ -130,7 +130,7 @@ export default async function BlogPage() {
                         {post.author.name || post.author.email.split('@')[0]}
                       </div>
                     </div>
-                    <h3 className="font-heading text-xl font-bold text-white mb-2 hover:text-trinity-red transition-colors line-clamp-2">
+                    <h3 className="font-heading text-xl font-bold text-white mb-2 hover:text-#ef4444 transition-colors line-clamp-2">
                       {post.title}
                     </h3>
                     {post.excerpt && (
@@ -153,7 +153,7 @@ export default async function BlogPage() {
                         )}
                       </div>
                     )}
-                    <div className="flex items-center text-trinity-red font-semibold text-sm mt-auto pt-4 border-t border-gray-700">
+                    <div className="flex items-center text-#ef4444 font-semibold text-sm mt-auto pt-4 border-t border-gray-700">
                       Read More
                       <FiArrowRight className="ml-2 h-4 w-4" />
                     </div>

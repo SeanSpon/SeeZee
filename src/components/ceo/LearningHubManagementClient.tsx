@@ -133,7 +133,7 @@ export function LearningHubManagementClient({
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
           CEO Command Center
         </span>
         <h1 className="text-3xl font-heading font-bold text-white">Learning Hub Management</h1>
@@ -171,7 +171,7 @@ export function LearningHubManagementClient({
             }}
             className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
               activeView === tab.id
-                ? "border-trinity-red text-trinity-red"
+                ? "border-#ef4444 text-#ef4444"
                 : "border-transparent text-gray-400 hover:text-white"
             }`}
           >
@@ -191,7 +191,7 @@ export function LearningHubManagementClient({
             placeholder={`Search ${activeView === "resources" ? "resources" : "tools"}...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-800 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-800 bg-gray-900 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444"
           />
         </div>
         <button
@@ -203,7 +203,7 @@ export function LearningHubManagementClient({
                 : "/admin/learning/tools?create=true"
             );
           }}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red text-white font-semibold transition-colors hover:bg-trinity-red/90"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-#ef4444 text-white font-semibold transition-colors hover:bg-#ef4444/90"
         >
           <FiPlus className="h-4 w-4" />
           Add {activeView === "resources" ? "Resource" : "Tool"}
@@ -279,7 +279,7 @@ export function LearningHubManagementClient({
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-trinity-red hover:text-trinity-red/80"
+                    className="flex items-center gap-1 text-#ef4444 hover:text-#ef4444/80"
                   >
                     <FiLink className="h-3 w-3" />
                     Open

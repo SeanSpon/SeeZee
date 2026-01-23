@@ -104,7 +104,7 @@ export function EmailsDashboard({ initialEmails }: EmailsDashboardProps) {
       {/* Header */}
       <header className="flex items-center justify-between">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
             Email Tracking
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">

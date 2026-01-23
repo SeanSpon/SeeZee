@@ -426,9 +426,9 @@ export default function BigRedBusCaseStudyPage() {
                     <motion.div
                       key={index}
                       whileHover={{ y: -4 }}
-                      className="p-6 rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 glass-effect"
+                      className="p-6 rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 glass-effect"
                     >
-                      <div className="text-trinity-red mb-4">{feature.icon}</div>
+                      <div className="text-#ef4444 mb-4">{feature.icon}</div>
                       <h4 className="text-xl font-heading font-semibold text-white mb-2">
                         {feature.title}
                       </h4>
@@ -661,7 +661,7 @@ export default function BigRedBusCaseStudyPage() {
                 </p>
                 <Link
                   href="/start"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
                 >
                   Start Your Project
                   <FiArrowRight className="w-5 h-5" />

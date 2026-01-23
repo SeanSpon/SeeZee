@@ -201,12 +201,12 @@ export default function ComprehensiveDashboardClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-trinity-red/50 transition-all duration-300 overflow-hidden"
+          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-#ef4444/50 transition-all duration-300 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gray-800/50 text-trinity-red">
+              <div className="p-3 rounded-xl bg-gray-800/50 text-#ef4444">
                 <FiFolder className="w-6 h-6" />
               </div>
               <StatusBadge status="active" size="sm" />
@@ -366,7 +366,7 @@ export default function ComprehensiveDashboardClient({
           <h2 className="text-2xl font-heading font-bold text-white">Your Projects</h2>
           <Link
             href="/client/projects"
-            className="flex items-center gap-2 text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+            className="flex items-center gap-2 text-#ef4444 hover:text-#dc2626 transition-colors font-medium"
           >
             View All
             <FiArrowRight className="w-4 h-4" />
@@ -385,7 +385,7 @@ export default function ComprehensiveDashboardClient({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
-                  className="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-trinity-red/50 transition-all duration-300"
+                  className="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-#ef4444/50 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -408,7 +408,7 @@ export default function ComprehensiveDashboardClient({
                       </div>
                       <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-trinity-red to-trinity-maroon transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-#ef4444 to-#dc2626 transition-all duration-500"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -416,7 +416,7 @@ export default function ComprehensiveDashboardClient({
                   )}
                   <Link
                     href={`/client/projects/${project.id}`}
-                    className="inline-flex items-center gap-2 text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+                    className="inline-flex items-center gap-2 text-#ef4444 hover:text-#dc2626 transition-colors font-medium"
                   >
                     View Details
                     <FiArrowRight className="w-4 h-4" />
@@ -430,7 +430,7 @@ export default function ComprehensiveDashboardClient({
             <p className="text-gray-400 mb-4">No projects yet</p>
             <Link
               href="/start"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-colors"
             >
               <FiPlus className="w-4 h-4" />
               Start a New Project
@@ -534,7 +534,7 @@ export default function ComprehensiveDashboardClient({
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">Requests</h3>
-            <Link href="/client/requests" className="text-sm text-trinity-red hover:text-trinity-maroon">
+            <Link href="/client/requests" className="text-sm text-#ef4444 hover:text-#dc2626">
               View All →
             </Link>
           </div>
@@ -563,7 +563,7 @@ export default function ComprehensiveDashboardClient({
                   <Link
                     key={request.id}
                     href="/client/requests"
-                    className="block p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-trinity-red transition-colors"
+                    className="block p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-#ef4444 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-1">
                       <h4 className="font-medium text-white text-sm line-clamp-1">{request.title}</h4>
@@ -593,14 +593,14 @@ export default function ComprehensiveDashboardClient({
               <FiCalendar className="w-5 h-5 text-purple-400" />
               Upcoming Meetings
             </h3>
-            <Link href="/client/meetings" className="text-sm text-trinity-red hover:text-trinity-maroon">
+            <Link href="/client/meetings" className="text-sm text-#ef4444 hover:text-#dc2626">
               View All →
             </Link>
           </div>
           
           {loadingMeetings ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-trinity-red mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-#ef4444 mx-auto"></div>
             </div>
           ) : upcomingMeetings.length > 0 ? (
             <div className="space-y-3">
@@ -638,7 +638,7 @@ export default function ComprehensiveDashboardClient({
               <p className="text-gray-400 text-sm mb-3">No upcoming meetings</p>
               <Link
                 href="/client/meetings"
-                className="inline-flex items-center gap-2 text-sm text-trinity-red hover:text-trinity-maroon"
+                className="inline-flex items-center gap-2 text-sm text-#ef4444 hover:text-#dc2626"
               >
                 <FiPlus className="w-4 h-4" />
                 Request Meeting

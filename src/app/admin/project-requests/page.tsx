@@ -156,7 +156,7 @@ export default function AdminProjectRequestsPage() {
     return (
       <div className="space-y-8">
         <header className="space-y-3 relative">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444 glow-on-hover inline-block">
             Client Management
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">Project Requests</h1>
@@ -171,7 +171,7 @@ export default function AdminProjectRequestsPage() {
   return (
       <div className="space-y-8">
         <header className="space-y-3 relative">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444 glow-on-hover inline-block">
             Client Management
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">Project Requests</h1>
@@ -181,17 +181,17 @@ export default function AdminProjectRequestsPage() {
         </header>
 
         <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-#ef4444/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Active Requests</p>
-              <div className="w-10 h-10 bg-trinity-red/20 rounded-lg flex items-center justify-center border border-trinity-red/30">
-                <FiMail className="w-5 h-5 text-trinity-red" />
+              <div className="w-10 h-10 bg-#ef4444/20 rounded-lg flex items-center justify-center border border-#ef4444/30">
+                <FiMail className="w-5 h-5 text-#ef4444" />
               </div>
             </div>
             <p className="text-4xl font-heading font-bold text-white mb-1">{activeRequests}</p>
             <p className="text-xs text-gray-500">Awaiting review</p>
           </div>
-          <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-trinity-red/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
+          <div className="rounded-2xl border-2 border-gray-700 glass-effect p-6 text-white hover:border-#ef4444/50 transition-all duration-300 group hover:shadow-large hover:-translate-y-1">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs uppercase tracking-[0.25em] text-gray-400 font-semibold">Total Requests</p>
               <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
@@ -203,7 +203,7 @@ export default function AdminProjectRequestsPage() {
           </div>
         </section>
 
-        <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+        <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all duration-300">
           <DataTable columns={columns} data={rows} emptyMessage="No project requests found" />
         </div>
       </div>

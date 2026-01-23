@@ -546,7 +546,7 @@ export function ClientFinderClient({
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
             Lead Finder
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">
@@ -564,7 +564,7 @@ export function ClientFinderClient({
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-trinity-red px-4 py-2.5 text-sm font-medium text-white hover:bg-trinity-maroon transition"
+            className="inline-flex items-center gap-2 rounded-lg bg-#ef4444 px-4 py-2.5 text-sm font-medium text-white hover:bg-#dc2626 transition"
           >
             <Plus className="w-4 h-4" />
             Add Lead
@@ -632,7 +632,7 @@ export function ClientFinderClient({
             <select
               value={prospectStatusFilter}
               onChange={(e) => setProspectStatusFilter(e.target.value)}
-              className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+              className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
             >
               <option value="all">All Status</option>
               <option value="PROSPECT">Prospects</option>
@@ -649,7 +649,7 @@ export function ClientFinderClient({
             <select
               value={minScore}
               onChange={(e) => setMinScore(parseInt(e.target.value))}
-              className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+              className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
             >
               <option value="0">All Scores</option>
               <option value="90">90-100</option>
@@ -661,7 +661,7 @@ export function ClientFinderClient({
               <select
                 value={maxScore}
                 onChange={(e) => setMaxScore(parseInt(e.target.value))}
-                className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+                className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
               >
                 <option value={minScore + 9}>{minScore}-{minScore + 9}</option>
                 <option value={minScore + 19}>{minScore}-{minScore + 19}</option>
@@ -674,7 +674,7 @@ export function ClientFinderClient({
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
           >
             <option value="all">All Time</option>
             <option value="today">Today</option>
@@ -686,7 +686,7 @@ export function ClientFinderClient({
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
-            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
           >
             <option value="all">All States</option>
             {states.sort().map((state) => (
@@ -700,7 +700,7 @@ export function ClientFinderClient({
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
           >
             <option value="all">All Categories</option>
             {categories.sort().map((cat) => (
@@ -714,7 +714,7 @@ export function ClientFinderClient({
           <select
             value={websiteFilter}
             onChange={(e) => setWebsiteFilter(e.target.value)}
-            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+            className="rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
           >
             <option value="all">All Websites</option>
             <option value="yes">Has Website</option>
@@ -732,7 +732,7 @@ export function ClientFinderClient({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search organizations..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-700 bg-[#1a2235] text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none text-sm"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-700 bg-[#1a2235] text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none text-sm"
             />
           </div>
 
@@ -956,7 +956,7 @@ export function ClientFinderClient({
                     onClick={() => setSelectedLead(lead)}
                     className={`p-3 rounded-lg border cursor-pointer transition ${
                       selectedLead?.id === lead.id
-                        ? "border-trinity-red bg-trinity-red/10"
+                        ? "border-#ef4444 bg-#ef4444/10"
                         : "border-gray-800 bg-[#1a2235] hover:border-gray-700"
                     }`}
                   >

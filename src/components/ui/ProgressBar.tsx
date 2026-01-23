@@ -23,7 +23,7 @@ export default function ProgressBar({
         className={`h-full ${
           gradient
             ? "bg-gradient-to-r from-blue-600 to-purple-600"
-            : "bg-trinity-red"
+            : "bg-#ef4444"
         }`}
         initial={animated ? { width: 0 } : { width: `${clampedValue}%` }}
         animate={{ width: `${clampedValue}%` }}

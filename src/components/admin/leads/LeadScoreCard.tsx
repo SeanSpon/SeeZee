@@ -74,7 +74,7 @@ export function LeadScoreCard({ lead, onClose }: LeadScoreCardProps) {
   return (
     <div className="rounded-xl border-2 border-gray-700 bg-[#151b2e] overflow-hidden">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-trinity-red/20 to-transparent border-b border-gray-800">
+      <div className="p-4 bg-gradient-to-r from-#ef4444/20 to-transparent border-b border-gray-800">
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-lg font-semibold text-white">
@@ -126,7 +126,7 @@ export function LeadScoreCard({ lead, onClose }: LeadScoreCardProps) {
               <span className="text-xs text-gray-400 w-32">{item.label}</span>
               <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-trinity-red"
+                  className="h-full rounded-full bg-#ef4444"
                   style={{ width: `${(item.value / item.max) * 100}%` }}
                 />
               </div>
@@ -185,7 +185,7 @@ export function LeadScoreCard({ lead, onClose }: LeadScoreCardProps) {
         <button
           onClick={handleGenerateOutreach}
           disabled={isGeneratingOutreach}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-trinity-red text-white hover:bg-trinity-maroon disabled:opacity-50 transition"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-#ef4444 text-white hover:bg-#dc2626 disabled:opacity-50 transition"
         >
           <Sparkles className="w-4 h-4" />
           {isGeneratingOutreach ? "Generating..." : "Generate AI Outreach"}
@@ -213,7 +213,7 @@ export function LeadScoreCard({ lead, onClose }: LeadScoreCardProps) {
               navigator.clipboard.writeText(outreachEmail);
               alert("Copied to clipboard!");
             }}
-            className="mt-2 text-xs text-trinity-red hover:text-trinity-maroon"
+            className="mt-2 text-xs text-#ef4444 hover:text-#dc2626"
           >
             Copy to clipboard
           </button>

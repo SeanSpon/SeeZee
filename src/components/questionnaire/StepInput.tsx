@@ -35,7 +35,7 @@ export function StepInput({
           onChange={(e) => setLocalValue(e.target.value)}
           placeholder={placeholder}
           required={required}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all"
         />
         {error && (
           <p className="text-sm text-red-400 flex items-center gap-1">
@@ -57,7 +57,7 @@ export function StepInput({
           placeholder={placeholder}
           required={required}
           rows={4}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all resize-none"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all resize-none"
         />
         {error && (
           <p className="text-sm text-red-400 flex items-center gap-1">
@@ -77,7 +77,7 @@ export function StepInput({
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
           required={required}
-          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all cursor-pointer"
+          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all cursor-pointer"
         >
           <option value="">Select an option...</option>
           {options.map((option) => (
@@ -120,7 +120,7 @@ export function StepInput({
                 className={`
                   px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
                   ${isSelected
-                    ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                    ? 'bg-#ef4444/20 text-#ef4444 border-2 border-#ef4444 shadow-lg shadow-#ef4444/25'
                     : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:text-white hover:border-gray-600'
                   }
                 `}
@@ -160,7 +160,7 @@ export function StepInput({
             className={`
               flex-1 px-6 py-4 rounded-lg font-semibold transition-all duration-200
               ${boolValue
-                ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                ? 'bg-#ef4444/20 text-#ef4444 border-2 border-#ef4444 shadow-lg shadow-#ef4444/25'
                 : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
               }
             `}

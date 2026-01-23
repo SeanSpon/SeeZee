@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {/* Category */}
             {post.category && (
               <div className="mb-4">
-                <span className="inline-block bg-trinity-red/10 text-trinity-red px-4 py-2 rounded-full text-sm font-semibold">
+                <span className="inline-block bg-#ef4444/10 text-#ef4444 px-4 py-2 rounded-full text-sm font-semibold">
                   {post.category}
                 </span>
               </div>
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   a: ({ href, children }) => (
                     <a
                       href={href}
-                      className="text-trinity-red hover:text-trinity-maroon underline"
+                      className="text-#ef4444 hover:text-#dc2626 underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -172,7 +172,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     </a>
                   ),
                   code: ({ children }) => (
-                    <code className="bg-gray-800 text-trinity-red px-2 py-1 rounded text-sm font-mono">
+                    <code className="bg-gray-800 text-#ef4444 px-2 py-1 rounded text-sm font-mono">
                       {children}
                     </code>
                   ),
@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     </pre>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-trinity-red pl-4 italic text-gray-400 my-4">
+                    <blockquote className="border-l-4 border-#ef4444 pl-4 italic text-gray-400 my-4">
                       {children}
                     </blockquote>
                   ),

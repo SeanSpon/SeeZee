@@ -175,14 +175,14 @@ export default function DataTable<T extends Record<string, any>>({
         <FiChevronUp
           className={`w-3 h-3 -mb-1 transition-colors ${
             sortKey === key && sortDirection === 'asc'
-              ? 'text-trinity-red'
+              ? 'text-#ef4444'
               : 'text-gray-600'
           }`}
         />
         <FiChevronDown
           className={`w-3 h-3 transition-colors ${
             sortKey === key && sortDirection === 'desc'
-              ? 'text-trinity-red'
+              ? 'text-#ef4444'
               : 'text-gray-600'
           }`}
         />
@@ -206,7 +206,7 @@ export default function DataTable<T extends Record<string, any>>({
                   setCurrentPage(1);
                 }}
                 placeholder={searchPlaceholder}
-                className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-trinity-red transition-colors"
+                className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-#ef4444 transition-colors"
               />
             </div>
           )}
@@ -332,7 +332,7 @@ export default function DataTable<T extends Record<string, any>>({
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                       currentPage === pageNum
-                        ? 'bg-trinity-red text-white'
+                        ? 'bg-#ef4444 text-white'
                         : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
                     }`}
                   >

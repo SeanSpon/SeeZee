@@ -236,7 +236,7 @@ export function RequestsClient() {
         <div className="flex gap-3">
           {activeTab === "change" && (
             <Link href="/client/requests/new">
-              <button className="px-6 py-3 bg-trinity-red hover:bg-trinity-maroon text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2">
+              <button className="px-6 py-3 bg-#ef4444 hover:bg-#dc2626 text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 New Change Request
               </button>
@@ -347,7 +347,7 @@ export function RequestsClient() {
               <h3 className="text-xl font-bold text-white mb-2">No change requests yet</h3>
               <p className="text-white/60 mb-6">Submit change requests for your active projects</p>
               <Link href="/client/requests/new">
-                <button className="px-6 py-3 bg-trinity-red hover:bg-trinity-maroon text-white font-semibold rounded-lg transition-colors">
+                <button className="px-6 py-3 bg-#ef4444 hover:bg-#dc2626 text-white font-semibold rounded-lg transition-colors">
                   Create Change Request
                 </button>
               </Link>
@@ -381,7 +381,7 @@ export function RequestsClient() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-trinity-red"
+                  className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-#ef4444"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -547,7 +547,7 @@ export function RequestsClient() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-trinity-red"
+                    className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-#ef4444"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">

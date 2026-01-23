@@ -93,7 +93,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
             Communications
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">
@@ -105,7 +105,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
             setSelectedTemplate(null);
             setIsCreating(true);
           }}
-          className="inline-flex items-center gap-2 rounded-lg bg-trinity-red px-4 py-2.5 text-sm font-medium text-white hover:bg-trinity-maroon transition"
+          className="inline-flex items-center gap-2 rounded-lg bg-#ef4444 px-4 py-2.5 text-sm font-medium text-white hover:bg-#dc2626 transition"
         >
           <Plus className="w-4 h-4" />
           New Template
@@ -122,7 +122,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
               onClick={() => setSelectedCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 selectedCategory === cat
-                  ? "bg-trinity-red text-white"
+                  ? "bg-#ef4444 text-white"
                   : "bg-[#1a2235] text-gray-400 hover:text-white hover:bg-[#1e2840]"
               }`}
             >
@@ -145,7 +145,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.03 }}
-                className="rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-trinity-red/30 transition-all"
+                className="rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-#ef4444/30 transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div className={`p-2.5 rounded-lg ${config.color}`}>
@@ -248,7 +248,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
                   setSelectedTemplate(null);
                   setIsCreating(true);
                 }}
-                className="mt-4 text-trinity-red hover:text-trinity-maroon text-sm"
+                className="mt-4 text-#ef4444 hover:text-#dc2626 text-sm"
               >
                 Create your first template
               </button>

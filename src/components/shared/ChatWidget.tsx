@@ -264,11 +264,11 @@ export function ChatWidget() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-20 h-20 bg-[#0B0F1A] border border-[#1a2332] rounded-full shadow-lg flex items-center justify-center z-50 group hover:border-trinity-red transition-all"
+        className="fixed bottom-6 right-6 w-20 h-20 bg-[#0B0F1A] border border-[#1a2332] rounded-full shadow-lg flex items-center justify-center z-50 group hover:border-#ef4444 transition-all"
       >
-        <MessageCircle className="w-9 h-9 text-gray-300 group-hover:text-trinity-red transition-colors" />
+        <MessageCircle className="w-9 h-9 text-gray-300 group-hover:text-#ef4444 transition-colors" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-6 h-6 bg-trinity-red rounded-full flex items-center justify-center text-white text-xs font-bold">
+          <span className="absolute -top-1 -right-1 w-6 h-6 bg-#ef4444 rounded-full flex items-center justify-center text-white text-xs font-bold">
             {unreadCount}
           </span>
         )}
@@ -286,7 +286,7 @@ export function ChatWidget() {
       >
         <button
           onClick={() => setIsMinimized(false)}
-          className="bg-[#0B0F1A] border border-[#1a2332] rounded-xl px-4 py-3 flex items-center gap-2 hover:border-trinity-red transition-all shadow-xl"
+          className="bg-[#0B0F1A] border border-[#1a2332] rounded-xl px-4 py-3 flex items-center gap-2 hover:border-#ef4444 transition-all shadow-xl"
         >
           <LogoHeader className="scale-75 origin-left" />
           <span className="text-xs text-gray-400 font-medium">Team Support</span>
@@ -368,7 +368,7 @@ export function ChatWidget() {
                   <div
                     className={`rounded-2xl px-4 py-3 ${
                       msg.role === "user"
-                        ? "bg-trinity-red text-white rounded-br-sm"
+                        ? "bg-#ef4444 text-white rounded-br-sm"
                         : msg.role === "system"
                         ? "bg-yellow-900/30 text-yellow-200 border border-yellow-800/50 rounded-bl-sm"
                         : "bg-[#1a2332] text-gray-100 border border-[#1a2332] rounded-bl-sm"
@@ -381,7 +381,7 @@ export function ChatWidget() {
                           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                           .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, href) => {
                             const isExternal = href.startsWith('http');
-                            return `<a href="${href}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="text-trinity-red hover:text-trinity-red/80 underline">${text}</a>`;
+                            return `<a href="${href}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="text-#ef4444 hover:text-#ef4444/80 underline">${text}</a>`;
                           })
                           .replace(/\n/g, '<br/>') 
                       }} 
@@ -398,7 +398,7 @@ export function ChatWidget() {
                         <button
                           key={action}
                           onClick={() => handleQuickAction(action)}
-                          className="text-xs px-3 py-1.5 bg-[#1a2332] border border-[#1a2332] rounded-full text-gray-300 hover:bg-trinity-red/20 hover:border-trinity-red hover:text-white transition-all"
+                          className="text-xs px-3 py-1.5 bg-[#1a2332] border border-[#1a2332] rounded-full text-gray-300 hover:bg-#ef4444/20 hover:border-#ef4444 hover:text-white transition-all"
                         >
                           {action}
                         </button>
@@ -425,7 +425,7 @@ export function ChatWidget() {
                             onClick={handleClick}
                             target={isExternal ? '_blank' : '_self'}
                             rel={isExternal ? 'noopener noreferrer' : undefined}
-                            className="text-xs px-3 py-1.5 bg-[#1a2332] border border-trinity-red/30 rounded-full text-trinity-red hover:bg-trinity-red/20 hover:border-trinity-red hover:text-white transition-all inline-flex items-center gap-1 cursor-pointer"
+                            className="text-xs px-3 py-1.5 bg-[#1a2332] border border-#ef4444/30 rounded-full text-#ef4444 hover:bg-#ef4444/20 hover:border-#ef4444 hover:text-white transition-all inline-flex items-center gap-1 cursor-pointer"
                           >
                             {link.text}
                             <span className="text-[10px]">→</span>
@@ -452,9 +452,9 @@ export function ChatWidget() {
             </div>
             <div className="bg-[#1a2332] border border-[#1a2332] rounded-2xl rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
-                <span className="w-2 h-2 bg-trinity-red rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <span className="w-2 h-2 bg-trinity-red rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <span className="w-2 h-2 bg-trinity-red rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <span className="w-2 h-2 bg-#ef4444 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <span className="w-2 h-2 bg-#ef4444 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <span className="w-2 h-2 bg-#ef4444 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
           </motion.div>
@@ -479,14 +479,14 @@ export function ChatWidget() {
                   placeholder="Your name"
                   value={leadInfo.name || ""}
                   onChange={(e) => setLeadInfo({ ...leadInfo, name: e.target.value })}
-                  className="w-full bg-[#050914] border border-[#1a2332] rounded-lg px-3 py-2 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-trinity-red focus:ring-1 focus:ring-trinity-red"
+                  className="w-full bg-[#050914] border border-[#1a2332] rounded-lg px-3 py-2 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-#ef4444 focus:ring-1 focus:ring-#ef4444"
                 />
                 <input
                   type="email"
                   placeholder="Your email"
                   value={leadInfo.email || ""}
                   onChange={(e) => setLeadInfo({ ...leadInfo, email: e.target.value })}
-                  className="w-full bg-[#050914] border border-[#1a2332] rounded-lg px-3 py-2 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-trinity-red focus:ring-1 focus:ring-trinity-red"
+                  className="w-full bg-[#050914] border border-[#1a2332] rounded-lg px-3 py-2 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-#ef4444 focus:ring-1 focus:ring-#ef4444"
                 />
                 <div className="flex gap-2">
                   <button
@@ -498,7 +498,7 @@ export function ChatWidget() {
                   <button
                     onClick={handleLeadSubmit}
                     disabled={!leadInfo.name || !leadInfo.email}
-                    className="flex-1 px-4 py-2 bg-trinity-red text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-trinity-maroon transition-colors"
+                    className="flex-1 px-4 py-2 bg-#ef4444 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-#dc2626 transition-colors"
                   >
                     Submit
                   </button>
@@ -525,10 +525,10 @@ export function ChatWidget() {
           }}
           placeholder="Type a message... (Press Enter to send)"
           disabled={isLoading}
-          className="w-full bg-[#0B0F1A] border border-[#1a2332] rounded-xl px-4 py-3 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-trinity-red focus:ring-1 focus:ring-trinity-red disabled:opacity-50 transition-all"
+          className="w-full bg-[#0B0F1A] border border-[#1a2332] rounded-xl px-4 py-3 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-#ef4444 focus:ring-1 focus:ring-#ef4444 disabled:opacity-50 transition-all"
         />
         <p className="text-[10px] text-gray-400 text-center mt-2">
-          Powered by AI • <a href="/contact" className="text-trinity-red hover:underline">Prefer to talk to a human?</a>
+          Powered by AI • <a href="/contact" className="text-#ef4444 hover:underline">Prefer to talk to a human?</a>
         </p>
       </div>
     </motion.div>

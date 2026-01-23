@@ -128,7 +128,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(220, 20, 60, 0.3)" }}
             whileTap={{ scale: 0.98 }}
-            className="px-6 py-3 bg-gradient-to-r from-trinity-red to-trinity-maroon hover:from-trinity-maroon hover:to-trinity-red text-white font-semibold rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-trinity-red/20"
+            className="px-6 py-3 bg-gradient-to-r from-#ef4444 to-#dc2626 hover:from-#dc2626 hover:to-#ef4444 text-white font-semibold rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-#ef4444/20"
           >
             <Plus className="w-4 h-4" />
             New Project
@@ -145,11 +145,11 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
         >
           <motion.div 
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className="group bg-gray-900/80 backdrop-blur-sm border border-gray-800 p-5 rounded-2xl hover:border-trinity-red/50 transition-all duration-300"
+            className="group bg-gray-900/80 backdrop-blur-sm border border-gray-800 p-5 rounded-2xl hover:border-#ef4444/50 transition-all duration-300"
           >
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2.5 bg-trinity-red/20 rounded-xl group-hover:bg-trinity-red/30 transition-colors">
-                <FolderKanban className="w-5 h-5 text-trinity-red" />
+              <div className="p-2.5 bg-#ef4444/20 rounded-xl group-hover:bg-#ef4444/30 transition-colors">
+                <FolderKanban className="w-5 h-5 text-#ef4444" />
               </div>
               <div>
                 <p className="text-3xl font-bold text-white">{stats.total}</p>
@@ -368,15 +368,15 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                 >
                   <Link
                     href={`/client/projects/${project.id}`}
-                    className="block bg-gray-900/80 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl group relative overflow-hidden hover:border-trinity-red/50 transition-all duration-300 hover:shadow-lg hover:shadow-trinity-red/10"
+                    className="block bg-gray-900/80 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl group relative overflow-hidden hover:border-#ef4444/50 transition-all duration-300 hover:shadow-lg hover:shadow-#ef4444/10"
                   >
                     {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/0 via-transparent to-trinity-maroon/0 group-hover:from-trinity-red/5 group-hover:to-trinity-maroon/5 transition-all duration-300 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/0 via-transparent to-#dc2626/0 group-hover:from-#ef4444/5 group-hover:to-#dc2626/5 transition-all duration-300 pointer-events-none" />
 
                     <div className="relative z-10">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-white group-hover:text-trinity-red transition-colors mb-2 truncate">
+                          <h3 className="text-lg font-bold text-white group-hover:text-#ef4444 transition-colors mb-2 truncate">
                             {project.name}
                           </h3>
                           {project.description && (
@@ -389,7 +389,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                           whileHover={{ x: 4 }}
                           className="flex-shrink-0 ml-2"
                         >
-                          <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-trinity-red transition-colors" />
+                          <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-#ef4444 transition-colors" />
                         </motion.div>
                       </div>
 

@@ -629,7 +629,7 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
               <select
                 value={selectedAssigneeId}
                 onChange={(e) => setSelectedAssigneeId(e.target.value)}
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
               >
                 <option value="">Unassigned</option>
                 {admins.map((admin) => (

@@ -128,7 +128,7 @@ export default function ContactForm() {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent transition-colors ${
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent transition-colors ${
               errors.name ? 'border-red-500 bg-red-900/30 text-red-200' : 'border-gray-600 bg-gray-800 text-white placeholder-gray-400'
             }`}
             aria-invalid={errors.name ? 'true' : 'false'}
@@ -154,7 +154,7 @@ export default function ContactForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent transition-colors ${
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent transition-colors ${
               errors.email ? 'border-red-500 bg-red-900/30 text-red-200' : 'border-gray-600 bg-gray-800 text-white placeholder-gray-400'
             }`}
             aria-invalid={errors.email ? 'true' : 'false'}
@@ -180,7 +180,7 @@ export default function ContactForm() {
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent transition-colors ${
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent transition-colors ${
               errors.subject ? 'border-red-500 bg-red-900/30 text-red-200' : 'border-gray-600 bg-gray-800 text-white placeholder-gray-400'
             }`}
             aria-invalid={errors.subject ? 'true' : 'false'}
@@ -206,7 +206,7 @@ export default function ContactForm() {
             value={formData.message}
             onChange={handleChange}
             rows={6}
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent transition-colors resize-none ${
+            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent transition-colors resize-none ${
               errors.message ? 'border-red-500 bg-red-900/30 text-red-200' : 'border-gray-600 bg-gray-800 text-white placeholder-gray-400'
             }`}
             aria-invalid={errors.message ? 'true' : 'false'}
@@ -224,7 +224,7 @@ export default function ContactForm() {
           disabled={isSubmitting}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full px-6 py-3 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-colors font-semibold shadow-medium hover:shadow-large disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="w-full px-6 py-3 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-colors font-semibold shadow-medium hover:shadow-large disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900"
         >
           {isSubmitting ? (
             <>

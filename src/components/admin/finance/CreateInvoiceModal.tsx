@@ -146,7 +146,7 @@ export function CreateInvoiceModal({
                 onChange={(e) =>
                   setFormData({ ...formData, organizationId: e.target.value })
                 }
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-#ef4444 focus:outline-none"
               >
                 <option value="">Select organization...</option>
                 {organizations.map((org) => (
@@ -171,7 +171,7 @@ export function CreateInvoiceModal({
                     setFormData({ ...formData, title: e.target.value })
                   }
                   placeholder="Website Development Deposit"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
               <div>
@@ -183,7 +183,7 @@ export function CreateInvoiceModal({
                   onChange={(e) =>
                     setFormData({ ...formData, invoiceType: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="deposit">Deposit</option>
                   <option value="final">Final Payment</option>
@@ -205,7 +205,7 @@ export function CreateInvoiceModal({
                 onChange={(e) =>
                   setFormData({ ...formData, dueDate: e.target.value })
                 }
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-trinity-red focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white focus:border-#ef4444 focus:outline-none"
               />
             </div>
 
@@ -221,7 +221,7 @@ export function CreateInvoiceModal({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 placeholder="Additional notes..."
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none resize-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-3 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none resize-none"
               />
             </div>
 
@@ -234,7 +234,7 @@ export function CreateInvoiceModal({
                 <button
                   type="button"
                   onClick={addItem}
-                  className="flex items-center gap-1 text-sm text-trinity-red hover:text-trinity-maroon transition"
+                  className="flex items-center gap-1 text-sm text-#ef4444 hover:text-#dc2626 transition"
                 >
                   <Plus className="w-4 h-4" />
                   Add Item
@@ -255,7 +255,7 @@ export function CreateInvoiceModal({
                         updateItem(index, "description", e.target.value)
                       }
                       placeholder="Description"
-                      className="flex-1 rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                      className="flex-1 rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                     />
                     <input
                       type="number"
@@ -265,7 +265,7 @@ export function CreateInvoiceModal({
                       onChange={(e) =>
                         updateItem(index, "quantity", parseInt(e.target.value) || 1)
                       }
-                      className="w-20 rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white text-center focus:border-trinity-red focus:outline-none"
+                      className="w-20 rounded-lg border border-gray-700 bg-[#1a2235] px-3 py-2 text-sm text-white text-center focus:border-#ef4444 focus:outline-none"
                     />
                     <span className="text-gray-500 text-sm">×</span>
                     <div className="relative">
@@ -281,7 +281,7 @@ export function CreateInvoiceModal({
                         onChange={(e) =>
                           updateItem(index, "rate", parseFloat(e.target.value) || 0)
                         }
-                        className="w-28 rounded-lg border border-gray-700 bg-[#1a2235] pl-7 pr-3 py-2 text-sm text-white focus:border-trinity-red focus:outline-none"
+                        className="w-28 rounded-lg border border-gray-700 bg-[#1a2235] pl-7 pr-3 py-2 text-sm text-white focus:border-#ef4444 focus:outline-none"
                       />
                     </div>
                     <span className="w-24 text-right text-sm text-white font-medium">
@@ -312,7 +312,7 @@ export function CreateInvoiceModal({
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-800">
                 <span className="text-white">Total</span>
-                <span className="text-trinity-red">${total.toFixed(2)}</span>
+                <span className="text-#ef4444">${total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -328,7 +328,7 @@ export function CreateInvoiceModal({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-6 py-2.5 rounded-lg bg-#ef4444 text-white font-medium hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {isSubmitting ? "Creating..." : "Create Invoice"}
               </button>

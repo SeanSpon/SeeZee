@@ -79,8 +79,8 @@ export default async function UserProfilePage({ params }: PageProps) {
         {/* Header */}
         <div className="relative">
           <div className="flex items-center gap-4 mb-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-trinity-red/20 to-purple-600/20 flex items-center justify-center border border-trinity-red/30">
-              <User className="w-6 h-6 text-trinity-red" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-#ef4444/20 to-purple-600/20 flex items-center justify-center border border-#ef4444/30">
+              <User className="w-6 h-6 text-#ef4444" />
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-heading font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
@@ -95,14 +95,14 @@ export default async function UserProfilePage({ params }: PageProps) {
           {/* Profile Card */}
           <div className="lg:col-span-1 space-y-6">
             {/* Main Profile */}
-            <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 transition-all duration-500 hover:border-trinity-red/50 hover:shadow-2xl hover:shadow-trinity-red/10 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 transition-all duration-500 hover:border-#ef4444/50 hover:shadow-2xl hover:shadow-#ef4444/10 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="relative z-10">
                 {/* Avatar */}
                 <div className="text-center mb-6">
                   <div className="relative inline-block mb-4">
-                    <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-700 p-1 group-hover:from-trinity-red/30 group-hover:to-red-600/30 transition-all duration-500">
+                    <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-700 p-1 group-hover:from-#ef4444/30 group-hover:to-red-600/30 transition-all duration-500">
                       <div className="w-full h-full rounded-2xl overflow-hidden">
                         <Avatar
                           src={user.image || user.profileImageUrl}
@@ -146,7 +146,7 @@ export default async function UserProfilePage({ params }: PageProps) {
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-3 pt-6 border-t border-white/5">
                   <div className="bg-white/5 rounded-xl p-4 text-center">
-                    <Target className="w-5 h-5 text-trinity-red mx-auto mb-2" />
+                    <Target className="w-5 h-5 text-#ef4444 mx-auto mb-2" />
                     <p className="text-2xl font-bold text-white">{user._count.assignedProjects}</p>
                     <p className="text-xs text-slate-400">Projects</p>
                   </div>
@@ -212,7 +212,7 @@ export default async function UserProfilePage({ params }: PageProps) {
             {/* Contact Information */}
             <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-trinity-red" />
+                <Mail className="w-5 h-5 text-#ef4444" />
                 Contact Information
               </h3>
 
@@ -312,7 +312,7 @@ export default async function UserProfilePage({ params }: PageProps) {
             {/* Account Status */}
             <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-trinity-red" />
+                <Shield className="w-5 h-5 text-#ef4444" />
                 Account Status
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

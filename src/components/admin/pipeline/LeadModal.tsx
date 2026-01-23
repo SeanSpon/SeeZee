@@ -121,7 +121,7 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
               type="submit"
               form="lead-form"
               disabled={loading}
-              className="px-6 py-2 rounded-lg border-2 border-trinity-red/50 bg-trinity-red text-white hover:bg-trinity-maroon transition-colors disabled:opacity-50"
+              className="px-6 py-2 rounded-lg border-2 border-#ef4444/50 bg-#ef4444 text-white hover:bg-#dc2626 transition-colors disabled:opacity-50"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>
@@ -140,7 +140,7 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
           {/* Name */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiUser className="h-4 w-4 text-trinity-red" />
+              <FiUser className="h-4 w-4 text-#ef4444" />
               Name
             </label>
             <input
@@ -148,62 +148,62 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Email */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiMail className="h-4 w-4 text-trinity-red" />
+              <FiMail className="h-4 w-4 text-#ef4444" />
               Email
             </label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Phone */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiPhone className="h-4 w-4 text-trinity-red" />
+              <FiPhone className="h-4 w-4 text-#ef4444" />
               Phone
             </label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Company */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiBriefcase className="h-4 w-4 text-trinity-red" />
+              <FiBriefcase className="h-4 w-4 text-#ef4444" />
               Company
             </label>
             <input
               type="text"
               value={formData.company}
               onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Status */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiTag className="h-4 w-4 text-trinity-red" />
+              <FiTag className="h-4 w-4 text-#ef4444" />
               Status
             </label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value as LeadStatus })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             >
               {STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -216,7 +216,7 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
           {/* Source */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiTag className="h-4 w-4 text-trinity-red" />
+              <FiTag className="h-4 w-4 text-#ef4444" />
               Source
             </label>
             <input
@@ -224,14 +224,14 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
               value={formData.source}
               onChange={(e) => setFormData({ ...formData, source: e.target.value })}
               placeholder="e.g., Website, Referral"
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Budget */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiDollarSign className="h-4 w-4 text-trinity-red" />
+              <FiDollarSign className="h-4 w-4 text-#ef4444" />
               Budget
             </label>
             <input
@@ -239,14 +239,14 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
               value={formData.budget}
               onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
               placeholder="e.g., $10,000 - $25,000"
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           {/* Timeline */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiCalendar className="h-4 w-4 text-trinity-red" />
+              <FiCalendar className="h-4 w-4 text-#ef4444" />
               Timeline
             </label>
             <input
@@ -254,7 +254,7 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
               value={formData.timeline}
               onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
               placeholder="e.g., 2-3 months"
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
         </div>
@@ -262,7 +262,7 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
         {/* Service Type */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-            <FiBriefcase className="h-4 w-4 text-trinity-red" />
+            <FiBriefcase className="h-4 w-4 text-#ef4444" />
             Service Type
           </label>
           <input
@@ -270,21 +270,21 @@ export function LeadModal({ isOpen, onClose, lead }: LeadModalProps) {
             value={formData.serviceType}
             onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
             placeholder="e.g., Web Development, Design"
-            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
           />
         </div>
 
         {/* Message/Notes */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-            <FiMessageSquare className="h-4 w-4 text-trinity-red" />
+            <FiMessageSquare className="h-4 w-4 text-#ef4444" />
             Notes / Message
           </label>
           <textarea
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             rows={4}
-            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors resize-none"
+            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors resize-none"
           />
         </div>
       </form>

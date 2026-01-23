@@ -114,7 +114,7 @@ export function CreateTaskModal({
                   setFormData({ ...formData, title: e.target.value })
                 }
                 placeholder="e.g., Design homepage mockup"
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
               />
             </div>
 
@@ -129,7 +129,7 @@ export function CreateTaskModal({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 placeholder="Task details..."
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none resize-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none resize-none"
               />
             </div>
 
@@ -143,7 +143,7 @@ export function CreateTaskModal({
                   onChange={(e) =>
                     setFormData({ ...formData, priority: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="LOW">Low</option>
                   <option value="MEDIUM">Medium</option>
@@ -160,7 +160,7 @@ export function CreateTaskModal({
                   onChange={(e) =>
                     setFormData({ ...formData, assignedToId: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="">Unassigned</option>
                   {teamMembers.map((member) => (
@@ -183,7 +183,7 @@ export function CreateTaskModal({
                   onChange={(e) =>
                     setFormData({ ...formData, dueDate: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -200,7 +200,7 @@ export function CreateTaskModal({
                     setFormData({ ...formData, estimatedHours: e.target.value })
                   }
                   placeholder="e.g., 4"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
             </div>
@@ -217,7 +217,7 @@ export function CreateTaskModal({
               <button
                 type="submit"
                 disabled={isSubmitting || !formData.title}
-                className="px-6 py-2 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-6 py-2 rounded-lg bg-#ef4444 text-white font-medium hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {isSubmitting ? "Creating..." : "Create Task"}
               </button>

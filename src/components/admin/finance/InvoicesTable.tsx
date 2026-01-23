@@ -212,7 +212,7 @@ export function InvoicesTable({ invoices, organizations = [] }: InvoicesTablePro
                       href={`/admin/pipeline/invoices/${invoice.id}`}
                       className="flex flex-col"
                     >
-                      <span className="text-sm font-semibold text-white hover:text-trinity-red transition">
+                      <span className="text-sm font-semibold text-white hover:text-#ef4444 transition">
                         {invoice.number}
                       </span>
                       <span className="text-xs text-gray-500 truncate max-w-[200px]">

@@ -152,7 +152,7 @@ export function TeamManagementClient({
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
           CEO Command Center
         </span>
         <h1 className="text-3xl font-heading font-bold text-white">Team Management</h1>
@@ -225,7 +225,7 @@ export function TeamManagementClient({
               }}
               className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? "border-trinity-red text-trinity-red"
+                  ? "border-#ef4444 text-#ef4444"
                   : "border-transparent text-gray-400 hover:text-white"
               }`}
             >
@@ -260,7 +260,7 @@ export function TeamManagementClient({
                           setSelectedItems(selectedItems.filter((id) => id !== item.id));
                         }
                       }}
-                      className="rounded border-gray-700 text-trinity-red focus:ring-trinity-red"
+                      className="rounded border-gray-700 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-sm text-gray-300 flex-1">
                       {"title" in item ? item.title : "name" in item ? item.name : (item as any).id}
@@ -289,7 +289,7 @@ export function TeamManagementClient({
                 }}
                 className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   audienceType === "user"
-                    ? "bg-trinity-red text-white"
+                    ? "bg-#ef4444 text-white"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
@@ -302,7 +302,7 @@ export function TeamManagementClient({
                 }}
                 className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   audienceType === "role"
-                    ? "bg-trinity-red text-white"
+                    ? "bg-#ef4444 text-white"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
@@ -328,7 +328,7 @@ export function TeamManagementClient({
                           setSelectedUsers(selectedUsers.filter((id) => id !== user.id));
                         }
                       }}
-                      className="rounded border-gray-700 text-trinity-red focus:ring-trinity-red"
+                      className="rounded border-gray-700 text-#ef4444 focus:ring-#ef4444"
                     />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-white">{user.name || user.email}</p>
@@ -357,7 +357,7 @@ export function TeamManagementClient({
                           setSelectedRoles(selectedRoles.filter((r) => r !== role));
                         }
                       }}
-                      className="rounded border-gray-700 text-trinity-red focus:ring-trinity-red"
+                      className="rounded border-gray-700 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-sm text-gray-300">{role}</span>
                   </label>
@@ -369,7 +369,7 @@ export function TeamManagementClient({
             <button
               onClick={handleAssign}
               disabled={loading || selectedItems.length === 0}
-              className="w-full px-4 py-3 rounded-lg bg-trinity-red text-white font-semibold transition-colors hover:bg-trinity-red/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-lg bg-#ef4444 text-white font-semibold transition-colors hover:bg-#ef4444/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Assigning..." : "Assign"}
             </button>

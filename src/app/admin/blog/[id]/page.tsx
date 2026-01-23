@@ -113,7 +113,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               id="title"
               name="title"
               defaultValue={post.title}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               placeholder="Enter post title..."
               required
             />
@@ -129,7 +129,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               id="slug"
               name="slug"
               defaultValue={post.slug}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               placeholder="url-friendly-slug"
               required
             />
@@ -145,7 +145,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               name="excerpt"
               rows={3}
               defaultValue={post.excerpt || ""}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent resize-none"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent resize-none"
               placeholder="Brief summary of the post..."
             />
           </div>
@@ -160,7 +160,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
               name="content"
               rows={15}
               defaultValue={post.content}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent font-mono text-sm resize-none"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent font-mono text-sm resize-none"
               placeholder="Write your blog post content here (Markdown supported)..."
               required
             />
@@ -177,7 +177,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 id="category"
                 name="category"
                 defaultValue={post.category || ""}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="e.g., Web Development"
               />
             </div>
@@ -191,7 +191,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 id="tags"
                 name="tags"
                 defaultValue={post.tags.join(", ")}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="react, nextjs, tutorial"
               />
             </div>
@@ -210,7 +210,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 id="seoTitle"
                 name="seoTitle"
                 defaultValue={post.seoTitle || ""}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="Custom title for search engines"
               />
             </div>
@@ -224,7 +224,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 name="seoDescription"
                 rows={2}
                 defaultValue={post.seoDescription || ""}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent resize-none"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent resize-none"
                 placeholder="Meta description for search engines"
               />
             </div>
@@ -240,7 +240,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 id="status"
                 name="status"
                 defaultValue={post.status}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               >
                 <option value="DRAFT">Draft</option>
                 <option value="REVIEW">Review</option>
@@ -258,7 +258,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                 id="coverImage"
                 name="coverImage"
                 defaultValue={post.coverImage || ""}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="https://..."
               />
             </div>
@@ -269,7 +269,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
                   type="checkbox"
                   name="featured"
                   defaultChecked={post.featured}
-                  className="w-5 h-5 bg-gray-900 border border-gray-700 rounded text-trinity-red focus:ring-2 focus:ring-trinity-red focus:ring-offset-0"
+                  className="w-5 h-5 bg-gray-900 border border-gray-700 rounded text-#ef4444 focus:ring-2 focus:ring-#ef4444 focus:ring-offset-0"
                 />
                 <span className="text-sm text-gray-300">Featured Post</span>
               </label>
@@ -289,7 +289,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-3 bg-gradient-to-r from-trinity-red to-trinity-maroon text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="px-6 py-3 bg-gradient-to-r from-#ef4444 to-#dc2626 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>

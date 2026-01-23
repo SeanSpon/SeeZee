@@ -101,7 +101,7 @@ export default function FilesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trinity-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-#ef4444"></div>
       </div>
     );
   }
@@ -158,7 +158,7 @@ export default function FilesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="bg-gray-900 border border-gray-800 p-6 rounded-xl hover:border-trinity-red/50 transition-all group"
+              className="bg-gray-900 border border-gray-800 p-6 rounded-xl hover:border-#ef4444/50 transition-all group"
             >
               <div className="flex items-start gap-4 mb-4">
                 <div className="flex-shrink-0 p-3 bg-white/5 rounded-lg">

@@ -115,7 +115,7 @@ export function ChatWidget() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-trinity-red to-trinity-maroon shadow-lg flex items-center justify-center z-50 hover:shadow-xl transition-shadow"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-#ef4444 to-#dc2626 shadow-lg flex items-center justify-center z-50 hover:shadow-xl transition-shadow"
       >
         <MessageCircle className="w-6 h-6 text-white" />
       </motion.button>
@@ -135,7 +135,7 @@ export function ChatWidget() {
       className="fixed bottom-6 right-6 w-96 rounded-2xl border-2 border-gray-700 bg-[#0a0e1a] shadow-2xl overflow-hidden z-50"
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-trinity-red to-trinity-maroon">
+      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-#ef4444 to-#dc2626">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
@@ -178,7 +178,7 @@ export function ChatWidget() {
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                     message.role === "USER"
-                      ? "bg-trinity-red text-white rounded-br-sm"
+                      ? "bg-#ef4444 text-white rounded-br-sm"
                       : message.role === "SYSTEM"
                       ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 rounded-bl-sm"
                       : "bg-[#1a2235] text-gray-200 rounded-bl-sm"
@@ -227,12 +227,12 @@ export function ChatWidget() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type a message..."
-                className="flex-1 rounded-xl border border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-trinity-red"
+                className="flex-1 rounded-xl border border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-#ef4444"
               />
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || isTyping}
-                className="p-2.5 rounded-xl bg-trinity-red text-white hover:bg-trinity-maroon disabled:bg-gray-700 disabled:cursor-not-allowed transition"
+                className="p-2.5 rounded-xl bg-#ef4444 text-white hover:bg-#dc2626 disabled:bg-gray-700 disabled:cursor-not-allowed transition"
               >
                 <Send className="w-5 h-5" />
               </button>

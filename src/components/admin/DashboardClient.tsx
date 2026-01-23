@@ -76,7 +76,7 @@ const coreActions = [
     label: "Pipeline",
     description: "Track deals & conversions",
     icon: FiTrendingUp,
-    accent: "from-trinity-red/20 via-trinity-red/10 to-transparent text-trinity-red",
+    accent: "from-[#ef4444]/20 via-[#ef4444]/10 to-transparent text-[#ef4444]",
   },
   {
     href: "/admin/projects",

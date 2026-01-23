@@ -236,7 +236,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
             type="submit"
             form="create-invoice-form"
             disabled={loading}
-            className="px-6 py-2 rounded-lg border-2 border-trinity-red/50 bg-trinity-red text-white hover:bg-trinity-maroon transition-colors disabled:opacity-50"
+            className="px-6 py-2 rounded-lg border-2 border-#ef4444/50 bg-#ef4444 text-white hover:bg-#dc2626 transition-colors disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Invoice"}
           </button>
@@ -253,7 +253,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
         {/* Project Selection */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-            <FiTag className="h-4 w-4 text-trinity-red" />
+            <FiTag className="h-4 w-4 text-#ef4444" />
             Project *
           </label>
           {loadingProjects ? (
@@ -263,7 +263,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
               value={formData.projectId}
               onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             >
               <option value="">Select a project</option>
               {projects.map((project) => (
@@ -279,7 +279,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiFileText className="h-4 w-4 text-trinity-red" />
+              <FiFileText className="h-4 w-4 text-#ef4444" />
               Invoice Title *
             </label>
             <input
@@ -288,19 +288,19 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="E.g., Website Development - Initial Payment"
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiTag className="h-4 w-4 text-trinity-red" />
+              <FiTag className="h-4 w-4 text-#ef4444" />
               Invoice Type
             </label>
             <select
               value={formData.invoiceType}
               onChange={(e) => setFormData({ ...formData, invoiceType: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             >
               {INVOICE_TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -312,7 +312,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiCalendar className="h-4 w-4 text-trinity-red" />
+              <FiCalendar className="h-4 w-4 text-#ef4444" />
               Due Date *
             </label>
             <input
@@ -320,7 +320,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
               value={formData.dueDate}
               onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
         </div>
@@ -328,7 +328,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
         {/* Description */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-            <FiAlignLeft className="h-4 w-4 text-trinity-red" />
+            <FiAlignLeft className="h-4 w-4 text-#ef4444" />
             Description (Optional)
           </label>
           <textarea
@@ -336,7 +336,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={2}
             placeholder="Additional notes or payment terms..."
-            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors resize-none"
+            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors resize-none"
           />
         </div>
 
@@ -370,7 +370,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                         e.target.value = ""; // Reset selector
                       }
                     }}
-                    className="flex-1 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-sm text-gray-300 focus:border-trinity-red/50 focus:outline-none"
+                    className="flex-1 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-sm text-gray-300 focus:border-#ef4444/50 focus:outline-none"
                   >
                     <option value="">Quick add template...</option>
                     {LINE_ITEM_TEMPLATES.map((template, idx) => (
@@ -399,7 +399,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                       onChange={(e) => updateLineItem(item.id, "description", e.target.value)}
                       placeholder="Description"
                       required
-                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-trinity-red/50 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-#ef4444/50 focus:outline-none"
                     />
                   </div>
                   <div className="col-span-4 md:col-span-2">
@@ -412,7 +412,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                       placeholder="Qty"
                       min="1"
                       required
-                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-trinity-red/50 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-#ef4444/50 focus:outline-none"
                     />
                   </div>
                   <div className="col-span-4 md:col-span-2">
@@ -426,7 +426,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                       min="0"
                       step="0.01"
                       required
-                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-trinity-red/50 focus:outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-#ef4444/50 focus:outline-none"
                     />
                   </div>
                   <div className="col-span-4 md:col-span-3">
@@ -454,12 +454,12 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
               onChange={(e) => setFormData({ ...formData, tax: parseFloat(e.target.value) || 0 })}
               min="0"
               step="0.01"
-              className="w-32 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-trinity-red/50 focus:outline-none"
+              className="w-32 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/50 text-white text-sm focus:border-#ef4444/50 focus:outline-none"
             />
           </div>
           <div className="pt-3 border-t border-gray-700 flex items-center justify-between">
             <span className="text-lg font-semibold text-white">Total</span>
-            <span className="text-2xl font-bold text-trinity-red">${total.toFixed(2)}</span>
+            <span className="text-2xl font-bold text-#ef4444">${total.toFixed(2)}</span>
           </div>
         </div>
       </form>
