@@ -260,7 +260,12 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
   );
 
   const renderTasksTab = () => (
-    <AdminProjectTasks projectId={project.id} clientTasks={project.clientTasks} adminTasks={project.adminTasks} />
+    <AdminProjectTasks 
+      projectId={project.id} 
+      clientTasks={project.clientTasks} 
+      adminTasks={project.adminTasks}
+      milestones={project.milestones}
+    />
   );
 
   const renderActivityTab = () => {
