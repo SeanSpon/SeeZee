@@ -45,7 +45,8 @@ export default async function AdminDashboardPage() {
   ).length;
 
   const paidInvoices = invoices.filter((inv) => inv.status === "PAID");
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + (inv.total || 0), 0);
+  // Invoice totals are stored in cents, convert to dollars for display
+  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + (inv.total || 0), 0) / 100;
 
   // Get unique clients from invoices and projects
   const clientIds = new Set<string>();
@@ -88,10 +89,10 @@ export default async function AdminDashboardPage() {
   const thisMonthExpenseCalc = calculateCurrentMonthExpenses(expenseItems);
   const totalExpenses = thisMonthExpenseCalc.total; // Already in cents
   
-  // Calculate this month's revenue
+  // Calculate this month's revenue (convert from cents to dollars)
   const thisMonthRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
-    .reduce((sum, inv) => sum + (inv.total || 0), 0);
+    .reduce((sum, inv) => sum + (inv.total || 0), 0) / 100;
   
   const netProfit = thisMonthRevenue - (totalExpenses / 100); // Convert cents to dollars
 

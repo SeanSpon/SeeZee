@@ -221,7 +221,7 @@ export function FinanceDashboard({
           value={currencyFormatter.format(
             invoices
               .filter((inv) => inv.status === "PAID")
-              .reduce((sum, inv) => sum + inv.total, 0)
+              .reduce((sum, inv) => sum + inv.total, 0) / 100
           )}
           subtitle={`${metrics.totalPaidInvoices} invoices paid`}
           icon={CreditCard}

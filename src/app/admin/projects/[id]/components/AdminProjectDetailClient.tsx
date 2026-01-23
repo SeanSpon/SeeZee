@@ -148,10 +148,10 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
     });
   const nextTasks = pendingTasks.slice(0, 3);
 
-  // Financial summary
-  const totalInvoiced = project.invoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0);
+  // Financial summary (invoice totals are in cents, convert to dollars)
+  const totalInvoiced = project.invoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 100;
   const paidInvoices = project.invoices.filter((inv) => inv.status === "PAID");
-  const totalPaid = paidInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0);
+  const totalPaid = paidInvoices.reduce((sum, inv) => sum + Number(inv.total || 0), 0) / 100;
   const outstandingAmount = totalInvoiced - totalPaid;
 
   // Format deadline

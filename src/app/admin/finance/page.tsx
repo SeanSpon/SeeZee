@@ -95,12 +95,12 @@ export default async function FinancePage() {
     inv.status === "SENT" || inv.status === "OVERDUE"
   );
 
-  // Revenue calculations
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+  // Revenue calculations - Invoice totals are stored in cents, convert to dollars
+  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
   
   const thisMonthRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
   
   const lastMonthRevenue = paidInvoices
     .filter(inv => 
@@ -108,16 +108,16 @@ export default async function FinancePage() {
       new Date(inv.paidAt) >= lastMonth && 
       new Date(inv.paidAt) < thisMonth
     )
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
 
   const last30DaysRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= last30Days)
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
 
   const outstandingAmount = outstandingInvoices.reduce(
     (sum, inv) => sum + Number(inv.total), 
     0
-  );
+  ) / 100;
 
   const overdueInvoices = invoices.filter(inv => {
     if (inv.status !== "SENT" && inv.status !== "OVERDUE") return false;
@@ -128,7 +128,7 @@ export default async function FinancePage() {
   const overdueAmount = overdueInvoices.reduce(
     (sum, inv) => sum + Number(inv.total),
     0
-  );
+  ) / 100;
 
   // Expense calculations - PROPERLY handles recurring vs one-time
   const expenseItems = expenses.map((exp) => ({
@@ -197,7 +197,7 @@ export default async function FinancePage() {
         new Date(inv.paidAt) >= monthStart && 
         new Date(inv.paidAt) < monthEnd
       )
-      .reduce((sum, inv) => sum + Number(inv.total), 0);
+      .reduce((sum, inv) => sum + Number(inv.total), 0) / 100; // Convert cents to dollars
 
     const monthExpenses = expenses
       .filter(exp => 

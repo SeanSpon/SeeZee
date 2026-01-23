@@ -28,6 +28,15 @@ export function formatCurrency(
 }
 
 /**
+ * Convert cents to dollars (for numeric calculations)
+ * Use this when you need to convert invoice/payment amounts from cents to dollars
+ * before displaying or calculating with other dollar amounts
+ */
+export function centsToDollars(cents: number): number {
+  return cents / 100;
+}
+
+/**
  * Format currency from cents (Stripe amounts are in cents)
  * Use this for any Stripe-related amounts
  */
@@ -40,7 +49,7 @@ export function formatCents(
     currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(cents / 100);
+  }).format(centsToDollars(cents));
 }
 
 /**

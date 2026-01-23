@@ -103,12 +103,12 @@ export default async function CEOAnalyticsPage() {
     }),
   ]);
 
-  // Calculate revenue metrics
+  // Calculate revenue metrics - Invoice totals are stored in cents, convert to dollars
   const paidInvoices = invoices.filter(i => i.status === 'PAID');
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
+  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
   const pendingRevenue = invoices
     .filter(i => ['SENT', 'OVERDUE'].includes(i.status))
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
 
   // Revenue by month (last 12 months)
   const now = new Date();
@@ -122,7 +122,7 @@ export default async function CEOAnalyticsPage() {
         const paidDate = inv.paidAt ? new Date(inv.paidAt) : null;
         return paidDate && paidDate >= monthStart && paidDate <= monthEnd;
       })
-      .reduce((sum, inv) => sum + Number(inv.total), 0);
+      .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
 
     return {
       month: month.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
@@ -152,10 +152,10 @@ export default async function CEOAnalyticsPage() {
   const completedTodos = todos.filter(t => t.status === 'DONE');
   const taskCompletionRate = todos.length > 0 ? (completedTodos.length / todos.length) * 100 : 0;
 
-  // Top clients by revenue
+  // Top clients by revenue (convert cents to dollars)
   const clientRevenue = paidInvoices.reduce((acc, inv) => {
     const client = inv.organization?.name || 'Unknown';
-    acc[client] = (acc[client] || 0) + Number(inv.total);
+    acc[client] = (acc[client] || 0) + Number(inv.total) / 100;
     return acc;
   }, {} as Record<string, number>);
 
@@ -175,14 +175,14 @@ export default async function CEOAnalyticsPage() {
   
   const recentRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= last30Days)
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
     
   const previousRevenue = paidInvoices
     .filter(inv => {
       const paidDate = inv.paidAt ? new Date(inv.paidAt) : null;
       return paidDate && paidDate >= last60Days && paidDate < last30Days;
     })
-    .reduce((sum, inv) => sum + Number(inv.total), 0);
+    .reduce((sum, inv) => sum + Number(inv.total), 0) / 100;
 
   const revenueTrend = previousRevenue > 0 
     ? ((recentRevenue - previousRevenue) / previousRevenue) * 100 
