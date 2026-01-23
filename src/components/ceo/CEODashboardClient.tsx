@@ -800,7 +800,7 @@ export function CEODashboardClient({
         </div>
 
         {/* Git Activity - Full GitHub API Integration */}
-        <SectionCard title="Development Activity" icon={<Github className="w-5 h-5" />}>
+        <SectionCard title="Development Activity">
           <GitDashboard 
             compact={false}
             showStats={true}

@@ -115,16 +115,16 @@ export default async function AdminDashboardPage() {
   }));
 
   // Get top tasks (high priority, not done)
-  const topTasks = tasks
-    .filter((task) => task.status !== "DONE")
-    .sort((a, b) => {
+  const topTasks = (tasks as any[])
+    .filter((task: any) => task.status !== "DONE")
+    .sort((a: any, b: any) => {
       const priorityOrder = { HIGH: 3, MEDIUM: 2, LOW: 1 };
       const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
       const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
       return bPriority - aPriority;
     })
     .slice(0, 5)
-    .map((task) => ({
+    .map((task: any) => ({
       id: task.id,
       title: task.title,
       status: task.status,

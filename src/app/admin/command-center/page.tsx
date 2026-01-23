@@ -305,7 +305,10 @@ export default function CommandCenterPage() {
         details: a.description,
         repo: a.repo,
         repoUrl: a.repoUrl,
-        actor: a.actor,
+        actor: {
+          username: a.actor.login,
+          avatar: a.actor.avatar,
+        },
         createdAt: a.createdAt,
       }));
       setGitEvents(mappedEvents);
