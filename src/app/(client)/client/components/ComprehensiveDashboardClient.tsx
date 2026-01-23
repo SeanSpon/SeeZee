@@ -201,19 +201,19 @@ export default function ComprehensiveDashboardClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-trinity-red/50 transition-all duration-300 overflow-hidden"
+          className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-#ef4444/50 transition-all duration-300 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gray-800/50 text-trinity-red">
+              <div className="p-3 rounded-xl bg-white/10 text-#ef4444">
                 <FiFolder className="w-6 h-6" />
               </div>
               <StatusBadge status="active" size="sm" />
             </div>
             <h3 className="text-3xl lg:text-4xl font-bold text-white mb-1">{data.stats.activeProjects}</h3>
-            <p className="text-sm text-gray-400 font-medium">Active Projects</p>
-            <p className="text-xs text-gray-500 mt-1">In progress</p>
+            <p className="text-sm text-slate-400 font-medium">Active Projects</p>
+            <p className="text-xs text-slate-500 mt-1">In progress</p>
           </div>
         </motion.div>
 
@@ -222,19 +222,19 @@ export default function ComprehensiveDashboardClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-yellow-500/50 transition-all duration-300 overflow-hidden"
+          className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-yellow-500/50 transition-all duration-300 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gray-800/50 text-yellow-500">
+              <div className="p-3 rounded-xl bg-white/10 text-yellow-500">
                 <FiFileText className="w-6 h-6" />
               </div>
               <StatusBadge status="unpaid" size="sm" />
             </div>
             <h3 className="text-3xl lg:text-4xl font-bold text-white mb-1">{data.stats.pendingInvoices}</h3>
-            <p className="text-sm text-gray-400 font-medium">Pending Invoices</p>
-            <p className="text-xs text-gray-500 mt-1">Awaiting payment</p>
+            <p className="text-sm text-slate-400 font-medium">Pending Invoices</p>
+            <p className="text-xs text-slate-500 mt-1">Awaiting payment</p>
           </div>
         </motion.div>
 
@@ -243,19 +243,19 @@ export default function ComprehensiveDashboardClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-blue-500/50 transition-all duration-300 overflow-hidden"
+          className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gray-800/50 text-blue-500">
+              <div className="p-3 rounded-xl bg-white/10 text-blue-500">
                 <FiMessageSquare className="w-6 h-6" />
               </div>
               <StatusBadge status="in_progress" size="sm" />
             </div>
             <h3 className="text-3xl lg:text-4xl font-bold text-white mb-1">{data.stats.activeRequests}</h3>
-            <p className="text-sm text-gray-400 font-medium">Active Requests</p>
-            <p className="text-xs text-gray-500 mt-1">Being worked on</p>
+            <p className="text-sm text-slate-400 font-medium">Active Requests</p>
+            <p className="text-xs text-slate-500 mt-1">Being worked on</p>
           </div>
         </motion.div>
 
@@ -264,12 +264,12 @@ export default function ComprehensiveDashboardClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="group relative bg-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-6 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden"
+          className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gray-800/50 text-cyan-500">
+              <div className="p-3 rounded-xl bg-white/10 text-cyan-500">
                 <FiClock className="w-6 h-6" />
               </div>
               {hoursBalance && !hoursBalance.isUnlimited && hoursBalance.monthlyUsed > 0 && (
@@ -282,10 +282,10 @@ export default function ComprehensiveDashboardClient({
             <h3 className="text-3xl lg:text-4xl font-bold text-white mb-1">
               {hoursBalance?.isUnlimited ? '∞' : (hoursBalance?.estimatedRemaining !== undefined ? hoursBalance.estimatedRemaining : hoursBalance?.totalAvailable ?? data.stats.totalProjects)}
             </h3>
-            <p className="text-sm text-gray-400 font-medium">
+            <p className="text-sm text-slate-400 font-medium">
               {hoursBalance ? (hoursBalance.estimatedRemaining !== undefined ? 'Estimated Remaining' : 'Hours Available') : 'Total Projects'}
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               {hoursBalance ? (
                 hoursBalance.isUnlimited ? 'Unlimited plan' : (
                   hoursBalance.estimatedRemaining !== undefined && hoursBalance.estimatedHoursPending && hoursBalance.estimatedHoursPending > 0
@@ -366,7 +366,7 @@ export default function ComprehensiveDashboardClient({
           <h2 className="text-2xl font-heading font-bold text-white">Your Projects</h2>
           <Link
             href="/client/projects"
-            className="flex items-center gap-2 text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+            className="flex items-center gap-2 text-#ef4444 hover:text-#dc2626 transition-colors font-medium"
           >
             View All
             <FiArrowRight className="w-4 h-4" />
@@ -385,7 +385,7 @@ export default function ComprehensiveDashboardClient({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
-                  className="bg-gray-900 rounded-xl border border-gray-800 p-6 hover:border-trinity-red/50 transition-all duration-300"
+                  className="bg-white/5 rounded-xl border border-white/10 p-6 hover:border-#ef4444/50 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -396,19 +396,19 @@ export default function ComprehensiveDashboardClient({
                     </div>
                   </div>
                   {project.description && (
-                    <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    <p className="text-sm text-slate-400 mb-4 line-clamp-2">
                       {project.description}
                     </p>
                   )}
                   {totalMilestones > 0 && (
                     <div className="mb-4">
-                      <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                      <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
                         <span>Progress</span>
                         <span>{progress}%</span>
                       </div>
-                      <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
+                      <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-trinity-red to-trinity-maroon transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-#ef4444 to-#dc2626 transition-all duration-500"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -416,7 +416,7 @@ export default function ComprehensiveDashboardClient({
                   )}
                   <Link
                     href={`/client/projects/${project.id}`}
-                    className="inline-flex items-center gap-2 text-trinity-red hover:text-trinity-maroon transition-colors font-medium"
+                    className="inline-flex items-center gap-2 text-#ef4444 hover:text-#dc2626 transition-colors font-medium"
                   >
                     View Details
                     <FiArrowRight className="w-4 h-4" />
@@ -426,11 +426,11 @@ export default function ComprehensiveDashboardClient({
             })}
           </div>
         ) : (
-          <div className="bg-gray-900 rounded-xl border border-gray-800 p-12 text-center">
-            <p className="text-gray-400 mb-4">No projects yet</p>
+          <div className="bg-white/5 rounded-xl border border-white/10 p-12 text-center">
+            <p className="text-slate-400 mb-4">No projects yet</p>
             <Link
               href="/start"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-colors"
             >
               <FiPlus className="w-4 h-4" />
               Start a New Project
@@ -444,7 +444,7 @@ export default function ComprehensiveDashboardClient({
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-white">Financial Overview</h2>
-            <p className="text-gray-400 mt-1">Your spending and payment history</p>
+            <p className="text-slate-400 mt-1">Your spending and payment history</p>
           </div>
           <ClientFinancialOverview data={data.financialData} />
         </div>
@@ -463,7 +463,7 @@ export default function ComprehensiveDashboardClient({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-gray-900 rounded-xl border border-gray-800 p-6"
+          className="bg-white/5 rounded-xl border border-white/10 p-6"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
@@ -476,13 +476,13 @@ export default function ComprehensiveDashboardClient({
             {currentHoursBalance.isUnlimited ? (
               <div className="text-center py-4">
                 <div className="text-3xl font-bold text-cyan-400 mb-2">∞</div>
-                <p className="text-sm text-gray-400">Unlimited Plan</p>
+                <p className="text-sm text-slate-400">Unlimited Plan</p>
               </div>
             ) : (
               <>
-                <div className="bg-gray-800/50 rounded-lg p-3">
+                <div className="bg-white/10 rounded-lg p-3">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-400">Available</span>
+                    <span className="text-sm text-slate-400">Available</span>
                     <span className="text-lg font-bold text-white">
                       {currentHoursBalance.estimatedRemaining !== undefined 
                         ? currentHoursBalance.estimatedRemaining 
@@ -490,8 +490,8 @@ export default function ComprehensiveDashboardClient({
                     </span>
                   </div>
                   {currentHoursBalance.estimatedHoursPending !== undefined && currentHoursBalance.estimatedHoursPending > 0 && (
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-700">
-                      <span className="text-xs text-gray-500">Pending</span>
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
+                      <span className="text-xs text-slate-500">Pending</span>
                       <span className="text-xs text-yellow-400">
                         -{currentHoursBalance.estimatedHoursPending}h
                       </span>
@@ -500,20 +500,20 @@ export default function ComprehensiveDashboardClient({
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-gray-400">Monthly</div>
+                  <div className="bg-white/10 rounded p-2">
+                    <div className="text-slate-400">Monthly</div>
                     <div className="text-white font-semibold">{currentHoursBalance.monthlyRemaining}</div>
                   </div>
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-gray-400">Rollover</div>
+                  <div className="bg-white/10 rounded p-2">
+                    <div className="text-slate-400">Rollover</div>
                     <div className="text-white font-semibold">{currentHoursBalance.rolloverTotal}</div>
                   </div>
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-gray-400">Packs</div>
+                  <div className="bg-white/10 rounded p-2">
+                    <div className="text-slate-400">Packs</div>
                     <div className="text-white font-semibold">{currentHoursBalance.packHoursTotal}</div>
                   </div>
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-gray-400">Used</div>
+                  <div className="bg-white/10 rounded p-2">
+                    <div className="text-slate-400">Used</div>
                     <div className="text-white font-semibold">{currentHoursBalance.monthlyUsed}</div>
                   </div>
                 </div>
@@ -530,28 +530,28 @@ export default function ComprehensiveDashboardClient({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="bg-gray-900 rounded-xl border border-gray-800 p-6"
+          className="bg-white/5 rounded-xl border border-white/10 p-6"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">Requests</h3>
-            <Link href="/client/requests" className="text-sm text-trinity-red hover:text-trinity-maroon">
+            <Link href="/client/requests" className="text-sm text-#ef4444 hover:text-#dc2626">
               View All →
             </Link>
           </div>
           
           {/* Breakdown Stats */}
           <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+            <div className="bg-white/10 rounded-lg p-3 text-center">
               <div className="text-2xl font-bold text-yellow-400">{requestBreakdown.pending.length}</div>
-              <div className="text-xs text-gray-400 mt-1">Pending</div>
+              <div className="text-xs text-slate-400 mt-1">Pending</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+            <div className="bg-white/10 rounded-lg p-3 text-center">
               <div className="text-2xl font-bold text-green-400">{requestBreakdown.approved.length}</div>
-              <div className="text-xs text-gray-400 mt-1">Approved</div>
+              <div className="text-xs text-slate-400 mt-1">Approved</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-gray-400">{requestBreakdown.rejected.length}</div>
-              <div className="text-xs text-gray-400 mt-1">Rejected</div>
+            <div className="bg-white/10 rounded-lg p-3 text-center">
+              <div className="text-2xl font-bold text-slate-400">{requestBreakdown.rejected.length}</div>
+              <div className="text-xs text-slate-400 mt-1">Rejected</div>
             </div>
           </div>
 
@@ -563,13 +563,13 @@ export default function ComprehensiveDashboardClient({
                   <Link
                     key={request.id}
                     href="/client/requests"
-                    className="block p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-trinity-red transition-colors"
+                    className="block p-3 bg-white/5 rounded-xl border border-white/10 hover:border-#ef4444 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-1">
                       <h4 className="font-medium text-white text-sm line-clamp-1">{request.title}</h4>
                       <StatusBadge status={request.status} size="sm" />
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-slate-500">
                       {new Date(request.createdAt).toLocaleDateString()}
                     </p>
                   </Link>
@@ -577,7 +577,7 @@ export default function ComprehensiveDashboardClient({
               })}
             </div>
           ) : (
-            <p className="text-gray-400 text-center py-8 text-sm">No recent requests</p>
+            <p className="text-slate-400 text-center py-8 text-sm">No recent requests</p>
           )}
         </motion.div>
 
@@ -586,21 +586,21 @@ export default function ComprehensiveDashboardClient({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="bg-gray-900 rounded-xl border border-gray-800 p-6"
+          className="bg-white/5 rounded-xl border border-white/10 p-6"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <FiCalendar className="w-5 h-5 text-purple-400" />
               Upcoming Meetings
             </h3>
-            <Link href="/client/meetings" className="text-sm text-trinity-red hover:text-trinity-maroon">
+            <Link href="/client/meetings" className="text-sm text-#ef4444 hover:text-#dc2626">
               View All →
             </Link>
           </div>
           
           {loadingMeetings ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-trinity-red mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-#ef4444 mx-auto"></div>
             </div>
           ) : upcomingMeetings.length > 0 ? (
             <div className="space-y-3">
@@ -611,7 +611,7 @@ export default function ComprehensiveDashboardClient({
                   <Link
                     key={meeting.id}
                     href="/client/meetings"
-                    className="block p-3 bg-gray-800 rounded-lg border border-gray-700 hover:border-purple-500 transition-colors"
+                    className="block p-3 bg-white/5 rounded-xl border border-white/10 hover:border-purple-500 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-1">
                       <h4 className="font-medium text-white text-sm line-clamp-1">{meeting.title}</h4>
@@ -619,14 +619,14 @@ export default function ComprehensiveDashboardClient({
                         <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded">Today</span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-slate-400 mt-1">
                       {isToday 
                         ? `Today at ${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
                         : startTime.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
                       }
                     </p>
                     {meeting.project && (
-                      <p className="text-xs text-gray-500 mt-1">{meeting.project.name}</p>
+                      <p className="text-xs text-slate-500 mt-1">{meeting.project.name}</p>
                     )}
                   </Link>
                 );
@@ -634,11 +634,11 @@ export default function ComprehensiveDashboardClient({
             </div>
           ) : (
             <div className="text-center py-8">
-              <FiCalendar className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400 text-sm mb-3">No upcoming meetings</p>
+              <FiCalendar className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+              <p className="text-slate-400 text-sm mb-3">No upcoming meetings</p>
               <Link
                 href="/client/meetings"
-                className="inline-flex items-center gap-2 text-sm text-trinity-red hover:text-trinity-maroon"
+                className="inline-flex items-center gap-2 text-sm text-#ef4444 hover:text-#dc2626"
               >
                 <FiPlus className="w-4 h-4" />
                 Request Meeting

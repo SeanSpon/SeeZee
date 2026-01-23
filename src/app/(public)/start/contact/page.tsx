@@ -46,7 +46,7 @@ function ContactPageContent() {
       <PageShell>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-trinity-red border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-16 h-16 border-4 border-#ef4444 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-white/60">Loading...</p>
           </div>
         </div>
@@ -76,7 +76,7 @@ function ContactPageContent() {
               </p>
               <Link
                 href="/start"
-                className="inline-block px-6 py-3 bg-trinity-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+                className="inline-block px-6 py-3 bg-#ef4444 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
               >
                 Back to Services
               </Link>
@@ -107,7 +107,7 @@ export default function ContactPage() {
       <PageShell>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-trinity-red border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-16 h-16 border-4 border-#ef4444 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-white/60">Loading...</p>
           </div>
         </div>

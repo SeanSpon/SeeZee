@@ -134,7 +134,7 @@ export default function StartProjectPage() {
                     </div>
 
                     {/* Service Name */}
-                    <h3 className="text-2xl font-heading font-bold text-white mb-3 group-hover:text-trinity-red transition-colors">
+                    <h3 className="text-2xl font-heading font-bold text-white mb-3 group-hover:text-#ef4444 transition-colors">
                       {getServiceCategoryDisplayName(service.category)}
                     </h3>
 
@@ -154,7 +154,7 @@ export default function StartProjectPage() {
                     </ul>
 
                     {/* CTA Button */}
-                    <div className="flex items-center justify-between text-white group-hover:text-trinity-red transition-colors">
+                    <div className="flex items-center justify-between text-white group-hover:text-#ef4444 transition-colors">
                       <span className="font-semibold">Get Started</span>
                       <FiArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                     </div>
@@ -176,7 +176,7 @@ export default function StartProjectPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 text-trinity-red hover:text-trinity-red/80 font-semibold transition-colors"
+              className="inline-flex items-center gap-2 text-#ef4444 hover:text-#ef4444/80 font-semibold transition-colors"
             >
               Contact us for a consultation
               <FiArrowRight className="w-4 h-4" />

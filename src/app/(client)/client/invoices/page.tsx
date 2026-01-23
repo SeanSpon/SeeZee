@@ -108,68 +108,68 @@ export default async function InvoicesPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-heading font-bold text-white mb-2">Billing Overview</h1>
-        <p className="text-gray-400">View and manage all invoices across your projects</p>
+        <p className="text-slate-400">View and manage all invoices across your projects</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-xl bg-green-500/20">
               <FiDollarSign className="w-5 h-5 text-green-400" />
             </div>
-            <span className="text-sm font-medium text-gray-400">Total Paid</span>
+            <span className="text-sm font-medium text-slate-400">Total Paid</span>
           </div>
           <p className="text-2xl font-bold text-green-400">
             ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}
           </p>
         </div>
 
-        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-xl bg-yellow-500/20">
               <FiClock className="w-5 h-5 text-yellow-400" />
             </div>
-            <span className="text-sm font-medium text-gray-400">Pending</span>
+            <span className="text-sm font-medium text-slate-400">Pending</span>
           </div>
           <p className="text-2xl font-bold text-yellow-400">
             ${totalPending.toLocaleString("en-US", { minimumFractionDigits: 2 })}
           </p>
         </div>
 
-        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-xl bg-red-500/20">
               <FiFileText className="w-5 h-5 text-red-400" />
             </div>
-            <span className="text-sm font-medium text-gray-400">Overdue</span>
+            <span className="text-sm font-medium text-slate-400">Overdue</span>
           </div>
           <p className="text-2xl font-bold text-red-400">
             ${totalOverdue.toLocaleString("en-US", { minimumFractionDigits: 2 })}
           </p>
         </div>
 
-        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-6">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-xl bg-cyan-500/20">
               <FiCheckCircle className="w-5 h-5 text-cyan-400" />
             </div>
-            <span className="text-sm font-medium text-gray-400">Invoices Paid</span>
+            <span className="text-sm font-medium text-slate-400">Invoices Paid</span>
           </div>
           <p className="text-2xl font-bold text-cyan-400">
-            {paidCount} <span className="text-sm text-gray-500">of {invoices.length}</span>
+            {paidCount} <span className="text-sm text-slate-500">of {invoices.length}</span>
           </p>
         </div>
       </div>
 
       {/* Invoices Table */}
       {invoices.length === 0 ? (
-        <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-12 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gray-800 flex items-center justify-center">
-            <FiFileText className="w-8 h-8 text-gray-600" />
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-12 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center">
+            <FiFileText className="w-8 h-8 text-slate-500" />
           </div>
-          <p className="text-gray-400 mb-2">No invoices yet</p>
-          <p className="text-sm text-gray-500">Invoices for your projects will appear here</p>
+          <p className="text-slate-400 mb-2">No invoices yet</p>
+          <p className="text-sm text-slate-500">Invoices for your projects will appear here</p>
         </div>
       ) : (
         <InvoicesTableClient invoices={invoices} />

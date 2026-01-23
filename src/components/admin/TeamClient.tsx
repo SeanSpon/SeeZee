@@ -252,11 +252,11 @@ export function TeamClient({ users }: TeamClientProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-trinity-red/20 to-purple-600/20 flex items-center justify-center border border-trinity-red/30">
-                <Users className="w-6 h-6 text-trinity-red" />
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-#ef4444/20 to-purple-600/20 flex items-center justify-center border border-#ef4444/30">
+                <Users className="w-6 h-6 text-#ef4444" />
               </div>
               <div>
-                <span className="text-xs font-bold uppercase tracking-[0.3em] text-trinity-red">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-#ef4444">
                   People Operations
                 </span>
                 <h1 className="text-3xl md:text-4xl font-heading font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
@@ -270,7 +270,7 @@ export function TeamClient({ users }: TeamClientProps) {
           </div>
           <button
             onClick={() => setShowInviteModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-trinity-red to-red-600 hover:from-trinity-red/90 hover:to-red-600/90 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-2 shadow-lg shadow-trinity-red/25 hover:shadow-xl hover:shadow-trinity-red/40 hover:-translate-y-0.5 group"
+            className="px-6 py-3 bg-gradient-to-r from-#ef4444 to-red-600 hover:from-#ef4444/90 hover:to-red-600/90 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-2 shadow-lg shadow-#ef4444/25 hover:shadow-xl hover:shadow-#ef4444/40 hover:-translate-y-0.5 group"
           >
             <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Invite Staff
@@ -304,13 +304,13 @@ export function TeamClient({ users }: TeamClientProps) {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Team */}
-        <div className="group relative rounded-2xl border border-gray-700/50 bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl p-6 transition-all duration-500 hover:border-trinity-red/50 hover:shadow-2xl hover:shadow-trinity-red/20 hover:-translate-y-1 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="group relative rounded-2xl border border-gray-700/50 bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl p-6 transition-all duration-500 hover:border-#ef4444/50 hover:shadow-2xl hover:shadow-#ef4444/20 hover:-translate-y-1 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs uppercase tracking-[0.25em] text-slate-400 font-bold">Total Team</p>
-              <div className="w-11 h-11 bg-gradient-to-br from-trinity-red/20 to-red-600/20 rounded-xl flex items-center justify-center border border-trinity-red/30 group-hover:scale-110 transition-transform duration-300">
-                <Users className="w-5 h-5 text-trinity-red" />
+              <div className="w-11 h-11 bg-gradient-to-br from-#ef4444/20 to-red-600/20 rounded-xl flex items-center justify-center border border-#ef4444/30 group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-5 h-5 text-#ef4444" />
               </div>
             </div>
             <p className="text-4xl font-heading font-bold bg-gradient-to-br from-white to-gray-300 bg-clip-text text-transparent mb-1">
@@ -389,13 +389,13 @@ export function TeamClient({ users }: TeamClientProps) {
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search Bar */}
           <div className="flex-1 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-trinity-red transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-#ef4444 transition-colors" />
             <input
               type="text"
               placeholder={selectedRole === "CLIENT" ? "Search clients by name, email, or company..." : "Search team members by name, email, or role..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 bg-slate-900/50 border border-gray-700/50 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-trinity-red/50 focus:border-trinity-red/50 transition-all backdrop-blur-xl"
+              className="w-full pl-12 pr-4 py-3.5 bg-slate-900/50 border border-gray-700/50 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-#ef4444/50 focus:border-#ef4444/50 transition-all backdrop-blur-xl"
             />
           </div>
 
@@ -404,7 +404,7 @@ export function TeamClient({ users }: TeamClientProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="appearance-none px-4 py-3.5 pr-10 bg-slate-900/50 border border-gray-700/50 rounded-xl text-white font-medium focus:outline-none focus:ring-2 focus:ring-trinity-red/50 focus:border-trinity-red/50 transition-all cursor-pointer backdrop-blur-xl min-w-[180px]"
+              className="appearance-none px-4 py-3.5 pr-10 bg-slate-900/50 border border-gray-700/50 rounded-xl text-white font-medium focus:outline-none focus:ring-2 focus:ring-#ef4444/50 focus:border-#ef4444/50 transition-all cursor-pointer backdrop-blur-xl min-w-[180px]"
             >
               <option value="role">Sort by Role</option>
               <option value="name">Sort by Name</option>
@@ -419,7 +419,7 @@ export function TeamClient({ users }: TeamClientProps) {
               onClick={() => setViewMode("grid")}
               className={`p-2.5 rounded-lg transition-all ${
                 viewMode === "grid"
-                  ? "bg-trinity-red text-white shadow-lg"
+                  ? "bg-#ef4444 text-white shadow-lg"
                   : "text-slate-400 hover:text-white hover:bg-white/5"
               }`}
               title="Grid View"
@@ -432,7 +432,7 @@ export function TeamClient({ users }: TeamClientProps) {
               onClick={() => setViewMode("list")}
               className={`p-2.5 rounded-lg transition-all ${
                 viewMode === "list"
-                  ? "bg-trinity-red text-white shadow-lg"
+                  ? "bg-#ef4444 text-white shadow-lg"
                   : "text-slate-400 hover:text-white hover:bg-white/5"
               }`}
               title="List View"
@@ -450,8 +450,8 @@ export function TeamClient({ users }: TeamClientProps) {
             onClick={() => setSelectedRole(null)}
             className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
               selectedRole === null
-                ? "bg-gradient-to-r from-trinity-red to-red-600 text-white shadow-lg shadow-trinity-red/25 scale-105"
-                : "bg-slate-900/50 text-slate-300 border border-gray-700/50 hover:border-trinity-red/50 hover:text-white hover:scale-105"
+                ? "bg-gradient-to-r from-#ef4444 to-red-600 text-white shadow-lg shadow-#ef4444/25 scale-105"
+                : "bg-slate-900/50 text-slate-300 border border-gray-700/50 hover:border-#ef4444/50 hover:text-white hover:scale-105"
             }`}
           >
             <span className="flex items-center gap-2">
@@ -473,7 +473,7 @@ export function TeamClient({ users }: TeamClientProps) {
                   isSelected
                     ? isClient 
                       ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 scale-105"
-                      : "bg-gradient-to-r from-trinity-red to-red-600 text-white shadow-lg shadow-trinity-red/25 scale-105"
+                      : "bg-gradient-to-r from-#ef4444 to-red-600 text-white shadow-lg shadow-#ef4444/25 scale-105"
                     : "bg-slate-900/50 text-slate-300 border border-gray-700/50 hover:border-white/20 hover:text-white hover:scale-105"
                 }`}
               >
@@ -498,7 +498,7 @@ export function TeamClient({ users }: TeamClientProps) {
             <h2 className="text-2xl font-heading font-bold text-white mb-1">
               {selectedRole === "CLIENT" ? "Clients" : "Team Members"}
               {selectedRole && selectedRole !== "CLIENT" && (
-                <span className="ml-2 text-trinity-red">({selectedRole})</span>
+                <span className="ml-2 text-#ef4444">({selectedRole})</span>
               )}
             </h2>
             <p className="text-sm text-slate-400">
@@ -538,10 +538,10 @@ export function TeamClient({ users }: TeamClientProps) {
               return (
                 <div
                   key={user.id}
-                  className="group relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 transition-all duration-500 hover:border-trinity-red/50 hover:shadow-2xl hover:shadow-trinity-red/10 hover:-translate-y-1 overflow-hidden"
+                  className="group relative bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 transition-all duration-500 hover:border-#ef4444/50 hover:shadow-2xl hover:shadow-#ef4444/10 hover:-translate-y-1 overflow-hidden"
                 >
                   {/* Background Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* New Badge */}
                   {isRecent && (
@@ -554,7 +554,7 @@ export function TeamClient({ users }: TeamClientProps) {
                     {/* Avatar & Quick Actions */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-700 p-0.5 group-hover:from-trinity-red/30 group-hover:to-red-600/30 transition-all duration-500">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-700 p-0.5 group-hover:from-#ef4444/30 group-hover:to-red-600/30 transition-all duration-500">
                           <div className="w-full h-full rounded-2xl overflow-hidden">
                             <Avatar
                               src={user.image}
@@ -581,7 +581,7 @@ export function TeamClient({ users }: TeamClientProps) {
                           <div className="absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
                             <Link
                               href={`/admin/team/${user.id}`}
-                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-trinity-red/10 hover:text-white transition-all flex items-center gap-3 group/item"
+                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-#ef4444/10 hover:text-white transition-all flex items-center gap-3 group/item"
                               onClick={() => setOpenMenuId(null)}
                             >
                               <Eye className="h-4 w-4 group-hover/item:scale-110 transition-transform" />
@@ -592,7 +592,7 @@ export function TeamClient({ users }: TeamClientProps) {
                                 setEditingUser(user);
                                 setOpenMenuId(null);
                               }}
-                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-trinity-red/10 hover:text-white transition-all flex items-center gap-3 group/item"
+                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-#ef4444/10 hover:text-white transition-all flex items-center gap-3 group/item"
                             >
                               <Edit className="h-4 w-4 group-hover/item:scale-110 transition-transform" />
                               Edit User
@@ -656,9 +656,9 @@ export function TeamClient({ users }: TeamClientProps) {
               return (
                 <div
                   key={user.id}
-                  className="group relative bg-gradient-to-r from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-xl p-4 transition-all duration-300 hover:border-trinity-red/50 hover:shadow-xl hover:shadow-trinity-red/10 overflow-hidden"
+                  className="group relative bg-gradient-to-r from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-gray-700/50 rounded-xl p-4 transition-all duration-300 hover:border-#ef4444/50 hover:shadow-xl hover:shadow-#ef4444/10 overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-trinity-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-#ef4444/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   <div className="relative z-10 flex items-center gap-4">
                     {/* Avatar */}
@@ -720,7 +720,7 @@ export function TeamClient({ users }: TeamClientProps) {
                           <div className="absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
                             <Link
                               href={`/admin/team/${user.id}`}
-                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-trinity-red/10 hover:text-white transition-all flex items-center gap-3 group/item"
+                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-#ef4444/10 hover:text-white transition-all flex items-center gap-3 group/item"
                               onClick={() => setOpenMenuId(null)}
                             >
                               <Eye className="h-4 w-4 group-hover/item:scale-110 transition-transform" />
@@ -731,7 +731,7 @@ export function TeamClient({ users }: TeamClientProps) {
                                 setEditingUser(user);
                                 setOpenMenuId(null);
                               }}
-                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-trinity-red/10 hover:text-white transition-all flex items-center gap-3 group/item"
+                              className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:bg-#ef4444/10 hover:text-white transition-all flex items-center gap-3 group/item"
                             >
                               <Edit className="h-4 w-4 group-hover/item:scale-110 transition-transform" />
                               Edit User
@@ -778,15 +778,15 @@ export function TeamClient({ users }: TeamClientProps) {
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
           <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border border-white/10 rounded-3xl p-8 max-w-lg w-full shadow-2xl shadow-black/50 animate-in zoom-in-95 duration-300">
             {/* Decorative Elements */}
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-trinity-red/20 rounded-full blur-3xl" />
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-#ef4444/20 rounded-full blur-3xl" />
             <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl" />
             
             <div className="relative z-10">
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-trinity-red/20 to-red-600/20 flex items-center justify-center border border-trinity-red/30">
-                    <UserPlus className="w-6 h-6 text-trinity-red" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-#ef4444/20 to-red-600/20 flex items-center justify-center border border-#ef4444/30">
+                    <UserPlus className="w-6 h-6 text-#ef4444" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-white">Invite Team Member</h2>
@@ -820,7 +820,7 @@ export function TeamClient({ users }: TeamClientProps) {
                   <p className="text-slate-300 mb-2">
                     A 6-digit verification code has been sent to:
                   </p>
-                  <p className="text-trinity-red font-semibold text-lg">{inviteEmail}</p>
+                  <p className="text-#ef4444 font-semibold text-lg">{inviteEmail}</p>
                   <p className="text-sm text-slate-400 mt-4">
                     The recipient can use this code to join your team
                   </p>
@@ -848,7 +848,7 @@ export function TeamClient({ users }: TeamClientProps) {
                         onChange={(e) => setInviteEmail(e.target.value)}
                         required
                         placeholder="colleague@example.com"
-                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-trinity-red/50 focus:border-trinity-red/50 transition-all"
+                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-#ef4444/50 focus:border-#ef4444/50 transition-all"
                       />
                     </div>
                   </div>
@@ -863,7 +863,7 @@ export function TeamClient({ users }: TeamClientProps) {
                       <select
                         value={inviteRole}
                         onChange={(e) => setInviteRole(e.target.value)}
-                        className="w-full pl-12 pr-10 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50 focus:border-trinity-red/50 transition-all appearance-none cursor-pointer"
+                        className="w-full pl-12 pr-10 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50 focus:border-#ef4444/50 transition-all appearance-none cursor-pointer"
                       >
                         <option value="CEO" className="bg-slate-900">CEO - Chief Executive</option>
                         <option value="CFO" className="bg-slate-900">CFO - Chief Financial Officer</option>
@@ -907,7 +907,7 @@ export function TeamClient({ users }: TeamClientProps) {
                     <button
                       type="submit"
                       disabled={isInviting || !inviteEmail}
-                      className="flex-1 px-6 py-3.5 bg-gradient-to-r from-trinity-red to-red-600 hover:from-trinity-red/90 hover:to-red-600/90 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-trinity-red/25 hover:shadow-xl hover:shadow-trinity-red/40"
+                      className="flex-1 px-6 py-3.5 bg-gradient-to-r from-#ef4444 to-red-600 hover:from-#ef4444/90 hover:to-red-600/90 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-#ef4444/25 hover:shadow-xl hover:shadow-#ef4444/40"
                     >
                       {isInviting ? (
                         <>

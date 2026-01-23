@@ -132,7 +132,7 @@ export function HoursBank({
   const hasExpiringSoon = (rolloverExpiringSoon?.length ?? 0) > 0 || (packHoursExpiringSoon?.length ?? 0) > 0;
   
   return (
-    <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+    <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center justify-between mb-4">
@@ -142,7 +142,7 @@ export function HoursBank({
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">Hours Balance</h3>
-              <p className="text-sm text-gray-400">{tierName} Plan</p>
+              <p className="text-sm text-slate-400">{tierName} Plan</p>
             </div>
           </div>
           
@@ -157,7 +157,7 @@ export function HoursBank({
                   : 'hours available'}
               </p>
               {estimatedHoursPending && estimatedHoursPending > 0 && (
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {formatHours(estimatedHoursPending)}h in pending requests
                 </p>
               )}
@@ -175,13 +175,13 @@ export function HoursBank({
         {/* Main Progress Bar */}
         {!isUnlimited && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Monthly Usage</span>
               <span>
                 {formatHours(monthlyUsed)} / {formatHours(monthlyIncluded)} hours
               </span>
             </div>
-            <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-3 bg-white/10 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(100, usagePercent)}%` }}
@@ -221,7 +221,7 @@ export function HoursBank({
                 {formatHours(monthlyRemaining)}
               </p>
             </div>
-            <p className="text-xs text-gray-400">Monthly</p>
+            <p className="text-xs text-slate-400">Monthly</p>
           </div>
           
           {/* Rollover */}
@@ -234,7 +234,7 @@ export function HoursBank({
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
               )}
             </div>
-            <p className="text-xs text-gray-400">Rollover</p>
+            <p className="text-xs text-slate-400">Rollover</p>
           </div>
           
           {/* Packs */}
@@ -247,7 +247,7 @@ export function HoursBank({
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
               )}
             </div>
-            <p className="text-xs text-gray-400">Packs</p>
+            <p className="text-xs text-slate-400">Packs</p>
           </div>
         </div>
       )}
@@ -287,7 +287,7 @@ export function HoursBank({
       {/* Expand Details */}
       <button
         onClick={() => setShowDetails(!showDetails)}
-        className="w-full px-6 py-3 border-t border-white/10 flex items-center justify-center gap-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+        className="w-full px-6 py-3 border-t border-white/10 flex items-center justify-center gap-2 text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
       >
         {showDetails ? (
           <>
@@ -314,7 +314,7 @@ export function HoursBank({
             {/* Period Info */}
             {periodEnd && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-400 flex items-center gap-2">
+                <span className="text-slate-400 flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   Period Ends
                 </span>
@@ -326,11 +326,11 @@ export function HoursBank({
             
             {/* On-Demand Status */}
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-400 flex items-center gap-2">
+              <span className="text-slate-400 flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 On-Demand Billing
               </span>
-              <span className={onDemandEnabled ? 'text-green-400' : 'text-gray-500'}>
+              <span className={onDemandEnabled ? 'text-green-400' : 'text-slate-500'}>
                 {onDemandEnabled ? 'Enabled' : 'Disabled'}
               </span>
             </div>
@@ -346,7 +346,7 @@ export function HoursBank({
                   {(rolloverExpiringSoon?.length ?? 0) > 0 ? (
                     rolloverExpiringSoon?.map((r, i) => (
                       <div key={i} className="flex justify-between text-sm">
-                        <span className="text-gray-400">
+                        <span className="text-slate-400">
                           Expires {new Date(r.expiresAt).toLocaleDateString()}
                         </span>
                         <span className="text-purple-400">
@@ -355,7 +355,7 @@ export function HoursBank({
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500">No rollover hours expiring soon</p>
+                    <p className="text-sm text-slate-500">No rollover hours expiring soon</p>
                   )}
                 </div>
               </div>
@@ -372,7 +372,7 @@ export function HoursBank({
                   {(packHoursExpiringSoon?.length ?? 0) > 0 ? (
                     packHoursExpiringSoon?.map((p) => (
                       <div key={p.packId} className="flex justify-between text-sm">
-                        <span className="text-gray-400">
+                        <span className="text-slate-400">
                           {p.packName} 
                           {p.expiresAt && ` - expires ${new Date(p.expiresAt).toLocaleDateString()}`}
                           {!p.expiresAt && ' - Never expires'}
@@ -383,7 +383,7 @@ export function HoursBank({
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500">No active hour packs</p>
+                    <p className="text-sm text-slate-500">No active hour packs</p>
                   )}
                 </div>
               </div>

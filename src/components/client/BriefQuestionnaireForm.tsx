@@ -132,7 +132,7 @@ export function BriefQuestionnaireForm({ onSubmit }: BriefQuestionnaireFormProps
         {/* Header */}
         <div className="p-8 border-b border-gray-200">
           <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">Tell Us About Your Project</h1>
-          <p className="text-gray-600 text-center">
+          <p className="text-slate-600 text-center">
             Help us understand your needs so we can provide the best solution for you
           </p>
         </div>
@@ -149,7 +149,7 @@ export function BriefQuestionnaireForm({ onSubmit }: BriefQuestionnaireFormProps
               type="text"
               value={formData.companyName}
               onChange={(e) => updateField('companyName', e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              className={`w-full px-4 py-3 border rounded-lg text-gray-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.companyName ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Acme Inc."
@@ -278,7 +278,7 @@ export function BriefQuestionnaireForm({ onSubmit }: BriefQuestionnaireFormProps
               type="url"
               value={formData.currentWebsite}
               onChange={(e) => updateField('currentWebsite', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="https://example.com"
             />
           </div>
@@ -293,7 +293,7 @@ export function BriefQuestionnaireForm({ onSubmit }: BriefQuestionnaireFormProps
               value={formData.notes}
               onChange={(e) => updateField('notes', e.target.value)}
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               placeholder="Tell us anything else that might help us understand your project better..."
             />
           </div>

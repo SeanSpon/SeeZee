@@ -187,7 +187,7 @@ export function GlobalSearch({ variant = "client", placeholder = "Search...", cl
     setQuery("");
   };
 
-  const accentColor = variant === "admin" ? "trinity-red" : "trinity-red";
+  const accentColor = variant === "admin" ? "#ef4444" : "#ef4444";
   const bgColor = variant === "admin" ? "bg-white/5" : "bg-gray-800/50";
   const borderColor = variant === "admin" ? "border-white/10" : "border-gray-700";
   const hoverBg = variant === "admin" ? "hover:bg-white/10" : "hover:bg-gray-700";

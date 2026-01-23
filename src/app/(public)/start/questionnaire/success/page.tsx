@@ -388,7 +388,7 @@ function SuccessPageContent() {
                 transition={{ delay: 1.3 }}
                 className="mt-12 text-center"
               >
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-trinity-red"></div>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-#ef4444"></div>
                 <p className="text-white/60 mt-4">Loading your receipt...</p>
               </motion.div>
             )}

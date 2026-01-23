@@ -192,7 +192,7 @@ function SettingsContent() {
                   }}
                   className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                     activeTab === "profile"
-                      ? "border-trinity-red text-trinity-red"
+                      ? "border-#ef4444 text-#ef4444"
                       : "border-transparent text-slate-400 hover:text-white"
                   }`}
                 >
@@ -206,7 +206,7 @@ function SettingsContent() {
                   }}
                   className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                     activeTab === "notifications"
-                      ? "border-trinity-red text-trinity-red"
+                      ? "border-#ef4444 text-#ef4444"
                       : "border-transparent text-slate-400 hover:text-white"
                   }`}
                 >
@@ -221,7 +221,7 @@ function SettingsContent() {
                     }}
                     className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                       activeTab === "billing"
-                        ? "border-trinity-red text-trinity-red"
+                        ? "border-#ef4444 text-#ef4444"
                         : "border-transparent text-slate-400 hover:text-white"
                     }`}
                   >
@@ -236,7 +236,7 @@ function SettingsContent() {
                   }}
                   className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                     activeTab === "security"
-                      ? "border-trinity-red text-trinity-red"
+                      ? "border-#ef4444 text-#ef4444"
                       : "border-transparent text-slate-400 hover:text-white"
                   }`}
                 >
@@ -250,7 +250,7 @@ function SettingsContent() {
                   }}
                   className={`flex items-center gap-2 pb-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                     activeTab === "privacy"
-                      ? "border-trinity-red text-trinity-red"
+                      ? "border-#ef4444 text-#ef4444"
                       : "border-transparent text-slate-400 hover:text-white"
                   }`}
                 >
@@ -264,9 +264,9 @@ function SettingsContent() {
               {/* Profile Tab */}
               {activeTab === "profile" && (
                 <form onSubmit={handleSave} className="space-y-6">
-                  <div className="bg-gradient-to-r from-trinity-red/10 to-red-600/10 rounded-xl border border-trinity-red/20 p-6 mb-6">
+                  <div className="bg-gradient-to-r from-#ef4444/10 to-red-600/10 rounded-xl border border-#ef4444/20 p-6 mb-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-trinity-red to-red-600 flex items-center justify-center text-2xl font-bold text-white">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-#ef4444 to-red-600 flex items-center justify-center text-2xl font-bold text-white">
                         {session?.user?.name?.charAt(0).toUpperCase() || "U"}
                       </div>
                       <div>
@@ -276,7 +276,7 @@ function SettingsContent() {
                           {session?.user?.email}
                         </p>
                         {userRole && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-trinity-red/20 text-trinity-red border border-trinity-red/30 mt-2">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-#ef4444/20 text-#ef4444 border border-#ef4444/30 mt-2">
                             {userRole}
                           </span>
                         )}
@@ -293,7 +293,7 @@ function SettingsContent() {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                      className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-#ef4444 transition-colors"
                       required
                     />
                   </div>
@@ -307,7 +307,7 @@ function SettingsContent() {
                         type="text"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                        className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-#ef4444 transition-colors"
                         placeholder="Your company name (optional)"
                       />
                     </div>
@@ -322,7 +322,7 @@ function SettingsContent() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                      className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-#ef4444 transition-colors"
                       placeholder="+1 (555) 000-0000"
                     />
                   </div>
@@ -330,7 +330,7 @@ function SettingsContent() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all font-medium flex items-center gap-2 shadow-lg shadow-trinity-red/20 disabled:opacity-50"
+                    className="px-6 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-all font-medium flex items-center gap-2 shadow-lg shadow-#ef4444/20 disabled:opacity-50"
                   >
                     {success ? (
                       <>
@@ -350,9 +350,9 @@ function SettingsContent() {
               {/* Notifications Tab */}
               {activeTab === "notifications" && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                  <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                     <div>
-                      <p className="text-white font-medium group-hover:text-trinity-red transition-colors">
+                      <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">
                         Email Notifications
                       </p>
                       <p className="text-sm text-slate-400">
@@ -363,13 +363,13 @@ function SettingsContent() {
                       type="checkbox"
                       checked={emailNotifications}
                       onChange={(e) => setEmailNotifications(e.target.checked)}
-                      className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                      className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                  <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                     <div>
-                      <p className="text-white font-medium group-hover:text-trinity-red transition-colors">
+                      <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">
                         Project Updates
                       </p>
                       <p className="text-sm text-slate-400">
@@ -380,14 +380,14 @@ function SettingsContent() {
                       type="checkbox"
                       checked={projectUpdates}
                       onChange={(e) => setProjectUpdates(e.target.checked)}
-                      className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                      className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                     />
                   </div>
 
                   {isClient && (
-                    <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                    <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                       <div>
-                        <p className="text-white font-medium group-hover:text-trinity-red transition-colors">
+                        <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">
                           Invoice Reminders
                         </p>
                         <p className="text-sm text-slate-400">
@@ -398,15 +398,15 @@ function SettingsContent() {
                         type="checkbox"
                         checked={invoiceReminders}
                         onChange={(e) => setInvoiceReminders(e.target.checked)}
-                        className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                        className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                       />
                     </div>
                   )}
 
                   {isAdmin && (
-                    <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                    <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                       <div>
-                        <p className="text-white font-medium group-hover:text-trinity-red transition-colors">
+                        <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">
                           System Alerts
                         </p>
                         <p className="text-sm text-slate-400">
@@ -417,7 +417,7 @@ function SettingsContent() {
                         type="checkbox"
                         checked={systemAlerts}
                         onChange={(e) => setSystemAlerts(e.target.checked)}
-                        className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                        className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                       />
                     </div>
                   )}
@@ -453,7 +453,7 @@ function SettingsContent() {
                       }
                     }}
                     disabled={loading}
-                    className="w-full px-6 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-trinity-red/20 disabled:opacity-50"
+                    className="w-full px-6 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-#ef4444/20 disabled:opacity-50"
                   >
                     {success ? (
                       <>
@@ -473,7 +473,7 @@ function SettingsContent() {
               {/* Billing Tab - Clients Only */}
               {activeTab === "billing" && isClient && (
                 <div className="space-y-6">
-                  <div className="flex items-start justify-between p-6 bg-gradient-to-r from-trinity-red/10 to-red-600/10 rounded-xl border border-trinity-red/20">
+                  <div className="flex items-start justify-between p-6 bg-gradient-to-r from-#ef4444/10 to-red-600/10 rounded-xl border border-#ef4444/20">
                     <div>
                       <h3 className="text-lg font-bold text-white mb-2">
                         Billing Portal
@@ -491,7 +491,7 @@ function SettingsContent() {
                         <ExternalLink className="w-4 h-4" />
                       </button>
                     </div>
-                    <CreditCard className="w-12 h-12 text-trinity-red" />
+                    <CreditCard className="w-12 h-12 text-#ef4444" />
                   </div>
 
                   {/* Recent Invoices */}
@@ -504,7 +504,7 @@ function SettingsContent() {
                         {invoices.slice(0, 5).map((invoice) => (
                           <div
                             key={invoice.id}
-                            className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors"
+                            className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors"
                           >
                             <div>
                               <p className="text-white font-medium">{invoice.description}</p>
@@ -558,7 +558,7 @@ function SettingsContent() {
                             type={showCurrentPassword ? "text" : "password"}
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 pr-10 text-white focus:outline-none focus:border-trinity-red/50 transition-colors"
+                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 pr-10 text-white focus:outline-none focus:border-#ef4444/50 transition-colors"
                             placeholder="Enter current password"
                           />
                           <button
@@ -578,7 +578,7 @@ function SettingsContent() {
                             type={showNewPassword ? "text" : "password"}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 pr-10 text-white focus:outline-none focus:border-trinity-red/50 transition-colors"
+                            className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 pr-10 text-white focus:outline-none focus:border-#ef4444/50 transition-colors"
                             placeholder="Enter new password"
                           />
                           <button
@@ -598,7 +598,7 @@ function SettingsContent() {
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-trinity-red transition-colors"
+                          className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-#ef4444 transition-colors"
                           placeholder="Confirm new password"
                         />
                       </div>
@@ -627,7 +627,7 @@ function SettingsContent() {
                           }
                         }}
                         disabled={loading || !currentPassword || !newPassword || !confirmPassword}
-                        className="w-full px-6 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-trinity-red/20 disabled:opacity-50"
+                        className="w-full px-6 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-#ef4444/20 disabled:opacity-50"
                       >
                         <Key className="w-4 h-4" />
                         {loading ? "Updating..." : "Update Password"}
@@ -649,7 +649,7 @@ function SettingsContent() {
                         <button
                           onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
                           className={`relative w-12 h-6 rounded-full transition-colors ${
-                            twoFactorEnabled ? "bg-trinity-red" : "bg-slate-700"
+                            twoFactorEnabled ? "bg-#ef4444" : "bg-slate-700"
                           }`}
                         >
                           <div
@@ -711,15 +711,15 @@ function SettingsContent() {
                   <div>
                     <h3 className="text-lg font-bold text-white mb-4">Profile Visibility</h3>
                     <div className="space-y-3">
-                      <label className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors cursor-pointer group">
+                      <label className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors cursor-pointer group">
                         <div>
-                          <p className="text-white font-medium group-hover:text-trinity-red transition-colors">Email Address</p>
+                          <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">Email Address</p>
                           <p className="text-sm text-slate-400">Who can see your email address</p>
                         </div>
                         <select
                           value={emailVisibility}
                           onChange={(e) => setEmailVisibility(e.target.value)}
-                          className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-trinity-red"
+                          className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-#ef4444"
                         >
                           <option value="private">Private</option>
                           <option value="team">Team Only</option>
@@ -727,15 +727,15 @@ function SettingsContent() {
                         </select>
                       </label>
 
-                      <label className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors cursor-pointer group">
+                      <label className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors cursor-pointer group">
                         <div>
-                          <p className="text-white font-medium group-hover:text-trinity-red transition-colors">Profile Information</p>
+                          <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">Profile Information</p>
                           <p className="text-sm text-slate-400">Control profile visibility</p>
                         </div>
                         <select
                           value={profileVisibility}
                           onChange={(e) => setProfileVisibility(e.target.value)}
-                          className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-trinity-red"
+                          className="bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-#ef4444"
                         >
                           <option value="private">Private</option>
                           <option value="team">Team Only</option>
@@ -749,29 +749,29 @@ function SettingsContent() {
                   <div className="border-t border-white/10 pt-6">
                     <h3 className="text-lg font-bold text-white mb-4">Data & Analytics</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                      <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                         <div>
-                          <p className="text-white font-medium group-hover:text-trinity-red transition-colors">Data Sharing</p>
+                          <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">Data Sharing</p>
                           <p className="text-sm text-slate-400">Allow sharing of anonymized data for product improvement</p>
                         </div>
                         <input
                           type="checkbox"
                           checked={dataSharing}
                           onChange={(e) => setDataSharing(e.target.checked)}
-                          className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                          className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                         />
                       </div>
 
-                      <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-trinity-red/30 transition-colors group">
+                      <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-white/5 hover:border-#ef4444/30 transition-colors group">
                         <div>
-                          <p className="text-white font-medium group-hover:text-trinity-red transition-colors">Analytics</p>
+                          <p className="text-white font-medium group-hover:text-#ef4444 transition-colors">Analytics</p>
                           <p className="text-sm text-slate-400">Help us improve by sharing usage analytics</p>
                         </div>
                         <input
                           type="checkbox"
                           checked={analytics}
                           onChange={(e) => setAnalytics(e.target.checked)}
-                          className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-trinity-red"
+                          className="w-5 h-5 rounded border-gray-700 bg-gray-800 checked:bg-#ef4444"
                         />
                       </div>
                     </div>
@@ -817,7 +817,7 @@ function SettingsContent() {
                       }
                     }}
                     disabled={loading}
-                    className="w-full px-6 py-2 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-trinity-red/20 disabled:opacity-50"
+                    className="w-full px-6 py-2 bg-#ef4444 text-white rounded-lg hover:bg-#dc2626 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-#ef4444/20 disabled:opacity-50"
                   >
                     {success ? (
                       <>

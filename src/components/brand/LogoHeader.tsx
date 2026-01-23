@@ -12,13 +12,13 @@ export function LogoHeader({ href = "/", className }: LogoHeaderProps) {
     <div
       className={`group flex items-center justify-center gap-1.5 font-heading font-bold uppercase tracking-[0.08em] ${className ?? ""}`.trim()}
     >
-      <span className="text-lg sm:text-xl text-white transition-colors duration-300 group-hover:text-trinity-red">
+      <span className="text-lg sm:text-xl text-white transition-colors duration-300 group-hover:text-#ef4444">
         SEE
       </span>
-      <span className="inline-flex items-center rounded-full bg-trinity-red px-3 py-1 text-[0.65rem] font-semibold tracking-[0.1em] text-white transition-colors duration-300 group-hover:bg-white group-hover:text-trinity-red">
+      <span className="inline-flex items-center rounded-full bg-#ef4444 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.1em] text-white transition-colors duration-300 group-hover:bg-white group-hover:text-#ef4444">
         STUDIO
       </span>
-      <span className="text-lg sm:text-xl text-white transition-colors duration-300 group-hover:text-trinity-red">
+      <span className="text-lg sm:text-xl text-white transition-colors duration-300 group-hover:text-#ef4444">
         ZEE
       </span>
     </div>

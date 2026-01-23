@@ -128,7 +128,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
               type="submit"
               form="client-form"
               disabled={loading}
-              className="px-6 py-2 rounded-lg border-2 border-trinity-red/50 bg-trinity-red text-white hover:bg-trinity-maroon transition-colors disabled:opacity-50"
+              className="px-6 py-2 rounded-lg border-2 border-#ef4444/50 bg-#ef4444 text-white hover:bg-#dc2626 transition-colors disabled:opacity-50"
             >
               {loading ? "Saving..." : mode === "create" ? "Create Client" : "Save Changes"}
             </button>
@@ -151,7 +151,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FiUser className="h-4 w-4 text-trinity-red" />
+                <FiUser className="h-4 w-4 text-#ef4444" />
                 Company Name *
               </label>
               <input
@@ -159,39 +159,39 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FiMail className="h-4 w-4 text-trinity-red" />
+                <FiMail className="h-4 w-4 text-#ef4444" />
                 Email
               </label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FiPhone className="h-4 w-4 text-trinity-red" />
+                <FiPhone className="h-4 w-4 text-#ef4444" />
                 Phone
               </label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
             <div className="md:col-span-2">
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FiGlobe className="h-4 w-4 text-trinity-red" />
+                <FiGlobe className="h-4 w-4 text-#ef4444" />
                 Website
               </label>
               <input
@@ -199,7 +199,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                 placeholder="https://example.com"
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -213,14 +213,14 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FiMapPin className="h-4 w-4 text-trinity-red" />
+                <FiMapPin className="h-4 w-4 text-#ef4444" />
                 Street Address
               </label>
               <input
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
@@ -232,7 +232,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 type="text"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
@@ -244,7 +244,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 type="text"
                 value={formData.state}
                 onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
@@ -256,7 +256,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 type="text"
                 value={formData.zip}
                 onChange={(e) => setFormData({ ...formData, zip: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
 
@@ -268,7 +268,7 @@ export function ClientModal({ isOpen, onClose, client, mode }: ClientModalProps)
                 type="text"
                 value={formData.country}
                 onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
               />
             </div>
           </div>

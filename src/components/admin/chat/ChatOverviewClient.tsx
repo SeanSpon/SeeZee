@@ -65,7 +65,7 @@ export function ChatOverviewClient({ conversations, stats }: ChatOverviewClientP
     <div className="space-y-6">
       {/* Header */}
       <header>
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
           AI Assistant
         </span>
         <h1 className="text-4xl font-heading font-bold gradient-text">
@@ -105,7 +105,7 @@ export function ChatOverviewClient({ conversations, stats }: ChatOverviewClientP
             onClick={() => setStatusFilter(status)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               statusFilter === status
-                ? "bg-trinity-red text-white"
+                ? "bg-#ef4444 text-white"
                 : "bg-[#1a2235] text-gray-400 hover:text-white hover:bg-[#1e2840]"
             }`}
           >
@@ -130,7 +130,7 @@ export function ChatOverviewClient({ conversations, stats }: ChatOverviewClientP
             >
               <Link
                 href={`/admin/chat/${conversation.id}`}
-                className="block rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-trinity-red/30 transition-all"
+                className="block rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-#ef4444/30 transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4">

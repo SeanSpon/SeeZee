@@ -218,7 +218,7 @@ export function BlogPageClient({ user, initialData }: BlogPageClientProps) {
         </div>
         <button
           onClick={handleCreatePost}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-trinity-red to-trinity-maroon text-white rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-#ef4444 to-#dc2626 text-white rounded-lg hover:opacity-90 transition-opacity"
         >
           <FiPlus className="h-5 w-5" />
           New Post

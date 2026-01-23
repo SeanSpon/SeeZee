@@ -131,7 +131,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Complete Your Subscription</h1>
-              <p className="text-gray-400">
+              <p className="text-slate-400">
                 Select your project and confirm your maintenance plan
               </p>
             </div>
@@ -150,7 +150,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setSelectedPlan(plan)}
-                className={`relative bg-gray-900/50 backdrop-blur-sm border rounded-xl p-6 cursor-pointer transition-all ${
+                className={`relative bg-white/5/50 backdrop-blur-sm border rounded-xl p-6 cursor-pointer transition-all ${
                   isSelected 
                     ? 'ring-2 ring-cyan-500 border-cyan-500' 
                     : 'border-white/10 hover:border-cyan-500/50'
@@ -182,16 +182,16 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                   <h3 className="text-2xl font-bold text-white mb-2">
                     {plan.displayName.replace(' Plan', '')}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
+                  <p className="text-slate-400 text-sm mb-4">{plan.description}</p>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-bold text-white">
                       ${(plan.price / 100).toLocaleString()}
                     </span>
-                    <span className="text-gray-400">
+                    <span className="text-slate-400">
                       /{plan.billingCycle === 'quarterly' ? 'quarter' : 'year'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     ${((plan.price / 100) / (plan.billingCycle === 'quarterly' ? 3 : 12)).toFixed(2)}/month
                     {plan.billingCycle === 'annual' && ' • Save 15%'}
                   </p>
@@ -205,7 +205,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                     </div>
                   ))}
                   {plan.features.length > 6 && (
-                    <p className="text-xs text-gray-400 italic">+{plan.features.length - 6} more features</p>
+                    <p className="text-xs text-slate-400 italic">+{plan.features.length - 6} more features</p>
                   )}
                 </div>
               </motion.div>
@@ -218,7 +218,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+            className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-6"
           >
             <h3 className="text-lg font-bold text-white mb-4">
               Select Project for {selectedPlan.displayName}
@@ -255,13 +255,13 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                             )}
                           </div>
                           {projectSub && (
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-xs text-slate-400 mt-1">
                               Current: {projectSub.planName}
                               {hasSelectedPlan && " • Already subscribed to this plan"}
                             </p>
                           )}
                           {!projectSub && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-slate-500 mt-1">
                               No active subscription
                             </p>
                           )}
@@ -295,7 +295,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                     <p className="text-sm text-green-400 font-medium mb-1">
                       ✓ This project already has {selectedPlan.displayName}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-slate-400">
                       You cannot purchase the same plan twice. To change plans, select a different subscription type above.
                     </p>
                   </div>
@@ -308,7 +308,7 @@ export function UpgradeClient({ plans, currentSubscriptions, projects }: Upgrade
                     <p className="text-sm text-yellow-400 font-medium mb-1">
                       Switching from {projectSub.planName} to {selectedPlan.displayName}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-slate-400">
                       Your current subscription will be canceled and replaced with the new plan. You'll be charged a prorated amount.
                     </p>
                   </div>

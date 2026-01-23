@@ -95,13 +95,13 @@ export function QuestionnaireForm() {
           <span className="text-sm text-white/60">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </span>
-          <span className="text-sm text-trinity-red font-semibold">
+          <span className="text-sm text-#ef4444 font-semibold">
             {Math.round(progress)}% Complete
           </span>
         </div>
         <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-trinity-red"
+            className="h-full bg-#ef4444"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.3 }}
@@ -122,7 +122,7 @@ export function QuestionnaireForm() {
           <div className="mb-6">
             <div className="text-2xl md:text-3xl font-heading font-bold gradient-text mb-3">
               {currentQuestion.label}
-              {currentQuestion.required && <span className="text-trinity-red ml-2">*</span>}
+              {currentQuestion.required && <span className="text-#ef4444 ml-2">*</span>}
             </div>
             {currentQuestion.description && (
               <div className="text-base text-white/60">{currentQuestion.description}</div>
@@ -146,14 +146,14 @@ export function QuestionnaireForm() {
                         px-5 py-4 rounded-lg font-medium text-sm transition-all text-left
                         ${
                           selected
-                            ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                            ? 'bg-#ef4444/20 text-#ef4444 border-2 border-#ef4444 shadow-lg shadow-#ef4444/25'
                             : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                         }
                       `}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
-                          selected ? 'bg-trinity-red border-trinity-red' : 'border-gray-600'
+                          selected ? 'bg-#ef4444 border-#ef4444' : 'border-gray-600'
                         }`}>
                           {selected && <Check className="w-3 h-3 text-white" />}
                         </div>
@@ -169,7 +169,7 @@ export function QuestionnaireForm() {
               <select
                 value={(questionnaire[currentQuestion.id as keyof typeof questionnaire] as string) || ''}
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
-                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all"
                 required={currentQuestion.required}
               >
                 <option value="">Select an option...</option>
@@ -187,7 +187,7 @@ export function QuestionnaireForm() {
                 value={(questionnaire[currentQuestion.id as keyof typeof questionnaire] as string) || ''}
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
                 placeholder={currentQuestion.placeholder}
-                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all"
                 required={currentQuestion.required}
               />
             )}
@@ -198,7 +198,7 @@ export function QuestionnaireForm() {
                 onChange={(e) => updateQuestionnaire({ [currentQuestion.id]: e.target.value })}
                 placeholder={currentQuestion.placeholder}
                 rows={6}
-                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all resize-none"
+                className="w-full px-5 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-base placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all resize-none"
                 required={currentQuestion.required}
               />
             )}
@@ -212,7 +212,7 @@ export function QuestionnaireForm() {
                     flex-1 px-8 py-6 rounded-lg font-semibold text-lg transition-all
                     ${
                       questionnaire[currentQuestion.id as keyof typeof questionnaire] === true
-                        ? 'bg-trinity-red/20 text-trinity-red border-2 border-trinity-red shadow-lg shadow-trinity-red/25'
+                        ? 'bg-#ef4444/20 text-#ef4444 border-2 border-#ef4444 shadow-lg shadow-#ef4444/25'
                         : 'bg-gray-800 text-white/70 border border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                     }
                   `}
@@ -253,9 +253,9 @@ export function QuestionnaireForm() {
                   key={idx}
                   className={`w-2 h-2 rounded-full transition-all ${
                     idx === currentQuestionIndex
-                      ? 'bg-trinity-red w-6'
+                      ? 'bg-#ef4444 w-6'
                       : idx < currentQuestionIndex
-                      ? 'bg-trinity-red/50'
+                      ? 'bg-#ef4444/50'
                       : 'bg-gray-700'
                   }`}
                 />
@@ -266,7 +266,7 @@ export function QuestionnaireForm() {
               <button
                 onClick={handleNext}
                 disabled={!isQuestionAnswered()}
-                className="flex items-center gap-2 px-6 py-3 rounded-lg bg-trinity-red hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-semibold text-white"
+                className="flex items-center gap-2 px-6 py-3 rounded-lg bg-#ef4444 hover:bg-#dc2626 transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-semibold text-white"
               >
                 Next
                 <ArrowRight className="w-5 h-5" />
@@ -275,7 +275,7 @@ export function QuestionnaireForm() {
               <button
                 onClick={handleContinueToContact}
                 disabled={!allQuestionsAnswered()}
-                className="flex items-center gap-2 px-8 py-3 rounded-lg bg-trinity-red hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-bold text-white"
+                className="flex items-center gap-2 px-8 py-3 rounded-lg bg-#ef4444 hover:bg-#dc2626 transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 font-bold text-white"
               >
                 <Check className="w-5 h-5" />
                 Continue to Review

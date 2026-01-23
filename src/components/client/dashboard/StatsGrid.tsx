@@ -29,7 +29,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+        className="rounded-xl border border-white/10 bg-white/5 p-6"
       >
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
         <div className="space-y-3">
           {/* Paid Amount */}
           <div>
-            <p className="text-xs text-gray-500">Total Paid</p>
+            <p className="text-xs text-slate-500">Total Paid</p>
             <p className="text-2xl font-bold text-green-400">
               ${billing.totalPaid.toLocaleString()}
             </p>
@@ -50,7 +50,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
           {/* Due Amount */}
           {billing.totalDue > 0 && (
             <div>
-              <p className="text-xs text-gray-500">Balance Due</p>
+              <p className="text-xs text-slate-500">Balance Due</p>
               <p className="text-2xl font-bold text-yellow-400">
                 ${billing.totalDue.toLocaleString()}
               </p>
@@ -69,7 +69,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
           
           {/* Subscription Status */}
           {billing.hasActiveSubscription && (
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-slate-400">
               <span className="flex h-2 w-2 rounded-full bg-green-400"></span>
               <span>Active {billing.subscriptionPlan} Plan</span>
             </div>
@@ -78,7 +78,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
         
         <Link
           href="/client/invoices"
-          className="mt-4 block rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-center text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="mt-4 block rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-center text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10"
         >
           View Invoices
         </Link>
@@ -89,14 +89,14 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
-        className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+        className="rounded-xl border border-white/10 bg-white/5 p-6"
       >
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">📁</span>
             <h3 className="font-semibold text-white">Files</h3>
           </div>
-          <span className="text-sm text-gray-500">{files.length}</span>
+          <span className="text-sm text-slate-500">{files.length}</span>
         </div>
         
         {recentFiles.length > 0 ? (
@@ -107,7 +107,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
                 href={file.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/50 p-3 transition-all hover:border-gray-700 hover:bg-gray-900"
+                className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20 hover:bg-white/10"
               >
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
                   {file.mimeType.startsWith('image/') ? '🖼️' : '📄'}
@@ -116,7 +116,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
                   <p className="truncate text-sm font-medium text-white">
                     {file.name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-slate-500">
                     {(file.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
@@ -124,15 +124,15 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No files yet</p>
+          <p className="text-sm text-slate-500">No files yet</p>
         )}
         
         <div className="mt-4 flex gap-2">
-          <button className="flex-1 rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800">
+          <button className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10">
             Upload
           </button>
           {files.length > 3 && (
-            <button className="rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800">
+            <button className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10">
               View All
             </button>
           )}
@@ -144,7 +144,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+        className="rounded-xl border border-white/10 bg-white/5 p-6"
         id="ai-insights"
       >
         <div className="mb-4 flex items-center justify-between">
@@ -164,7 +164,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
             {aiSuggestions.slice(0, 3).map((suggestion) => (
               <div
                 key={suggestion.id}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 p-3 transition-all hover:border-gray-700"
+                className="rounded-lg border border-white/10 bg-white/5 p-3 transition-all hover:border-white/20"
               >
                 <div className="mb-2 flex items-start gap-2">
                   <span className="text-lg">{suggestion.icon}</span>
@@ -173,13 +173,13 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
                       {suggestion.title}
                     </p>
                     <div className="mt-1 flex items-center gap-2">
-                      <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-800">
+                      <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
                         <div
                           className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                           style={{ width: `${suggestion.confidence}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-slate-500">
                         {suggestion.confidence}%
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export default function StatsGrid({ billing, files, aiSuggestions }: StatsGridPr
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No suggestions yet</p>
+          <p className="text-sm text-slate-500">No suggestions yet</p>
         )}
         
         {aiSuggestions.length > 0 && (

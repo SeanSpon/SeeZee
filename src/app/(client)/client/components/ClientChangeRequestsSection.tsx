@@ -81,13 +81,13 @@ export function ClientChangeRequestsSection({ requests: initialRequests, project
 
   const getPriorityColor = (priority?: string) => {
     const config: Record<string, string> = {
-      LOW: "text-gray-400",
+      LOW: "text-slate-400",
       NORMAL: "text-blue-400",
       HIGH: "text-orange-400",
       URGENT: "text-red-400",
       EMERGENCY: "text-purple-400",
     };
-    return config[priority || "NORMAL"] || "text-gray-400";
+    return config[priority || "NORMAL"] || "text-slate-400";
   };
 
   const handleApprove = async (id: string) => {
@@ -129,12 +129,12 @@ export function ClientChangeRequestsSection({ requests: initialRequests, project
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-2xl font-bold text-white">Change Requests</h3>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             View and manage change requests for this project
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-slate-400">
             {filteredRequests.length} of {requests.length}
           </span>
         </div>
@@ -143,13 +143,13 @@ export function ClientChangeRequestsSection({ requests: initialRequests, project
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
             placeholder="Search requests..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+            className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto">
@@ -160,7 +160,7 @@ export function ClientChangeRequestsSection({ requests: initialRequests, project
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                 filterStatus === status.value
                   ? "bg-cyan-500 text-white"
-                  : "bg-gray-900 text-gray-400 hover:bg-gray-800"
+                  : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
               {status.label} ({statusCounts[status.value as keyof typeof statusCounts]})
@@ -188,7 +188,7 @@ export function ClientChangeRequestsSection({ requests: initialRequests, project
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden"
+                className="bg-white/5 rounded-xl border border-white/10 overflow-hidden"
               >
                 <RequestCard
                   request={request}
@@ -248,7 +248,7 @@ function RequestCard({
             )}
           </div>
           {body && (
-            <p className="text-sm text-gray-400 mb-3 whitespace-pre-wrap">{body}</p>
+            <p className="text-sm text-slate-400 mb-3 whitespace-pre-wrap">{body}</p>
           )}
         </div>
       </div>
@@ -257,22 +257,22 @@ function RequestCard({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {request.estimatedHours !== null && request.estimatedHours !== undefined && (
           <div className="flex items-center gap-2 text-sm">
-            <Clock className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-400">Est:</span>
+            <Clock className="w-4 h-4 text-slate-400" />
+            <span className="text-slate-400">Est:</span>
             <span className="text-white font-medium">{request.estimatedHours}h</span>
           </div>
         )}
         {request.actualHours !== null && request.actualHours !== undefined && (
           <div className="flex items-center gap-2 text-sm">
-            <TrendingUp className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-400">Actual:</span>
+            <TrendingUp className="w-4 h-4 text-slate-400" />
+            <span className="text-slate-400">Actual:</span>
             <span className="text-white font-medium">{request.actualHours}h</span>
           </div>
         )}
         {request.urgencyFee && request.urgencyFee > 0 && (
           <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-400">Fee:</span>
+            <DollarSign className="w-4 h-4 text-slate-400" />
+            <span className="text-slate-400">Fee:</span>
             <span className="text-white font-medium">${(request.urgencyFee / 100).toFixed(2)}</span>
           </div>
         )}
@@ -285,8 +285,8 @@ function RequestCard({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+        <div className="flex items-center gap-2 text-xs text-slate-500">
           <Calendar className="w-3 h-3" />
           <span>Created {new Date(request.createdAt).toLocaleDateString()}</span>
           {request.completedAt && (

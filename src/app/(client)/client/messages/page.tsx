@@ -90,7 +90,7 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trinity-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-#ef4444"></div>
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function MessagesPage() {
       </div>
 
       {threads.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
+        <div className="bg-white/5 border border-white/10 rounded-xl p-12 text-center">
           <MessageSquare className="w-16 h-16 text-white/20 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">No messages yet</h3>
           <p className="text-white/60 mb-6">
@@ -121,8 +121,8 @@ export default function MessagesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Threads List */}
-          <div className="lg:col-span-1 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-            <div className="p-4 border-b border-gray-800">
+          <div className="lg:col-span-1 bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+            <div className="p-4 border-b border-white/10">
               <h2 className="font-semibold text-white">Conversations</h2>
             </div>
             <div className="divide-y divide-gray-800 max-h-[600px] overflow-y-auto">
@@ -130,8 +130,8 @@ export default function MessagesPage() {
                 <button
                   key={thread.id}
                   onClick={() => setSelectedThread(thread)}
-                  className={`w-full p-4 text-left hover:bg-gray-800 transition-colors ${
-                    selectedThread?.id === thread.id ? "bg-gray-800" : ""
+                  className={`w-full p-4 text-left hover:bg-white/10 transition-colors ${
+                    selectedThread?.id === thread.id ? "bg-white/10" : ""
                   }`}
                 >
                   {thread.project && (
@@ -154,10 +154,10 @@ export default function MessagesPage() {
           </div>
 
           {/* Messages View */}
-          <div className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden flex flex-col">
+          <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-xl overflow-hidden flex flex-col">
             {selectedThread ? (
               <>
-                <div className="p-4 border-b border-gray-800">
+                <div className="p-4 border-b border-white/10">
                   {selectedThread.project && (
                     <div className="flex items-center gap-2 mb-1">
                       <FolderKanban className="w-4 h-4 text-blue-400" />
@@ -192,7 +192,7 @@ export default function MessagesPage() {
                           className={`max-w-[70%] rounded-lg p-3 ${
                             message.role === "client"
                               ? "bg-blue-600 text-white"
-                              : "bg-gray-800 text-white"
+                              : "bg-white/10 text-white"
                           }`}
                         >
                           <p className="text-sm">{message.content}</p>
@@ -207,7 +207,7 @@ export default function MessagesPage() {
                 </div>
 
                 {/* Message Input */}
-                <div className="p-4 border-t border-gray-800">
+                <div className="p-4 border-t border-white/10">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -220,7 +220,7 @@ export default function MessagesPage() {
                         }
                       }}
                       placeholder="Type a message..."
-                      className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 bg-white/10 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                       onClick={handleSendMessage}

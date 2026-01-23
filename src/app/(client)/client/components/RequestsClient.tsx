@@ -218,7 +218,7 @@ export function RequestsClient() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="skeleton h-48 rounded-2xl" />
+            <div key={i} className="skeleton h-48 rounded-xl" />
           ))}
         </div>
       </div>
@@ -236,7 +236,7 @@ export function RequestsClient() {
         <div className="flex gap-3">
           {activeTab === "change" && (
             <Link href="/client/requests/new">
-              <button className="px-6 py-3 bg-trinity-red hover:bg-trinity-maroon text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2">
+              <button className="px-6 py-3 bg-#ef4444 hover:bg-#dc2626 text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 New Change Request
               </button>
@@ -254,7 +254,7 @@ export function RequestsClient() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-800">
+      <div className="flex gap-2 border-b border-white/10">
         <button
           onClick={() => {
             setActiveTab("project");
@@ -263,7 +263,7 @@ export function RequestsClient() {
           className={`px-6 py-3 font-medium transition-colors border-b-2 ${
             activeTab === "project"
               ? "border-blue-500 text-blue-400"
-              : "border-transparent text-gray-400 hover:text-white"
+              : "border-transparent text-slate-400 hover:text-white"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -279,7 +279,7 @@ export function RequestsClient() {
           className={`px-6 py-3 font-medium transition-colors border-b-2 ${
             activeTab === "change"
               ? "border-blue-500 text-blue-400"
-              : "border-transparent text-gray-400 hover:text-white"
+              : "border-transparent text-slate-400 hover:text-white"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -291,7 +291,7 @@ export function RequestsClient() {
 
       {/* Status Filter */}
       {allRequests.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 p-4 rounded-xl">
+        <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
           <div className="flex flex-wrap gap-2">
             {activeTab === "project" ? (
               // Project Request filters
@@ -329,7 +329,7 @@ export function RequestsClient() {
       )}
 
       {allRequests.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 p-12 text-center rounded-2xl">
+        <div className="bg-white/5 border border-white/10 p-12 text-center rounded-xl">
           {activeTab === "project" ? (
             <>
               <FileText className="w-16 h-16 text-white/20 mx-auto mb-4" />
@@ -347,7 +347,7 @@ export function RequestsClient() {
               <h3 className="text-xl font-bold text-white mb-2">No change requests yet</h3>
               <p className="text-white/60 mb-6">Submit change requests for your active projects</p>
               <Link href="/client/requests/new">
-                <button className="px-6 py-3 bg-trinity-red hover:bg-trinity-maroon text-white font-semibold rounded-lg transition-colors">
+                <button className="px-6 py-3 bg-#ef4444 hover:bg-#dc2626 text-white font-semibold rounded-lg transition-colors">
                   Create Change Request
                 </button>
               </Link>
@@ -355,7 +355,7 @@ export function RequestsClient() {
           )}
         </div>
       ) : currentRequests.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 p-12 text-center rounded-2xl">
+        <div className="bg-white/5 border border-white/10 p-12 text-center rounded-xl">
           <Filter className="w-12 h-12 text-white/20 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">No requests found</h3>
           <p className="text-white/60 mb-4">Try adjusting your filter</p>
@@ -381,7 +381,7 @@ export function RequestsClient() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-trinity-red"
+                  className="bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all rounded-xl hover:border-#ef4444"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -527,13 +527,13 @@ export function RequestsClient() {
 
                 const getPriorityColor = (priority: string) => {
                   const colors: Record<string, string> = {
-                    LOW: "text-gray-400",
+                    LOW: "text-slate-400",
                     NORMAL: "text-blue-400",
                     HIGH: "text-yellow-400",
                     URGENT: "text-orange-400",
                     EMERGENCY: "text-red-400",
                   };
-                  return colors[priority] || "text-gray-400";
+                  return colors[priority] || "text-slate-400";
                 };
 
                 const statusColor = getStatusColor(request.status);
@@ -547,7 +547,7 @@ export function RequestsClient() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-gray-900 border border-gray-800 p-6 hover:bg-gray-800 transition-all rounded-2xl hover:border-trinity-red"
+                    className="bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all rounded-xl hover:border-#ef4444"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
@@ -637,7 +637,7 @@ export function RequestsClient() {
               className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
             >
               <div
-                className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto pointer-events-auto"
+                className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto pointer-events-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-6">

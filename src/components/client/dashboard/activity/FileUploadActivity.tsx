@@ -21,13 +21,13 @@ export default function FileUploadActivity({ activity }: FileUploadActivityProps
         <p className="text-white">
           <span className="font-semibold">File uploaded</span>
         </p>
-        <p className="truncate text-sm text-gray-400">{fileName}</p>
+        <p className="truncate text-sm text-slate-400">{fileName}</p>
         {fileSize && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500">
             {(fileSize / 1024).toFixed(1)} KB
           </p>
         )}
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-slate-500">
           {formatActivityTime(activity.createdAt)}
         </p>
       </div>
@@ -36,7 +36,7 @@ export default function FileUploadActivity({ activity }: FileUploadActivityProps
           href={fileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 rounded-lg border border-gray-700 bg-gray-800/50 px-3 py-1 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="flex-shrink-0 rounded-lg border border-white/10 bg-white/10/50 px-3 py-1 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-white/10"
         >
           Download
         </a>

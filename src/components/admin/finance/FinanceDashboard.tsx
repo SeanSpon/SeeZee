@@ -95,7 +95,7 @@ function StatCard({
   icon: Icon,
   trend,
   trendValue,
-  color = "trinity-red",
+  color = "#ef4444",
 }: {
   title: string;
   value: string;
@@ -106,7 +106,7 @@ function StatCard({
   color?: string;
 }) {
   const colorClasses: Record<string, string> = {
-    "trinity-red": "text-trinity-red bg-trinity-red/20",
+    "#ef4444": "text-#ef4444 bg-#ef4444/20",
     green: "text-green-400 bg-green-500/20",
     yellow: "text-yellow-400 bg-yellow-500/20",
     cyan: "text-cyan-400 bg-cyan-500/20",
@@ -115,7 +115,7 @@ function StatCard({
   return (
     <motion.div
       whileHover={{ y: -2 }}
-      className="rounded-2xl border-2 border-gray-700 glass-effect p-6 hover:border-trinity-red/30 transition-all"
+      className="rounded-2xl border-2 border-gray-700 glass-effect p-6 hover:border-#ef4444/30 transition-all"
     >
       <div className="flex items-start justify-between">
         <div>
@@ -170,7 +170,7 @@ export function FinanceDashboard({
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
             Financial Overview
           </span>
           <h1 className="text-4xl font-heading font-bold gradient-text">
@@ -180,12 +180,12 @@ export function FinanceDashboard({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-trinity-red px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-trinity-maroon hover:shadow-large"
+            className="inline-flex items-center gap-2 rounded-lg bg-#ef4444 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-#dc2626 hover:shadow-large"
           >
             <Plus className="w-4 h-4" />
             Create Invoice
           </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-sm font-medium text-white transition-all hover:border-trinity-red/50">
+          <button className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-sm font-medium text-white transition-all hover:border-#ef4444/50">
             <Download className="w-4 h-4" />
             Export
           </button>
@@ -239,7 +239,7 @@ export function FinanceDashboard({
               onClick={() => setActiveTab("invoices")}
               className={`text-sm font-semibold transition-colors ${
                 activeTab === "invoices"
-                  ? "text-trinity-red"
+                  ? "text-#ef4444"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -249,7 +249,7 @@ export function FinanceDashboard({
               onClick={() => setActiveTab("subscriptions")}
               className={`text-sm font-semibold transition-colors ${
                 activeTab === "subscriptions"
-                  ? "text-trinity-red"
+                  ? "text-#ef4444"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -267,7 +267,7 @@ export function FinanceDashboard({
                     onClick={() => setStatusFilter(status)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       statusFilter === status
-                        ? "bg-trinity-red text-white"
+                        ? "bg-#ef4444 text-white"
                         : "bg-[#1a2235] text-gray-400 hover:text-white hover:bg-[#1e2840]"
                     }`}
                   >

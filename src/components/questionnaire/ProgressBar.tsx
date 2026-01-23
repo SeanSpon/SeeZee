@@ -16,14 +16,14 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
         <span className="text-sm font-medium text-white/80">
           Step {current + 1} of {total}
         </span>
-        <span className="text-sm font-medium text-trinity-red">
+        <span className="text-sm font-medium text-#ef4444">
           {percentage}%
         </span>
       </div>
       
       <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-trinity-red rounded-full"
+          className="h-full bg-#ef4444 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
           transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}

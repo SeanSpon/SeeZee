@@ -44,7 +44,7 @@ export default async function SummaryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large">
+      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 p-8 shadow-medium hover:shadow-large">
         <h1 className="text-3xl md:text-4xl font-heading font-bold gradient-text mb-2">
           Review Your Project
         </h1>
@@ -54,7 +54,7 @@ export default async function SummaryPage() {
       </div>
 
       {/* Answers */}
-      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-6 shadow-medium hover:shadow-large">
+      <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 p-6 shadow-medium hover:shadow-large">
         <h2 className="text-xl font-heading font-semibold text-white mb-4">Your Answers</h2>
         <div className="space-y-4">
           {data && StepSlugs.map((slug) => {
@@ -79,7 +79,7 @@ export default async function SummaryPage() {
                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                   title="Edit"
                 >
-                  <Edit2 className="w-4 h-4 text-white/60 hover:text-trinity-red" />
+                  <Edit2 className="w-4 h-4 text-white/60 hover:text-#ef4444" />
                 </Link>
               </div>
             );
@@ -89,7 +89,7 @@ export default async function SummaryPage() {
 
       {/* Pricing */}
       {estimate && deposit && (
-        <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-8 shadow-medium hover:shadow-large">
+        <div className="glass-effect rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 p-8 shadow-medium hover:shadow-large">
           <h2 className="text-2xl md:text-3xl font-heading font-bold gradient-text mb-4">
             Your Project Estimate
           </h2>
@@ -110,8 +110,8 @@ export default async function SummaryPage() {
               </span>
             </div>
             <div className="flex justify-between text-xl font-bold">
-              <span className="text-trinity-red">Deposit Required:</span>
-              <span className="text-trinity-red">{formatPrice(deposit)}</span>
+              <span className="text-#ef4444">Deposit Required:</span>
+              <span className="text-#ef4444">{formatPrice(deposit)}</span>
             </div>
           </div>
 

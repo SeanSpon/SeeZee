@@ -98,7 +98,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, company: e.target.value })
                   }
                   placeholder="ABC Nonprofit"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -114,7 +114,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, name: e.target.value })
                   }
                   placeholder="John Doe"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -130,7 +130,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   placeholder="john@nonprofit.org"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -145,7 +145,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   placeholder="(502) 555-1234"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -160,7 +160,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, websiteUrl: e.target.value })
                   }
                   placeholder="https://nonprofit.org"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -173,7 +173,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="">Select category...</option>
                   <option value="Healthcare">Healthcare</option>
@@ -200,7 +200,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, city: e.target.value })
                   }
                   placeholder="Louisville"
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
 
@@ -216,7 +216,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                   }
                   placeholder="KY"
                   maxLength={2}
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none uppercase"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none uppercase"
                 />
               </div>
 
@@ -231,7 +231,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
                     setFormData({ ...formData, internalNotes: e.target.value })
                   }
                   placeholder="Any relevant notes..."
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none resize-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none resize-none"
                 />
               </div>
             </div>
@@ -248,7 +248,7 @@ export function AddLeadModal({ onClose }: AddLeadModalProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-6 py-2.5 rounded-lg bg-#ef4444 text-white font-medium hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {isSubmitting ? "Creating..." : "Add Lead"}
               </button>

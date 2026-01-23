@@ -117,7 +117,7 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
         <div className="flex items-center gap-2">
           <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-trinity-red to-trinity-maroon"
+              className="h-full bg-gradient-to-r from-#ef4444 to-#dc2626"
               style={{ width: `${project.progress}%` }}
             />
           </div>
@@ -190,14 +190,14 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
       <header className="space-y-3 relative">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block mb-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444 glow-on-hover inline-block mb-2">
               Delivery Operations
             </span>
             <h1 className="text-4xl font-heading font-bold gradient-text">Projects</h1>
           </div>
           <button
             onClick={handleCreateProject}
-            className="inline-flex items-center gap-2 rounded-lg border-2 border-trinity-red/40 bg-trinity-red/10 px-5 py-2.5 text-sm font-medium text-trinity-red transition-all hover:bg-trinity-red hover:text-white hover:shadow-large hover:border-trinity-red"
+            className="inline-flex items-center gap-2 rounded-lg border-2 border-#ef4444/40 bg-#ef4444/10 px-5 py-2.5 text-sm font-medium text-#ef4444 transition-all hover:bg-#ef4444 hover:text-white hover:shadow-large hover:border-#ef4444"
           >
             <FiPlus className="h-4 w-4" />
             New Project
@@ -213,8 +213,8 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
           label="Active Projects"
           value={initialData.activeProjects}
           icon={FiTrendingUp}
-          iconColor="text-trinity-red"
-          iconBgColor="bg-trinity-red/20"
+          iconColor="text-#ef4444"
+          iconBgColor="bg-#ef4444/20"
           subtitle="In progress"
         />
         <EnhancedStatCard
@@ -235,7 +235,7 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
         />
       </section>
 
-      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all duration-300">
+      <div className="glass-effect rounded-2xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all duration-300">
         <DataTable
           columns={columns}
           data={projects}

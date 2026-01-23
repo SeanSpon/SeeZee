@@ -62,28 +62,28 @@ function ContactForm() {
 
   if (status === 'success') {
     return (
-      <div className="w-full min-h-screen bg-[#0f172a] py-20">
+      <div className="w-full min-h-screen bg-[#0a1128] py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mx-auto max-w-xl text-center bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/10"
+            className="mx-auto max-w-xl text-center bg-white/5 backdrop-blur-sm rounded-xl p-12 border border-white/10"
           >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="w-16 h-16 bg-[#dc2626]/20 rounded-full flex items-center justify-center mx-auto mb-6"
+              className="w-16 h-16 bg-[#ef4444]/20 rounded-full flex items-center justify-center mx-auto mb-6"
             >
-              <svg className="w-8 h-8 text-[#dc2626]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-8 h-8 text-[#ef4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </motion.div>
             <h3 className="text-3xl font-heading font-bold mb-3 text-white">Message Sent!</h3>
-            <p className="text-gray-400 mb-8 text-lg">We'll get back to you within 24 hours.</p>
+            <p className="text-slate-400 mb-8 text-lg">We'll get back to you within 24 hours.</p>
             <button
               onClick={() => setStatus('idle')}
-              className="px-8 py-3 bg-[#dc2626] text-white rounded-lg font-semibold hover:bg-[#b91c1c] transition-colors duration-200"
+              className="px-8 py-3 bg-[#ef4444] text-white rounded-lg font-semibold hover:bg-[#dc2626] transition-colors duration-200"
             >
               Send Another Message
             </button>
@@ -94,7 +94,7 @@ function ContactForm() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#0f172a] py-20">
+    <div className="w-full min-h-screen bg-[#0a1128] py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -105,7 +105,7 @@ function ContactForm() {
           <h1 className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-4 leading-tight">
             Get In Touch
           </h1>
-          <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
             We'd love to hear from you. Reach out and let's start building something amazing together.
           </p>
         </motion.div>
@@ -116,15 +116,15 @@ function ContactForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-[#dc2626]/50 transition-all duration-300 hover:-translate-y-1"
+            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 bg-[#dc2626]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiMail className="w-6 h-6 text-[#dc2626]" />
+            <div className="w-12 h-12 bg-[#ef4444]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiMail className="w-6 h-6 text-[#ef4444]" />
             </div>
             <h3 className="font-semibold text-white mb-2">Email</h3>
             <a
               href="mailto:contact@seezeestudios.com"
-              className="text-sm text-gray-400 hover:text-[#dc2626] transition-colors"
+              className="text-sm text-slate-400 hover:text-[#ef4444] transition-colors"
             >
               contact@seezeestudios.com
             </a>
@@ -134,15 +134,15 @@ function ContactForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-[#dc2626]/50 transition-all duration-300 hover:-translate-y-1"
+            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 bg-[#dc2626]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiPhone className="w-6 h-6 text-[#dc2626]" />
+            <div className="w-12 h-12 bg-[#ef4444]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiPhone className="w-6 h-6 text-[#ef4444]" />
             </div>
             <h3 className="font-semibold text-white mb-2">Phone</h3>
             <a
               href="tel:+15024352986"
-              className="text-sm text-gray-400 hover:text-[#dc2626] transition-colors"
+              className="text-sm text-slate-400 hover:text-[#ef4444] transition-colors"
             >
               (502) 435-2986
             </a>
@@ -152,26 +152,26 @@ function ContactForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-[#dc2626]/50 transition-all duration-300 hover:-translate-y-1"
+            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 bg-[#dc2626]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiMapPin className="w-6 h-6 text-[#dc2626]" />
+            <div className="w-12 h-12 bg-[#ef4444]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiMapPin className="w-6 h-6 text-[#ef4444]" />
             </div>
             <h3 className="font-semibold text-white mb-2">Location</h3>
-            <p className="text-sm text-gray-400">Louisville, KY</p>
+            <p className="text-sm text-slate-400">Louisville, KY</p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-[#dc2626]/50 transition-all duration-300 hover:-translate-y-1"
+            className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="w-12 h-12 bg-[#dc2626]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiClock className="w-6 h-6 text-[#dc2626]" />
+            <div className="w-12 h-12 bg-[#ef4444]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiClock className="w-6 h-6 text-[#ef4444]" />
             </div>
             <h3 className="font-semibold text-white mb-2">Response Time</h3>
-            <p className="text-sm text-gray-400">Within 24 hours</p>
+            <p className="text-sm text-slate-400">Within 24 hours</p>
           </motion.div>
         </div>
 
@@ -180,19 +180,19 @@ function ContactForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mx-auto max-w-2xl bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 md:p-12"
+          className="mx-auto max-w-2xl bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8 md:p-12"
           onSubmit={handleSubmit}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <label htmlFor="name" className="block">
               <span className="block text-sm font-medium text-white mb-2">
-                Full Name <span className="text-[#dc2626]">*</span>
+                Full Name <span className="text-[#ef4444]">*</span>
               </span>
               <input
                 id="name"
                 type="text"
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#dc2626] focus:outline-none focus:ring-2 focus:ring-[#dc2626]/50 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#ef4444] focus:outline-none focus:ring-2 focus:ring-[#ef4444]/50 transition-all"
                 value={state.name}
                 onChange={(e) => setState({ ...state, name: e.target.value })}
                 required
@@ -203,12 +203,12 @@ function ContactForm() {
             {/* Email */}
             <label htmlFor="email" className="block">
               <span className="block text-sm font-medium text-white mb-2">
-                Email Address <span className="text-[#dc2626]">*</span>
+                Email Address <span className="text-[#ef4444]">*</span>
               </span>
               <input
                 id="email"
                 type="email"
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#dc2626] focus:outline-none focus:ring-2 focus:ring-[#dc2626]/50 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#ef4444] focus:outline-none focus:ring-2 focus:ring-[#ef4444]/50 transition-all"
                 value={state.email}
                 onChange={(e) => setState({ ...state, email: e.target.value })}
                 required
@@ -224,7 +224,7 @@ function ContactForm() {
             </span>
             <select
               id="inquiryType"
-              className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white focus:border-[#dc2626] focus:outline-none focus:ring-2 focus:ring-[#dc2626]/50 transition-all"
+              className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white focus:border-[#ef4444] focus:outline-none focus:ring-2 focus:ring-[#ef4444]/50 transition-all"
               value={state.inquiryType}
               onChange={(e) => setState({ ...state, inquiryType: e.target.value })}
             >
@@ -240,12 +240,12 @@ function ContactForm() {
           {/* Message */}
           <label htmlFor="message" className="mt-6 block">
             <span className="block text-sm font-medium text-white mb-2">
-              Message <span className="text-[#dc2626]">*</span>
+              Message <span className="text-[#ef4444]">*</span>
             </span>
             <textarea
               id="message"
               rows={6}
-              className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#dc2626] focus:outline-none focus:ring-2 focus:ring-[#dc2626]/50 resize-none transition-all"
+              className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder-gray-500 focus:border-[#ef4444] focus:outline-none focus:ring-2 focus:ring-[#ef4444]/50 resize-none transition-all"
               value={state.message}
               onChange={(e) => setState({ ...state, message: e.target.value })}
               required
@@ -257,14 +257,14 @@ function ContactForm() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 p-4 bg-[#dc2626]/20 border border-[#dc2626]/50 rounded-xl text-red-200 text-sm"
+              className="mt-6 p-4 bg-[#ef4444]/20 border border-[#ef4444]/50 rounded-xl text-red-200 text-sm"
             >
               {errorMessage}
             </motion.div>
           )}
 
           <button
-            className="mt-8 w-full rounded-xl bg-[#dc2626] text-white px-6 py-4 font-semibold text-lg hover:bg-[#b91c1c] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            className="mt-8 w-full rounded-xl bg-[#ef4444] text-white px-6 py-4 font-semibold text-lg hover:bg-[#dc2626] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             type="submit"
             disabled={status === 'loading'}
           >
@@ -281,7 +281,7 @@ function ContactForm() {
             )}
           </button>
 
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm text-slate-500">
             We typically respond within 24 hours
           </p>
         </motion.form>
@@ -293,7 +293,7 @@ function ContactForm() {
 export default function Page() {
   return (
     <Suspense fallback={
-      <div className="w-full min-h-screen bg-[#0f172a] py-20">
+      <div className="w-full min-h-screen bg-[#0a1128] py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
           <div className="text-center">
             <div className="animate-pulse text-white">Loading contact form...</div>

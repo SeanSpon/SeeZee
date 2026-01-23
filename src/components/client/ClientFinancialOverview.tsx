@@ -52,9 +52,9 @@ const getStatusColor = (status: string) => {
     case "overdue":
       return "bg-red-500/20 text-red-400 border-red-500/30";
     case "draft":
-      return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+      return "bg-gray-500/20 text-slate-400 border-gray-500/30";
     default:
-      return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+      return "bg-gray-500/20 text-slate-400 border-gray-500/30";
   }
 };
 
@@ -77,8 +77,8 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
           <h3 className="text-2xl font-bold text-white">
             {formatCurrency(data.totalSpent)}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">Total Invested</p>
-          <p className="text-xs text-gray-500 mt-1">All-time spending</p>
+          <p className="text-slate-400 text-sm mt-1">Total Invested</p>
+          <p className="text-xs text-slate-500 mt-1">All-time spending</p>
         </motion.div>
 
         {/* This Month */}
@@ -96,8 +96,8 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
           <h3 className="text-2xl font-bold text-white">
             {formatCurrency(data.thisMonthSpent)}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">This Month</p>
-          <p className="text-xs text-gray-500 mt-1">Current period</p>
+          <p className="text-slate-400 text-sm mt-1">This Month</p>
+          <p className="text-xs text-slate-500 mt-1">Current period</p>
         </motion.div>
 
         {/* Pending Payments */}
@@ -121,7 +121,7 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
             >
               <FiAlertCircle
                 className={`w-5 h-5 ${
-                  data.pendingPayments > 0 ? "text-orange-400" : "text-gray-400"
+                  data.pendingPayments > 0 ? "text-orange-400" : "text-slate-400"
                 }`}
               />
             </div>
@@ -129,7 +129,7 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
           <h3 className="text-2xl font-bold text-white">
             {formatCurrency(data.pendingPayments)}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">Pending Payments</p>
+          <p className="text-slate-400 text-sm mt-1">Pending Payments</p>
           {data.nextPaymentDue && (
             <p className="text-xs text-orange-400 mt-1">
               Due {new Date(data.nextPaymentDue).toLocaleDateString()}
@@ -158,7 +158,7 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
             >
               <FiCreditCard
                 className={`w-5 h-5 ${
-                  data.activeSubscription ? "text-purple-400" : "text-gray-400"
+                  data.activeSubscription ? "text-purple-400" : "text-slate-400"
                 }`}
               />
             </div>
@@ -171,10 +171,10 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
               ? formatCurrency(data.subscriptionAmount)
               : "—"}
           </h3>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-slate-400 text-sm mt-1">
             {data.activeSubscription ? "Subscription" : "No Subscription"}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             {data.activeSubscription ? "Monthly plan" : "Upgrade available"}
           </p>
         </motion.div>
@@ -185,7 +185,7 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl font-semibold text-white">Recent Invoices</h2>
-            <p className="text-sm text-gray-400 mt-1">Your payment history</p>
+            <p className="text-sm text-slate-400 mt-1">Your payment history</p>
           </div>
           <Link
             href="/client/invoices"
@@ -215,7 +215,7 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <p className="text-sm text-gray-400">Invoice #{invoice.number}</p>
+                    <p className="text-sm text-slate-400">Invoice #{invoice.number}</p>
                     {invoice.status === "PAID" && invoice.paidAt && (
                       <p className="text-xs text-green-400">
                         • Paid {new Date(invoice.paidAt).toLocaleDateString()}
@@ -228,17 +228,17 @@ export function ClientFinancialOverview({ data }: ClientFinancialOverviewProps) 
                     {formatCurrency(invoice.amount)}
                   </p>
                   {invoice.status !== "PAID" && (
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-slate-400">
                       Due {new Date(invoice.dueDate).toLocaleDateString()}
                     </p>
                   )}
                 </div>
-                <FiArrowRight className="w-5 h-5 text-gray-500 group-hover:text-cyan-400 transition-colors ml-4" />
+                <FiArrowRight className="w-5 h-5 text-slate-500 group-hover:text-cyan-400 transition-colors ml-4" />
               </Link>
             ))
           ) : (
-            <div className="text-center py-8 text-gray-400">
-              <FiDollarSign className="w-12 h-12 mx-auto mb-2 text-gray-600" />
+            <div className="text-center py-8 text-slate-400">
+              <FiDollarSign className="w-12 h-12 mx-auto mb-2 text-slate-600" />
               <p className="text-sm">No invoices yet</p>
             </div>
           )}

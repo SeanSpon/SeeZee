@@ -142,7 +142,7 @@ export function EventDetailModal({
                   href={event.meetingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-trinity-red hover:text-trinity-maroon flex items-center gap-1"
+                  className="text-#ef4444 hover:text-#dc2626 flex items-center gap-1"
                 >
                   Join Meeting
                   <ExternalLink className="w-4 h-4" />

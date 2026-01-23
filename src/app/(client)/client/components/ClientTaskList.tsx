@@ -58,7 +58,7 @@ export function ClientTaskList({ tasks, onTaskUpdate }: ClientTaskListProps) {
             className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
               filter === 'all'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-white/60 hover:bg-gray-700'
+                : 'bg-white/10 text-white/60 hover:bg-gray-700'
             }`}
           >
             All ({tasks.length})
@@ -68,7 +68,7 @@ export function ClientTaskList({ tasks, onTaskUpdate }: ClientTaskListProps) {
             className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
               filter === 'pending'
                 ? 'bg-amber-600 text-white'
-                : 'bg-gray-800 text-white/60 hover:bg-gray-700'
+                : 'bg-white/10 text-white/60 hover:bg-gray-700'
             }`}
           >
             Pending ({pendingTasks.length})
@@ -78,7 +78,7 @@ export function ClientTaskList({ tasks, onTaskUpdate }: ClientTaskListProps) {
             className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
               filter === 'completed'
                 ? 'bg-emerald-600 text-white'
-                : 'bg-gray-800 text-white/60 hover:bg-gray-700'
+                : 'bg-white/10 text-white/60 hover:bg-gray-700'
             }`}
           >
             Completed ({completedTasks.length})
@@ -105,12 +105,12 @@ export function ClientTaskList({ tasks, onTaskUpdate }: ClientTaskListProps) {
             return (
               <div
                 key={task.id}
-                className={`p-4 bg-gray-900 hover:bg-gray-800 rounded-xl border transition-all ${
+                className={`p-4 bg-white/5 hover:bg-white/10 rounded-xl border transition-all ${
                   isOverdue
                     ? 'border-red-500/50 bg-red-500/5'
                     : isCompleted
-                    ? 'border-gray-800 opacity-75'
-                    : 'border-gray-800'
+                    ? 'border-white/10 opacity-75'
+                    : 'border-white/10'
                 }`}
               >
                 <div className="flex items-start gap-4">

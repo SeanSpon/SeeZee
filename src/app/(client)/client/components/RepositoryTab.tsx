@@ -132,14 +132,14 @@ export function RepositoryTab({ projectId, isAdmin = false }: RepositoryTabProps
       {/* Repository Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {repository.description && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <h4 className="text-sm font-semibold text-white/60 mb-2">Description</h4>
             <p className="text-white">{repository.description}</p>
           </div>
         )}
 
         {repository.language && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <h4 className="text-sm font-semibold text-white/60 mb-2">Language</h4>
             <div className="flex items-center gap-2">
               <Code className="w-4 h-4 text-blue-400" />
@@ -149,14 +149,14 @@ export function RepositoryTab({ projectId, isAdmin = false }: RepositoryTabProps
         )}
 
         {repository.stars !== undefined && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <h4 className="text-sm font-semibold text-white/60 mb-2">Stars</h4>
             <p className="text-2xl font-bold text-white">{repository.stars}</p>
           </div>
         )}
 
         {repository.forks !== undefined && (
-          <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+          <div className="p-4 bg-white/5 rounded-xl border border-white/10">
             <h4 className="text-sm font-semibold text-white/60 mb-2">Forks</h4>
             <p className="text-2xl font-bold text-white">{repository.forks}</p>
           </div>
@@ -168,7 +168,7 @@ export function RepositoryTab({ projectId, isAdmin = false }: RepositoryTabProps
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 bg-gray-900 rounded-xl border border-gray-800"
+          className="p-4 bg-white/5 rounded-xl border border-white/10"
         >
           <div className="flex items-center gap-2 mb-4">
             <GitBranch className="w-5 h-5 text-cyan-400" />
@@ -222,7 +222,7 @@ export function RepositoryTab({ projectId, isAdmin = false }: RepositoryTabProps
 
       {/* Repository URL (fallback) */}
       {!repository.fullUrl && repository.url && (
-        <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+        <div className="p-4 bg-white/5 rounded-xl border border-white/10">
           <h4 className="text-sm font-semibold text-white/60 mb-2">Repository URL</h4>
           <a
             href={repository.url}

@@ -121,7 +121,7 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
             <Database className="h-6 w-6 text-purple-400" />
           </div>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
               System Database
             </span>
             <h1 className="text-4xl font-heading font-bold gradient-text mt-1">Database Browser</h1>
@@ -161,13 +161,13 @@ export function DatabaseClient({ models }: DatabaseClientProps) {
             <FileText className="h-8 w-8 text-green-400" />
           </div>
         </div>
-        <div className="glass-effect rounded-xl border border-gray-700/50 p-5 hover:border-trinity-red/30 transition-all">
+        <div className="glass-effect rounded-xl border border-gray-700/50 p-5 hover:border-#ef4444/30 transition-all">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Records</p>
               <p className="text-3xl font-bold text-white">{recordCount || "—"}</p>
             </div>
-            <Hash className="h-8 w-8 text-trinity-red" />
+            <Hash className="h-8 w-8 text-#ef4444" />
           </div>
         </div>
       </div>

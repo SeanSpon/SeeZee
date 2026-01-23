@@ -71,7 +71,7 @@ export default async function ClientTasksPage() {
   return (
     <div className="space-y-8">
       <header className="space-y-3 relative">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red glow-on-hover inline-block">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444 glow-on-hover inline-block">
           Client Delivery
         </span>
         <h1 className="text-4xl font-heading font-bold gradient-text">Client Tasks</h1>

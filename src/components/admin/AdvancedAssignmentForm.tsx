@@ -165,7 +165,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
               value={formData.projectId}
               onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
               required
-              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50"
+              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50"
             >
               <option value="">Select a project</option>
               {projects.map((project) => (
@@ -186,7 +186,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
-              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50"
+              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50"
               placeholder="Assignment title"
             />
           </div>
@@ -201,7 +201,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
               rows={4}
-              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50 resize-none"
+              className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50 resize-none"
               placeholder="Detailed assignment description"
             />
           </div>
@@ -216,7 +216,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50"
+                className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50"
               >
                 <option value="general">General</option>
                 <option value="questionnaire">Questionnaire</option>
@@ -235,7 +235,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
                 type="datetime-local"
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-trinity-red/50"
+                className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-#ef4444/50"
               />
             </div>
           </div>
@@ -247,7 +247,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
               id="requiresUpload"
               checked={formData.requiresUpload}
               onChange={(e) => setFormData({ ...formData, requiresUpload: e.target.checked })}
-              className="w-4 h-4 rounded border-white/20 bg-slate-800 text-trinity-red focus:ring-trinity-red/50"
+              className="w-4 h-4 rounded border-white/20 bg-slate-800 text-#ef4444 focus:ring-#ef4444/50"
             />
             <label htmlFor="requiresUpload" className="text-sm text-white">
               Requires file upload from client
@@ -327,7 +327,7 @@ export function AdvancedAssignmentForm({ isOpen, onClose, onSuccess }: AdvancedA
             <button
               type="submit"
               disabled={loading || uploading || isUploading || !formData.projectId || !formData.title || !formData.description}
-              className="flex-1 px-4 py-2 bg-trinity-red hover:bg-trinity-red/80 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-#ef4444 hover:bg-#ef4444/80 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Creating..." : uploading || isUploading ? "Uploading files..." : "Create Assignment"}
             </button>

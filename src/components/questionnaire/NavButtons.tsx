@@ -33,7 +33,7 @@ export function NavButtons({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex items-center gap-2 px-6 py-3 bg-trinity-red text-white font-semibold rounded-lg hover:bg-trinity-maroon transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+        className="flex items-center gap-2 px-6 py-3 bg-#ef4444 text-white font-semibold rounded-lg hover:bg-#dc2626 transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
       >
         {isSubmitting ? 'Saving...' : nextLabel}
         <ArrowRight size={16} />

@@ -66,7 +66,7 @@ export default async function AdminTrainingPage() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-#ef4444">
           Learning Engine
         </span>
         <h1 className="text-3xl font-heading font-bold text-white">Training</h1>

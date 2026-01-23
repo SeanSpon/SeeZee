@@ -194,7 +194,7 @@ export function TemplateEditor({ template, onClose, onSave }: TemplateEditorProp
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g., Cold Outreach - Nonprofits"
-              className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+              className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
             />
           </div>
           <div>
@@ -204,7 +204,7 @@ export function TemplateEditor({ template, onClose, onSave }: TemplateEditorProp
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+              className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat.value} value={cat.value}>
@@ -225,7 +225,7 @@ export function TemplateEditor({ template, onClose, onSave }: TemplateEditorProp
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
             placeholder="e.g., {{organizationName}} - Website Proposal"
-            className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+            className="w-full rounded-lg border-2 border-gray-700 bg-[#1a2235] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
           />
           <p className="mt-1 text-xs text-gray-500">
             Use {"{{variable}}"} syntax for personalization
@@ -334,7 +334,7 @@ export function TemplateEditor({ template, onClose, onSave }: TemplateEditorProp
                 type="checkbox"
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                className="rounded border-gray-700 bg-[#1a2235] text-trinity-red focus:ring-trinity-red"
+                className="rounded border-gray-700 bg-[#1a2235] text-#ef4444 focus:ring-#ef4444"
               />
               Active
             </label>
@@ -358,7 +358,7 @@ export function TemplateEditor({ template, onClose, onSave }: TemplateEditorProp
             <button
               onClick={handleSubmit}
               disabled={isSubmitting || !formData.name || !formData.subject}
-              className="px-6 py-2 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="px-6 py-2 rounded-lg bg-#ef4444 text-white font-medium hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               {isSubmitting ? "Saving..." : template ? "Update Template" : "Create Template"}
             </button>

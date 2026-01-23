@@ -17,7 +17,7 @@ export default function MilestoneTimeline({ milestones }: MilestoneTimelineProps
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+      className="rounded-xl border border-white/10 bg-white/5/50 p-6"
     >
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
@@ -53,7 +53,7 @@ export default function MilestoneTimeline({ milestones }: MilestoneTimelineProps
                     ? 'border-green-500 bg-green-500/20'
                     : isCurrent
                     ? 'border-blue-500 bg-blue-500/20'
-                    : 'border-gray-700 bg-gray-900'
+                    : 'border-white/10 bg-white/5'
                 }`}
               >
                 {isCompleted && (
@@ -63,7 +63,7 @@ export default function MilestoneTimeline({ milestones }: MilestoneTimelineProps
                   <span className="text-sm text-blue-400">🔄</span>
                 )}
                 {!isCompleted && !isCurrent && (
-                  <span className="text-sm text-gray-500">⏳</span>
+                  <span className="text-sm text-slate-500">⏳</span>
                 )}
               </div>
               
@@ -75,18 +75,18 @@ export default function MilestoneTimeline({ milestones }: MilestoneTimelineProps
                       ? 'text-green-400'
                       : isCurrent
                       ? 'text-blue-400'
-                      : 'text-gray-400'
+                      : 'text-slate-400'
                   }`}
                 >
                   {milestone.title}
                 </h3>
                 {milestone.description && (
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-slate-500">
                     {milestone.description}
                   </p>
                 )}
                 {milestone.dueDate && (
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-slate-500">
                     {isCompleted && milestone.completedAt
                       ? `Completed ${new Date(milestone.completedAt).toLocaleDateString()}`
                       : `Due ${new Date(milestone.dueDate).toLocaleDateString()}`

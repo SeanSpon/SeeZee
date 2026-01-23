@@ -52,7 +52,7 @@ export function ActionMenu({ actions }: ActionMenuProps) {
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="rounded-lg border border-gray-700 bg-gray-800/50 p-2 text-gray-400 transition-all hover:border-trinity-red/50 hover:bg-gray-700 hover:text-white"
+        className="rounded-lg border border-gray-700 bg-gray-800/50 p-2 text-gray-400 transition-all hover:border-#ef4444/50 hover:bg-gray-700 hover:text-white"
       >
         <FiMoreHorizontal className="h-4 w-4" />
       </button>

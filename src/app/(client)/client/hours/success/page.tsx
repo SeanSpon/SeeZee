@@ -224,7 +224,7 @@ export default function HourPackSuccessPage() {
         className="max-w-3xl w-full"
       >
         {/* Success Card */}
-        <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+        <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-8">
           {/* Success Icon */}
           <motion.div
             initial={{ scale: 0 }}
@@ -259,15 +259,15 @@ export default function HourPackSuccessPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <p className="text-sm text-gray-400 mb-1">Hours Added</p>
+                  <p className="text-sm text-slate-400 mb-1">Hours Added</p>
                   <p className="text-3xl font-bold text-white">{purchasedPack.hours}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-400 mb-1">Amount Paid</p>
+                  <p className="text-sm text-slate-400 mb-1">Amount Paid</p>
                   <p className="text-3xl font-bold text-white">${purchasedPack.price}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-400 mb-1">Per Hour</p>
+                  <p className="text-sm text-slate-400 mb-1">Per Hour</p>
                   <p className="text-3xl font-bold text-white">
                     ${Math.round(purchasedPack.price / purchasedPack.hours)}
                   </p>
@@ -291,8 +291,8 @@ export default function HourPackSuccessPage() {
 
               <div className="flex items-center justify-center gap-4 mb-4">
                 <div className="text-center">
-                  <p className="text-sm text-gray-400 mb-1">Previous</p>
-                  <p className="text-2xl font-bold text-gray-400 line-through">
+                  <p className="text-sm text-slate-400 mb-1">Previous</p>
+                  <p className="text-2xl font-bold text-slate-400 line-through">
                     {formatHours(previousHours)}
                   </p>
                 </div>
@@ -300,7 +300,7 @@ export default function HourPackSuccessPage() {
                 <ArrowRight className="w-6 h-6 text-cyan-400" />
 
                 <div className="text-center">
-                  <p className="text-sm text-gray-400 mb-1">Now</p>
+                  <p className="text-sm text-slate-400 mb-1">Now</p>
                   <p className="text-3xl font-bold text-green-400">
                     {formatHours(newHours)}
                   </p>
@@ -336,19 +336,19 @@ export default function HourPackSuccessPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-sm text-gray-400 mb-1">Plan Tier</p>
+                  <p className="text-sm text-slate-400 mb-1">Plan Tier</p>
                   <p className="text-xl font-bold text-white">
                     {currentPlan.tierName || currentPlan.tier || 'Essentials'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400 mb-1">Monthly Hours</p>
+                  <p className="text-sm text-slate-400 mb-1">Monthly Hours</p>
                   <p className="text-xl font-bold text-white">
                     {currentPlan.monthlyHours === -1 ? 'Unlimited' : (currentPlan.monthlyHours || 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400 mb-1">Hour Packs</p>
+                  <p className="text-sm text-slate-400 mb-1">Hour Packs</p>
                   <p className="text-xl font-bold text-white">
                     {currentPlan.hourPacks || 0}
                   </p>

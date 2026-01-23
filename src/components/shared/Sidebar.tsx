@@ -146,7 +146,7 @@ export default function Sidebar() {
       case 'STAFF':
         return { color: 'bg-green-500', label: 'Staff', icon: FiShield, glow: 'shadow-green-500/50' }
       case 'CLIENT':
-        return { color: 'bg-trinity-red', label: 'Client', icon: FiUser, glow: 'shadow-trinity-red/50' }
+        return { color: 'bg-#ef4444', label: 'Client', icon: FiUser, glow: 'shadow-#ef4444/50' }
       default:
         return { color: 'bg-gray-500', label: 'User', icon: FiUser, glow: 'shadow-gray-500/50' }
     }
@@ -159,7 +159,7 @@ export default function Sidebar() {
       {/* Mobile menu button - fixed top left */}
       <motion.button
         whileTap={{ scale: 0.95 }}
-        className="fixed top-4 left-4 z-50 lg:hidden p-3 rounded-lg bg-gray-900/90 backdrop-blur-sm text-gray-300 hover:text-trinity-red hover:bg-gray-800 border border-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
+        className="fixed top-4 left-4 z-50 lg:hidden p-3 rounded-lg bg-gray-900/90 backdrop-blur-sm text-gray-300 hover:text-#ef4444 hover:bg-gray-800 border border-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900"
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={sidebarOpen}
@@ -208,7 +208,7 @@ export default function Sidebar() {
               >
                 <Link
                   href="/"
-                  className="flex items-center focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
+                  className="flex items-center focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
                   onClick={() => setSidebarOpen(false)}
                   aria-label="SeeZee Studio Home"
                 >
@@ -250,7 +250,7 @@ export default function Sidebar() {
                       collapsed ? 'justify-center' : ''
                     } ${
                       active
-                        ? 'bg-trinity-red/15 border-l-[3px] border-trinity-red text-white'
+                        ? 'bg-#ef4444/15 border-l-[3px] border-#ef4444 text-white'
                         : 'hover:bg-gray-800 text-gray-300'
                     }`}
                     aria-current={active ? 'page' : undefined}
@@ -268,7 +268,7 @@ export default function Sidebar() {
 
             {/* Featured Nav Section: Philosophy & Big Red Bus */}
             {!collapsed && (
-              <div className="bg-trinity-red/5 rounded-lg p-2 mb-3 border border-trinity-red/20">
+              <div className="bg-#ef4444/5 rounded-lg p-2 mb-3 border border-#ef4444/20">
                 {featuredNavLinks.map((link, index) => {
                   const Icon = link.icon
                   const active = isActive(link.path)
@@ -284,8 +284,8 @@ export default function Sidebar() {
                         onClick={() => setSidebarOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 ease-in-out mb-1 last:mb-0 ${
                           active
-                            ? 'bg-trinity-red/20 border-l-[3px] border-trinity-red text-white font-semibold'
-                            : 'hover:bg-trinity-red/10 text-gray-200 hover:text-white'
+                            ? 'bg-#ef4444/20 border-l-[3px] border-#ef4444 text-white font-semibold'
+                            : 'hover:bg-#ef4444/10 text-gray-200 hover:text-white'
                         }`}
                         aria-current={active ? 'page' : undefined}
                       >
@@ -314,7 +314,7 @@ export default function Sidebar() {
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center justify-center p-3 rounded-lg transition-all duration-150 ease-in-out ${
                       active
-                        ? 'bg-trinity-red/20 border border-trinity-red/30 text-white'
+                        ? 'bg-#ef4444/20 border border-#ef4444/30 text-white'
                         : 'hover:bg-gray-800 text-gray-300'
                     }`}
                     aria-current={active ? 'page' : undefined}
@@ -347,7 +347,7 @@ export default function Sidebar() {
                       collapsed ? 'justify-center' : ''
                     } ${
                       active
-                        ? 'bg-trinity-red/15 border-l-[3px] border-trinity-red text-white'
+                        ? 'bg-#ef4444/15 border-l-[3px] border-#ef4444 text-white'
                         : 'hover:bg-gray-800 text-gray-300'
                     }`}
                     aria-current={active ? 'page' : undefined}
@@ -408,7 +408,7 @@ export default function Sidebar() {
                     onClick={() => setSidebarOpen(false)}
                     className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${
                       collapsed ? 'justify-center' : ''
-                    } bg-trinity-red hover:bg-red-700 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5`}
+                    } bg-#ef4444 hover:bg-red-700 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5`}
                     aria-label="Start Project"
                     title={collapsed ? 'Start Project' : undefined}
                   >

@@ -122,7 +122,7 @@ export function SubscriptionsClient({
                 Submit a Request
               </Link>
             </div>
-            <p className="text-sm text-gray-400 mt-4">
+            <p className="text-sm text-slate-400 mt-4">
               💡 Maintenance plans are optional and give you monthly support hours, priority support, and ongoing updates.
             </p>
           </div>
@@ -141,7 +141,7 @@ export function SubscriptionsClient({
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">My Subscriptions</h1>
-          <p className="text-gray-400">
+          <p className="text-slate-400">
             Manage your monthly subscriptions and billing
           </p>
         </div>
@@ -153,7 +153,7 @@ export function SubscriptionsClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-blue-500 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-white/10 text-slate-400 hover:bg-gray-700'
             }`}
           >
             All ({subscriptions.length})
@@ -163,7 +163,7 @@ export function SubscriptionsClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === 'active'
                 ? 'bg-blue-500 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-white/10 text-slate-400 hover:bg-gray-700'
             }`}
           >
             Active ({activeSubscriptions.length})
@@ -174,7 +174,7 @@ export function SubscriptionsClient({
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === 'past_due'
                   ? 'bg-red-500 text-white'
-                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  : 'bg-white/10 text-slate-400 hover:bg-gray-700'
               }`}
             >
               Past Due ({pastDueSubscriptions.length})
@@ -190,47 +190,47 @@ export function SubscriptionsClient({
           Spending Overview
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-900/60 border border-white/10 rounded-lg p-4">
-            <div className="text-sm text-gray-400 mb-1">Monthly Recurring Cost</div>
+          <div className="bg-white/5/60 border border-white/10 rounded-lg p-4">
+            <div className="text-sm text-slate-400 mb-1">Monthly Recurring Cost</div>
             <div className="text-2xl font-bold text-white">{formatCurrency(totalMonthlyCost)}</div>
-            <div className="text-xs text-gray-500 mt-1">All active subscriptions</div>
+            <div className="text-xs text-slate-500 mt-1">All active subscriptions</div>
           </div>
-          <div className="bg-gray-900/60 border border-white/10 rounded-lg p-4">
-            <div className="text-sm text-gray-400 mb-1">Annual Recurring Cost</div>
+          <div className="bg-white/5/60 border border-white/10 rounded-lg p-4">
+            <div className="text-sm text-slate-400 mb-1">Annual Recurring Cost</div>
             <div className="text-2xl font-bold text-white">{formatCurrency(totalAnnualCost)}</div>
-            <div className="text-xs text-gray-500 mt-1">Projected yearly spending</div>
+            <div className="text-xs text-slate-500 mt-1">Projected yearly spending</div>
           </div>
-          <div className="bg-gray-900/60 border border-white/10 rounded-lg p-4">
-            <div className="text-sm text-gray-400 mb-1">Total Paid (All Time)</div>
+          <div className="bg-white/5/60 border border-white/10 rounded-lg p-4">
+            <div className="text-sm text-slate-400 mb-1">Total Paid (All Time)</div>
             <div className="text-2xl font-bold text-green-400">{formatCurrency(totalPaid)}</div>
-            <div className="text-xs text-gray-500 mt-1">Including packages & invoices</div>
+            <div className="text-xs text-slate-500 mt-1">Including packages & invoices</div>
           </div>
         </div>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <CreditCard className="w-5 h-5 text-blue-400" />
-            <span className="text-sm text-gray-400">Active Subscriptions</span>
+            <span className="text-sm text-slate-400">Active Subscriptions</span>
           </div>
           <div className="text-3xl font-bold text-white">{activeSubscriptions.length}</div>
         </div>
 
-        <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <Package className="w-5 h-5 text-green-400" />
-            <span className="text-sm text-gray-400">Change Requests</span>
+            <span className="text-sm text-slate-400">Change Requests</span>
           </div>
           <div className="text-3xl font-bold text-white">Unlimited</div>
-          <div className="text-xs text-gray-500 mt-1">Tied to available hours</div>
+          <div className="text-xs text-slate-500 mt-1">Tied to available hours</div>
         </div>
 
-        <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-2">
             <Server className="w-5 h-5 text-purple-400" />
-            <span className="text-sm text-gray-400">Hosting & Maintenance</span>
+            <span className="text-sm text-slate-400">Hosting & Maintenance</span>
           </div>
           <div className="text-2xl font-bold text-white">
             {activeSubscriptions.length} {activeSubscriptions.length === 1 ? 'Project' : 'Projects'}
@@ -246,10 +246,10 @@ export function SubscriptionsClient({
             <div className="text-3xl font-bold text-red-400">{pastDueSubscriptions.length}</div>
           </div>
         ) : (
-          <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+          <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-2">
               <TrendingUp className="w-5 h-5 text-green-400" />
-              <span className="text-sm text-gray-400">All Up to Date</span>
+              <span className="text-sm text-slate-400">All Up to Date</span>
             </div>
             <div className="text-2xl font-bold text-green-400">✓</div>
           </div>
@@ -258,7 +258,7 @@ export function SubscriptionsClient({
 
       {/* Package & Cost Breakdown */}
       {subscriptions.length > 0 && (
-        <div className="bg-gray-900/40 border border-white/10 rounded-xl p-6">
+        <div className="bg-white/5/40 border border-white/10 rounded-xl p-6">
           <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
             <Receipt className="w-5 h-5 text-blue-400" />
             Package & Cost Breakdown
@@ -279,21 +279,21 @@ export function SubscriptionsClient({
               return (
                 <div 
                   key={sub.id}
-                  className="bg-gray-800/50 border border-white/5 rounded-lg p-4"
+                  className="bg-white/10/50 border border-white/5 rounded-lg p-4"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="text-white font-semibold">{sub.projectName}</h3>
                       {pkgInfo && (
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-sm text-gray-400">Package:</span>
+                          <span className="text-sm text-slate-400">Package:</span>
                           <span className="text-sm font-medium text-blue-400">
                             {pkgInfo.icon} {pkgInfo.title} - {formatCurrency(pkgInfo.basePrice)}
                           </span>
                         </div>
                       )}
                       {sub.projectTotalPaid && sub.projectTotalPaid > 0 && (
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-slate-500 mt-1">
                           Total paid: {formatCurrency(sub.projectTotalPaid)}
                         </div>
                       )}
@@ -306,13 +306,13 @@ export function SubscriptionsClient({
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="text-gray-400 mb-1">Maintenance Plan</div>
+                      <div className="text-slate-400 mb-1">Maintenance Plan</div>
                       <div className="text-white font-medium">
                         {sub.tierName || sub.planName}
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-400 mb-1">Hosting & Support</div>
+                      <div className="text-slate-400 mb-1">Hosting & Support</div>
                       <div className="text-white font-medium">
                         {formatCurrency(monthlyCost)}/mo
                       </div>
@@ -320,7 +320,7 @@ export function SubscriptionsClient({
                   </div>
                   {sub.isAddon && sub.additionalCost && sub.additionalCost > 0 && (
                     <div className="mt-3 pt-3 border-t border-white/5">
-                      <div className="text-xs text-gray-400 mb-1">Additional Addon</div>
+                      <div className="text-xs text-slate-400 mb-1">Additional Addon</div>
                       <div className="text-sm text-white">+{formatCurrency(sub.additionalCost)}/mo</div>
                     </div>
                   )}

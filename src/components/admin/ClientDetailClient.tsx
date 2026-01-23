@@ -188,7 +188,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
 
         {/* Stats Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
+          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-400">Total Projects</span>
               <Folder className="h-5 w-5 text-blue-400" />
@@ -197,7 +197,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             <div className="text-xs text-gray-500 mt-1">{activeProjects} active</div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
+          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-400">Total Invoices</span>
               <FileText className="h-5 w-5 text-purple-400" />
@@ -208,7 +208,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             </div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
+          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-400">Total Revenue</span>
               <DollarSign className="h-5 w-5 text-green-400" />
@@ -217,7 +217,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             <div className="text-xs text-gray-500 mt-1">Paid invoices</div>
           </div>
 
-          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all">
+          <div className="glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-400">Leads</span>
               <TrendingUp className="h-5 w-5 text-yellow-400" />
@@ -361,7 +361,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   <Link
                     key={proj.id}
                     href={`/admin/pipeline/projects/${proj.id}`}
-                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all"
+                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -420,7 +420,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                   <Link
                     key={invoice.id}
                     href={`/admin/pipeline/invoices/${invoice.id}`}
-                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-trinity-red/30 transition-all"
+                    className="block glass-effect rounded-xl border-2 border-gray-700 p-6 hover:border-#ef4444/30 transition-all"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">

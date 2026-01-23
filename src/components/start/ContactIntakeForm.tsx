@@ -450,7 +450,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 required
                 value={formData.websiteUrl}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="https://yourwebsite.com"
               />
             </div>
@@ -465,7 +465,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 name="websitePlatform"
                 value={formData.websitePlatform}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               >
                 <option value="">Select platform...</option>
                 <option value="wordpress" className="bg-gray-900">WordPress</option>
@@ -496,7 +496,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       value={option}
                       checked={formData.hasAccessCredentials === option}
                       onChange={handleInputChange}
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-white">{option}</span>
                   </label>
@@ -526,7 +526,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       type="checkbox"
                       checked={formData.maintenanceNeeds.includes(need)}
                       onChange={() => handleCheckboxChange(need, 'maintenanceNeeds')}
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red rounded"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444 rounded"
                     />
                     <span className="text-white text-sm">{need}</span>
                   </label>
@@ -545,7 +545,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 rows={4}
                 value={formData.goals}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent resize-none"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent resize-none"
                 placeholder="Tell us more about the issues you're experiencing or changes you need..."
               />
             </div>
@@ -568,7 +568,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       checked={formData.urgency === option}
                       onChange={handleInputChange}
                       required
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-white">{option}</span>
                   </label>
@@ -590,7 +590,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                   key={tierOption.id}
                   className={`block p-4 border rounded-xl cursor-pointer transition-all ${
                     formData.maintenanceTier === tierOption.id
-                      ? 'border-trinity-red bg-trinity-red/10'
+                      ? 'border-#ef4444 bg-#ef4444/10'
                       : 'border-white/10 bg-white/5 hover:bg-white/10'
                   }`}
                 >
@@ -601,12 +601,12 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       value={tierOption.id}
                       checked={formData.maintenanceTier === tierOption.id}
                       onChange={handleInputChange}
-                      className="w-4 h-4 mt-1 text-trinity-red focus:ring-trinity-red"
+                      className="w-4 h-4 mt-1 text-#ef4444 focus:ring-#ef4444"
                     />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-white">{tierOption.name}</span>
-                        <span className="text-trinity-red font-bold">{tierOption.price}</span>
+                        <span className="text-#ef4444 font-bold">{tierOption.price}</span>
                       </div>
                       <p className="text-gray-400 text-sm mb-2">{tierOption.hours}</p>
                       <ul className="space-y-1">
@@ -625,7 +625,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               <label
                 className={`block p-4 border rounded-xl cursor-pointer transition-all ${
                   formData.maintenanceTier === 'custom'
-                    ? 'border-trinity-red bg-trinity-red/10'
+                    ? 'border-#ef4444 bg-#ef4444/10'
                     : 'border-white/10 bg-white/5 hover:bg-white/10'
                 }`}
               >
@@ -636,7 +636,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                     value="custom"
                     checked={formData.maintenanceTier === 'custom'}
                     onChange={handleInputChange}
-                    className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                    className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                   />
                   <div>
                     <span className="font-semibold text-white">I'm not sure / Need custom quote</span>
@@ -665,7 +665,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 required
                 value={formData.organizationName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="Your Organization"
               />
             </div>
@@ -681,7 +681,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 required
                 value={formData.organizationType}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               >
                 <option value="">Select organization type...</option>
                 {ORGANIZATION_TYPES.map((type) => (
@@ -703,7 +703,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 name="currentWebsite"
                 value={formData.currentWebsite}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="https://yourorg.org"
               />
             </div>
@@ -725,7 +725,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       value={option}
                       checked={formData.nonprofitStatus === option}
                       onChange={handleInputChange}
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-white">{option}</span>
                   </label>
@@ -745,7 +745,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                   name="nonprofitEIN"
                   value={formData.nonprofitEIN}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                   placeholder="XX-XXXXXXX"
                 />
                 <p className="mt-1 text-xs text-gray-400">This helps us verify nonprofit discounts</p>
@@ -770,7 +770,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               required
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               placeholder="John Doe"
             />
           </div>
@@ -787,7 +787,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 name="role"
                 value={formData.role}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                 placeholder="e.g., Executive Director, Program Manager"
               />
             </div>
@@ -807,7 +807,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               onChange={handleInputChange}
               readOnly={!!session?.user?.email}
               disabled={!!session?.user?.email}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent disabled:opacity-70 disabled:cursor-not-allowed"
               placeholder="john@example.com"
             />
             {session?.user?.email && (
@@ -827,7 +827,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               required={isNonprofit}
               value={formData.phone}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               placeholder="(555) 123-4567"
             />
           </div>
@@ -843,7 +843,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 name="bestTimeToCall"
                 value={formData.bestTimeToCall}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               >
                 <option value="">Select best time...</option>
                 {BEST_TIME_TO_CALL.map((time) => (
@@ -900,7 +900,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                         checked={formData.pricingComfort === option}
                         onChange={handleInputChange}
                         required
-                        className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                        className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                       />
                       <span className="text-white">{option}</span>
                     </label>
@@ -922,7 +922,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               rows={5}
               value={formData.goals}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent resize-none"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent resize-none"
               placeholder={isNonprofit 
                 ? "Tell us about your organization and what you need. For example: We're a mental health support group that needs event scheduling and donation collection for our weekly meetings and annual fundraiser."
                 : "Tell us what you're looking to achieve with this project..."
@@ -949,7 +949,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       type="checkbox"
                       checked={formData.importantFeatures.includes(feature)}
                       onChange={() => handleCheckboxChange(feature)}
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red rounded"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444 rounded"
                     />
                     <span className="text-white">{feature}</span>
                   </label>
@@ -967,7 +967,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                   name="otherFeature"
                   value={formData.otherFeature}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
                   placeholder="Specify other feature..."
                 />
               </div>
@@ -985,7 +985,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 name="budget"
                 value={formData.budget}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
               >
                 <option value="">Select a range...</option>
                 <option value="micro" className="bg-gray-900">Under $1,000</option>
@@ -1014,7 +1014,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               required={isNonprofit}
               value={formData.timeline}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent"
             >
               <option value="">Select timeline...</option>
               {TIMELINE_OPTIONS.map((option) => (
@@ -1044,7 +1044,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                       checked={formData.contentReadiness === option}
                       onChange={handleInputChange}
                       required
-                      className="w-4 h-4 text-trinity-red focus:ring-trinity-red"
+                      className="w-4 h-4 text-#ef4444 focus:ring-#ef4444"
                     />
                     <span className="text-white">{option}</span>
                   </label>
@@ -1075,7 +1075,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               />
               <label
                 htmlFor="file-upload"
-                className="cursor-pointer inline-flex items-center gap-2 text-trinity-red hover:text-trinity-red/80 transition-colors"
+                className="cursor-pointer inline-flex items-center gap-2 text-#ef4444 hover:text-#ef4444/80 transition-colors"
               >
                 <FiUpload className="w-5 h-5" />
                 <span>Upload files (logos, assets, documents)</span>
@@ -1115,7 +1115,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
               rows={4}
               value={formData.additionalNotes}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-transparent resize-none"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-transparent resize-none"
               placeholder="Any additional information, requirements, or questions..."
             />
           </div>
@@ -1127,7 +1127,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full px-6 py-4 bg-gradient-to-r from-trinity-red to-red-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-4 bg-gradient-to-r from-#ef4444 to-red-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting 
             ? 'Submitting...' 

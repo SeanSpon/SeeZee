@@ -108,7 +108,7 @@ export default function TopBar() {
       case 'STAFF':
         return { color: 'bg-green-500', label: 'Staff' }
       case 'CLIENT':
-        return { color: 'bg-trinity-red', label: 'Client' }
+        return { color: 'bg-#ef4444', label: 'Client' }
       default:
         return { color: 'bg-gray-500', label: 'User' }
     }
@@ -129,7 +129,7 @@ export default function TopBar() {
             >
               <Link
                 href="/"
-                className="flex items-center focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
+                className="flex items-center focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="SeeZee Studio Home"
               >
@@ -148,7 +148,7 @@ export default function TopBar() {
                     href={link.path}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
                       active
-                        ? 'bg-trinity-red/15 text-white border-b-2 border-trinity-red'
+                        ? 'bg-#ef4444/15 text-white border-b-2 border-#ef4444'
                         : 'text-gray-300 hover:text-white hover:bg-gray-800'
                     }`}
                     aria-current={active ? 'page' : undefined}
@@ -171,7 +171,7 @@ export default function TopBar() {
                 >
                   <Link
                     href="/start"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-#ef4444 hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                   >
                     <FiPlus className="w-4 h-4" />
                     Start Project
@@ -188,7 +188,7 @@ export default function TopBar() {
                 >
                   <Link
                     href="/login"
-                    className="px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150"
+                    className="px-4 py-2 rounded-lg bg-#ef4444 hover:bg-red-700 text-white font-medium transition-all duration-150"
                   >
                     Login
                   </Link>
@@ -320,7 +320,7 @@ export default function TopBar() {
                         onClick={() => setMobileMenuOpen(false)}
                         className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
                           active
-                            ? 'bg-trinity-red/15 text-white'
+                            ? 'bg-#ef4444/15 text-white'
                             : 'text-gray-300 hover:text-white hover:bg-gray-800'
                         }`}
                         aria-current={active ? 'page' : undefined}
@@ -337,7 +337,7 @@ export default function TopBar() {
                       <Link
                         href="/start"
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-#ef4444 text-white font-medium transition-all duration-150 mb-3"
                       >
                         <FiPlus className="w-4 h-4" />
                         Start Project
@@ -347,7 +347,7 @@ export default function TopBar() {
                       <Link
                         href="/login"
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-#ef4444 text-white font-medium transition-all duration-150"
                       >
                         <FiUser className="w-4 h-4" />
                         Login

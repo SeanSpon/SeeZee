@@ -31,15 +31,15 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="rounded-xl border border-gray-800 bg-gray-900/50 p-12 text-center"
+        className="rounded-xl border border-white/10 bg-white/5 p-12 text-center"
       >
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800 text-4xl">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-4xl">
           📰
         </div>
         <h3 className="mb-2 font-heading text-xl font-bold text-white">
           Activity will appear here
         </h3>
-        <p className="text-gray-400">
+        <p className="text-slate-400">
           As your project progresses, you'll see updates about files, messages, milestones, and more.
         </p>
       </motion.div>
@@ -51,7 +51,7 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+      className="rounded-xl border border-white/10 bg-white/5 p-6"
     >
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -66,30 +66,30 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`rounded-lg px-3 py-1 text-sm font-medium transition-all ${
+            className={`rounded-xl px-3 py-1 text-sm font-medium transition-all ${
               filter === 'all'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800 hover:text-white'
+                ? 'bg-[#ef4444] text-white'
+                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
             }`}
           >
             All
           </button>
           <button
             onClick={() => setFilter('files')}
-            className={`rounded-lg px-3 py-1 text-sm font-medium transition-all ${
+            className={`rounded-xl px-3 py-1 text-sm font-medium transition-all ${
               filter === 'files'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800 hover:text-white'
+                ? 'bg-[#ef4444] text-white'
+                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
             }`}
           >
             Files
           </button>
           <button
             onClick={() => setFilter('team')}
-            className={`rounded-lg px-3 py-1 text-sm font-medium transition-all ${
+            className={`rounded-xl px-3 py-1 text-sm font-medium transition-all ${
               filter === 'team'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800 hover:text-white'
+                ? 'bg-[#ef4444] text-white'
+                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
             }`}
           >
             Team
@@ -111,7 +111,7 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
             <div key={activity.id}>
               {showDateHeader && (
                 <div className="mb-4 mt-6 first:mt-0">
-                  <h3 className="text-sm font-semibold text-gray-400">
+                  <h3 className="text-sm font-semibold text-slate-400">
                     {currentDate === new Date().toLocaleDateString() 
                       ? 'Today'
                       : currentDate === new Date(Date.now() - 86400000).toLocaleDateString()
@@ -122,7 +122,7 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
                 </div>
               )}
               
-              <div className="rounded-lg border border-gray-800 bg-gray-900/30 p-4">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                 {activity.type === 'FILE_UPLOAD' && <FileUploadActivity activity={activity} />}
                 {activity.type === 'MESSAGE' && <MessageActivity activity={activity} />}
                 {activity.type === 'MILESTONE' && <MilestoneActivity activity={activity} />}
@@ -137,8 +137,8 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
                       <p className="text-white">
                         <span className="font-semibold">{activity.title}</span>
                       </p>
-                      <p className="mt-1 text-sm text-gray-400">{activity.description}</p>
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-sm text-slate-400">{activity.description}</p>
+                      <p className="mt-1 text-xs text-slate-500">
                         {new Date(activity.createdAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -154,7 +154,7 @@ export default function ActivityFeed({ activities, projectId }: ActivityFeedProp
       {filteredActivities.length < activities.length && (
         <button
           onClick={() => setDisplayCount(prev => prev + 10)}
-          className="mt-6 w-full rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2 text-sm font-medium text-white transition-all hover:border-gray-600 hover:bg-gray-800"
+          className="mt-6 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10"
         >
           Load More
         </button>

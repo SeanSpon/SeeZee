@@ -12,12 +12,12 @@ export default function WebsiteMockup({ type = 'starter', className = '' }: Webs
     starter: {
       header: 'bg-gradient-to-r from-gray-700 to-gray-800',
       content: 'bg-gray-50',
-      accent: 'bg-trinity-red',
+      accent: 'bg-#ef4444',
     },
     business: {
-      header: 'bg-gradient-to-r from-trinity-red to-trinity-maroon',
+      header: 'bg-gradient-to-r from-#ef4444 to-#dc2626',
       content: 'bg-white',
-      accent: 'bg-trinity-red',
+      accent: 'bg-#ef4444',
     },
     ecommerce: {
       header: 'bg-gradient-to-r from-purple-600 to-indigo-600',

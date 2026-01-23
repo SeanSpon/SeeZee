@@ -145,7 +145,7 @@ export function CreateEventModal({
                   setFormData({ ...formData, title: e.target.value })
                 }
                 placeholder="e.g., Client Kickoff Call"
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
               />
             </div>
 
@@ -158,7 +158,7 @@ export function CreateEventModal({
                 onChange={(e) =>
                   setFormData({ ...formData, allDay: e.target.checked })
                 }
-                className="rounded border-gray-700 bg-[#151b2e] text-trinity-red focus:ring-trinity-red"
+                className="rounded border-gray-700 bg-[#151b2e] text-#ef4444 focus:ring-#ef4444"
               />
               <label htmlFor="allDay" className="text-sm text-gray-400">
                 All-day event
@@ -180,7 +180,7 @@ export function CreateEventModal({
                     onChange={(e) =>
                       setFormData({ ...formData, startDate: e.target.value })
                     }
-                    className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                    className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                   />
                 </div>
               </div>
@@ -198,7 +198,7 @@ export function CreateEventModal({
                       onChange={(e) =>
                         setFormData({ ...formData, startTime: e.target.value })
                       }
-                      className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                      className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export function CreateEventModal({
                   onChange={(e) =>
                     setFormData({ ...formData, endDate: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 />
               </div>
               {!formData.allDay && (
@@ -229,7 +229,7 @@ export function CreateEventModal({
                     onChange={(e) =>
                       setFormData({ ...formData, endTime: e.target.value })
                     }
-                    className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                    className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                   />
                 </div>
               )}
@@ -247,7 +247,7 @@ export function CreateEventModal({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 placeholder="Event details..."
-                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none resize-none"
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none resize-none"
               />
             </div>
 
@@ -265,7 +265,7 @@ export function CreateEventModal({
                     setFormData({ ...formData, location: e.target.value })
                   }
                   placeholder="Zoom, office, etc."
-                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
             </div>
@@ -284,7 +284,7 @@ export function CreateEventModal({
                     setFormData({ ...formData, meetingUrl: e.target.value })
                   }
                   placeholder="https://zoom.us/j/..."
-                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
             </div>
@@ -300,7 +300,7 @@ export function CreateEventModal({
                   onChange={(e) =>
                     setFormData({ ...formData, organizationId: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="">None</option>
                   {organizations.map((org) => (
@@ -319,7 +319,7 @@ export function CreateEventModal({
                   onChange={(e) =>
                     setFormData({ ...formData, projectId: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-#ef4444 focus:outline-none"
                 >
                   <option value="">None</option>
                   {projects.map((proj) => (
@@ -345,7 +345,7 @@ export function CreateEventModal({
                     setFormData({ ...formData, attendees: e.target.value })
                   }
                   placeholder="email@example.com, email2@example.com"
-                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                  className="w-full pl-10 rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-#ef4444 focus:outline-none"
                 />
               </div>
             </div>
@@ -386,7 +386,7 @@ export function CreateEventModal({
               <button
                 type="submit"
                 disabled={isSubmitting || !formData.title}
-                className="px-6 py-2 rounded-lg bg-trinity-red text-white font-medium hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-6 py-2 rounded-lg bg-#ef4444 text-white font-medium hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {isSubmitting ? "Creating..." : "Create Event"}
               </button>

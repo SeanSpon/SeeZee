@@ -7,14 +7,14 @@ export default function ClientSupportPage() {
       </div>
 
       {/* Contact Support */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
         <h3 className="text-lg font-bold text-white mb-4">Contact Support</h3>
         <p className="text-slate-400 mb-4">
           Need help? Our team is here to assist you. Send us a message and we'll get back to you as soon as possible.
         </p>
         <a
           href="mailto:support@seezee.studio"
-          className="inline-block px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all font-medium"
+          className="inline-block px-6 py-3 bg-[#ef4444] hover:bg-[#dc2626] text-white rounded-xl transition-all font-medium"
         >
           Email Support
         </a>
@@ -24,7 +24,7 @@ export default function ClientSupportPage() {
       <div>
         <h3 className="text-lg font-bold text-white mb-4">Frequently Asked Questions</h3>
         <div className="space-y-4">
-          <details className="bg-gray-900 border border-gray-800 rounded-xl p-6 group">
+          <details className="bg-white/5 border border-white/10 rounded-xl p-6 group">
             <summary className="text-white font-medium cursor-pointer">
               How do I track my project progress?
             </summary>

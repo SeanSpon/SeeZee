@@ -28,7 +28,7 @@ export default function ServicesPage() {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="bg-[#0f172a] py-20 lg:py-32 relative overflow-hidden">
+      <section className="bg-[#0a1128] py-20 lg:py-32 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center">
@@ -44,7 +44,7 @@ export default function ServicesPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl md:text-2xl text-[#cbd5e1] leading-relaxed mb-8"
+                className="text-xl md:text-2xl text-slate-300 leading-relaxed mb-8"
               >
                 From hands-on support to custom development. Clear pricing. Real partnership.
               </motion.p>
@@ -55,7 +55,7 @@ export default function ServicesPage() {
               >
                 <Link
                   href="/start"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-[#dc2626] text-white rounded-lg hover:bg-[#b91c1c] transition-all duration-200 font-semibold text-lg shadow-lg"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-all duration-200 font-semibold text-lg shadow-lg"
                 >
                   Start Your Project
                   <FiArrowRight className="w-5 h-5" />
@@ -67,13 +67,13 @@ export default function ServicesPage() {
       </section>
 
       {/* Project Types Section */}
-      <section className="py-20 bg-[#1a2332]">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
               What We Offer
             </h2>
-            <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-[1.7]">
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
               Development projects billed at $75/hour. Pick your project type and we'll estimate the hours needed.
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function ServicesPage() {
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Marketing Website - Featured with cyan border */}
             <ScrollAnimation delay={0.1}>
-              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl mb-4">🌐</div>
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Marketing Website
@@ -115,7 +115,7 @@ export default function ServicesPage() {
 
             {/* E-commerce Store */}
             <ScrollAnimation delay={0.2}>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#22d3ee] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl mb-4">🛒</div>
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   E-commerce Store
@@ -149,7 +149,7 @@ export default function ServicesPage() {
 
             {/* Web Application */}
             <ScrollAnimation delay={0.3}>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#22d3ee] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl mb-4">📱</div>
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Web Application
@@ -183,7 +183,7 @@ export default function ServicesPage() {
 
             {/* Landing Page */}
             <ScrollAnimation delay={0.4}>
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#22d3ee] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="text-4xl mb-4">⚡</div>
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Landing Page
@@ -217,7 +217,7 @@ export default function ServicesPage() {
 
             {/* Maintenance Plan */}
             <ScrollAnimation delay={0.5}>
-              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden">
+              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden">
                 <div className="absolute top-4 right-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-xs font-bold rounded-full uppercase shadow-lg">
                     Popular
@@ -247,7 +247,7 @@ export default function ServicesPage() {
                 </ul>
                 <Link
                   href="/start"
-                  className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#dc2626] text-white rounded-lg hover:bg-[#b91c1c] transition-all duration-200 font-semibold text-sm"
+                  className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-all duration-200 font-semibold text-sm"
                 >
                   Learn More
                 </Link>
@@ -258,13 +258,13 @@ export default function ServicesPage() {
       </section>
 
       {/* Donation System Showcase */}
-      <section className="py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
               {/* Screenshot - Takes up 3 columns */}
               <ScrollAnimation delay={0.1} className="lg:col-span-3">
-                <div className="rounded-2xl overflow-hidden border-2 border-[#22d3ee]/30 shadow-2xl hover:shadow-[#22d3ee]/40 transition-all duration-300">
+                <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300">
                   <Image 
                     src="/avfy-donate-new.png" 
                     alt="Stripe-Integrated Donation System"
@@ -317,20 +317,20 @@ export default function ServicesPage() {
       </section>
 
       {/* Maintenance Plans Section */}
-      <section className="py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
               Ongoing Maintenance & Support
             </h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
               Keep your website running smoothly with our maintenance plans
             </p>
           </div>
 
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             <ScrollAnimation delay={0.1}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-8 hover:border-white/20 transition-all duration-300">
                 <h3 className="text-2xl font-heading font-bold text-white mb-2">Quarterly Plan</h3>
                 <div className="text-4xl font-bold text-[#22d3ee] mb-2">$2,000</div>
                 <p className="text-white/70 mb-6">per quarter · 30 hours included</p>
@@ -354,7 +354,7 @@ export default function ServicesPage() {
                 </ul>
                 <Link
                   href="/start"
-                  className="inline-flex items-center justify-center w-full px-6 py-3 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-[#dc2626] hover:bg-[#dc2626] transition-all duration-200 font-semibold"
+                  className="inline-flex items-center justify-center w-full px-6 py-3 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-[#ef4444] hover:bg-[#ef4444] transition-all duration-200 font-semibold"
                 >
                   Choose Quarterly
                 </Link>
@@ -362,7 +362,7 @@ export default function ServicesPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-xl p-8 relative overflow-hidden shadow-2xl shadow-[#22d3ee]/20">
+              <div className="bg-white/5 border-2 border-[#22d3ee] rounded-xl p-8 relative overflow-hidden shadow-xl">
                 <div className="absolute top-4 right-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full uppercase shadow-lg">
                     Save 15%
@@ -391,7 +391,7 @@ export default function ServicesPage() {
                 </ul>
                 <Link
                   href="/start"
-                  className="inline-flex items-center justify-center w-full px-6 py-3 bg-[#dc2626] text-white rounded-lg hover:bg-[#b91c1c] hover:scale-105 transition-all duration-200 font-semibold shadow-lg"
+                  className="inline-flex items-center justify-center w-full px-6 py-3 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-all duration-200 font-semibold shadow-lg"
                 >
                   Choose Annual
                 </Link>
@@ -402,7 +402,7 @@ export default function ServicesPage() {
       </section>
 
       {/* What's Included Section */}
-      <section className="py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
@@ -412,48 +412,48 @@ export default function ServicesPage() {
 
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <ScrollAnimation delay={0.1}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiCode className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiCode className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">Professional Design</h4>
                 <p className="text-white/70 text-sm">Clean, modern websites that work perfectly on all devices</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiMessageSquare className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiMessageSquare className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">Your Own Dashboard</h4>
                 <p className="text-white/70 text-sm">Track progress, view invoices, request changes—all in one place</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.3}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiClock className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiClock className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">Fast Delivery</h4>
                 <p className="text-white/70 text-sm">Most projects completed in 2-3 weeks. Rush options available</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.4}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiTrendingUp className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiTrendingUp className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">SEO Basics</h4>
                 <p className="text-white/70 text-sm">Set up for search engine success from day one</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.5}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiShield className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiShield className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">Secure Hosting</h4>
                 <p className="text-white/70 text-sm">Fast, reliable hosting included in your monthly maintenance</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.6}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#dc2626] transition-all duration-300">
-                <FiUsers className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <FiUsers className="w-10 h-10 text-[#ef4444] mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-white mb-2">Ongoing Support</h4>
                 <p className="text-white/70 text-sm">Monthly maintenance includes updates, backups, and support</p>
               </div>
@@ -463,7 +463,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Why SeeZee Section */}
-      <section className="py-20 bg-[#1a2332]">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
@@ -473,7 +473,7 @@ export default function ServicesPage() {
 
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <ScrollAnimation delay={0.1}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiUsers className="w-8 h-8 text-[#22d3ee]" />
                 </div>
@@ -483,7 +483,7 @@ export default function ServicesPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiMessageSquare className="w-8 h-8 text-[#22d3ee]" />
                 </div>
@@ -493,7 +493,7 @@ export default function ServicesPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.3}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiDollarSign className="w-8 h-8 text-[#22d3ee]" />
                 </div>
@@ -503,7 +503,7 @@ export default function ServicesPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.4}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiShield className="w-8 h-8 text-[#22d3ee]" />
                 </div>
@@ -513,7 +513,7 @@ export default function ServicesPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.5}>
-              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                 <div className="w-16 h-16 bg-[#22d3ee]/10 border border-[#22d3ee]/30 rounded-full flex items-center justify-center mb-4 mx-auto">
                   <FiAward className="w-8 h-8 text-[#22d3ee]" />
                 </div>
@@ -526,7 +526,7 @@ export default function ServicesPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
@@ -536,56 +536,56 @@ export default function ServicesPage() {
 
           <div className="max-w-4xl mx-auto space-y-6">
             <ScrollAnimation delay={0.1}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">How long does it take?</h4>
                 <p className="text-white/70">Most projects are completed in 2-3 weeks. Rush delivery (1 week) available for an additional fee.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">What if I don't know exactly what I need?</h4>
                 <p className="text-white/70">That's okay! The project brief helps us understand your needs and recommend the right solutions. We'll guide you through the process.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.3}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">Do you offer payment plans?</h4>
                 <p className="text-white/70">Yes! We offer flexible payment schedules for larger projects. Typically 50% upfront, 50% on delivery.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.4}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">What's included in monthly maintenance?</h4>
                 <p className="text-white/70">Hosting, security updates, backups, minor content updates, and email support. Premium plans include priority support.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.5}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">Can you work with my budget?</h4>
                 <p className="text-white/70">We create custom quotes based on your specific needs and budget. Let us know your constraints in the project brief and we'll work with you.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.6}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">What if I need changes after launch?</h4>
                 <p className="text-white/70">Minor updates are included in your monthly maintenance. Larger changes can be quoted separately through your dashboard.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.7}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">Do I own the website?</h4>
                 <p className="text-white/70">Yes! You own all content and design. We just maintain the hosting and technical infrastructure.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.8}>
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-[#22d3ee] transition-all duration-300">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">What payment methods do you accept?</h4>
                 <p className="text-white/70">We use Stripe for secure payment processing. Credit cards, debit cards, and ACH transfers accepted.</p>
               </div>
@@ -595,7 +595,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-[#dc2626] relative overflow-hidden">
+      <section className="py-16 sm:py-24 bg-[#ef4444] relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <ScrollAnimation>
@@ -606,12 +606,12 @@ export default function ServicesPage() {
               <p className="text-xl text-white mb-4 leading-relaxed">
                 Tell us about your organization. We'll listen, understand your needs, and show you how we can help.
               </p>
-              <p className="text-white/80 mb-8 text-lg">
+              <p className="text-white/90 mb-8 text-lg">
                 No pressure. No commitment. Just a conversation about what you need.
               </p>
               <Link
                 href="/start"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#dc2626] rounded-lg hover:bg-white/90 hover:scale-105 transition-all duration-200 font-bold text-lg shadow-lg min-h-[48px]"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#ef4444] rounded-lg hover:bg-gray-100 transition-all duration-200 font-bold text-lg shadow-lg min-h-[48px]"
               >
                 Start Your Project
                 <FiArrowRight className="w-5 h-5" />

@@ -188,7 +188,7 @@ export default function PaymentMethodsPage() {
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Loading payment methods...</p>
+          <p className="text-slate-400">Loading payment methods...</p>
         </div>
       </div>
     );
@@ -201,7 +201,7 @@ export default function PaymentMethodsPage() {
         <div className="mb-8">
           <Link
             href="/client/settings?tab=billing"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Billing Settings</span>
@@ -213,7 +213,7 @@ export default function PaymentMethodsPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Payment Methods</h1>
-              <p className="text-gray-400">Manage your saved payment methods</p>
+              <p className="text-slate-400">Manage your saved payment methods</p>
             </div>
           </div>
         </div>
@@ -262,10 +262,10 @@ export default function PaymentMethodsPage() {
 
         {/* Payment Methods List */}
         {paymentMethods.length === 0 ? (
-          <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-12 text-center">
-            <CreditCard className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+          <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-12 text-center">
+            <CreditCard className="w-16 h-16 text-slate-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">No payment methods</h3>
-            <p className="text-gray-400 mb-6">
+            <p className="text-slate-400 mb-6">
               Add a payment method to enable automatic billing and faster checkout.
             </p>
             <button
@@ -284,7 +284,7 @@ export default function PaymentMethodsPage() {
                 key={pm.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6"
+                className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-6"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -305,7 +305,7 @@ export default function PaymentMethodsPage() {
                         )}
                       </div>
                       {pm.card && (
-                        <p className="text-sm text-gray-400 mt-1">
+                        <p className="text-sm text-slate-400 mt-1">
                           Expires {formatExpiry(pm.card.expMonth, pm.card.expYear)}
                         </p>
                       )}

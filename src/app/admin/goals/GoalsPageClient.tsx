@@ -171,7 +171,7 @@ export function GoalsPageClient({ user, initialData }: GoalsPageClientProps) {
             <div className="flex items-center gap-2">
               <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-trinity-red to-trinity-maroon"
+                  className="h-full bg-gradient-to-r from-#ef4444 to-#dc2626"
                   style={{ width: `${percentage}%` }}
                 />
               </div>
@@ -260,7 +260,7 @@ export function GoalsPageClient({ user, initialData }: GoalsPageClientProps) {
         </div>
         <button
           onClick={handleCreateGoal}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-trinity-red to-trinity-maroon text-white rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-#ef4444 to-#dc2626 text-white rounded-lg hover:opacity-90 transition-opacity"
         >
           <FiPlus className="h-5 w-5" />
           New Goal

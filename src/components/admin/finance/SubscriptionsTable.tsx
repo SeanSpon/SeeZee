@@ -108,7 +108,7 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-trinity-red/30 transition-all"
+            className="rounded-xl border-2 border-gray-700 bg-[#151b2e] p-5 hover:border-#ef4444/30 transition-all"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">

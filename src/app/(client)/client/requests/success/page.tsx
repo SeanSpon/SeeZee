@@ -39,7 +39,7 @@ export default function ChangeRequestSuccessPage() {
         className="max-w-2xl w-full"
       >
         {/* Success Card */}
-        <div className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center">
+        <div className="bg-white/5/50 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center">
           {/* Success Icon */}
           <motion.div
             initial={{ scale: 0 }}
@@ -71,7 +71,7 @@ export default function ChangeRequestSuccessPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <FileText className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-400 mb-2">Request ID</p>
+              <p className="text-sm text-slate-400 mb-2">Request ID</p>
               {requestId ? (
                 <div className="flex items-center justify-center gap-2">
                   <p className="text-white font-mono text-sm break-all">
@@ -85,18 +85,18 @@ export default function ChangeRequestSuccessPage() {
                     {copied ? (
                       <Check className="w-4 h-4 text-green-400" />
                     ) : (
-                      <Copy className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+                      <Copy className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" />
                     )}
                   </button>
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">Processing...</p>
+                <p className="text-slate-500 text-sm">Processing...</p>
               )}
             </div>
 
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Clock className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-400 mb-1">Response Time</p>
+              <p className="text-sm text-slate-400 mb-1">Response Time</p>
               <p className="text-white font-medium">24-48 hours</p>
             </div>
           </div>

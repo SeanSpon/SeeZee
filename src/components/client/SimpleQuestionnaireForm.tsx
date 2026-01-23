@@ -207,7 +207,7 @@ export function SimpleQuestionnaireForm({ taskId, projectId }: SimpleQuestionnai
                   onChange={(e) => updateField(currentQuestion.id as keyof SimpleQuestionnaireData, e.target.value)}
                   placeholder={currentQuestion.placeholder}
                   rows={6}
-                  className={`w-full text-lg text-gray-900 placeholder:text-gray-400 border-0 border-b-2 focus:outline-none focus:border-blue-600 resize-none ${
+                  className={`w-full text-lg text-gray-900 placeholder:text-slate-400 border-0 border-b-2 focus:outline-none focus:border-blue-600 resize-none ${
                     errors[currentQuestion.id] ? 'border-red-500' : 'border-gray-300'
                   }`}
                   style={{ borderBottomWidth: '2px' }}
@@ -215,7 +215,7 @@ export function SimpleQuestionnaireForm({ taskId, projectId }: SimpleQuestionnai
                 {errors[currentQuestion.id] && (
                   <p className="mt-2 text-sm text-red-500">{errors[currentQuestion.id]}</p>
                 )}
-                <p className="mt-2 text-sm text-gray-500">Shift ⇧ + Enter ↵ to make a line break</p>
+                <p className="mt-2 text-sm text-slate-500">Shift ⇧ + Enter ↵ to make a line break</p>
               </div>
             )}
 
@@ -246,7 +246,7 @@ export function SimpleQuestionnaireForm({ taskId, projectId }: SimpleQuestionnai
               <button
                 type="button"
                 onClick={handlePrevious}
-                className="px-6 py-3 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                className="px-6 py-3 text-slate-600 hover:text-gray-900 font-medium transition-colors"
               >
                 {currentStep === 0 ? 'Back' : 'Previous'}
               </button>

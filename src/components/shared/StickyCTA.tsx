@@ -30,7 +30,7 @@ export default function StickyCTA() {
         >
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-trinity-red text-white rounded-full hover:bg-trinity-maroon transition-all duration-200 font-semibold shadow-large glow-on-hover transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-#ef4444 text-white rounded-full hover:bg-#dc2626 transition-all duration-200 font-semibold shadow-large glow-on-hover transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:ring-offset-2 focus:ring-offset-gray-900"
           >
             Get Started
             <FiArrowRight className="w-4 h-4" />

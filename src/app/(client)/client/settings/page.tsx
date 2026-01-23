@@ -680,7 +680,7 @@ export default function ClientSettingsPage() {
                       Open Billing Portal
                     </GlassButton>
                   </div>
-                  <div className="hidden sm:block p-4 rounded-2xl bg-violet-500/10 border border-violet-500/20">
+                  <div className="hidden sm:block p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
                     <CreditCard className="w-12 h-12 text-violet-400" />
                   </div>
                 </div>
@@ -852,7 +852,7 @@ export default function ClientSettingsPage() {
                 <GlassCardContent>
                   {invoices.length === 0 ? (
                     <div className="text-center py-8">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
                         <CreditCard className="w-8 h-8 text-slate-500" />
                       </div>
                       <p className="text-slate-400">No invoices yet</p>

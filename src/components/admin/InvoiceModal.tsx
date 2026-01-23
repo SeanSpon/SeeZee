@@ -123,7 +123,7 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
               type="submit"
               form="invoice-form"
               disabled={loading}
-              className="px-6 py-2 rounded-lg border-2 border-trinity-red/50 bg-trinity-red text-white hover:bg-trinity-maroon transition-colors disabled:opacity-50"
+              className="px-6 py-2 rounded-lg border-2 border-#ef4444/50 bg-#ef4444 text-white hover:bg-#dc2626 transition-colors disabled:opacity-50"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>
@@ -157,7 +157,7 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiFileText className="h-4 w-4 text-trinity-red" />
+              <FiFileText className="h-4 w-4 text-#ef4444" />
               Title
             </label>
             <input
@@ -165,13 +165,13 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="Invoice title"
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiDollarSign className="h-4 w-4 text-trinity-red" />
+              <FiDollarSign className="h-4 w-4 text-#ef4444" />
               Amount
             </label>
             <input
@@ -181,13 +181,13 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
               min="0"
               step="0.01"
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiDollarSign className="h-4 w-4 text-trinity-red" />
+              <FiDollarSign className="h-4 w-4 text-#ef4444" />
               Tax
             </label>
             <input
@@ -196,19 +196,19 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
               onChange={(e) => setFormData({ ...formData, tax: parseFloat(e.target.value) || 0 })}
               min="0"
               step="0.01"
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiTag className="h-4 w-4 text-trinity-red" />
+              <FiTag className="h-4 w-4 text-#ef4444" />
               Status
             </label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             >
               {STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -220,14 +220,14 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FiCalendar className="h-4 w-4 text-trinity-red" />
+              <FiCalendar className="h-4 w-4 text-#ef4444" />
               Due Date
             </label>
             <input
               type="date"
               value={formData.dueDate}
               onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors"
+              className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors"
             />
           </div>
         </div>
@@ -235,22 +235,22 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
         {/* Description */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-            <FiAlignLeft className="h-4 w-4 text-trinity-red" />
+            <FiAlignLeft className="h-4 w-4 text-#ef4444" />
             Description
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
-            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-trinity-red/50 focus:outline-none transition-colors resize-none"
+            className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-#ef4444/50 focus:outline-none transition-colors resize-none"
           />
         </div>
 
         {/* Total */}
-        <div className="rounded-lg border-2 border-trinity-red/30 bg-trinity-red/5 p-4">
+        <div className="rounded-lg border-2 border-#ef4444/30 bg-#ef4444/5 p-4">
           <div className="flex items-center justify-between">
             <span className="text-lg font-heading font-semibold text-white">Total</span>
-            <span className="text-2xl font-heading font-bold text-trinity-red">
+            <span className="text-2xl font-heading font-bold text-#ef4444">
               ${calculatedTotal.toFixed(2)}
             </span>
           </div>

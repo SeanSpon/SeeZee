@@ -363,7 +363,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
         <div className="w-full mb-12">
           <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-trinity-red"
+              className="h-full bg-#ef4444"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}
@@ -391,11 +391,11 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="w-full glass-effect rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 p-4 sm:p-6 lg:p-8 shadow-medium hover:shadow-large"
+            className="w-full glass-effect rounded-xl border-2 border-gray-700 hover:border-#ef4444 transition-all duration-300 p-4 sm:p-6 lg:p-8 shadow-medium hover:shadow-large"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold gradient-text mb-4 sm:mb-6">
               {currentQuestion.label}
-              {currentQuestion.required && <span className="text-trinity-red">*</span>}
+              {currentQuestion.required && <span className="text-#ef4444">*</span>}
             </h1>
 
             {currentQuestion.type === 'text' && (
@@ -407,7 +407,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                   placeholder={currentQuestion.placeholder}
                   readOnly={currentQuestion.readOnly}
                   disabled={currentQuestion.readOnly}
-                  className={`w-full text-base sm:text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all ${
+                  className={`w-full text-base sm:text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all ${
                     errors[currentQuestion.id] ? 'border-red-500' : ''
                   } ${currentQuestion.readOnly ? 'cursor-not-allowed opacity-70' : ''}`}
                 />
@@ -437,7 +437,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                   onChange={(e) => updateField(currentQuestion.id as keyof ProjectRequestData, e.target.value)}
                   placeholder={currentQuestion.placeholder}
                   rows={6}
-                  className={`w-full text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red resize-none transition-all ${
+                  className={`w-full text-lg text-white placeholder:text-white/40 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 resize-none transition-all ${
                     errors[currentQuestion.id] ? 'border-red-500' : ''
                   }`}
                 />
@@ -453,7 +453,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                 <select
                   value={getCurrentValue() as string}
                   onChange={(e) => updateField(currentQuestion.id as keyof ProjectRequestData, e.target.value)}
-                  className={`w-full text-lg text-white bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:border-trinity-red transition-all cursor-pointer ${
+                  className={`w-full text-lg text-white bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-#ef4444 focus:border-#ef4444 transition-all cursor-pointer ${
                     errors[currentQuestion.id] ? 'border-red-500' : ''
                   }`}
                 >
@@ -479,7 +479,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                     onClick={() => updateField(currentQuestion.id as keyof ProjectRequestData, option.value)}
                     className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                       getCurrentValue() === option.value
-                        ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                        ? 'border-#ef4444 bg-#ef4444/20 text-#ef4444 shadow-lg shadow-#ef4444/25'
                         : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
                     }`}
                   >
@@ -501,7 +501,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                     onClick={() => updateField(currentQuestion.id as keyof ProjectRequestData, option)}
                     className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                       getCurrentValue() === option
-                        ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                        ? 'border-#ef4444 bg-#ef4444/20 text-#ef4444 shadow-lg shadow-#ef4444/25'
                         : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
                     }`}
                   >
@@ -525,13 +525,13 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                       onClick={() => toggleProjectType(option)}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selected
-                          ? 'border-trinity-red bg-trinity-red/20 text-trinity-red shadow-lg shadow-trinity-red/25'
+                          ? 'border-#ef4444 bg-#ef4444/20 text-#ef4444 shadow-lg shadow-#ef4444/25'
                           : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700 text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                          selected ? 'bg-trinity-red border-trinity-red' : 'border-gray-600'
+                          selected ? 'bg-#ef4444 border-#ef4444' : 'border-gray-600'
                         }`}>
                           {selected && <CheckCircle2 className="w-3 h-3 text-white" />}
                         </div>
@@ -565,7 +565,7 @@ export function ProjectRequestForm({ selectedPackage, onClose, onSubmit }: Proje
                 type="button"
                 onClick={handleNext}
                 disabled={isSubmitting}
-                className="px-8 py-4 bg-trinity-red hover:bg-trinity-maroon disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white font-semibold text-lg transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:hover:translate-y-0"
+                className="px-8 py-4 bg-#ef4444 hover:bg-#dc2626 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white font-semibold text-lg transition-all duration-200 shadow-medium transform hover:-translate-y-1 glow-on-hover disabled:hover:translate-y-0"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">

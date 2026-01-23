@@ -44,10 +44,10 @@ export default function HomePage() {
       <StickyCTA />
       
       {/* Hero Section - Enhanced Artistic Design */}
-      <section className="bg-black py-20 sm:py-32 lg:py-40 relative overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
+      <section className="bg-[#050914] py-20 sm:py-32 lg:py-40 relative overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Multi-layer Animated Background */}
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-[#0a0f1e] via-[#1a1f35] to-[#0f1419]"
+          className="absolute inset-0 bg-gradient-to-br from-[#0a1128] via-[#0f172a] to-[#0a1128]"
           animate={{
             backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
           }}
@@ -481,15 +481,10 @@ export default function HomePage() {
               >
                 <Link
                   href="/start"
-                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-[#ef4444] text-white rounded-lg font-bold text-base sm:text-lg shadow-2xl hover:shadow-[#ef4444]/50 transition-all duration-300 group relative overflow-hidden min-h-[48px] w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-[#ef4444] text-white rounded-lg font-bold text-base sm:text-lg shadow-lg hover:bg-[#dc2626] hover:shadow-xl transition-all duration-200 min-h-[48px] w-full sm:w-auto"
                 >
-                  <span className="relative z-10">Start Your Project</span>
-                  <FiArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-[#ef4444] to-[#dc2626]"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  Start Your Project
+                  <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
               
@@ -568,11 +563,11 @@ export default function HomePage() {
         </div>
 
         {/* Bottom Gradient Fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#1a2332] to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f172a] to-transparent"></div>
       </section>
 
       {/* Built by Sean & Zach Section */}
-      <section className="py-12 sm:py-20 bg-[#1a2332]">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <ScrollAnimation>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
@@ -668,7 +663,7 @@ export default function HomePage() {
       </section>
 
       {/* Who We Serve Section - Enhanced */}
-      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#1a2332] via-[#0f1825] to-[#0a1128] relative overflow-hidden">
+      <section className="py-16 sm:py-20 bg-gradient-to-b from-[#0f172a] via-[#0a1128] to-[#0a1128] relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/6 rounded-full blur-3xl"></div>
@@ -717,8 +712,8 @@ export default function HomePage() {
             ].map((group, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
                 <motion.div
-                  whileHover={{ y: -12, scale: 1.03 }}
-                  className="group p-8 rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a2332]/70 via-[#0a1128]/60 to-[#1a2332]/70 backdrop-blur-xl hover:border-blue-400/40 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 relative overflow-hidden"
+                  whileHover={{ y: -8 }}
+                  className="group p-8 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 transition-all duration-300 hover:shadow-xl relative overflow-hidden"
                 >
                   {/* Inner glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
@@ -741,7 +736,7 @@ export default function HomePage() {
       </section>
 
       {/* What We Provide Section - Enhanced */}
-      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#0a1128] via-[#0f1825] to-[#0a1128] relative overflow-hidden">
+      <section className="py-16 sm:py-20 bg-[#0a1128] relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div 
           className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-br from-cyan-500/8 to-blue-500/8 rounded-full blur-3xl"
@@ -791,11 +786,9 @@ export default function HomePage() {
             ].map((item, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
                 <motion.div
-                  whileHover={{ y: -12, rotateX: 2 }}
-                  className={`group p-8 rounded-2xl border-2 border-white/10 border-t-4 ${item.borderColor} bg-gradient-to-br from-[#0a1128]/80 via-black/60 to-[#0a1128]/80 backdrop-blur-xl hover:shadow-2xl hover:border-white/30 transition-all duration-500 relative overflow-hidden`}
+                  whileHover={{ y: -8 }}
+                  className={`group p-8 rounded-xl border border-white/10 border-t-4 ${item.borderColor} bg-white/5 hover:shadow-xl hover:border-white/20 transition-all duration-300 relative overflow-hidden`}
                 >
-                  {/* Shimmer effect on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                   <div className="relative z-10">
                   <div className={`${item.color} mb-6 flex justify-center`}>{item.icon}</div>
                   <h3 className="text-xl font-heading font-semibold text-white mb-4 text-center">
@@ -816,8 +809,8 @@ export default function HomePage() {
       <TechStrip />
 
       {/* Featured Project - Big Red Bus */}
-      <section className="py-12 sm:py-20 bg-[#0a1128] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1128] to-[#1a2332]/50 opacity-50"></div>
+      <section className="py-16 sm:py-20 bg-[#0f172a] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] to-[#0a1128]/50 opacity-50"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <ScrollAnimation>
             <div className="max-w-6xl mx-auto">
@@ -858,7 +851,7 @@ export default function HomePage() {
                     <FiArrowRight className="w-5 h-5" />
                   </Link>
                 </div>
-                <div className="rounded-2xl p-8 bg-[#1a2332]/50 border border-white/10 shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-rotate-1">
+                <div className="rounded-xl p-8 bg-white/5 border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300">
                   <div className="aspect-video bg-gradient-to-br from-slate-700/30 to-slate-800/30 rounded-xl flex items-center justify-center border border-slate-600/40 p-6">
                     <ImageLightbox
                       src="/logos/Stylized Red Bus Logo with Integrated Text.png"
@@ -881,8 +874,8 @@ export default function HomePage() {
       </section>
 
       {/* Featured Project 2: A Vision For You */}
-      <section className="py-12 sm:py-20 bg-[#1a2332] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2332] to-[#1e2a45]/40 opacity-50"></div>
+      <section className="py-16 sm:py-20 bg-[#0a1128] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1128] to-[#0f172a]/50 opacity-50"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <ScrollAnimation>
             <div className="max-w-6xl mx-auto">
@@ -961,7 +954,7 @@ export default function HomePage() {
       </section>
 
       {/* Our Approach Section */}
-      <section className="py-12 sm:py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <ScrollAnimation>
             <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16 px-2">
@@ -1000,8 +993,8 @@ export default function HomePage() {
             ].map((principle, index) => (
               <ScrollAnimation key={index} delay={index * 0.1}>
                 <motion.div
-                  whileHover={{ y: -8 }}
-                  className="p-8 rounded-xl border border-white/10 bg-[#0a1128]/50 backdrop-blur hover:border-blue-400/40 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 text-center"
+                  whileHover={{ y: -4 }}
+                  className="p-8 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 transition-all duration-300 hover:shadow-xl text-center"
                 >
                   <motion.div 
                     whileHover={{ scale: 1.1 }}
@@ -1023,7 +1016,7 @@ export default function HomePage() {
       </section>
 
       {/* Supporting Your Community Section */}
-      <section className="py-12 sm:py-20 bg-[#0a1128]">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center px-2">
@@ -1044,7 +1037,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-[#ef4444] via-[#dc2626] to-[#b91c1c] relative overflow-hidden">
+      <section className="py-16 sm:py-24 lg:py-32 bg-[#ef4444] relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
@@ -1057,23 +1050,19 @@ export default function HomePage() {
                 Tell us about your organization. We'll listen, ask good questions, and show you how we can help — no pressure, no jargon, no sales pitch.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/start"
-                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-white text-[#ef4444] rounded-lg hover:bg-gray-100 transition-all duration-300 font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/30 min-h-[48px] w-full sm:w-auto"
-                  >
-                    Start Your Project
-                    <FiArrowRight className="w-5 h-5" />
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 border-2 border-white text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-semibold text-base sm:text-lg backdrop-blur min-h-[48px] w-full sm:w-auto"
-                  >
-                    View Our Work
-                  </Link>
-                </motion.div>
+                <Link
+                  href="/start"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-white text-[#ef4444] rounded-lg hover:bg-gray-100 transition-all duration-200 font-bold text-base sm:text-lg shadow-lg min-h-[48px] w-full sm:w-auto"
+                >
+                  Start Your Project
+                  <FiArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/projects"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all duration-200 font-semibold text-base sm:text-lg min-h-[48px] w-full sm:w-auto"
+                >
+                  View Our Work
+                </Link>
               </div>
             </div>
           </ScrollAnimation>

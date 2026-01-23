@@ -31,7 +31,7 @@ export default function ProjectsPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto"
+                className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto"
               >
                 Real projects, real production systems, real results. Here's what we've built and shipped.
               </motion.p>
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
       {/* ========================================
           PROJECT CARDS CONTAINER
           ======================================== */}
-      <section className="bg-[#1a2332] py-16">
+      <section className="bg-[#0f172a] py-16">
         <div className="max-w-7xl mx-auto px-6 space-y-16">
           
           {/* ========================================
@@ -112,7 +112,7 @@ export default function ProjectsPage() {
                     <h3 className="text-xl font-bold text-white mb-4">
                       About the Project
                     </h3>
-                    <p className="text-base text-gray-300 leading-relaxed mb-6">
+                    <p className="text-base text-slate-300 leading-relaxed mb-6">
                       A comprehensive recovery center management system serving 500+ individuals annually. Built for A Vision For You, a Louisville-based nonprofit providing four distinct recovery pathways with housing, treatment, and community support.
                     </p>
                     
@@ -133,7 +133,7 @@ export default function ProjectsPage() {
                             <span className="text-lg">{program.icon}</span>
                             <span className="text-sm font-medium text-white">{program.name}</span>
                           </div>
-                          <p className="text-xs text-gray-400">{program.duration}</p>
+                          <p className="text-xs text-slate-400">{program.duration}</p>
                         </div>
                       ))}
                     </div>
@@ -158,7 +158,7 @@ export default function ProjectsPage() {
                         'Member Management',
                         'Role-Based Access'
                       ].map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-gray-300">
+                        <div key={idx} className="flex items-center gap-2 text-slate-300">
                           <FiCheck className="text-emerald-400 flex-shrink-0 w-4 h-4" />
                           <span className="text-sm">{feature}</span>
                         </div>
@@ -176,7 +176,7 @@ export default function ProjectsPage() {
                         'NextAuth',
                         'Stripe'
                       ].map((tech, idx) => (
-                        <span key={idx} className="px-3 py-1 text-xs border border-white/20 text-gray-300 rounded-full bg-white/5">
+                        <span key={idx} className="px-3 py-1 text-xs border border-white/20 text-slate-300 rounded-full bg-white/5">
                           {tech}
                         </span>
                       ))}
@@ -206,7 +206,7 @@ export default function ProjectsPage() {
                       <div className="text-sm font-medium text-white mb-1">
                         {stat.label}
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-slate-400">
                         {stat.sublabel}
                       </div>
                     </div>
@@ -239,7 +239,7 @@ export default function ProjectsPage() {
                         />
                       </div>
                       <div className="p-3 bg-white/5 text-center">
-                        <span className="text-sm text-gray-300">{screenshot.label}</span>
+                        <span className="text-sm text-slate-300">{screenshot.label}</span>
                       </div>
                     </div>
                   ))}
@@ -297,10 +297,10 @@ export default function ProjectsPage() {
                   
                   {/* LEFT - Description */}
                   <div>
-                    <p className="text-base text-gray-300 leading-relaxed mb-4">
+                    <p className="text-base text-slate-300 leading-relaxed mb-4">
                       Big Red Bus is a Louisville-based nonprofit initiative using a physical bus to bring mental health resources, recovery support, and community connection directly to those who need it.
                     </p>
-                    <p className="text-base text-gray-300 leading-relaxed">
+                    <p className="text-base text-slate-300 leading-relaxed">
                       For our FBLA Coding & Programming project, we built a digital platform to help organizations like Big Red Bus connect with their communities.
                     </p>
                   </div>
@@ -310,15 +310,15 @@ export default function ProjectsPage() {
                     <h4 className="text-sm font-semibold text-white mb-3">
                       Follow the Initiative
                     </h4>
-                    <div className="space-y-2 text-sm text-gray-300">
+                    <div className="space-y-2 text-sm text-slate-300">
                       <div>
-                        <span className="text-gray-400">Instagram:</span> @brb.bigredbus
+                        <span className="text-slate-400">Instagram:</span> @brb.bigredbus
                       </div>
                       <div>
-                        <span className="text-gray-400">TikTok:</span> @bigredbus
+                        <span className="text-slate-400">TikTok:</span> @bigredbus
                       </div>
                     </div>
-                    <p className="text-xs text-gray-400 mt-3 italic">
+                    <p className="text-xs text-slate-400 mt-3 italic">
                       Real nonprofit inspiring our FBLA project
                     </p>
                   </div>
@@ -342,7 +342,7 @@ export default function ProjectsPage() {
                     'Accessible, cognitive-friendly design',
                     'Mobile-first responsive layout'
                   ].map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-gray-300">
+                    <div key={idx} className="flex items-center gap-2 text-slate-300">
                       <FiCheck className="text-emerald-400 flex-shrink-0 w-4 h-4" />
                       <span className="text-sm">{feature}</span>
                     </div>
@@ -359,7 +359,7 @@ export default function ProjectsPage() {
                       'Vite',
                       'Accessible UI'
                     ].map((tech, idx) => (
-                      <span key={idx} className="px-3 py-1 text-xs border border-white/20 text-gray-300 rounded-full bg-white/5">
+                      <span key={idx} className="px-3 py-1 text-xs border border-white/20 text-slate-300 rounded-full bg-white/5">
                         {tech}
                       </span>
                     ))}
@@ -428,7 +428,7 @@ export default function ProjectsPage() {
             <h2 className="text-3xl font-bold text-white mb-6">
               Why This Matters
             </h2>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-lg text-slate-300 leading-relaxed">
               We don't list fake projects or inflate results. Every project here represents real production systems handling real users and real transactions.
               <br /><br />
               These platforms are live, maintained, and actually being used.
