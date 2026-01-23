@@ -63,14 +63,18 @@ const AUTH_URL = process.env.AUTH_URL;
 const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
 
 // Validate URL configuration - this is critical for OAuth to work
-// NOTE: Only warn at import time, don't throw - this breaks Vercel builds
-// The actual validation happens at runtime when OAuth is attempted
+// NOTE: Don't throw at build time - only warn. The error will surface at runtime
+// when auth operations are actually performed. This allows builds to succeed
+// even when env vars aren't configured (e.g., Vercel preview deployments).
 if (!AUTH_URL && !NEXTAUTH_URL) {
-  // Only log warning if not during build (NEXT_PHASE indicates build)
-  if (!process.env.NEXT_PHASE) {
-    console.warn("⚠️ AUTH_URL or NEXTAUTH_URL is not set. OAuth sign-in may not work correctly.");
-    console.warn("   Set AUTH_URL to your production domain (e.g., https://seezeestudios.com)");
-  }
+  console.warn(
+    "⚠️ AUTH_URL or NEXTAUTH_URL is not set. " +
+    "OAuth sign-in may not work correctly. " +
+    "Set AUTH_URL to your production domain (e.g., https://seezeestudios.com) or " +
+    "NEXTAUTH_URL for NextAuth compatibility."
+  );
+  // Only warn during build - runtime errors will be caught by NextAuth
+  // Don't throw - this breaks Vercel preview builds that may not have all env vars
 }
 
 // URL configuration validated (logs removed to prevent console spam)
@@ -127,7 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         secure: process.env.NODE_ENV === 'production',
         // CRITICAL: Don't set domain in production - let browser handle it
         // Setting domain explicitly can cause cookie issues with subdomains
-        // domain: process.env.NODE_ENV === 'production' ? '.seezeestudios.com' : undefined,
+        // domain: process.env.NODE_ENV === 'production' ? '.see-zee.com' : undefined,
       },
     },
   },
@@ -188,7 +192,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           // CEO whitelist - auto-setup CEO users
-          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "contact@seezeestudios.com"];
+          const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
           const isCEO = CEO_EMAILS.includes((credentials.email as string).toLowerCase());
 
           // Auto-verify CEO email if not already verified
@@ -260,7 +264,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "spmcculloch1007@gmail.com", "sean.mcculloch23@gmail.com"];
         if (CEO_EMAILS.includes(user.email!)) {
           await retryDatabaseOperation(async () => {
             return await prisma.user.update({
@@ -474,7 +478,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         
         // CEO whitelist - auto-upgrade to CEO with completed onboarding
-        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com", "seanmcculloch@seezeestudios.com", "zach@seezeestudios.com", "contact@seezeestudios.com"];
+        const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
         const isCEO = CEO_EMAILS.includes(email as string);
         
         // Always fetch latest user data from database to catch onboarding completion and role changes
