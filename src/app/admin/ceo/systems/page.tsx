@@ -184,7 +184,7 @@ export default async function CEOSystemsPage() {
       active: maintenancePlans.filter(m => m.status === 'ACTIVE').length,
       mrr: maintenancePlans
         .filter(m => m.status === 'ACTIVE')
-        .reduce((sum, m) => sum + Number(m.monthlyPrice || 0), 0),
+        .reduce((sum, m) => sum + Number(m.monthlyPrice || 0) / 100, 0), // Convert cents to dollars
     },
     files: {
       total: files.length,

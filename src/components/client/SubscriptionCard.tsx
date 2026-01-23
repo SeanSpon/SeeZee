@@ -78,9 +78,10 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   // No need to calculate remaining - if you have hours, you can make requests
   
   // Get pricing from tier config or monthlyPrice field
+  // tierConfig.monthlyPrice is in cents, subscription.monthlyPrice might be in dollars
   const monthlyPrice = tierConfig 
     ? tierConfig.monthlyPrice 
-    : (subscription.monthlyPrice || 0);
+    : ((subscription.monthlyPrice || 0) * 100); // Convert dollars to cents for formatCurrency
   
   const pkgInfo = subscription.projectPackage 
     ? PACKAGES.find((pkg) => pkg.id === subscription.projectPackage)

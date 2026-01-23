@@ -67,9 +67,9 @@ export default async function ClientBillingPage() {
           name: project.name,
           maintenancePlan: {
             ...planWithoutDecimal,
-            // Convert Decimal field to number for client component serialization
-            monthlyPrice: monthlyPrice ? Number(monthlyPrice) : 0,
-            // hourPacks cost is Int, not Decimal, so no conversion needed
+            // Convert Decimal field to dollars (stored in cents)
+            monthlyPrice: monthlyPrice ? Number(monthlyPrice) / 100 : 0,
+            // hourPacks cost is Int in cents, no conversion needed here (done in component)
           },
           invoices: project.invoices.map((invoice) => {
             // Calculate subtotal from items

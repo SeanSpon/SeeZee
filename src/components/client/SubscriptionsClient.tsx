@@ -271,9 +271,10 @@ export function SubscriptionsClient({
               const pkgInfo = getPackageInfo(sub.projectPackage);
               
               // Use tier monthlyPrice if available, otherwise fall back to monthlyPrice field
+              // tierConfig.monthlyPrice is in cents, sub.monthlyPrice is now in dollars
               const monthlyCost = tierConfig 
                 ? tierConfig.monthlyPrice 
-                : (sub.monthlyPrice || 0);
+                : ((sub.monthlyPrice || 0) * 100); // Convert dollars back to cents for formatCurrency
 
               return (
                 <div 
