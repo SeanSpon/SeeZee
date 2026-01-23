@@ -76,10 +76,10 @@ function CollapsibleNavGroup({
       <div className="relative group">
         <button
           onClick={() => onNavigate(group.items[0]?.href || "#")}
-          className={`flex w-full items-center justify-center rounded-lg p-3 transition-all duration-200 ${
+          className={`flex w-full items-center justify-center rounded-xl p-3 transition-all duration-200 ${
             hasActiveChild
-              ? "bg-trinity-red text-white shadow-lg"
-              : "text-gray-400 hover:bg-gray-800 hover:text-white"
+              ? "bg-[#ef4444] text-white shadow-lg"
+              : "text-slate-400 hover:bg-white/5 hover:text-white"
           }`}
           title={group.label}
         >
@@ -87,8 +87,8 @@ function CollapsibleNavGroup({
         </button>
         {/* Tooltip with all items */}
         <div className="absolute left-full top-0 ml-2 hidden group-hover:block z-50">
-          <div className="bg-gray-900 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[180px]">
-            <p className="px-3 pb-2 text-xs font-semibold text-gray-400 uppercase border-b border-gray-800 mb-2">
+          <div className="bg-[#0f172a] border border-white/10 rounded-xl shadow-xl py-2 min-w-[180px]">
+            <p className="px-3 pb-2 text-xs font-semibold text-slate-500 uppercase border-b border-white/10 mb-2">
               {group.label}
             </p>
             {group.items.map((item) => (
@@ -97,14 +97,14 @@ function CollapsibleNavGroup({
                 onClick={() => onNavigate(item.href)}
                 className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
                   isActive(item.href)
-                    ? "bg-trinity-red/20 text-trinity-red"
-                    : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                    ? "bg-[#ef4444]/20 text-[#ef4444]"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}
                 {item.badge && (
-                  <span className="ml-auto bg-trinity-red text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className="ml-auto bg-[#ef4444] text-white text-xs px-2 py-0.5 rounded-full">
                     {item.badge}
                   </span>
                 )}
@@ -120,10 +120,10 @@ function CollapsibleNavGroup({
     <div className="space-y-1">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex w-full items-center justify-between rounded-lg px-4 py-3 transition-all duration-200 ${
+        className={`flex w-full items-center justify-between rounded-xl px-4 py-3 transition-all duration-200 ${
           hasActiveChild && !isOpen
-            ? "bg-gray-800 text-white"
-            : "text-gray-400 hover:bg-gray-800/50 hover:text-white"
+            ? "bg-white/5 text-white"
+            : "text-slate-400 hover:bg-white/5 hover:text-white"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -146,22 +146,22 @@ function CollapsibleNavGroup({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="ml-4 space-y-1 border-l border-gray-800 pl-4">
+            <div className="ml-4 space-y-1 border-l border-white/10 pl-4">
               {group.items.map((item) => (
                 <motion.button
                   key={item.href}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onNavigate(item.href)}
-                  className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-200 ${
+                  className={`group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 ${
                     isActive(item.href)
-                      ? "bg-trinity-red text-white shadow-md"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                      ? "bg-gradient-to-r from-[#ef4444]/20 to-[#ef4444]/10 text-white border-l-2 border-[#ef4444]"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
-                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  <item.icon className={`h-4 w-4 flex-shrink-0 ${isActive(item.href) ? 'text-[#ef4444]' : ''}`} />
                   <span className="text-sm">{item.label}</span>
                   {item.badge && (
-                    <span className="ml-auto bg-trinity-red/20 text-trinity-red text-xs px-2 py-0.5 rounded-full">
+                    <span className="ml-auto bg-[#ef4444]/20 text-[#ef4444] text-xs px-2 py-0.5 rounded-full">
                       {item.badge}
                     </span>
                   )}
@@ -277,30 +277,30 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   // Handle case where session is loading - after all hooks are called
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a1128] flex items-center justify-center">
         <div className="text-white/60">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#0a1128] text-white">
       <div className="relative flex min-h-screen">
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-40 transform border-r border-gray-800 bg-gray-900 transition-all duration-300 ease-in-out lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 transform border-r border-white/10 bg-[#0f172a]/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:translate-x-0 ${
             isCollapsed ? "w-20 lg:w-20" : "w-64 lg:w-64"
           } ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex h-full flex-col">
-            <div className={`border-b border-gray-800 px-6 py-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+            <div className={`border-b border-white/10 px-6 py-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
               {!isCollapsed && <LogoHeader href="/client" />}
               {/* Desktop Collapse Toggle */}
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="hidden lg:flex p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-[color,background-color] duration-150 ease-in-out"
+                className="hidden lg:flex p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
                 aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               >
                 {isCollapsed ? (
@@ -316,7 +316,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavigate("/client/requests/new")}
-                className={`flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-trinity-red to-trinity-maroon px-4 py-3 text-white shadow-lg shadow-trinity-red/20 transition-all hover:shadow-trinity-red/30 mb-4 ${
+                className={`flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-[#ef4444] to-[#dc2626] px-4 py-3 text-white shadow-lg shadow-[#ef4444]/20 transition-all hover:shadow-[#ef4444]/30 mb-4 ${
                   isCollapsed ? "justify-center" : ""
                 }`}
                 title={isCollapsed ? "New Request" : undefined}
@@ -336,33 +336,33 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                 />
               ))}
             </nav>
-            <div className="border-t border-gray-800 px-4 py-4">
+            <div className="border-t border-white/10 px-4 py-4">
               {!isCollapsed ? (
                 <>
-                  <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3">
                     <Avatar
                       src={user?.image ?? undefined}
                       alt={user?.name ?? "User"}
                       size={40}
                       fallbackText={user?.name ?? undefined}
-                      className="h-10 w-10 flex-shrink-0"
+                      className="h-10 w-10 flex-shrink-0 ring-2 ring-white/10"
                     />
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-white">{user?.name ?? "User"}</p>
-                      <p className="truncate text-xs text-gray-400">{user?.email ?? ""}</p>
+                      <p className="truncate text-xs text-slate-400">{user?.email ?? ""}</p>
                     </div>
                   </div>
                   <div className="mt-3 space-y-2">
                     <button
                       onClick={() => handleNavigate("/")}
-                      className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
                     >
                       <FiArrowLeft className="h-5 w-5" />
                       Back to Site
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
                     >
                       <FiLogOut className="h-5 w-5" />
                       Logout
@@ -377,20 +377,20 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                       alt={user?.name ?? "User"}
                       size={40}
                       fallbackText={user?.name ?? undefined}
-                      className="h-10 w-10 flex-shrink-0"
+                      className="h-10 w-10 flex-shrink-0 ring-2 ring-white/10"
                     />
                   </div>
                   <div className="flex flex-col gap-2 w-full">
                     <button
                       onClick={() => handleNavigate("/")}
-                      className="flex items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      className="flex items-center justify-center rounded-xl p-2 text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
                       title="Back to Site"
                     >
                       <FiArrowLeft className="h-5 w-5" />
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                      className="flex items-center justify-center rounded-xl p-2 text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
                       title="Logout"
                     >
                       <FiLogOut className="h-5 w-5" />
@@ -405,17 +405,17 @@ export default function ClientShell({ children }: { children: React.ReactNode })
         {/* Mobile overlay */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-30 bg-[#0a1128]/80 backdrop-blur-sm lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
         <div className={`flex min-h-screen flex-1 flex-col transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
-          <header className="relative border-b border-gray-800 bg-gray-900/80 backdrop-blur-sm px-4 py-4 lg:px-8 z-50">
+          <header className="border-b border-white/10 bg-[#0f172a]/80 backdrop-blur-xl px-4 py-4 lg:px-8 z-50">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setIsSidebarOpen((prev) => !prev)}
-                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white lg:hidden"
+                className="rounded-xl p-2 text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
                 aria-label="Toggle sidebar"
               >
                 {isSidebarOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
@@ -432,7 +432,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleNavigate("/client/requests/new")}
-                  className="hidden md:flex items-center gap-2 rounded-lg bg-trinity-red px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-trinity-maroon"
+                  className="hidden md:flex items-center gap-2 rounded-xl bg-[#ef4444] px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-[#dc2626]"
                 >
                   <FiPlusCircle className="h-4 w-4" />
                   New Request
@@ -441,7 +441,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto bg-[#0a1128] px-4 py-6 lg:px-10 lg:py-10">
+          <main className="flex-1 overflow-y-auto bg-[#0a1128] px-4 py-8 lg:px-10 lg:py-12">
             {/* Subtle dot pattern background */}
             <div 
               className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -450,7 +450,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                 backgroundSize: '32px 32px'
               }}
             />
-            <div className="relative mx-auto w-full max-w-[1200px] space-y-8">{children}</div>
+            <div className="relative mx-auto w-full max-w-[1200px] space-y-10">{children}</div>
           </main>
         </div>
       </div>

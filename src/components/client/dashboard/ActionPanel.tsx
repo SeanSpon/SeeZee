@@ -16,7 +16,7 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="rounded-xl border border-gray-800 bg-gray-900/50 p-8 text-center"
+        className="rounded-xl border border-white/10 bg-white/5 p-8 text-center"
       >
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-4xl">
           🎉
@@ -24,7 +24,7 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
         <h3 className="mb-2 font-heading text-xl font-bold text-white">
           All caught up!
         </h3>
-        <p className="text-gray-400">
+        <p className="text-slate-400">
           No pending actions at the moment. We'll notify you when something needs your attention.
         </p>
       </motion.div>
@@ -36,7 +36,7 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+      className="rounded-xl border border-white/10 bg-white/5 p-6"
     >
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
@@ -61,10 +61,10 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
             transition={{ delay: 0.1 + index * 0.05 }}
             className={`rounded-lg border p-4 transition-all ${
               action.completed
-                ? "border-gray-800 bg-gray-900/30 opacity-60"
+                ? "border-white/10 bg-white/5 opacity-60"
                 : action.urgent
-                ? "border-red-500/30 bg-red-500/5 hover:border-red-500/50"
-                : "border-gray-800 bg-gray-900/50 hover:border-gray-700"
+                ? "border-[#ef4444]/30 bg-[#ef4444]/5 hover:border-[#ef4444]/50"
+                : "border-white/10 bg-white/5 hover:border-white/20"
             }`}
           >
             <div className="flex items-start gap-3">
@@ -74,8 +74,8 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
                   action.completed
                     ? "bg-green-500/20 text-green-400"
                     : action.urgent
-                    ? "bg-red-500/20 text-red-400"
-                    : "bg-blue-500/20 text-blue-400"
+                    ? "bg-[#ef4444]/20 text-[#ef4444]"
+                    : "bg-[#22d3ee]/20 text-[#22d3ee]"
                 }`}
               >
                 {action.completed ? "✓" : action.urgent ? "!" : "•"}
@@ -87,18 +87,18 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
                   {action.title}
                 </h3>
                 {action.description && (
-                  <p className="mb-2 text-sm text-gray-400">
+                  <p className="mb-2 text-sm text-slate-400">
                     {action.description}
                   </p>
                 )}
                 
                 {/* Meta */}
-                <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
                   {action.completed && action.completedAt && (
                     <span>Completed {formatActivityTime(action.completedAt)}</span>
                   )}
                   {!action.completed && action.dueDate && (
-                    <span className={action.urgent ? "text-red-400" : ""}>
+                    <span className={action.urgent ? "text-[#ef4444]" : ""}>
                       Due {formatActivityTime(action.dueDate)}
                     </span>
                   )}
@@ -114,8 +114,8 @@ export default function ActionPanel({ actions }: ActionPanelProps) {
                   href={action.ctaLink}
                   className={`flex-shrink-0 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
                     action.urgent
-                      ? "bg-red-600 text-white hover:bg-red-700"
-                      : "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-[#ef4444] text-white hover:bg-[#dc2626]"
+                      : "bg-[#ef4444] text-white hover:bg-[#dc2626]"
                   }`}
                 >
                   {action.cta} →

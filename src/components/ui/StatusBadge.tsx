@@ -14,11 +14,11 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   },
   in_progress: {
     label: "In Progress",
-    className: "border-trinity-red bg-trinity-red/30 text-trinity-red",
+    className: "border-[#ef4444] bg-[#ef4444]/20 text-[#ef4444]",
   },
   "in progress": {
     label: "In Progress",
-    className: "border-trinity-red bg-trinity-red/30 text-trinity-red",
+    className: "border-[#ef4444] bg-[#ef4444]/20 text-[#ef4444]",
   },
   completed: {
     label: "Completed",
@@ -34,7 +34,7 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   },
   lead: {
     label: "Lead",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
   proposal: {
     label: "Proposal",
@@ -46,12 +46,12 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   },
   active: {
     label: "Active",
-    className: "border-trinity-red bg-trinity-red/30 text-trinity-red",
+    className: "border-[#ef4444] bg-[#ef4444]/20 text-[#ef4444]",
   },
   // Blog statuses
   draft: {
     label: "Draft",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
   review: {
     label: "Review",
@@ -67,16 +67,16 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   },
   archived: {
     label: "Archived",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
   // Goal statuses
   not_started: {
     label: "Not Started",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
   "not started": {
     label: "Not Started",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
   on_track: {
     label: "On Track",
@@ -100,7 +100,7 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   },
   cancelled: {
     label: "Cancelled",
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   },
 };
 
@@ -119,7 +119,7 @@ export function StatusBadge({ status, size = "md" }: StatusBadgeProps) {
   const normalized = status?.toLowerCase?.() ?? "unknown";
   const config = STATUS_STYLES[normalized] ?? {
     label: status,
-    className: "border-gray-600 bg-gray-700 text-gray-300",
+    className: "border-slate-600 bg-slate-800/50 text-slate-300",
   };
 
   return (
