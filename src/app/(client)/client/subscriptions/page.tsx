@@ -175,18 +175,18 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
       projectFeatures: project.projectQuestionnaire?.responses
         ? (project.projectQuestionnaire.responses as any)?.selectedFeatures || []
         : [],
-      monthlyPrice: Number(plan.monthlyPrice),
+      monthlyPrice: Number(plan.monthlyPrice) / 100, // Convert cents to dollars
       isMaintenancePlan: true,
     });
   });
 
-  // Calculate totals using tier config pricing
+  // Calculate totals using tier config pricing (tierConfig.monthlyPrice is in cents)
   const totalMonthlyCost = subscriptionsData
     .filter((s) => s.status === 'active')
     .reduce((sum, sub) => {
       const tierKey = (sub.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
       const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
-      return sum + tierConfig.monthlyPrice;
+      return sum + tierConfig.monthlyPrice / 100; // Convert cents to dollars
     }, 0);
 
   const totalAnnualCost = totalMonthlyCost * 12;

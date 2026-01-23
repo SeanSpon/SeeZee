@@ -195,7 +195,7 @@ export default async function TransactionsPage() {
       };
     });
 
-    // Serialize maintenance plans
+    // Serialize maintenance plans (monthlyPrice is stored in cents)
     const serializedPlans = maintenancePlans.map(plan => ({
       id: plan.id,
       type: "maintenance" as const,
@@ -204,7 +204,7 @@ export default async function TransactionsPage() {
       clientEmail: plan.project?.organization?.email || null,
       projectId: plan.projectId,
       projectName: plan.project?.name || "Unknown",
-      monthlyPrice: Number(plan.monthlyPrice),
+      monthlyPrice: Number(plan.monthlyPrice) / 100, // Convert cents to dollars
       billingCycle: "monthly",
       status: plan.status,
       stripeSubscriptionId: plan.stripeSubscriptionId,

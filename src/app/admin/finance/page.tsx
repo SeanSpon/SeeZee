@@ -161,10 +161,10 @@ export default async function FinancePage() {
   // Monthly recurring expense cost
   const monthlyRecurringExpenseCost = totalExpenseCalc.monthlyRecurringCost; // In cents
 
-  // Subscription metrics
+  // Subscription metrics (monthlyPrice is stored in cents)
   const activeSubscriptions = maintenancePlans.filter(plan => plan.status === "ACTIVE");
   const monthlyRecurringRevenue = activeSubscriptions.reduce(
-    (sum, plan) => sum + Number(plan.monthlyPrice),
+    (sum, plan) => sum + Number(plan.monthlyPrice) / 100, // Convert cents to dollars
     0
   );
   const annualRecurringRevenue = monthlyRecurringRevenue * 12;
@@ -281,7 +281,7 @@ export default async function FinancePage() {
     id: plan.id,
     client: plan.project?.organization?.name || "Unknown",
     project: plan.project?.name || "Unknown",
-    amount: Number(plan.monthlyPrice),
+    amount: Number(plan.monthlyPrice) / 100, // Convert cents to dollars
     status: plan.status,
     billingCycle: "monthly",
     nextBillingDate: null,
