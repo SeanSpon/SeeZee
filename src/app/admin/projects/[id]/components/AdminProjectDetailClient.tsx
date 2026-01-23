@@ -33,6 +33,8 @@ import { AdminProjectTasks } from "./AdminProjectTasks";
 import { RepositoryTab } from "@/app/(client)/client/components/RepositoryTab";
 import { SettingsTab } from "@/app/(client)/client/components/SettingsTab";
 import { AdminChangeRequestsSection } from "./AdminChangeRequestsSection";
+import { GitIntegrationPanel } from "@/components/admin/projects/GitIntegrationPanel";
+import { VercelDeploymentsPanel } from "@/components/admin/projects/VercelDeploymentsPanel";
 
 interface AdminProjectDetailClientProps {
   project: {
@@ -509,6 +511,27 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
 
   const renderMoreTab = () => (
     <div className="space-y-6">
+      {/* Git & Vercel Integrations */}
+      <div>
+        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
+          Development Integrations
+        </h3>
+        <div className="space-y-4">
+          <GitIntegrationPanel 
+            projectId={project.id}
+            githubRepo={project.githubRepo}
+            isAdmin={true}
+            expanded={true}
+          />
+          <VercelDeploymentsPanel
+            projectId={project.id}
+            vercelUrl={project.vercelUrl}
+            isAdmin={true}
+            expanded={true}
+          />
+        </div>
+      </div>
+
       {/* Milestones */}
       <div>
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
@@ -547,9 +570,9 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
         </div>
       )}
 
-      {/* Repository */}
+      {/* Legacy Repository Tab (backup) */}
       <div>
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Repository</h3>
+        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Repository Details</h3>
         <RepositoryTab projectId={project.id} isAdmin={true} />
       </div>
 
