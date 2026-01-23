@@ -21,7 +21,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { id } = await params;
   const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
-  // Fetch task with full details
+  // Fetch task with full details including materials
   const task = await db.todo.findUnique({
     where: { id },
     include: {
@@ -42,6 +42,12 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
           image: true,
           role: true,
         },
+      },
+      materials: {
+        orderBy: [
+          { order: "asc" },
+          { createdAt: "desc" },
+        ],
       },
     },
   });

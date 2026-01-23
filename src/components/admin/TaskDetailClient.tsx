@@ -17,9 +17,7 @@ import {
   CheckCircle,
   Edit2,
   Trash2,
-  Save,
   X,
-  MessageSquare,
   Activity,
   Flag,
 } from "lucide-react";
@@ -27,6 +25,26 @@ import Link from "next/link";
 import { format, formatDistanceToNow } from "date-fns";
 import { updateTaskStatus, assignTask, deleteTask } from "@/server/actions";
 import { toast } from "@/hooks/use-toast";
+import { TaskMaterialsSection } from "@/components/admin/TaskMaterialsSection";
+
+type TaskMaterial = {
+  id: string;
+  todoId: string;
+  title: string;
+  description: string | null;
+  type: string;
+  fileUrl: string | null;
+  linkUrl: string | null;
+  fileName: string | null;
+  fileSize: number | null;
+  mimeType: string | null;
+  dueDate: Date | null;
+  isRequired: boolean;
+  order: number;
+  createdById: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 type Task = {
   id: string;
@@ -37,6 +55,7 @@ type Task = {
   dueDate: Date | null;
   completedAt: Date | null;
   createdAt: Date;
+  materials?: TaskMaterial[];
   assignedTo: {
     id: string;
     name: string | null;
@@ -312,6 +331,13 @@ export function TaskDetailClient({
               )}
             </div>
           </SectionCard>
+
+          {/* Learning Materials & Resources */}
+          <TaskMaterialsSection
+            taskId={task.id}
+            materials={task.materials || []}
+            canEdit={canEdit}
+          />
 
           {/* Activity History */}
           <SectionCard

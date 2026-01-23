@@ -780,12 +780,51 @@ model Todo {
   // Time tracking
   timeLogs TimeLog[]
 
+  // Learning materials and resources
+  materials TaskMaterial[]
+
   @@index([projectId, column])
   @@index([status])
   @@index([changeRequestId])
   @@index([assignedToRole])
   @@index([assignedToTeamId])
   @@map("todos")
+}
+
+// Task Materials - Learning resources, PDFs, assignments attached to tasks
+model TaskMaterial {
+  id          String             @id @default(cuid())
+  todoId      String
+  todo        Todo               @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  type        TaskMaterialType
+  fileUrl     String? // For uploaded files (PDFs, videos, images)
+  linkUrl     String? // For external links/resources
+  fileName    String? // Original file name
+  fileSize    Int? // File size in bytes
+  mimeType    String? // File MIME type
+  dueDate     DateTime? // For assignments - when it's due
+  isRequired  Boolean            @default(false) // Whether this material is required
+  order       Int                @default(0) // Display order
+  createdById String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([todoId])
+  @@index([type])
+  @@index([createdById])
+  @@map("task_materials")
+}
+
+enum TaskMaterialType {
+  PDF // PDF documents
+  DOCUMENT // Word docs, text files, etc.
+  VIDEO // Video files or links
+  IMAGE // Image files
+  LINK // External links/resources
+  ASSIGNMENT // Assignments with due dates
+  RESOURCE // General resources
 }
 
 model Goal {
