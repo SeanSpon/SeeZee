@@ -19,7 +19,7 @@ type Lead = {
   phone: string | null;
   company: string | null;
   status: string;
-  createdAt: Date;
+  createdAt: Date | string;  // Can be string from server serialization
   organization: { name: string } | null;
 };
 

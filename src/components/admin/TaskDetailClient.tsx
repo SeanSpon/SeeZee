@@ -34,9 +34,9 @@ type Task = {
   description: string | null;
   status: string;
   priority: string;
-  dueDate: Date | null;
-  completedAt: Date | null;
-  createdAt: Date;
+  dueDate: Date | string | null;  // Can be string from serialization
+  completedAt: Date | string | null;  // Can be string from serialization
+  createdAt: Date | string;  // Can be string from serialization
   assignedTo: {
     id: string;
     name: string | null;
@@ -58,7 +58,7 @@ type ActivityLog = {
   type: string;
   title: string;
   description: string | null;
-  createdAt: Date;
+  createdAt: Date | string;  // Can be string from serialization
   user: {
     id: string;
     name: string | null;

@@ -18,9 +18,9 @@ type Task = {
   description: string | null;
   status: string;
   priority: string;
-  dueDate: Date | null;
-  completedAt: Date | null;
-  createdAt: Date;
+  dueDate: Date | string | null;  // Can be string from RSC serialization
+  completedAt: Date | string | null;  // Can be string from RSC serialization
+  createdAt: Date | string;  // Can be string from RSC serialization
   assignedTo: {
     id: string;
     name: string | null;
@@ -73,6 +73,7 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   });
 
   // Map tasks to kanban format
+  // Note: Dates come as strings from RSC serialization, so handle both Date and string types
   const kanbanTasks = tasks.map((task) => ({
     ...task,
     column: task.status === "TODO" ? "todo" : 
@@ -89,8 +90,12 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       name: task.assignedTo.name,
       image: null, // Map email to image if needed, or set to null
     } : null,
-    dueDate: task.dueDate ? task.dueDate.toISOString() : null,
-    createdAt: task.createdAt.toISOString(),
+    dueDate: task.dueDate 
+      ? (typeof task.dueDate === 'string' ? task.dueDate : task.dueDate.toISOString()) 
+      : null,
+    createdAt: typeof task.createdAt === 'string' 
+      ? task.createdAt 
+      : task.createdAt.toISOString(),
     dependencies: [],
     attachments: [],
   }));
