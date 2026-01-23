@@ -745,6 +745,67 @@ export default function CommandCenterPage() {
               ))}
             </div>
           </div>
+
+          {/* Vercel Deployments */}
+          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+            <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-white" />
+                <h3 className="font-semibold text-white">Deployments</h3>
+              </div>
+              <a
+                href="https://vercel.com/seezeestudios"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-white/40 hover:text-white flex items-center gap-1"
+              >
+                View All
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+            <div className="divide-y divide-white/5 max-h-64 overflow-y-auto">
+              {loading ? (
+                <div className="px-4 py-6 text-center text-white/40 text-sm">
+                  Loading deployments...
+                </div>
+              ) : deployments.length === 0 ? (
+                <div className="px-4 py-6 text-center text-white/40 text-sm">
+                  No recent deployments
+                </div>
+              ) : (
+                deployments.slice(0, 5).map((deployment) => (
+                  <a
+                    key={deployment.id}
+                    href={`https://${deployment.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-3 hover:bg-white/5 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-white font-medium truncate">
+                        {deployment.name}
+                      </span>
+                      <DeploymentStatusBadge status={deployment.state} />
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-white/40">
+                      {deployment.meta?.branch && (
+                        <span className="flex items-center gap-1">
+                          <GitBranch className="w-3 h-3" />
+                          {deployment.meta.branch}
+                        </span>
+                      )}
+                      {deployment.meta?.commit && (
+                        <span className="font-mono bg-white/10 px-1 rounded">
+                          {deployment.meta.commit}
+                        </span>
+                      )}
+                      <span>{formatTimeAgo(new Date(deployment.createdAt).toISOString())}</span>
+                    </div>
+                  </a>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -909,5 +970,23 @@ function QuickActionButton({
     >
       <Icon className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
     </a>
+  );
+}
+
+function DeploymentStatusBadge({ status }: { status: string }) {
+  const statusConfig: Record<string, { text: string; color: string; bg: string }> = {
+    READY: { text: "Live", color: "text-emerald-400", bg: "bg-emerald-400/20" },
+    BUILDING: { text: "Building", color: "text-amber-400", bg: "bg-amber-400/20" },
+    QUEUED: { text: "Queued", color: "text-blue-400", bg: "bg-blue-400/20" },
+    ERROR: { text: "Error", color: "text-red-400", bg: "bg-red-400/20" },
+    CANCELED: { text: "Canceled", color: "text-gray-400", bg: "bg-gray-400/20" },
+  };
+
+  const config = statusConfig[status] || { text: status, color: "text-white/60", bg: "bg-white/10" };
+
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${config.color} ${config.bg}`}>
+      {config.text}
+    </span>
   );
 }
