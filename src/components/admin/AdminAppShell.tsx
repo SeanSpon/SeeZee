@@ -86,92 +86,85 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       });
   }, []);
 
-  // Quick Access - Most frequently used pages
-  const quickAccessItems = useMemo<NavItem[]>(
+  // ===========================================
+  // CORE PAGES (Always visible, not collapsible)
+  // These are the 4 main "rooms" of the admin
+  // ===========================================
+  const coreItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin", label: "Dashboard", icon: FiHome },
-      { href: "/admin/pipeline", label: "Pipeline", icon: FiTrendingUp },
-      { href: "/admin/clients", label: "Clients", icon: FiUsers },
+      { href: "/admin", label: "Dashboard", icon: FiHome, description: "Overview and quick stats" },
+      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
+      { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
+      { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
     ],
     []
   );
 
-  // Operations group - Project management
-  const operationsItems = useMemo<NavItem[]>(
+  // ===========================================
+  // PIPELINE & GROWTH (Lead to Revenue flow)
+  // ===========================================
+  const pipelineItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/projects", label: "Projects", icon: FiFolder },
-      { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare },
-      { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget },
-      { href: "/admin/goals", label: "Goals", icon: FiTarget },
-      { href: "/admin/calendar", label: "Calendar", icon: FiCalendar },
+      { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
+      { href: "/admin/leads", label: "Leads", icon: FiMapPin, description: "Lead management and finder" },
+      { href: "/admin/marketing", label: "Email Hub", icon: FiMail, description: "Campaigns and outreach" },
+      { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
     ],
     []
   );
 
-  // Marketing & Growth - Lead generation and campaigns
-  const marketingItems = useMemo<NavItem[]>(
-    () => [
-      { href: "/admin/leads", label: "Leads & Finder", icon: FiMapPin },
-      { href: "/admin/marketing", label: "Email Hub", icon: FiMail },
-      { href: "/admin/blog", label: "Blog Posts", icon: FiBookmark },
-      { href: "/admin/marketing/campaigns", label: "Campaigns", icon: FiSend },
-      { href: "/admin/marketing/templates", label: "Templates", icon: FiFileText },
-    ],
-    []
-  );
-
-  // Financial group - Consolidated into 2 main pages
+  // ===========================================
+  // FINANCIAL (Consolidated money management)
+  // ===========================================
   const financialItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/finance", label: "Finance", icon: FiDollarSign, description: "Revenue metrics and financial overview" },
-      { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices, payments, and subscriptions" },
-      { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Track Vercel, Cursor, and other costs" },
-      { href: "/admin/hours", label: "Hours & Packages", icon: FiClock, description: "Manage client hours and packages" },
-      { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance schedules and change requests" },
+      { href: "/admin/finance", label: "Overview", icon: FiDollarSign, description: "Revenue and profit metrics" },
+      { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices and payments" },
+      { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Cost tracking" },
+      { href: "/admin/hours", label: "Hours", icon: FiClock, description: "Time and packages" },
     ],
     []
   );
 
-  // Team & Collaboration group
+  // ===========================================
+  // TEAM & OPERATIONS (Internal coordination)
+  // ===========================================
   const teamItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/team", label: "Team Members", icon: FiTeamUsers },
-      { href: "/admin/feed", label: "Activity Feed", icon: FiActivity },
-      { href: "/admin/recordings", label: "Recordings", icon: FiMic },
-      { href: "/admin/chat", label: "Team Chat", icon: FiMessageSquare },
-      { href: "/admin/learning", label: "Learning Hub", icon: FiBookOpen },
+      { href: "/admin/team", label: "Team", icon: FiTeamUsers, description: "Team members" },
+      { href: "/admin/feed", label: "Activity", icon: FiActivity, description: "Recent activity" },
+      { href: "/admin/calendar", label: "Calendar", icon: FiCalendar, description: "Schedule overview" },
+      { href: "/admin/goals", label: "Goals", icon: FiTarget, description: "OKRs and targets" },
+      { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget, description: "Client deliverables" },
     ],
     []
   );
 
-  // Analytics group (role-based visibility)
-  const analyticsItems = useMemo<NavItem[]>(
-    () => [
-      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart },
-    ],
-    []
-  );
-
-  // CEO Command Center group (CEO only)
+  // ===========================================
+  // CEO COMMAND CENTER (CEO only - simplified)
+  // ===========================================
   const ceoItems = useMemo<NavItem[]>(
     () => [
-      { href: "/admin/ceo", label: "CEO Dashboard", icon: FiStar },
-      { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2 },
-      { href: "/admin/ceo/systems", label: "Systems", icon: FiServer },
-      { href: "/admin/ceo/systems/logs", label: "System Logs", icon: FiActivity },
-      { href: "/admin/ceo/systems/automations", label: "Automations", icon: FiTool },
-      { href: "/admin/ceo/tasks", label: "CEO Tasks", icon: FiCheckSquare },
+      { href: "/admin/ceo", label: "Command Center", icon: FiStar, description: "Executive overview" },
+      { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
+      { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
     ],
     []
   );
 
-  // Tools & Settings group
-  const toolsItems = useMemo<NavItem[]>(
+  // ===========================================
+  // SYSTEM & TOOLS (De-emphasized, rare access)
+  // ===========================================
+  const systemItems = useMemo<NavItem[]>(
     () => [
-      { href: "/settings", label: "Settings", icon: FiSettings },
-      { href: "/admin/links", label: "Links & Resources", icon: FiLink },
-      { href: "/admin/database", label: "Database", icon: FiDatabase },
-      { href: "/admin/test/create-project", label: "Test Tools", icon: FiTool },
+      { href: "/settings", label: "Settings", icon: FiSettings, description: "App configuration" },
+      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
+      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
+      { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
+      { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
+      { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
+      { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
+      { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance plans" },
     ],
     []
   );
@@ -226,101 +219,82 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 )}
               </button>
             </div>
-            <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-4">
-              {/* Quick Access Section */}
+            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+              {/* ========================================= */}
+              {/* CORE PAGES - Always visible, prominent */}
+              {/* ========================================= */}
               {!isCollapsed && (
-                <div className="mb-3">
-                  <p className="px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">Quick Access</p>
+                <div className="mb-2 px-3">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Core</p>
                 </div>
               )}
-              {quickAccessItems.map(({ href, label, icon: Icon }) => (
+              {coreItems.map(({ href, label, icon: Icon }) => (
                 <motion.button
                   key={href}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleNavigate(href)}
-                  className={`group relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all duration-200 ${
+                  className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-200 ${
                     isCollapsed ? 'justify-center' : ''
                   } ${
                     isActive(href)
-                      ? "bg-gradient-to-r from-[#ef4444]/20 to-[#ef4444]/10 text-white shadow-lg border border-[#ef4444]/30"
+                      ? "bg-gradient-to-r from-[#ef4444]/20 to-[#ef4444]/10 text-white border-l-2 border-[#ef4444]"
                       : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                   title={isCollapsed ? label : undefined}
                 >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {!isCollapsed && <span className="font-medium">{label}</span>}
-                  {isActive(href) && !isCollapsed && (
-                    <motion.span
-                      layoutId={`admin-nav-active-${href}`}
-                      className="absolute inset-0 rounded-xl border border-[#ef4444]/40"
-                      transition={{ type: "spring", stiffness: 250, damping: 30 }}
-                    />
-                  )}
+                  <Icon className={`h-5 w-5 flex-shrink-0 ${isActive(href) ? 'text-[#ef4444]' : ''}`} />
+                  {!isCollapsed && <span className="font-medium text-sm">{label}</span>}
                 </motion.button>
               ))}
               
               {/* Divider */}
-              <div className="my-4 border-t border-white/10" />
+              <div className="my-4 border-t border-white/5" />
 
-              {/* Operations Group */}
+              {/* ========================================= */}
+              {/* PIPELINE & GROWTH - Lead to Revenue */}
+              {/* ========================================= */}
               <CollapsibleNavGroup
-                title="Operations"
-                icon={FiFolder}
-                items={operationsItems}
+                title="Pipeline & Growth"
+                icon={FiTrendingUp}
+                items={pipelineItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/projects") || pathname.startsWith("/admin/tasks") || pathname.startsWith("/admin/calendar")}
+                defaultOpen={pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
                 collapsed={isCollapsed}
               />
 
-              {/* Marketing & Growth Group */}
-              <CollapsibleNavGroup
-                title="Marketing & Growth"
-                icon={FiTarget}
-                items={marketingItems}
-                isActive={isActive}
-                onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/leads")}
-                collapsed={isCollapsed}
-              />
-
-              {/* Financial Group */}
+              {/* ========================================= */}
+              {/* FINANCIAL - Consolidated money management */}
+              {/* ========================================= */}
               <CollapsibleNavGroup
                 title="Financial"
                 icon={FiDollarSign}
                 items={financialItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/invoices") || pathname.startsWith("/admin/finances") || pathname.startsWith("/admin/purchases") || pathname.startsWith("/admin/maintenance")}
+                defaultOpen={pathname.startsWith("/admin/finance") || pathname.startsWith("/admin/hours")}
                 collapsed={isCollapsed}
               />
 
-              {/* Analytics Group */}
+              {/* ========================================= */}
+              {/* TEAM & OPERATIONS - Internal coordination */}
+              {/* ========================================= */}
               <CollapsibleNavGroup
-                title="Analytics"
-                icon={FiBarChart2}
-                items={analyticsItems}
-                isActive={isActive}
-                onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/analytics")}
-                collapsed={isCollapsed}
-              />
-
-              {/* Team & Collaboration Group */}
-              <CollapsibleNavGroup
-                title="Team & Collaboration"
+                title="Team & Ops"
                 icon={FiTeamUsers}
                 items={teamItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/feed") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/learning")}
+                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/feed") || pathname.startsWith("/admin/calendar") || pathname.startsWith("/admin/goals") || pathname.startsWith("/admin/client-tasks")}
                 collapsed={isCollapsed}
               />
 
-              {/* CEO Command Center (CEO only) */}
+              {/* ========================================= */}
+              {/* CEO COMMAND CENTER (CEO only) */}
+              {/* ========================================= */}
               {isUserCEO && (
                 <CollapsibleNavGroup
-                  title="CEO Command Center"
+                  title="CEO"
                   icon={FiStar}
                   items={ceoItems}
                   isActive={isActive}
@@ -331,14 +305,19 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 />
               )}
 
-              {/* Tools & Settings Group */}
+              {/* Divider before System */}
+              <div className="my-4 border-t border-white/5" />
+
+              {/* ========================================= */}
+              {/* SYSTEM & TOOLS - De-emphasized, rare use */}
+              {/* ========================================= */}
               <CollapsibleNavGroup
-                title="Tools & Settings"
+                title="System"
                 icon={FiSettings}
-                items={toolsItems}
+                items={systemItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/links") || pathname.startsWith("/admin/database") || pathname.startsWith("/settings")}
+                defaultOpen={pathname.startsWith("/admin/database") || pathname.startsWith("/settings") || pathname.startsWith("/admin/analytics") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/learning") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/links") || pathname.startsWith("/admin/maintenance")}
                 collapsed={isCollapsed}
               />
             </nav>
