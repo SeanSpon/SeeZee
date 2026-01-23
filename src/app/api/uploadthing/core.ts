@@ -73,6 +73,38 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId, fileUrl: file.url };
     }),
 
+  // Task materials uploader (for learning materials, PDFs, resources)
+  taskMaterialUploader: f({
+    pdf: { maxFileSize: "32MB", maxFileCount: 5 },
+    video: { maxFileSize: "128MB", maxFileCount: 3 },
+    image: { maxFileSize: "8MB", maxFileCount: 10 },
+    blob: { maxFileSize: "32MB", maxFileCount: 5 },
+  })
+    .middleware(async () => {
+      const session = await auth();
+      
+      if (!session?.user) {
+        throw new Error("Unauthorized");
+      }
+
+      // Check if user has admin role
+      if (!ADMIN_ROLES.includes(session.user.role || "")) {
+        throw new Error("Forbidden - Admin access required");
+      }
+
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Task material upload complete:", file.url);
+      return { 
+        uploadedBy: metadata.userId, 
+        fileUrl: file.url,
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+      };
+    }),
+
   // Client project file uploader (for client dashboard)
   projectFileUploader: f({
     image: { maxFileSize: "8MB", maxFileCount: 10 },
