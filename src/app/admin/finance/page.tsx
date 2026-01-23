@@ -95,12 +95,12 @@ export default async function FinancePage() {
     inv.status === "SENT" || inv.status === "OVERDUE"
   );
 
-  // Revenue calculations - Invoice totals need /1000 to get dollars
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0) / 1000;
+  // Revenue calculations - Invoice totals are stored in dollars
+  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total), 0);
   
   const thisMonthRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= thisMonth)
-    .reduce((sum, inv) => sum + Number(inv.total), 0) / 1000;
+    .reduce((sum, inv) => sum + Number(inv.total), 0);
   
   const lastMonthRevenue = paidInvoices
     .filter(inv => 
@@ -108,16 +108,16 @@ export default async function FinancePage() {
       new Date(inv.paidAt) >= lastMonth && 
       new Date(inv.paidAt) < thisMonth
     )
-    .reduce((sum, inv) => sum + Number(inv.total), 0) / 1000;
+    .reduce((sum, inv) => sum + Number(inv.total), 0);
 
   const last30DaysRevenue = paidInvoices
     .filter(inv => inv.paidAt && new Date(inv.paidAt) >= last30Days)
-    .reduce((sum, inv) => sum + Number(inv.total), 0) / 1000;
+    .reduce((sum, inv) => sum + Number(inv.total), 0);
 
   const outstandingAmount = outstandingInvoices.reduce(
     (sum, inv) => sum + Number(inv.total), 
     0
-  ) / 1000;
+  );
 
   const overdueInvoices = invoices.filter(inv => {
     if (inv.status !== "SENT" && inv.status !== "OVERDUE") return false;
@@ -128,7 +128,7 @@ export default async function FinancePage() {
   const overdueAmount = overdueInvoices.reduce(
     (sum, inv) => sum + Number(inv.total),
     0
-  ) / 1000;
+  );
 
   // Expense calculations - PROPERLY handles recurring vs one-time
   const expenseItems = expenses.map((exp) => ({
@@ -197,7 +197,7 @@ export default async function FinancePage() {
         new Date(inv.paidAt) >= monthStart && 
         new Date(inv.paidAt) < monthEnd
       )
-      .reduce((sum, inv) => sum + Number(inv.total), 0) / 1000; // Convert to dollars
+      .reduce((sum, inv) => sum + Number(inv.total), 0); // Invoice totals are in dollars
 
     const monthExpenses = expenses
       .filter(exp => 

@@ -44,10 +44,10 @@ export default async function AdminClientsPage() {
 
     const projectCount = org.projects?.length ?? 0;
     const invoiceCount = org.invoices?.length ?? 0;
-    // Invoice totals need /1000 to get dollars
+    // Invoice totals are stored in dollars
     const revenue = (org.invoices?.reduce((sum: number, inv: any) => {
       return inv.status === "PAID" ? sum + Number(inv.total ?? 0) : sum;
-    }, 0) ?? 0) / 1000;
+    }, 0) ?? 0);
 
     clientsMap.set(org.id, {
       id: org.id,
@@ -106,8 +106,8 @@ export default async function AdminClientsPage() {
       // Update existing client
       existing.invoices += 1;
       if (invoice.status === "PAID") {
-        // Invoice totals need /1000 to get dollars
-        existing.revenue += Number(invoice.total ?? 0) / 1000;
+        // Invoice totals are stored in dollars
+        existing.revenue += Number(invoice.total ?? 0);
       }
       if (invoice.status) {
         existing.rawStatuses.push(String(invoice.status).toLowerCase());
@@ -131,8 +131,8 @@ export default async function AdminClientsPage() {
         company: organization.name ?? project.clientCompany ?? "N/A",
         projects: project ? 1 : 0,
         invoices: 1,
-        // Invoice totals need /1000 to get dollars
-        revenue: Number(invoice.status === "PAID" ? invoice.total ?? 0 : 0) / 1000,
+        // Invoice totals are stored in dollars
+        revenue: Number(invoice.status === "PAID" ? invoice.total ?? 0 : 0),
         statuses: invoice.status ? [String(invoice.status).toLowerCase()] : [],
         rawStatuses: invoice.status ? [String(invoice.status).toLowerCase()] : [],
       });
