@@ -26,7 +26,7 @@ export default function AboutPage() {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="bg-gray-900 py-24 lg:py-40 relative overflow-hidden">
+      <section className="bg-[#0a1128] py-24 lg:py-40 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-5"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
           <ScrollAnimation>
@@ -43,7 +43,7 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl md:text-2xl text-gray-300 leading-relaxed"
+                className="text-xl md:text-2xl text-slate-300 leading-relaxed"
               >
                 SeeZee Studio provides hands-on technical support, consulting, and custom solutions for schools, nonprofits, and community organizations in Louisville and beyond.
               </motion.p>
@@ -53,16 +53,16 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="py-20 bg-gray-800">
+      <section className="py-16 sm:py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-8 text-center">
                 How SeeZee Started
               </h2>
             </ScrollAnimation>
             <ScrollAnimation delay={0.1}>
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+              <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
                 <p>
                   SeeZee started with a simple idea: community organizations deserve better technology support.
                 </p>
@@ -77,15 +77,15 @@ export default function AboutPage() {
                 </p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-[#ef4444] mr-3">•</span>
                     <span>Big IT companies wanted enterprise contracts and didn't understand community needs.</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-[#ef4444] mr-3">•</span>
                     <span>DIY solutions led to frustration and wasted time.</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-[#ef4444] mr-3">•</span>
                     <span>Freelancers would fix one thing and disappear.</span>
                   </li>
                 </ul>
@@ -105,16 +105,16 @@ export default function AboutPage() {
       </section>
 
       {/* Our Roots Section - Trinity High School, FBLA, Beta Club */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-16 sm:py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-8 text-center">
                 Our Roots
               </h2>
             </ScrollAnimation>
             <ScrollAnimation delay={0.1}>
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+              <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
                 <p>
                   SeeZee was born at <span className="text-white font-semibold">Trinity High School</span>, where Sean and Zach first discovered their passion for helping people with technology.
                 </p>
@@ -167,7 +167,7 @@ export default function AboutPage() {
       </section>
 
       {/* Sean & Zach Photo Section */}
-      <section className="py-16 bg-[#1a2332]">
+      <section className="py-16 sm:py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <ScrollAnimation>
             <h2 className="text-3xl text-white text-center mb-12 font-heading font-bold">
@@ -199,7 +199,7 @@ export default function AboutPage() {
               {/* Right Column - Text (60%) */}
               <div className="md:col-span-3">
                 <ScrollAnimation delay={0.2}>
-                  <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+                  <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
                     <p>
                       We're Sean and Zach — your local technology partners from Louisville who started working together through FBLA at Trinity High School.
                     </p>
@@ -221,11 +221,11 @@ export default function AboutPage() {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-20 bg-gray-800">
+      <section className="py-16 sm:py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <ScrollAnimation>
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
                 Meet the Team
               </h2>
             </div>
@@ -235,10 +235,10 @@ export default function AboutPage() {
             {/* Sean */}
             <ScrollAnimation delay={0.1}>
               <motion.div
-                whileHover={{ scale: 1.02, y: -4 }}
-                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-2xl hover:shadow-xl transition-all bg-gray-800 border-2 border-gray-700 hover:border-trinity-red"
+                whileHover={{ y: -4 }}
+                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-xl hover:shadow-xl transition-all bg-white/5 border border-white/10 hover:border-white/20"
               >
-                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-trinity-red relative group">
+                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-[#ef4444] relative group">
                   <Image
                     src="/sean-profile.png"
                     alt="Sean McCulloch"
@@ -272,7 +272,7 @@ export default function AboutPage() {
                       href="https://github.com/SeanSpon"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white hover:text-gray-300 transition-colors"
+                      className="text-white hover:text-slate-300 transition-colors"
                       aria-label="GitHub"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -284,8 +284,8 @@ export default function AboutPage() {
                   <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
                     Sean McCulloch
                   </h3>
-                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Lead</p>
-                  <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
+                  <p className="text-[#ef4444] font-semibold mb-4 text-lg">Co-Founder & Technical Lead</p>
+                  <div className="space-y-4 text-base md:text-lg text-slate-300 leading-relaxed mb-6">
                     <p>
                       Sean leads technical support and system development for SeeZee — solving real-world problems and building solutions that actually work.
                     </p>
@@ -298,34 +298,34 @@ export default function AboutPage() {
                   </div>
                   <div className="mb-6">
                     <h4 className="text-white font-semibold mb-3">Sean handles:</h4>
-                    <ul className="space-y-2 text-gray-300">
+                    <ul className="space-y-2 text-slate-300">
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Technical support (on-site & remote)</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>System troubleshooting & problem-solving</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Web development & accessible design</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Automation & workflow tools</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Database & system architecture</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>AI-powered solutions</span>
                       </li>
                     </ul>
                   </div>
-                  <p className="text-gray-300 italic mb-4">
+                  <p className="text-slate-300 italic mb-4">
                     Sean builds technology that helps people — not confuses them.
                   </p>
                   <div className="flex flex-wrap gap-3">
@@ -374,9 +374,9 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.2}>
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
-                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-2xl hover:shadow-xl transition-all bg-gray-800 border-2 border-gray-700 hover:border-trinity-red"
+                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-xl hover:shadow-xl transition-all bg-[#0f172a] border-2 border-white/10 hover:border-white/20"
               >
-                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-trinity-red relative group">
+                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-[#ef4444] relative group">
                   <Image
                     src="/zach-profile.png"
                     alt="Zach Robards"
@@ -410,7 +410,7 @@ export default function AboutPage() {
                       href="https://github.com/zrobards"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white hover:text-gray-300 transition-colors"
+                      className="text-white hover:text-slate-300 transition-colors"
                       aria-label="GitHub"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -422,8 +422,8 @@ export default function AboutPage() {
                   <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
                     Zach Robards
                   </h3>
-                  <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Consulting Lead</p>
-                  <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
+                  <p className="text-[#ef4444] font-semibold mb-4 text-lg">Co-Founder & Consulting Lead</p>
+                  <div className="space-y-4 text-base md:text-lg text-slate-300 leading-relaxed mb-6">
                     <p>
                       Zach handles consulting and partner relationships.
                     </p>
@@ -436,34 +436,34 @@ export default function AboutPage() {
                   </div>
                   <div className="mb-6">
                     <h4 className="text-white font-semibold mb-3">Zach handles:</h4>
-                    <ul className="space-y-2 text-gray-300">
+                    <ul className="space-y-2 text-slate-300">
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Technology consulting & decision support</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Partner communication & relationship building</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Project planning & coordination</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Content & user experience</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Training & documentation</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-[#ef4444] mr-2 flex-shrink-0 mt-0.5" />
                         <span>Long-term partnership management</span>
                       </li>
                     </ul>
                   </div>
-                  <p className="text-gray-300 italic mb-4">
+                  <p className="text-slate-300 italic mb-4">
                     Zach ensures every organization gets solutions that actually fit their needs and budget.
                   </p>
                   <div className="flex flex-wrap gap-3">
@@ -511,7 +511,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Values Section */}
-      <section className="py-20 bg-gray-800">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
@@ -555,13 +555,13 @@ export default function AboutPage() {
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
                     whileHover={{ y: -4 }}
-                    className="p-6 rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 glass-effect"
+                    className="p-6 rounded-xl border-2 border-white/10 hover:border-white/20 transition-all duration-300 glass-effect"
                   >
-                    <div className="text-trinity-red mb-4">{value.icon}</div>
+                    <div className="text-[#ef4444] mb-4">{value.icon}</div>
                     <h3 className="text-xl font-heading font-semibold text-white mb-3">
                       {value.title}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-slate-300 leading-relaxed">
                       {value.description}
                     </p>
                   </motion.div>
@@ -573,7 +573,7 @@ export default function AboutPage() {
       </section>
 
       {/* Who We Serve Section */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
@@ -593,7 +593,7 @@ export default function AboutPage() {
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
                     whileHover={{ y: -4 }}
-                    className="p-6 rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 glass-effect"
+                    className="p-6 rounded-xl border-2 border-white/10 hover:border-white/20 transition-all duration-300 glass-effect"
                   >
                     <div className="flex items-start gap-4">
                       <div className="text-4xl flex-shrink-0">{group.emoji}</div>
@@ -601,7 +601,7 @@ export default function AboutPage() {
                         <h3 className="text-xl font-heading font-semibold text-white mb-2">
                           {group.title}
                         </h3>
-                        <p className="text-gray-300 leading-relaxed text-sm">
+                        <p className="text-slate-300 leading-relaxed text-sm">
                           {group.desc}
                         </p>
                       </div>
@@ -615,7 +615,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Approach Section */}
-      <section className="py-20 bg-gray-800">
+      <section className="py-16 sm:py-20 bg-[#0f172a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
@@ -647,14 +647,14 @@ export default function AboutPage() {
                 },
               ].map((principle, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
-                  <div className="p-6 rounded-xl border-2 border-gray-700 glass-effect">
+                  <div className="p-6 rounded-xl border-2 border-white/10 glass-effect">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="text-trinity-red flex-shrink-0">{principle.icon}</div>
+                      <div className="text-[#ef4444] flex-shrink-0">{principle.icon}</div>
                       <div className="flex-1">
                         <h3 className="text-xl font-heading font-semibold text-white mb-2">
                           {principle.title}
                         </h3>
-                        <p className="text-gray-300 leading-relaxed">
+                        <p className="text-slate-300 leading-relaxed">
                           {principle.description}
                         </p>
                       </div>
@@ -668,7 +668,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Mission Section */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-16 sm:py-20 bg-[#0a1128]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
@@ -677,7 +677,7 @@ export default function AboutPage() {
               </h2>
             </ScrollAnimation>
             <ScrollAnimation delay={0.1}>
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+              <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
                 <p>
                   SeeZee exists because community organizations deserve a technology partner they can trust.
                 </p>
@@ -690,29 +690,29 @@ export default function AboutPage() {
                 <p>We provide:</p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-[#ef4444] mr-3 flex-shrink-0 mt-0.5" />
                     <span>Hands-on technical support (on-site and remote)</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-[#ef4444] mr-3 flex-shrink-0 mt-0.5" />
                     <span>Technology consulting and decision support</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-[#ef4444] mr-3 flex-shrink-0 mt-0.5" />
                     <span>Custom web development and accessible platforms</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-[#ef4444] mr-3 flex-shrink-0 mt-0.5" />
                     <span>Automation and AI solutions that save time</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
                   We're not just a technology vendor.
                 </p>
-                <p className="text-2xl text-trinity-red font-bold">
+                <p className="text-2xl text-[#ef4444] font-bold">
                   We're your community technology partner.
                 </p>
-                <p className="text-lg text-gray-300 pt-4">
+                <p className="text-lg text-slate-300 pt-4">
                   Built on trust, real support, and a genuine commitment to helping your organization succeed.
                 </p>
               </div>
@@ -722,7 +722,7 @@ export default function AboutPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-trinity-red relative overflow-hidden">
+      <section className="py-24 bg-[#ef4444] relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
           <ScrollAnimation>
@@ -736,7 +736,7 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/start"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-trinity-red rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#ef4444] rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
                 >
                   Start Your Project
                   <FiArrowRight className="w-5 h-5" />

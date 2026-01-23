@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "elevated" | "outlined" | "gradient";
+  variant?: "default" | "elevated" | "glass" | "featured" | "outlined";
   padding?: "none" | "sm" | "md" | "lg";
   hover?: boolean;
 }
@@ -18,10 +18,16 @@ export function Card({
   ...props
 }: CardProps) {
   const variantClasses = {
-    default: "bg-slate-900/50 border border-white/10",
-    elevated: "bg-slate-900/80 border border-white/20 shadow-xl",
+    // Default card with subtle background
+    default: "bg-white/5 border border-white/10",
+    // Elevated with more prominent background
+    elevated: "bg-[#1a2332]/50 border border-white/10 backdrop-blur-sm",
+    // Glass morphism effect
+    glass: "bg-white/5 backdrop-blur-md border border-white/10",
+    // Featured/highlighted card with accent border
+    featured: "bg-white/5 border-2 border-[#22d3ee] shadow-lg",
+    // Outline only
     outlined: "bg-transparent border-2 border-white/20",
-    gradient: "bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10",
   };
   
   const paddingClasses = {
@@ -34,10 +40,10 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl transition-all duration-200",
+        "rounded-xl transition-all duration-300",
         variantClasses[variant],
         paddingClasses[padding],
-        hover && "hover:border-white/30 hover:shadow-lg cursor-pointer",
+        hover && "hover:border-white/20 hover:shadow-xl hover:-translate-y-1 cursor-pointer",
         className
       )}
       {...props}

@@ -123,7 +123,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/start"
-                className="hidden sm:inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-[#dc2626] px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white shadow-md hover:bg-[#b91c1c] transition-all min-h-[36px] sm:min-h-[44px]"
+                className="hidden sm:inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-[#ef4444] px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white shadow-md hover:bg-[#dc2626] transition-all min-h-[36px] sm:min-h-[44px]"
               >
                 <Rocket className="h-4 w-4" />
                 <span className="hidden lg:inline">Start a Project</span>

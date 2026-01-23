@@ -9,17 +9,17 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0a1128] text-gray-300 border-t border-[#ef4444]/20">
+    <footer className="bg-[#0a1128] text-slate-300 border-t border-[#ef4444]/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link
               href="/"
-              className="flex items-center mb-4 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md px-2 py-1"
+              className="flex items-center mb-4 focus:outline-none focus:ring-2 focus:ring-[#ef4444] focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md px-2 py-1"
               aria-label="SeeZee Studio Home"
             >
-              <div className="[&_.logo-header-text]:!text-white [&_.logo-header-text]:!opacity-100 [&_.logo-header-capsule]:!bg-trinity-red [&_.logo-header-capsule]:!text-white [&_.logo-header-capsule]:!opacity-100">
+              <div className="[&_.logo-header-text]:!text-white [&_.logo-header-text]:!opacity-100 [&_.logo-header-capsule]:!bg-[#ef4444] [&_.logo-header-capsule]:!text-white [&_.logo-header-capsule]:!opacity-100">
                 <LogoHeader />
               </div>
             </Link>
