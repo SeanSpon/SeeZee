@@ -643,12 +643,41 @@ function LeadCard({
             exit={{ opacity: 0, height: 0 }}
             className="mt-3 pt-3 border-t border-white/10 space-y-2"
           >
+            {/* Quick Contact */}
+            <div className="flex gap-2 mb-2">
+              {lead.email && (
+                <a
+                  href={`mailto:${lead.email}?subject=Following up on your inquiry&body=Hi ${lead.name},%0D%0A%0D%0AThank you for reaching out to SeeZee Studios.%0D%0A%0D%0A`}
+                  className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-xs text-blue-400 transition-colors"
+                >
+                  <Mail className="w-3.5 h-3.5" />
+                  Email
+                </a>
+              )}
+              {lead.phone && (
+                <a
+                  href={`tel:${lead.phone}`}
+                  className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-xs text-emerald-400 transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  Call
+                </a>
+              )}
+            </div>
+            
             <Link
               href={`/admin/pipeline/leads/${lead.id}`}
               className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 text-xs text-white/70 hover:text-white transition-colors"
             >
               <Eye className="w-3.5 h-3.5" />
               View Details
+            </Link>
+            <Link
+              href={`/admin/marketing?email=${encodeURIComponent(lead.email || "")}&name=${encodeURIComponent(lead.name)}`}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 text-xs text-white/70 hover:text-white transition-colors"
+            >
+              <Send className="w-3.5 h-3.5" />
+              Add to Campaign
             </Link>
             <button
               onClick={() => onDelete(lead.id)}
