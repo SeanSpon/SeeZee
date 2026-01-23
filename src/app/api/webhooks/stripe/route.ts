@@ -81,6 +81,14 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
+      case "charge.succeeded":
+        console.log(`[WEBHOOK] Processing charge.succeeded for charge ${(event.data.object as Stripe.Charge).id}`);
+        await handleChargeSucceeded(event.data.object as Stripe.Charge);
+        break;
+      case "payment_intent.succeeded":
+        console.log(`[WEBHOOK] Processing payment_intent.succeeded for payment ${(event.data.object as Stripe.PaymentIntent).id}`);
+        await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+        break;
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
@@ -1641,5 +1649,194 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   } catch (error) {
     console.error("Error handling subscription.deleted:", error);
     throw error;
+  }
+}
+
+/**
+ * Handle charge.succeeded event
+ * Sends receipt email for direct charges that may not go through checkout sessions
+ */
+async function handleChargeSucceeded(charge: Stripe.Charge) {
+  try {
+    // Skip if this charge is already associated with an invoice (will be handled by invoice.paid)
+    if (charge.invoice) {
+      console.log(`[WEBHOOK] Charge ${charge.id} is associated with invoice, skipping (handled by invoice.paid)`);
+      return;
+    }
+
+    // Skip if we've already processed this payment via checkout session
+    const existingPayment = await prisma.payment.findFirst({
+      where: { stripeChargeId: charge.id },
+    });
+
+    if (existingPayment) {
+      console.log(`[WEBHOOK] Charge ${charge.id} already processed, skipping receipt`);
+      return;
+    }
+
+    // Get customer email
+    let customerEmail: string | null = null;
+    let customerName: string | null = null;
+
+    if (charge.customer) {
+      const customer = await stripe.customers.retrieve(charge.customer as string);
+      if (!customer.deleted) {
+        customerEmail = customer.email || null;
+        customerName = customer.name || null;
+      }
+    }
+
+    // Fall back to receipt_email if available
+    if (!customerEmail && charge.receipt_email) {
+      customerEmail = charge.receipt_email;
+    }
+
+    // Fall back to billing details
+    if (!customerEmail && charge.billing_details?.email) {
+      customerEmail = charge.billing_details.email;
+    }
+    if (!customerName && charge.billing_details?.name) {
+      customerName = charge.billing_details.name;
+    }
+
+    if (!customerEmail) {
+      console.warn(`[WEBHOOK] No customer email found for charge ${charge.id}, skipping receipt`);
+      return;
+    }
+
+    // Determine description from charge metadata or description
+    const description = charge.description || 
+      (charge.metadata?.description) || 
+      'Payment';
+
+    // Create a mock session for sendReceiptEmail
+    const mockSession = {
+      id: charge.id,
+      amount_total: charge.amount,
+      currency: charge.currency,
+      customer_email: customerEmail,
+      customer: charge.customer as string | undefined,
+    } as Stripe.Checkout.Session;
+
+    await sendReceiptEmail(mockSession, 'invoice', {
+      description,
+      customerName: customerName || undefined,
+      customerEmail,
+    });
+
+    console.log(`[WEBHOOK] Receipt email sent for charge ${charge.id} to ${customerEmail}`);
+
+    // Create payment record to track this
+    await prisma.payment.create({
+      data: {
+        amount: new Prisma.Decimal(charge.amount / 100),
+        currency: charge.currency.toUpperCase(),
+        status: 'COMPLETED',
+        method: charge.payment_method_details?.type || 'card',
+        stripeChargeId: charge.id,
+        stripePaymentId: charge.payment_intent as string || null,
+      },
+    });
+
+    console.log(`[WEBHOOK] Payment record created for charge ${charge.id}`);
+  } catch (error) {
+    console.error("[WEBHOOK] Error handling charge.succeeded:", error);
+    // Don't throw - we don't want to fail the webhook for receipt email issues
+  }
+}
+
+/**
+ * Handle payment_intent.succeeded event
+ * Sends receipt email for payment intents that may not trigger other events
+ */
+async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    // Skip if this is associated with an invoice (will be handled by invoice.paid)
+    if (paymentIntent.invoice) {
+      console.log(`[WEBHOOK] PaymentIntent ${paymentIntent.id} is associated with invoice, skipping (handled by invoice.paid)`);
+      return;
+    }
+
+    // Skip if we've already processed this payment
+    const existingPayment = await prisma.payment.findFirst({
+      where: { stripePaymentId: paymentIntent.id },
+    });
+
+    if (existingPayment) {
+      console.log(`[WEBHOOK] PaymentIntent ${paymentIntent.id} already processed, skipping receipt`);
+      return;
+    }
+
+    // Get customer email
+    let customerEmail: string | null = null;
+    let customerName: string | null = null;
+
+    if (paymentIntent.customer) {
+      const customer = await stripe.customers.retrieve(paymentIntent.customer as string);
+      if (!customer.deleted) {
+        customerEmail = customer.email || null;
+        customerName = customer.name || null;
+      }
+    }
+
+    // Fall back to receipt_email if available
+    if (!customerEmail && paymentIntent.receipt_email) {
+      customerEmail = paymentIntent.receipt_email;
+    }
+
+    if (!customerEmail) {
+      console.warn(`[WEBHOOK] No customer email found for payment_intent ${paymentIntent.id}, skipping receipt`);
+      return;
+    }
+
+    // Determine description from metadata
+    const description = paymentIntent.description || 
+      (paymentIntent.metadata?.description) || 
+      'Payment';
+
+    // Determine receipt type from metadata
+    let receiptType: ReceiptType = 'invoice';
+    if (paymentIntent.metadata?.type === 'hour-pack') {
+      receiptType = 'hour-pack';
+    } else if (paymentIntent.metadata?.type === 'subscription' || paymentIntent.metadata?.type === 'maintenance-plan') {
+      receiptType = 'maintenance-plan';
+    } else if (paymentIntent.metadata?.type === 'deposit') {
+      receiptType = 'deposit';
+    }
+
+    // Create a mock session for sendReceiptEmail
+    const mockSession = {
+      id: paymentIntent.id,
+      amount_total: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      customer_email: customerEmail,
+      customer: paymentIntent.customer as string | undefined,
+    } as Stripe.Checkout.Session;
+
+    await sendReceiptEmail(mockSession, receiptType, {
+      description,
+      customerName: customerName || undefined,
+      customerEmail,
+      hours: paymentIntent.metadata?.hours ? parseInt(paymentIntent.metadata.hours) : undefined,
+      expirationDays: paymentIntent.metadata?.expirationDays ? parseInt(paymentIntent.metadata.expirationDays) : undefined,
+    });
+
+    console.log(`[WEBHOOK] Receipt email sent for payment_intent ${paymentIntent.id} to ${customerEmail}`);
+
+    // Create payment record to track this
+    await prisma.payment.create({
+      data: {
+        amount: new Prisma.Decimal(paymentIntent.amount / 100),
+        currency: paymentIntent.currency.toUpperCase(),
+        status: 'COMPLETED',
+        method: 'stripe',
+        stripePaymentId: paymentIntent.id,
+      },
+    });
+
+    console.log(`[WEBHOOK] Payment record created for payment_intent ${paymentIntent.id}`);
+  } catch (error) {
+    console.error("[WEBHOOK] Error handling payment_intent.succeeded:", error);
+    // Don't throw - we don't want to fail the webhook for receipt email issues
   }
 }
