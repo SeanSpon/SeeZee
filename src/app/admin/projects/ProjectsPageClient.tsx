@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { DataTable, type DataTableColumn } from "@/components/table/DataTable";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { EnhancedStatCard } from "@/components/admin/shared/EnhancedStatCard";
-import { FiDollarSign, FiCalendar, FiUsers, FiTrash2, FiEdit, FiPlus, FiTrendingUp } from "react-icons/fi";
+import { FiDollarSign, FiCalendar, FiUsers, FiTrash2, FiEdit, FiPlus, FiTrendingUp, FiUserPlus } from "react-icons/fi";
 import { CreateProjectModal } from "@/components/admin/CreateProjectModal";
 import type { CurrentUser } from "@/lib/auth/requireRole";
 
@@ -195,13 +196,22 @@ export function ProjectsPageClient({ user, initialData }: ProjectsPageClientProp
             </p>
             <h1 className="text-3xl font-semibold text-white">Projects</h1>
           </div>
-          <button
-            onClick={handleCreateProject}
-            className="inline-flex items-center gap-2 rounded-lg bg-white/[0.08] border border-white/[0.08] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/[0.12] hover:border-white/[0.15]"
-          >
-            <FiPlus className="h-4 w-4" />
-            New Project
-          </button>
+<div className="flex items-center gap-3">
+            <Link
+              href="/admin/projects/create"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-emerald-500/40 bg-emerald-500/10 px-5 py-2.5 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500 hover:text-white hover:shadow-large hover:border-emerald-500"
+            >
+              <FiUserPlus className="h-4 w-4" />
+              Create from Lead
+            </Link>
+            <button
+              onClick={handleCreateProject}
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-trinity-red/40 bg-trinity-red/10 px-5 py-2.5 text-sm font-medium text-trinity-red transition-all hover:bg-trinity-red hover:text-white hover:shadow-large hover:border-trinity-red"
+            >
+              <FiPlus className="h-4 w-4" />
+              New Project
+            </button>
+          </div>
         </div>
         <p className="max-w-2xl text-sm text-slate-400 leading-relaxed">
           Portfolio view of every active build, including assigned owners and projected revenue impact.
