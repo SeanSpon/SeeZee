@@ -43,6 +43,9 @@ export async function GET(req: NextRequest) {
       Accept: "application/vnd.github.v3+json",
     };
 
+    // Check if token is configured
+    const isConfigured = !!githubToken;
+    
     if (githubToken) {
       headers.Authorization = `Bearer ${githubToken}`;
     }
@@ -50,13 +53,27 @@ export async function GET(req: NextRequest) {
     // Fetch user events
     const eventsRes = await fetch(
       `https://api.github.com/users/${username}/events?per_page=${per_page}`,
-      { headers }
+      { headers, next: { revalidate: 60 } } // Cache for 60 seconds
     );
 
     if (!eventsRes.ok) {
+      const status = eventsRes.status;
+      let errorMessage = "Failed to fetch GitHub events";
+      
+      if (status === 403) {
+        errorMessage = isConfigured 
+          ? "GitHub API rate limit exceeded" 
+          : "GitHub API rate limit exceeded. Add GITHUB_TOKEN to increase limits.";
+      } else if (status === 404) {
+        errorMessage = `GitHub user '${username}' not found`;
+      }
+      
       return NextResponse.json({
         events: [],
-        error: "Failed to fetch GitHub events",
+        repos: [],
+        configured: isConfigured,
+        error: errorMessage,
+        username,
       });
     }
 
@@ -117,7 +134,7 @@ export async function GET(req: NextRequest) {
     // Fetch repos
     const reposRes = await fetch(
       `https://api.github.com/users/${username}/repos?sort=pushed&per_page=10`,
-      { headers }
+      { headers, next: { revalidate: 60 } }
     );
 
     let repos: any[] = [];
@@ -140,6 +157,10 @@ export async function GET(req: NextRequest) {
       events: transformedEvents,
       repos,
       username,
+      configured: isConfigured,
+      message: !isConfigured && transformedEvents.length === 0 
+        ? "Add GITHUB_TOKEN to your environment for full Git integration" 
+        : undefined,
     });
   } catch (error) {
     console.error("[GET /api/integrations/github/activity]", error);

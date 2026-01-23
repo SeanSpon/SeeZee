@@ -308,9 +308,19 @@ export default function CommandCenterPage() {
               new Date(e.createdAt).toDateString() === today
           ).length;
           setStats(prev => ({ ...prev, commitsToday: todayCommits }));
+          
+          // Update GitHub service status
+          if (!gitData.configured) {
+            setServices(prev => prev.map(s => 
+              s.name === "GitHub" ? { ...s, status: "degraded" as const } : s
+            ));
+          }
         }
       } catch (e) {
         console.error("Failed to fetch GitHub data:", e);
+        setServices(prev => prev.map(s => 
+          s.name === "GitHub" ? { ...s, status: "down" as const } : s
+        ));
       }
 
       try {
@@ -325,9 +335,19 @@ export default function CommandCenterPage() {
             (d: Deployment) => d.state === "READY"
           ).length;
           setStats(prev => ({ ...prev, activeDeployments: activeCount }));
+          
+          // Update Vercel service status if not configured
+          if (vercelData.error) {
+            setServices(prev => prev.map(s => 
+              s.name === "Vercel" ? { ...s, status: "degraded" as const } : s
+            ));
+          }
         }
       } catch (e) {
         console.error("Failed to fetch Vercel data:", e);
+        setServices(prev => prev.map(s => 
+          s.name === "Vercel" ? { ...s, status: "down" as const } : s
+        ));
       }
 
       try {
@@ -349,9 +369,18 @@ export default function CommandCenterPage() {
           if (stripeData.metrics) {
             setStats(prev => ({ ...prev, mrr: stripeData.metrics.mrr }));
           }
+          // Update Stripe service status
+          if (!stripeData.configured) {
+            setServices(prev => prev.map(s => 
+              s.name === "Stripe" ? { ...s, status: "degraded" as const } : s
+            ));
+          }
         }
       } catch (e) {
         console.error("Failed to fetch Stripe data:", e);
+        setServices(prev => prev.map(s => 
+          s.name === "Stripe" ? { ...s, status: "down" as const } : s
+        ));
       }
 
       setLoading(false);
@@ -602,8 +631,11 @@ export default function CommandCenterPage() {
                   Loading Git activity...
                 </div>
               ) : gitEvents.length === 0 ? (
-                <div className="px-4 py-6 text-center text-white/40 text-sm">
-                  No recent Git activity
+                <div className="px-4 py-6 text-center">
+                  <p className="text-white/40 text-sm mb-2">No recent Git activity</p>
+                  <p className="text-white/30 text-xs">
+                    Add <code className="bg-white/10 px-1 rounded">GITHUB_TOKEN</code> to your environment for full integration
+                  </p>
                 </div>
               ) : (
                 gitEvents.slice(0, 10).map((event) => (
@@ -931,9 +963,9 @@ function LinkSection({
 
 function ServiceStatusDisplay({ name, status }: { name: string; status: "operational" | "degraded" | "down" }) {
   const statusConfig = {
-    operational: { text: "Operational", color: "text-emerald-400", dot: "bg-emerald-400" },
-    degraded: { text: "Degraded", color: "text-amber-400", dot: "bg-amber-400" },
-    down: { text: "Down", color: "text-red-400", dot: "bg-red-400" },
+    operational: { text: "Connected", color: "text-emerald-400", dot: "bg-emerald-400" },
+    degraded: { text: "Setup Required", color: "text-amber-400", dot: "bg-amber-400" },
+    down: { text: "Error", color: "text-red-400", dot: "bg-red-400" },
   };
   
   const config = statusConfig[status];
@@ -945,7 +977,7 @@ function ServiceStatusDisplay({ name, status }: { name: string; status: "operati
         <span className={`text-xs ${config.color}`}>
           {config.text}
         </span>
-        <div className={`w-2 h-2 rounded-full ${config.dot}`} />
+        <div className={`w-2 h-2 rounded-full ${config.dot} ${status === "operational" ? "" : "animate-pulse"}`} />
       </div>
     </div>
   );
