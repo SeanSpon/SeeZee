@@ -18,9 +18,9 @@ type Task = {
   description: string | null;
   status: string;
   priority: string;
-  dueDate: Date | null;
-  completedAt: Date | null;
-  createdAt: Date;
+  dueDate: Date | string | null;  // Can be string from RSC serialization
+  completedAt: Date | string | null;  // Can be string from RSC serialization
+  createdAt: Date | string;  // Can be string from RSC serialization
   assignedTo: {
     id: string;
     name: string | null;
@@ -72,7 +72,15 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
     dueDate: "",
   });
 
+  // Helper to ensure date is in ISO string format
+  // Dates are serialized to strings by toPlain() on the server, but may be Date objects during client-side updates
+  const ensureISOString = (date: Date | string): string => {
+    return typeof date === 'string' ? date : date.toISOString();
+  };
+
   // Map tasks to kanban format
+  // Note: Dates come as strings from RSC (React Server Component) serialization via toPlain().
+  // We handle both Date and string types to support server-serialized data and client-side updates.
   const kanbanTasks = tasks.map((task) => ({
     ...task,
     column: task.status === "TODO" ? "todo" : 
@@ -89,8 +97,8 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       name: task.assignedTo.name,
       image: null, // Map email to image if needed, or set to null
     } : null,
-    dueDate: task.dueDate ? task.dueDate.toISOString() : null,
-    createdAt: task.createdAt.toISOString(),
+    dueDate: task.dueDate ? ensureISOString(task.dueDate) : null,
+    createdAt: ensureISOString(task.createdAt),
     dependencies: [],
     attachments: [],
   }));
