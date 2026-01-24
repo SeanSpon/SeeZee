@@ -12,6 +12,7 @@ import { revalidatePath } from "next/cache";
 import { createActivity } from "./activity";
 import { TodoStatus, TodoPriority, UserRole } from "@prisma/client";
 import { auth } from "@/auth";
+import { toPlain } from "@/lib/serialize";
 
 // Type aliases for backward compatibility
 export type TaskStatus = TodoStatus;
@@ -129,7 +130,10 @@ export async function getTasks(filter?: {
       ],
     });
 
-    return { success: true, tasks };
+    // Serialize tasks to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
+    const serializedTasks = toPlain(tasks);
+
+    return { success: true, tasks: serializedTasks };
   } catch (error) {
     console.error("Failed to fetch tasks:", error);
     return { success: false, error: "Failed to fetch tasks", tasks: [] };
@@ -183,7 +187,10 @@ export async function getTasksByRole(role: UserRole, projectId?: string) {
       ],
     });
 
-    return { success: true, tasks };
+    // Serialize tasks to ensure all fields are JSON-safe
+    const serializedTasks = toPlain(tasks);
+
+    return { success: true, tasks: serializedTasks };
   } catch (error) {
     console.error("Failed to fetch tasks by role:", error);
     return { success: false, error: "Failed to fetch tasks by role", tasks: [] };
