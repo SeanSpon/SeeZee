@@ -55,7 +55,7 @@ export default function AVisionForYouCaseStudyPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-2xl text-[#22d3ee] mb-2"
               >
-                Recovery Center Management Platform
+                Nonprofit Operations & Program Management Platform
               </motion.p>
 
               {/* Location */}
@@ -76,8 +76,8 @@ export default function AVisionForYouCaseStudyPage() {
                 className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto mb-6"
               >
                 A comprehensive digital platform helping a Louisville nonprofit 
-                serve 500+ community members through four distinct recovery pathways — 
-                from residential treatment to intensive outpatient programs.
+                support 500+ community members through four distinct program pathways — 
+                from residential to intensive outpatient programs.
               </motion.p>
 
               {/* Status Line */}
@@ -104,14 +104,19 @@ export default function AVisionForYouCaseStudyPage() {
               </h2>
               <div className="border-l-4 border-[#22d3ee] bg-gradient-to-r from-[#22d3ee]/10 to-transparent pl-6 py-6 rounded-r max-w-3xl mx-auto mb-4">
                 <p className="text-xl italic text-gray-300 leading-relaxed text-left">
-                  "To empower the homeless, addicted, maladjusted, and mentally ill 
+                  "To empower the homeless, individuals facing challenges, and those seeking support 
                   to lead productive lives through housing, education, self-help, 
-                  treatment, or any other available resource."
+                  programs, or any other available resource."
                 </p>
               </div>
               <p className="text-sm text-gray-400">
-                — A Vision For You Recovery
+                — A Vision For You (Client Organization Mission)
               </p>
+              <div className="mt-6 max-w-2xl mx-auto">
+                <p className="text-sm text-cyan-400 italic bg-cyan-500/10 border border-cyan-400/30 rounded-lg p-4">
+                  <strong>Note:</strong> SeeZee Studio does not provide medical, mental health, or recovery services. We design and maintain software platforms for organizations that do.
+                </p>
+              </div>
             </div>
           </ScrollAnimation>
         </div>
@@ -123,7 +128,7 @@ export default function AVisionForYouCaseStudyPage() {
           <div className="max-w-6xl mx-auto">
             <ScrollAnimation>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-                About A Vision For You Recovery
+                About A Vision For You
               </h2>
             </ScrollAnimation>
 
@@ -133,13 +138,12 @@ export default function AVisionForYouCaseStudyPage() {
                 <div className="lg:w-[60%] space-y-6">
                   <p className="text-lg text-gray-300 leading-relaxed">
                     A Vision For You is a Louisville-based 501(c)(3) nonprofit 
-                    organization dedicated to serving individuals struggling with 
-                    homelessness, addiction, mental health challenges, and substance 
-                    abuse disorders.
+                    organization dedicated to serving individuals facing life challenges, 
+                    providing housing, support services, and program pathways.
                   </p>
                   <p className="text-lg text-gray-300 leading-relaxed">
                     Founded on principles of compassion and community support, the 
-                    organization provides multiple pathways to recovery — recognizing 
+                    organization provides multiple pathways — recognizing 
                     that each person's journey is unique and requires different levels 
                     of care and support.
                   </p>
@@ -164,7 +168,7 @@ export default function AVisionForYouCaseStudyPage() {
                           <div className="text-5xl font-bold text-[#b6e41f]">4</div>
                         </div>
                         <div className="text-right">
-                          <div className="text-sm text-gray-400">Recovery Programs</div>
+                          <div className="text-sm text-gray-400">Program Pathways</div>
                         </div>
                       </div>
                       <div className="flex items-center justify-between pb-4 border-b border-white/10">
@@ -198,10 +202,10 @@ export default function AVisionForYouCaseStudyPage() {
           <div className="max-w-6xl mx-auto">
             <ScrollAnimation>
               <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-                Four Recovery Programs
+                Four Program Pathways
               </h2>
               <p className="text-lg text-gray-300 text-center max-w-2xl mx-auto mb-12">
-                A Vision For You offers multiple recovery pathways, each designed 
+                A Vision For You offers multiple program pathways, each designed 
                 to meet people where they are in their journey.
               </p>
             </ScrollAnimation>
@@ -214,8 +218,8 @@ export default function AVisionForYouCaseStudyPage() {
                   <h3 className="text-xl font-bold text-white mb-2">Surrender Program</h3>
                   <p className="text-sm text-[#22d3ee] mb-3">6-9 Month Residential</p>
                   <p className="text-base text-gray-300 leading-relaxed">
-                    Long-term residential treatment providing structure, community, 
-                    and intensive support for sustainable recovery.
+                    Long-term residential program providing structure, community, 
+                    and intensive support for sustainable progress.
                   </p>
                 </div>
               </ScrollAnimation>
@@ -238,10 +242,10 @@ export default function AVisionForYouCaseStudyPage() {
                 <div className="bg-[#7f3d8b]/10 border border-[#7f3d8b]/30 rounded-xl p-6 hover:bg-[#7f3d8b]/20 transition-all duration-300">
                   <div className="text-5xl mb-4 text-center">⛪</div>
                   <h3 className="text-xl font-bold text-white mb-2">Moving Mountains Ministry</h3>
-                  <p className="text-sm text-[#22d3ee] mb-3">Faith-Based Recovery</p>
+                  <p className="text-sm text-[#22d3ee] mb-3">Faith-Based Program</p>
                   <p className="text-base text-gray-300 leading-relaxed">
-                    Christ-centered recovery program integrating spiritual principles 
-                    with evidence-based treatment approaches.
+                    Christ-centered program integrating spiritual principles 
+                    with evidence-based approaches.
                   </p>
                 </div>
               </ScrollAnimation>
@@ -253,8 +257,8 @@ export default function AVisionForYouCaseStudyPage() {
                   <h3 className="text-xl font-bold text-white mb-2">Women's Program</h3>
                   <p className="text-sm text-[#22d3ee] mb-3">Specialized Care</p>
                   <p className="text-base text-gray-300 leading-relaxed">
-                    Gender-specific programming addressing unique challenges faced 
-                    by women in recovery, including trauma-informed care.
+                    Gender-specific programming addressing unique challenges, 
+                    including trauma-informed care.
                   </p>
                 </div>
               </ScrollAnimation>
@@ -326,7 +330,7 @@ export default function AVisionForYouCaseStudyPage() {
                 {
                   icon: '📋',
                   title: 'Client Assessment System',
-                  description: 'Interactive questionnaire matching individuals to appropriate recovery programs based on their needs, circumstances, and goals.'
+                  description: 'Interactive questionnaire matching individuals to appropriate programs based on their needs, circumstances, and goals.'
                 },
                 {
                   icon: '📅',
@@ -513,7 +517,7 @@ export default function AVisionForYouCaseStudyPage() {
             {/* Impact Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {[
-                { number: '500+', label: 'Community Members', desc: 'Active users across four recovery programs' },
+                { number: '500+', label: 'Community Members', desc: 'Active users across four program pathways' },
                 { number: '24/7', label: 'Donation Acceptance', desc: 'Automated processing and acknowledgment' },
                 { number: '85%', label: 'Meeting Attendance Increase', desc: 'Through automated reminder system' },
                 { number: '100%', label: 'Staff Time Saved', desc: 'On manual administrative tasks' }
@@ -538,7 +542,7 @@ export default function AVisionForYouCaseStudyPage() {
                     'Accept donations 24/7 with automated acknowledgment',
                     'Track outcomes for board reporting and grant applications',
                     'Reduce meeting no-shows through automated reminders',
-                    'Match clients to optimal recovery pathways',
+                    'Match clients to optimal program pathways',
                     'Build community through shared success stories',
                     'Generate impact reports for stakeholders'
                   ].map((outcome, idx) => (
@@ -623,7 +627,7 @@ export default function AVisionForYouCaseStudyPage() {
                 <p className="text-white font-semibold pt-4 border-t border-gray-700">
                   This isn't just a website — it's a digital infrastructure enabling 
                   a nonprofit to scale their mission while maintaining the personal 
-                  touch that makes recovery work effective.
+                  touch that makes their work effective.
                 </p>
               </div>
             </ScrollAnimation>
@@ -640,8 +644,8 @@ export default function AVisionForYouCaseStudyPage() {
                 Building Something for Your Community?
               </h2>
               <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                Whether you're a nonprofit, recovery center, or community 
-                organization — we build platforms that scale your impact.
+                Whether you're a nonprofit, community service organization, or social impact 
+                initiative — we build platforms that scale your impact.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link

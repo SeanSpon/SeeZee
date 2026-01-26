@@ -286,7 +286,7 @@ export default function ServicesPage() {
                     Donation Systems That Actually Work
                   </h2>
                   <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                    This is the live donation page for A Vision For You Recovery. 
+                    This is the live donation page for A Vision For You. 
                     It processes real transactions, calculates donor impact in real-time, 
                     and handles both one-time and recurring donations.
                   </p>

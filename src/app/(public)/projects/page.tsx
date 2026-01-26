@@ -84,7 +84,7 @@ export default function ProjectsPage() {
                 
                 {/* Subtitle */}
                 <p className="text-xl text-cyan-300 mb-2">
-                  Recovery Center Management Platform
+                  Nonprofit Operations & Program Management Platform
                 </p>
                 
                 {/* Location */}
@@ -96,10 +96,10 @@ export default function ProjectsPage() {
               {/* SECTION 2: MISSION */}
               <div className="bg-black/30 border-l-4 border-cyan-400 p-8">
                 <p className="text-lg text-white/90 italic leading-relaxed">
-                  "To empower the homeless, addicted, maladjusted, and mentally ill to lead productive lives through housing, education, self-help, treatment, or any other available resource."
+                  "To empower the homeless, individuals facing challenges, and those seeking support to lead productive lives through housing, education, self-help, programs, or any other available resource."
                 </p>
                 <p className="text-sm text-white/60 mt-2">
-                  — A Vision For You Recovery
+                  — A Vision For You (Client Organization)
                 </p>
               </div>
 
@@ -113,11 +113,15 @@ export default function ProjectsPage() {
                       About the Project
                     </h3>
                     <p className="text-base text-gray-300 leading-relaxed mb-6">
-                      A comprehensive recovery center management system serving 500+ individuals annually. Built for A Vision For You, a Louisville-based nonprofit providing four distinct recovery pathways with housing, treatment, and community support.
+                      A comprehensive nonprofit operations platform supporting 500+ community members annually. Built for A Vision For You, a Louisville-based nonprofit providing four distinct program pathways with housing, education, and community support.
+                    </p>
+                    
+                    <p className="text-sm text-cyan-400 italic mb-6 bg-cyan-500/10 border border-cyan-400/30 rounded-lg p-4">
+                      <strong>Note:</strong> SeeZee Studio does not provide medical, mental health, or recovery services. We design and maintain software platforms for organizations that do.
                     </p>
                     
                     <h4 className="text-lg font-bold text-white mb-4">
-                      Four Recovery Programs
+                      Four Program Pathways
                     </h4>
                     
                     {/* Programs Grid */}
@@ -125,7 +129,7 @@ export default function ProjectsPage() {
                       {[
                         { icon: '🏠', name: 'Surrender Program', duration: '6-9 Month Residential' },
                         { icon: '🧠', name: 'MindBodySoul IOP', duration: 'Intensive Outpatient' },
-                        { icon: '⛪', name: 'Moving Mountains', duration: 'Faith-Based Recovery' },
+                        { icon: '⛪', name: 'Moving Mountains', duration: 'Faith-Based Program' },
                         { icon: '💜', name: "Women's Program", duration: 'Specialized Care' }
                       ].map((program, idx) => (
                         <div key={idx} className="bg-white/5 p-3 rounded-lg border border-white/10">
@@ -194,9 +198,9 @@ export default function ProjectsPage() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {[
-                    { number: '500+', label: 'Community Members', sublabel: 'Served annually' },
+                    { number: '500+', label: 'Community Members', sublabel: 'Operations supported annually' },
                     { number: '24/7', label: 'Donation Processing', sublabel: 'Automated acknowledgment' },
-                    { number: '4', label: 'Recovery Programs', sublabel: 'Distinct pathways' },
+                    { number: '4', label: 'Program Pathways', sublabel: 'Distinct offerings' },
                     { number: '25', label: 'Database Models', sublabel: 'Full platform architecture' }
                   ].map((stat, idx) => (
                     <div key={idx} className="text-center">
@@ -287,7 +291,7 @@ export default function ProjectsPage() {
                 
                 {/* Subtitle */}
                 <p className="text-xl text-cyan-300">
-                  Community Platform for Mental Health & Recovery Organizations
+                  Community Resource & Accessibility Platform
                 </p>
               </div>
 
@@ -298,7 +302,7 @@ export default function ProjectsPage() {
                   {/* LEFT - Description */}
                   <div>
                     <p className="text-base text-gray-300 leading-relaxed mb-4">
-                      Big Red Bus is a Louisville-based nonprofit initiative using a physical bus to bring mental health resources, recovery support, and community connection directly to those who need it.
+                      Big Red Bus is a Louisville-based nonprofit initiative using a physical bus to bring community resources, accessibility support, and connection directly to those who need it.
                     </p>
                     <p className="text-base text-gray-300 leading-relaxed">
                       For our FBLA Coding & Programming project, we built a digital platform to help organizations like Big Red Bus connect with their communities.

@@ -57,7 +57,7 @@ export default function BigRedBusCaseStudyPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-2xl text-gray-300 leading-relaxed mb-4"
               >
-                Digital Platform Supporting Mental Health & Recovery Organizations
+                Community Resource & Accessibility Platform
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -65,8 +65,7 @@ export default function BigRedBusCaseStudyPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-lg text-gray-400 leading-relaxed mb-8"
               >
-                Big Red Bus is a Louisville nonprofit bringing mental health and recovery 
-                resources to the community through a physical bus and grassroots outreach. 
+                Big Red Bus is a Louisville nonprofit bringing community resources and accessibility support to the community through a physical bus and grassroots outreach. 
                 We built a digital platform to extend their reach and help similar 
                 organizations connect with those they serve.
               </motion.p>
@@ -304,7 +303,7 @@ export default function BigRedBusCaseStudyPage() {
             <ScrollAnimation delay={0.1}>
               <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  Community organizations doing mental health and recovery work face several challenges:
+                  Community organizations providing support services face several challenges:
                 </p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
@@ -559,7 +558,7 @@ export default function BigRedBusCaseStudyPage() {
                     <div>
                       <span className="text-white font-semibold">Start with a real community need</span>
                       <p className="text-gray-400 mt-1">
-                        Inspired by an actual Louisville nonprofit doing mental health outreach
+                        Inspired by an actual Louisville nonprofit doing community outreach
                       </p>
                     </div>
                   </li>
