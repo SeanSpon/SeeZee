@@ -831,17 +831,17 @@ export default function HomePage() {
                     Big Red Bus
                   </h2>
                   <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-4 sm:mb-6">
-                    Big Red Bus needed a platform that wouldn't overwhelm users dealing with mental health and brain health challenges. We designed everything for clarity first — not complexity.
+                    Big Red Bus needed a platform that wouldn't overwhelm users with cognitive accessibility needs. We designed everything for clarity first — not complexity.
                   </p>
                   <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-4 sm:mb-6">
-                    A mental health and neuro-inclusive community platform connecting people with brain health challenges to resources, support groups, and community events.
+                    A community resource and accessibility-focused platform connecting people to resources, support groups, and community events.
                   </p>
                   <ul className="space-y-3 mb-8">
                     {[
                       'Cognitive accessibility design (WCAG AA+)',
                       'Support group directory & scheduling',
                       'Event calendar with reminders',
-                      'Resource library for mental health',
+                      'Community resource library',
                       'Simple navigation, large fonts, minimal distractions'
                     ].map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3 text-gray-300">
@@ -867,11 +867,11 @@ export default function HomePage() {
                       height={450}
                       className="w-full h-auto"
                       priority
-                      caption="Big Red Bus — Mental Health Community Platform"
+                      caption="Big Red Bus — Community Resource Platform"
                     />
                   </div>
                   <p className="text-center text-gray-400 text-sm mt-4 font-semibold">
-                    Big Red Bus — Mental Health Community Platform
+                    Big Red Bus — Community Resource Platform
                   </p>
                 </div>
               </div>
@@ -894,17 +894,17 @@ export default function HomePage() {
                     <div className="rounded-2xl overflow-hidden border-2 border-indigo-500/40 shadow-2xl hover:shadow-indigo-500/30 transition-all duration-300">
                       <ImageLightbox 
                         src="/avfy-home.png" 
-                        alt="A Vision For You Recovery Platform"
+                        alt="A Vision For You Platform"
                         width={800}
                         height={600}
                         className="w-full h-auto"
-                        caption="A Vision For You Recovery Platform - Homepage"
+                        caption="A Vision For You Platform - Homepage"
                       />
                     </div>
                     {/* Mini Gallery */}
                     <div className="grid grid-cols-3 gap-3">
                       <div className="rounded-lg overflow-hidden border border-indigo-500/30">
-                        <ImageLightbox src="/avfy-programs.png" alt="Programs" width={300} height={200} className="w-full h-auto" caption="Recovery Programs Directory" />
+                        <ImageLightbox src="/avfy-programs.png" alt="Programs" width={300} height={200} className="w-full h-auto" caption="Programs Directory" />
                       </div>
                       <div className="rounded-lg overflow-hidden border border-indigo-500/30">
                         <ImageLightbox src="/avfy-donate.png" alt="Donation System" width={300} height={200} className="w-full h-auto" caption="Stripe Donation System" />
@@ -923,18 +923,18 @@ export default function HomePage() {
                     <span>Launching December 20, 2024</span>
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
-                    A Vision For You Recovery
+                    A Vision For You
                   </h2>
                   <p className="text-xl text-[#b6e41f] font-mono mb-4">
                     Louisville, Kentucky 501(c)(3)
                   </p>
                   <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                    A comprehensive recovery center management platform serving 500+ individuals annually. We built a full-stack system with Stripe donations, program matching, meeting RSVPs, and automated email workflows.
+                    A comprehensive nonprofit operations platform supporting 500+ community members annually. We built a full-stack system with Stripe donations, program matching, meeting RSVPs, and automated email workflows.
                   </p>
                   <ul className="space-y-3 mb-8">
                     {[
                       'Stripe payment system with impact visualization',
-                      'Four recovery programs with detailed pathways',
+                      'Four program pathways with detailed information',
                       'Department-routed contact system',
                       'Meeting management & automated reminders',
                       'Real-time donation impact calculator',
