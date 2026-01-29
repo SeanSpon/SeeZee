@@ -90,6 +90,8 @@ export async function getTasks(filter?: {
       where.projectId = filter.projectId;
     }
 
+    console.log("[getTasks] Query where clause:", JSON.stringify(where));
+    
     const tasks = await db.todo.findMany({
       where,
       include: {
@@ -122,8 +124,12 @@ export async function getTasks(filter?: {
       ],
     });
 
+    console.log("[getTasks] Found", tasks.length, "tasks");
+
     // Serialize tasks to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
     const serializedTasks = toPlain(tasks);
+
+    console.log("[getTasks] Serialized", serializedTasks.length, "tasks");
 
     return { success: true, tasks: serializedTasks };
   } catch (error) {

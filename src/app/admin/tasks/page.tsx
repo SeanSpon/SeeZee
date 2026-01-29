@@ -15,8 +15,16 @@ export default async function TasksPage() {
     getTaskStats(),
   ]);
 
+  console.log("[TasksPage] tasksResult.success:", tasksResult.success);
+  console.log("[TasksPage] tasksResult.tasks count:", tasksResult.tasks?.length ?? 0);
+  if (!tasksResult.success) {
+    console.log("[TasksPage] tasksResult.error:", (tasksResult as any).error);
+  }
+
   const tasks = tasksResult.success ? tasksResult.tasks : [];
   const stats = statsResult.success ? statsResult.stats : { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 };
+
+  console.log("[TasksPage] Passing", tasks.length, "tasks to TasksClient");
 
   return (
     <div className="space-y-6">

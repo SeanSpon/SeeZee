@@ -59,6 +59,10 @@ const priorityColors: Record<string, string> = {
 export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const router = useRouter();
   const [tasks, setTasks] = useState(initialTasks);
+  
+  // Debug logging
+  console.log("[TasksClient] initialTasks count:", initialTasks?.length ?? 0);
+  console.log("[TasksClient] stats:", stats);
   const [filter, setFilter] = useState<"all" | "TODO" | "IN_PROGRESS" | "DONE">("all");
   const [view, setView] = useState<"table" | "kanban">("kanban");
   const [updating, setUpdating] = useState<string | null>(null);
