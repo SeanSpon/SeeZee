@@ -91,6 +91,12 @@ export async function getTasks(filter?: {
     }
 
     console.log("[getTasks] Query where clause:", JSON.stringify(where));
+    console.log("[getTasks] User role:", user.role);
+    console.log("[getTasks] Filter showAll:", filter?.showAll);
+    
+    // First, let's check raw count
+    const rawCount = await db.todo.count({ where });
+    console.log("[getTasks] Raw count with where clause:", rawCount);
     
     const tasks = await db.todo.findMany({
       where,
@@ -125,15 +131,38 @@ export async function getTasks(filter?: {
     });
 
     console.log("[getTasks] Found", tasks.length, "tasks");
+    if (tasks.length > 0) {
+      console.log("[getTasks] First task raw:", JSON.stringify(tasks[0], (key, value) => 
+        value instanceof Date ? value.toISOString() : value
+      ));
+    }
 
-    // Serialize tasks to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
-    const serializedTasks = toPlain(tasks);
+    // Use direct JSON serialization to avoid any toPlain issues
+    const serializedTasks = JSON.parse(JSON.stringify(tasks, (key, value) => {
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+      // Handle Decimal from Prisma
+      if (value && typeof value === 'object' && value.constructor?.name === 'Decimal') {
+        return value.toString();
+      }
+      if (typeof value === 'bigint') {
+        return value.toString();
+      }
+      return value;
+    }));
 
-    console.log("[getTasks] Serialized", serializedTasks.length, "tasks");
+    console.log("[getTasks] Serialized", serializedTasks?.length ?? 'null/undefined', "tasks");
+    if (serializedTasks && serializedTasks.length > 0) {
+      console.log("[getTasks] First serialized task:", JSON.stringify(serializedTasks[0]));
+    }
 
     return { success: true, tasks: serializedTasks };
   } catch (error) {
-    console.error("Failed to fetch tasks:", error);
+    console.error("[getTasks] FAILED:", error);
+    console.error("[getTasks] Error name:", (error as Error)?.name);
+    console.error("[getTasks] Error message:", (error as Error)?.message);
+    console.error("[getTasks] Error stack:", (error as Error)?.stack);
     return { success: false, error: "Failed to fetch tasks", tasks: [] };
   }
 }

@@ -15,19 +15,27 @@ export default async function TasksPage() {
     getTaskStats(),
   ]);
 
-  console.log("[TasksPage] tasksResult.success:", tasksResult.success);
-  console.log("[TasksPage] tasksResult.tasks count:", tasksResult.tasks?.length ?? 0);
-  if (!tasksResult.success) {
-    console.log("[TasksPage] tasksResult.error:", (tasksResult as any).error);
-  }
-
   const tasks = tasksResult.success ? tasksResult.tasks : [];
   const stats = statsResult.success ? statsResult.stats : { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 };
 
-  console.log("[TasksPage] Passing", tasks.length, "tasks to TasksClient");
+  // Debug info to pass to client
+  const serverDebug = {
+    tasksResultSuccess: tasksResult.success,
+    tasksResultError: (tasksResult as any).error || null,
+    tasksCount: tasksResult.tasks?.length ?? 0,
+    statsResultSuccess: statsResult.success,
+  };
 
   return (
     <div className="space-y-6">
+      {/* Server-side debug info */}
+      <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-3 text-blue-200 text-sm font-mono">
+        <strong>SERVER DEBUG:</strong><br/>
+        getTasks success: {String(serverDebug.tasksResultSuccess)}<br/>
+        getTasks error: {serverDebug.tasksResultError || 'none'}<br/>
+        getTasks count: {serverDebug.tasksCount}<br/>
+        getTaskStats success: {String(serverDebug.statsResultSuccess)}
+      </div>
       <TasksClient initialTasks={tasks as any} stats={stats} />
     </div>
   );
