@@ -6,20 +6,6 @@ Write-Host "Migration Deployment Verification" -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
 
-function Test-Command {
-    param($Command, $Description)
-    try {
-        $result = Invoke-Expression $Command
-        Write-Host "✓ $Description" -ForegroundColor Green
-        return $result
-    }
-    catch {
-        Write-Host "✗ $Description" -ForegroundColor Red
-        Write-Host "  Error: $_" -ForegroundColor Red
-        return $null
-    }
-}
-
 Write-Host "Checking migration status..." -ForegroundColor Yellow
 Write-Host "================================================"
 npx prisma migrate status

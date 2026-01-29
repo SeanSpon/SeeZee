@@ -8,28 +8,17 @@ echo "================================================"
 echo ""
 
 # Colors for output
-RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Function to check if a command succeeded
-check_result() {
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓${NC} $1"
-    else
-        echo -e "${RED}✗${NC} $1"
-    fi
-}
-
-echo "Checking database connection..."
-npx prisma db execute --stdin <<EOF > /dev/null 2>&1
-SELECT 1;
-EOF
-check_result "Database connection successful"
+echo -e "${CYAN}Checking migration status...${NC}"
+echo "================================================"
+npx prisma migrate status
 echo ""
 
-echo "Checking migration status..."
+echo -e "${CYAN}Verifying new columns in 'todos' table...${NC}"
 echo "================================================"
 npx prisma migrate status
 echo ""
@@ -55,7 +44,7 @@ ORDER BY column_name;
 EOF
 echo ""
 
-echo "Verifying 'task_materials' table..."
+echo -e "${CYAN}Verifying 'task_materials' table...${NC}"
 echo "================================================"
 npx prisma db execute --stdin <<EOF
 SELECT COUNT(*) as column_count
@@ -64,7 +53,7 @@ WHERE table_name = 'task_materials';
 EOF
 echo ""
 
-echo "Verifying 'TaskMaterialType' enum..."
+echo -e "${CYAN}Verifying 'TaskMaterialType' enum...${NC}"
 echo "================================================"
 npx prisma db execute --stdin <<EOF
 SELECT enumlabel 
@@ -75,7 +64,7 @@ ORDER BY enumsortorder;
 EOF
 echo ""
 
-echo "Checking indexes..."
+echo -e "${CYAN}Checking indexes...${NC}"
 echo "================================================"
 npx prisma db execute --stdin <<EOF
 SELECT tablename, indexname
@@ -91,7 +80,7 @@ ORDER BY tablename, indexname;
 EOF
 echo ""
 
-echo "Checking applied migrations..."
+echo -e "${CYAN}Checking applied migrations...${NC}"
 echo "================================================"
 npx prisma db execute --stdin <<EOF
 SELECT 
@@ -108,10 +97,10 @@ EOF
 echo ""
 
 echo "================================================"
-echo "Verification Complete!"
+echo -e "${GREEN}Verification Complete!${NC}"
 echo "================================================"
 echo ""
-echo "Next steps:"
+echo -e "${YELLOW}Next steps:${NC}"
 echo "1. Restart your application"
 echo "2. Test the task detail page"
 echo "3. Try creating a task with materials"

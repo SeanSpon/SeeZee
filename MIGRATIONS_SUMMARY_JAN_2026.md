@@ -255,10 +255,10 @@ ORDER BY enumsortorder;
 SELECT schemaname, tablename, indexname
 FROM pg_indexes
 WHERE tablename IN ('todos', 'task_materials')
-  AND indexname LIKE '%milestone%' 
-   OR indexname LIKE '%material%'
-   OR indexname LIKE '%changeRequest%'
-   OR indexname LIKE '%assigned%'
+  AND (indexname LIKE '%milestone%' 
+    OR indexname LIKE '%material%'
+    OR indexname LIKE '%changeRequest%'
+    OR indexname LIKE '%assigned%')
 ORDER BY tablename, indexname;
 ```
 

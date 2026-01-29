@@ -4,11 +4,8 @@ ALTER TABLE "todos" ADD COLUMN IF NOT EXISTS "changeRequestId" TEXT;
 ALTER TABLE "todos" ADD COLUMN IF NOT EXISTS "assignedToRole" "UserRole";
 ALTER TABLE "todos" ADD COLUMN IF NOT EXISTS "assignedToTeamId" TEXT;
 
--- CreateIndex
+-- CreateIndex (unique partial index - also serves as regular index)
 CREATE UNIQUE INDEX IF NOT EXISTS "todos_changeRequestId_key" ON "todos"("changeRequestId") WHERE "changeRequestId" IS NOT NULL;
-
--- CreateIndex
-CREATE INDEX IF NOT EXISTS "todos_changeRequestId_idx" ON "todos"("changeRequestId");
 
 -- CreateIndex
 CREATE INDEX IF NOT EXISTS "todos_assignedToRole_idx" ON "todos"("assignedToRole");
