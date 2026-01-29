@@ -30,6 +30,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
       name: true,
       description: true,
       status: true,
+      teamType: true,
       budget: true,
       startDate: true,
       endDate: true,
@@ -37,6 +38,11 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
       updatedAt: true,
       githubRepo: true,
       vercelUrl: true,
+      liveUrl: true,
+      currentStage: true,
+      progress: true,
+      isNonprofit: true,
+      assigneeId: true,
       assignee: {
         select: {
           id: true,
@@ -283,6 +289,21 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     completedAt: request.completedAt,
   }));
 
+  // Fetch all admin users for assignee selection
+  const adminUsers = await prisma.user.findMany({
+    where: {
+      role: {
+        in: ["ADMIN", "CEO", "STAFF", "FRONTEND", "BACKEND", "DESIGNER", "DEV"],
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+    orderBy: { name: "asc" },
+  });
+
   return (
     <AdminProjectDetailClient
       project={{
@@ -290,12 +311,18 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
         name: project.name,
         description: project.description,
         status: project.status,
+        teamType: project.teamType,
         budget: project.budget ? Number(project.budget) : null,
         startDate: project.startDate,
         endDate: project.endDate,
         createdAt: project.createdAt,
         githubRepo: project.githubRepo,
         vercelUrl: project.vercelUrl,
+        liveUrl: project.liveUrl,
+        currentStage: project.currentStage,
+        progress: project.progress,
+        isNonprofit: project.isNonprofit,
+        assigneeId: project.assigneeId,
         assignee: project.assignee,
         organization: project.organization,
         milestones: transformedMilestones,
@@ -307,6 +334,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
         invoices: transformedInvoices,
         questionnaire: project.questionnaire,
       }}
+      assignees={adminUsers}
     />
   );
 }

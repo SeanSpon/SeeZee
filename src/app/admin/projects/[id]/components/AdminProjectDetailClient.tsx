@@ -26,7 +26,7 @@ import {
   DollarSign,
   TrendingUp,
   ChevronRight,
-  MoreHorizontal,
+  Upload,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AdminProjectTasks } from "./AdminProjectTasks";
@@ -35,6 +35,8 @@ import { SettingsTab } from "@/app/(client)/client/components/SettingsTab";
 import { AdminChangeRequestsSection } from "./AdminChangeRequestsSection";
 import { GitIntegrationPanel } from "@/components/admin/projects/GitIntegrationPanel";
 import { VercelDeploymentsPanel } from "@/components/admin/projects/VercelDeploymentsPanel";
+import { AdminProjectSettingsPanel } from "@/components/admin/projects/AdminProjectSettingsPanel";
+import { ProjectFilesSection } from "@/components/admin/projects/ProjectFilesSection";
 
 interface AdminProjectDetailClientProps {
   project: {
@@ -42,12 +44,18 @@ interface AdminProjectDetailClientProps {
     name: string;
     description: string | null;
     status: string;
+    teamType?: string;
     budget: number | null;
     startDate: Date | null;
     endDate: Date | null;
     createdAt: Date;
     githubRepo: string | null;
     vercelUrl: string | null;
+    liveUrl?: string | null;
+    currentStage?: string;
+    progress?: number;
+    isNonprofit?: boolean;
+    assigneeId?: string | null;
     assignee: {
       id: string;
       name: string | null;
@@ -82,12 +90,17 @@ interface AdminProjectDetailClientProps {
     invoices: Array<any>;
     questionnaire: any;
   };
+  assignees?: Array<{
+    id: string;
+    name: string | null;
+    email: string | null;
+  }>;
 }
 
 // Hub tabs - focused on what matters
-type TabType = "overview" | "tasks" | "activity" | "client" | "financials" | "more";
+type TabType = "overview" | "tasks" | "files" | "activity" | "client" | "financials" | "settings";
 
-export function AdminProjectDetailClient({ project }: AdminProjectDetailClientProps) {
+export function AdminProjectDetailClient({ project, assignees = [] }: AdminProjectDetailClientProps) {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [showAddTask, setShowAddTask] = useState(false);
 
@@ -160,14 +173,15 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
   const deadline = project.endDate ? new Date(project.endDate) : null;
   const daysUntilDeadline = deadline ? Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null;
 
-  // Hub tabs - 5 focused tabs + More
+  // Hub tabs - 7 focused tabs
   const tabs = [
     { id: "overview" as TabType, label: "Overview", icon: FileText },
     { id: "tasks" as TabType, label: "Tasks", icon: ListTodo, badge: pendingTasks.length > 0 ? pendingTasks.length : undefined },
+    { id: "files" as TabType, label: "Files", icon: Folder, badge: project.files.length > 0 ? project.files.length : undefined },
     { id: "activity" as TabType, label: "Activity", icon: Activity },
     { id: "client" as TabType, label: "Client", icon: Users },
     { id: "financials" as TabType, label: "Financials", icon: DollarSign },
-    { id: "more" as TabType, label: "More", icon: MoreHorizontal },
+    { id: "settings" as TabType, label: "Settings", icon: Settings },
   ];
 
   // =============================================
@@ -514,8 +528,37 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
     </div>
   );
 
-  const renderMoreTab = () => (
+  const renderFilesTab = () => (
     <div className="space-y-6">
+      <ProjectFilesSection
+        projectId={project.id}
+        files={project.files}
+        canEdit={true}
+      />
+    </div>
+  );
+
+  const renderSettingsTab = () => (
+    <div className="space-y-6">
+      {/* Project Settings Panel */}
+      <AdminProjectSettingsPanel
+        project={{
+          id: project.id,
+          name: project.name,
+          description: project.description,
+          status: project.status,
+          teamType: project.teamType,
+          budget: project.budget,
+          startDate: project.startDate,
+          endDate: project.endDate,
+          isNonprofit: project.isNonprofit,
+          assigneeId: project.assigneeId,
+          currentStage: project.currentStage,
+          progress: project.progress,
+        }}
+        assignees={assignees}
+      />
+
       {/* Git & Vercel Integrations */}
       <div>
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
@@ -580,24 +623,6 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Repository Details</h3>
         <RepositoryTab projectId={project.id} isAdmin={true} />
       </div>
-
-      {/* Settings */}
-      <div>
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Settings</h3>
-        <SettingsTab
-          project={{
-            id: project.id,
-            name: project.name,
-            description: project.description,
-            status: project.status,
-            githubRepo: project.githubRepo,
-            vercelUrl: project.vercelUrl,
-            questionnaire: project.questionnaire,
-          }}
-          assignee={project.assignee}
-          isAdmin={true}
-        />
-      </div>
     </div>
   );
 
@@ -607,14 +632,16 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
         return renderOverviewTab();
       case "tasks":
         return renderTasksTab();
+      case "files":
+        return renderFilesTab();
       case "activity":
         return renderActivityTab();
       case "client":
         return renderClientTab();
       case "financials":
         return renderFinancialsTab();
-      case "more":
-        return renderMoreTab();
+      case "settings":
+        return renderSettingsTab();
       default:
         return null;
     }

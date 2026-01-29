@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       assigneeId,
       type,
       status,
+      teamType,
       priority,
       budget,
       startDate,
@@ -82,13 +83,14 @@ export async function POST(req: Request) {
     }
 
     // Create project
-    console.log("[POST /api/admin/projects] Creating project:", { name, organizationId: org.id, assigneeId });
+    console.log("[POST /api/admin/projects] Creating project:", { name, organizationId: org.id, assigneeId, teamType });
     const project = await db.project.create({
       data: {
         name,
         organizationId: org.id,
         assigneeId: assigneeId || null,
         status: status ?? "LEAD",
+        teamType: teamType ?? "INDIVIDUAL",
         description,
         budget: budget ? parseFloat(budget) : null,
         startDate: startDate ? new Date(startDate) : new Date(),
@@ -224,6 +226,7 @@ export async function GET(req: NextRequest) {
         name: p.name,
         description: p.description,
         status: p.status,
+        teamType: p.teamType,
         budget: p.budget ? Number(p.budget) : null,
         startDate: p.startDate,
         endDate: p.endDate,
