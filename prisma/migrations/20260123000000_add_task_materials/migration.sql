@@ -1,8 +1,12 @@
 -- CreateEnum
-CREATE TYPE "TaskMaterialType" AS ENUM ('PDF', 'DOCUMENT', 'VIDEO', 'IMAGE', 'LINK', 'ASSIGNMENT', 'RESOURCE');
+DO $$ BEGIN
+  CREATE TYPE "TaskMaterialType" AS ENUM ('PDF', 'DOCUMENT', 'VIDEO', 'IMAGE', 'LINK', 'ASSIGNMENT', 'RESOURCE');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
 -- CreateTable
-CREATE TABLE "task_materials" (
+CREATE TABLE IF NOT EXISTS "task_materials" (
     "id" TEXT NOT NULL,
     "todoId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -24,13 +28,25 @@ CREATE TABLE "task_materials" (
 );
 
 -- CreateIndex
-CREATE INDEX "task_materials_todoId_idx" ON "task_materials"("todoId");
+CREATE INDEX IF NOT EXISTS "task_materials_todoId_idx" ON "task_materials"("todoId");
 
 -- CreateIndex
-CREATE INDEX "task_materials_type_idx" ON "task_materials"("type");
+CREATE INDEX IF NOT EXISTS "task_materials_type_idx" ON "task_materials"("type");
 
 -- CreateIndex
-CREATE INDEX "task_materials_createdById_idx" ON "task_materials"("createdById");
+CREATE INDEX IF NOT EXISTS "task_materials_createdById_idx" ON "task_materials"("createdById");
 
 -- AddForeignKey
-ALTER TABLE "task_materials" ADD CONSTRAINT "task_materials_todoId_fkey" FOREIGN KEY ("todoId") REFERENCES "todos"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint 
+    WHERE conname = 'task_materials_todoId_fkey'
+  ) THEN
+    ALTER TABLE "task_materials" 
+    ADD CONSTRAINT "task_materials_todoId_fkey" 
+    FOREIGN KEY ("todoId") 
+    REFERENCES "todos"("id") 
+    ON DELETE CASCADE ON UPDATE CASCADE;
+  END IF;
+END $$;
