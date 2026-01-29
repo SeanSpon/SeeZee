@@ -137,28 +137,22 @@ export async function getTasks(filter?: {
       ));
     }
 
-    // Serialize tasks to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
-    let serializedTasks;
-    try {
-      serializedTasks = toPlain(tasks);
-      console.log("[getTasks] toPlain succeeded");
-    } catch (serializeError) {
-      console.error("[getTasks] toPlain FAILED:", serializeError);
-      // Fallback to manual serialization
-      serializedTasks = tasks.map(t => ({
-        ...t,
-        dueDate: t.dueDate?.toISOString() ?? null,
-        completedAt: t.completedAt?.toISOString() ?? null,
-        createdAt: t.createdAt.toISOString(),
-        updatedAt: t.updatedAt.toISOString(),
-        submittedAt: t.submittedAt?.toISOString() ?? null,
-        approvedAt: t.approvedAt?.toISOString() ?? null,
-      }));
-    }
+    // Use direct JSON serialization to avoid any toPlain issues
+    const serializedTasks = JSON.parse(JSON.stringify(tasks, (key, value) => {
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+      // Handle Decimal from Prisma
+      if (value && typeof value === 'object' && value.constructor?.name === 'Decimal') {
+        return value.toString();
+      }
+      if (typeof value === 'bigint') {
+        return value.toString();
+      }
+      return value;
+    }));
 
     console.log("[getTasks] Serialized", serializedTasks?.length ?? 'null/undefined', "tasks");
-    console.log("[getTasks] serializedTasks type:", typeof serializedTasks);
-    console.log("[getTasks] Array.isArray(serializedTasks):", Array.isArray(serializedTasks));
     if (serializedTasks && serializedTasks.length > 0) {
       console.log("[getTasks] First serialized task:", JSON.stringify(serializedTasks[0]));
     }
