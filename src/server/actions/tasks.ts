@@ -131,11 +131,37 @@ export async function getTasks(filter?: {
     });
 
     console.log("[getTasks] Found", tasks.length, "tasks");
+    if (tasks.length > 0) {
+      console.log("[getTasks] First task raw:", JSON.stringify(tasks[0], (key, value) => 
+        value instanceof Date ? value.toISOString() : value
+      ));
+    }
 
     // Serialize tasks to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
-    const serializedTasks = toPlain(tasks);
+    let serializedTasks;
+    try {
+      serializedTasks = toPlain(tasks);
+      console.log("[getTasks] toPlain succeeded");
+    } catch (serializeError) {
+      console.error("[getTasks] toPlain FAILED:", serializeError);
+      // Fallback to manual serialization
+      serializedTasks = tasks.map(t => ({
+        ...t,
+        dueDate: t.dueDate?.toISOString() ?? null,
+        completedAt: t.completedAt?.toISOString() ?? null,
+        createdAt: t.createdAt.toISOString(),
+        updatedAt: t.updatedAt.toISOString(),
+        submittedAt: t.submittedAt?.toISOString() ?? null,
+        approvedAt: t.approvedAt?.toISOString() ?? null,
+      }));
+    }
 
-    console.log("[getTasks] Serialized", serializedTasks.length, "tasks");
+    console.log("[getTasks] Serialized", serializedTasks?.length ?? 'null/undefined', "tasks");
+    console.log("[getTasks] serializedTasks type:", typeof serializedTasks);
+    console.log("[getTasks] Array.isArray(serializedTasks):", Array.isArray(serializedTasks));
+    if (serializedTasks && serializedTasks.length > 0) {
+      console.log("[getTasks] First serialized task:", JSON.stringify(serializedTasks[0]));
+    }
 
     return { success: true, tasks: serializedTasks };
   } catch (error) {
