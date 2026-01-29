@@ -22,6 +22,9 @@ import {
   Check,
   CalendarClock,
   X,
+  Plus,
+  MapPin,
+  Link2,
 } from "lucide-react";
 import Link from "next/link";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, isToday, addMonths, subMonths } from "date-fns";
@@ -154,7 +157,22 @@ export function CalendarClient({
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [eventFilter, setEventFilter] = useState<"all" | "task" | "maintenance" | "milestone" | "meeting">("all");
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState<CalendarEventData | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    title: '',
+    description: '',
+    location: '',
+    startDate: format(new Date(), 'yyyy-MM-dd'),
+    startTime: '09:00',
+    endDate: format(new Date(), 'yyyy-MM-dd'),
+    endTime: '10:00',
+    allDay: false,
+    projectId: '',
+    meetingUrl: '',
+    color: '#dc2626',
+  });
   const [rescheduleForm, setRescheduleForm] = useState({
     newStartTime: '',
     newEndTime: '',
@@ -236,6 +254,81 @@ export function CalendarClient({
       });
       setShowRescheduleModal(true);
     }
+  };
+
+  // Handle create event
+  const handleCreateEvent = async () => {
+    if (!createForm.title.trim()) {
+      alert('Please enter an event title');
+      return;
+    }
+
+    setIsCreating(true);
+    try {
+      const startTime = createForm.allDay
+        ? new Date(`${createForm.startDate}T00:00:00`)
+        : new Date(`${createForm.startDate}T${createForm.startTime}:00`);
+
+      const endTime = createForm.allDay
+        ? new Date(`${createForm.endDate}T23:59:59`)
+        : new Date(`${createForm.endDate}T${createForm.endTime}:00`);
+
+      const res = await fetch('/api/calendar/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: createForm.title,
+          description: createForm.description || null,
+          location: createForm.location || null,
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+          allDay: createForm.allDay,
+          projectId: createForm.projectId || null,
+          meetingUrl: createForm.meetingUrl || null,
+          color: createForm.color,
+          createdBy: currentUser.id,
+          attendees: [],
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to create event');
+      }
+
+      setShowCreateModal(false);
+      setCreateForm({
+        title: '',
+        description: '',
+        location: '',
+        startDate: format(new Date(), 'yyyy-MM-dd'),
+        startTime: '09:00',
+        endDate: format(new Date(), 'yyyy-MM-dd'),
+        endTime: '10:00',
+        allDay: false,
+        projectId: '',
+        meetingUrl: '',
+        color: '#dc2626',
+      });
+      
+      // Refresh the page to show new event
+      window.location.reload();
+    } catch (error: any) {
+      alert(error.message || 'Failed to create event');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  // Open create modal for a specific day
+  const openCreateModal = (day?: Date) => {
+    const targetDate = day || new Date();
+    setCreateForm(prev => ({
+      ...prev,
+      startDate: format(targetDate, 'yyyy-MM-dd'),
+      endDate: format(targetDate, 'yyyy-MM-dd'),
+    }));
+    setShowCreateModal(true);
   };
 
   // Convert all data into calendar events
@@ -334,17 +427,26 @@ export function CalendarClient({
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-seezee-red glow-on-hover inline-block mb-2">
-            Schedule
-          </span>
-          <h1 className="text-3xl font-heading font-bold gradient-text flex items-center gap-3">
-            <Calendar className="w-8 h-8 text-seezee-blue" />
-            SeeZee Calendar
-          </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            {viewMode === "organization" ? "Organization-wide schedule" : "Your personal schedule"}
-          </p>
+        <div className="flex items-start gap-4">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-seezee-red glow-on-hover inline-block mb-2">
+              Schedule
+            </span>
+            <h1 className="text-3xl font-heading font-bold gradient-text flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-seezee-blue" />
+              SeeZee Calendar
+            </h1>
+            <p className="text-sm text-slate-400 mt-1">
+              {viewMode === "organization" ? "Organization-wide schedule" : "Your personal schedule"}
+            </p>
+          </div>
+          <button
+            onClick={() => openCreateModal()}
+            className="px-4 py-2 bg-seezee-red hover:bg-seezee-red/80 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg shadow-seezee-red/20"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Add Event</span>
+          </button>
         </div>
 
         {/* Event Type Filters */}
@@ -756,6 +858,219 @@ export function CalendarClient({
                     setShowRescheduleModal(false);
                     setSelectedMeeting(null);
                   }}
+                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Event Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Create New Event</h2>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Event Title <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={createForm.title}
+                  onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
+                  placeholder="e.g., Client Meeting, Team Standup"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                />
+              </div>
+
+              {/* All Day Toggle */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="allDay"
+                  checked={createForm.allDay}
+                  onChange={(e) => setCreateForm({ ...createForm, allDay: e.target.checked })}
+                  className="rounded border-slate-600 bg-slate-800 text-seezee-red focus:ring-seezee-red"
+                />
+                <label htmlFor="allDay" className="text-sm text-slate-300">
+                  All-day event
+                </label>
+              </div>
+
+              {/* Date & Time */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={createForm.startDate}
+                    onChange={(e) => setCreateForm({ ...createForm, startDate: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                  />
+                </div>
+                {!createForm.allDay && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Start Time
+                    </label>
+                    <input
+                      type="time"
+                      value={createForm.startTime}
+                      onChange={(e) => setCreateForm({ ...createForm, startTime: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                    />
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={createForm.endDate}
+                    onChange={(e) => setCreateForm({ ...createForm, endDate: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                  />
+                </div>
+                {!createForm.allDay && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      End Time
+                    </label>
+                    <input
+                      type="time"
+                      value={createForm.endTime}
+                      onChange={(e) => setCreateForm({ ...createForm, endTime: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={createForm.description}
+                  onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                  placeholder="Event details..."
+                  rows={3}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-seezee-blue/50 resize-none"
+                />
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Location
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input
+                    type="text"
+                    value={createForm.location}
+                    onChange={(e) => setCreateForm({ ...createForm, location: e.target.value })}
+                    placeholder="Zoom, office, etc."
+                    className="w-full pl-10 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                  />
+                </div>
+              </div>
+
+              {/* Meeting URL */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Meeting URL
+                </label>
+                <div className="relative">
+                  <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input
+                    type="url"
+                    value={createForm.meetingUrl}
+                    onChange={(e) => setCreateForm({ ...createForm, meetingUrl: e.target.value })}
+                    placeholder="https://zoom.us/j/..."
+                    className="w-full pl-10 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                  />
+                </div>
+              </div>
+
+              {/* Project */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Link to Project
+                </label>
+                <select
+                  value={createForm.projectId}
+                  onChange={(e) => setCreateForm({ ...createForm, projectId: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-seezee-blue/50"
+                >
+                  <option value="">None</option>
+                  {projects.map((proj) => (
+                    <option key={proj.id} value={proj.id}>
+                      {proj.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Color */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Event Color
+                </label>
+                <div className="flex gap-2">
+                  {['#dc2626', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899'].map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => setCreateForm({ ...createForm, color })}
+                      className={`w-8 h-8 rounded-full border-2 transition ${
+                        createForm.color === color ? 'border-white scale-110' : 'border-transparent'
+                      }`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleCreateEvent}
+                  disabled={isCreating || !createForm.title.trim()}
+                  className="flex-1 py-3 bg-seezee-red hover:bg-seezee-red/80 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCreating ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-5 h-5" />
+                      Create Event
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowCreateModal(false)}
                   className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
                 >
                   Cancel
