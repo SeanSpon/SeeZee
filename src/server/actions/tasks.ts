@@ -159,11 +159,22 @@ export async function getTasks(filter?: {
 
     return { success: true, tasks: serializedTasks };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorName = error instanceof Error ? error.name : 'Unknown';
+    const errorStack = error instanceof Error ? error.stack : '';
+    
     console.error("[getTasks] FAILED:", error);
-    console.error("[getTasks] Error name:", (error as Error)?.name);
-    console.error("[getTasks] Error message:", (error as Error)?.message);
-    console.error("[getTasks] Error stack:", (error as Error)?.stack);
-    return { success: false, error: "Failed to fetch tasks", tasks: [] };
+    console.error("[getTasks] Error name:", errorName);
+    console.error("[getTasks] Error message:", errorMessage);
+    console.error("[getTasks] Error stack:", errorStack);
+    
+    // Return detailed error for debugging
+    return { 
+      success: false, 
+      error: `${errorName}: ${errorMessage}`, 
+      errorDetails: errorStack?.split('\n').slice(0, 5).join(' | ') || 'No stack',
+      tasks: [] 
+    };
   }
 }
 

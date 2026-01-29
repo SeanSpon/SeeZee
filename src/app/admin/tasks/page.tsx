@@ -22,6 +22,7 @@ export default async function TasksPage() {
   const serverDebug = {
     tasksResultSuccess: tasksResult.success,
     tasksResultError: (tasksResult as any).error || null,
+    tasksResultErrorDetails: (tasksResult as any).errorDetails || null,
     tasksCount: tasksResult.tasks?.length ?? 0,
     statsResultSuccess: statsResult.success,
   };
@@ -33,6 +34,9 @@ export default async function TasksPage() {
         <strong>SERVER DEBUG:</strong><br/>
         getTasks success: {String(serverDebug.tasksResultSuccess)}<br/>
         getTasks error: {serverDebug.tasksResultError || 'none'}<br/>
+        {serverDebug.tasksResultErrorDetails && (
+          <>errorDetails: {serverDebug.tasksResultErrorDetails}<br/></>
+        )}
         getTasks count: {serverDebug.tasksCount}<br/>
         getTaskStats success: {String(serverDebug.statsResultSuccess)}
       </div>
