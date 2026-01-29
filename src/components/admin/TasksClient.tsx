@@ -59,16 +59,6 @@ const priorityColors: Record<string, string> = {
 export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const router = useRouter();
   const [tasks, setTasks] = useState(initialTasks);
-  
-  // Debug logging
-  console.log("[TasksClient] initialTasks:", initialTasks);
-  console.log("[TasksClient] initialTasks count:", initialTasks?.length ?? 0);
-  console.log("[TasksClient] initialTasks type:", typeof initialTasks);
-  console.log("[TasksClient] Array.isArray(initialTasks):", Array.isArray(initialTasks));
-  console.log("[TasksClient] stats:", stats);
-  if (initialTasks && initialTasks.length > 0) {
-    console.log("[TasksClient] First task:", JSON.stringify(initialTasks[0]));
-  }
   const [filter, setFilter] = useState<"all" | "TODO" | "IN_PROGRESS" | "DONE">("all");
   const [view, setView] = useState<"table" | "kanban">("kanban");
   const [updating, setUpdating] = useState<string | null>(null);
@@ -322,19 +312,8 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
     },
   ];
 
-  // Temporary debug banner - remove after fix
-  const debugInfo = `Tasks received: ${initialTasks?.length ?? 0} | Array: ${Array.isArray(initialTasks)} | Stats total: ${stats.total}`;
-
   return (
     <div className="space-y-8">
-      {/* Debug Banner - TEMPORARY */}
-      <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 text-yellow-200 text-sm">
-        <strong>DEBUG:</strong> {debugInfo}
-        {initialTasks?.length === 0 && stats.total > 0 && (
-          <span className="ml-2 text-red-400">⚠️ MISMATCH: Stats show {stats.total} tasks but received 0!</span>
-        )}
-      </div>
-      
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {statCards.map((stat, index) => {

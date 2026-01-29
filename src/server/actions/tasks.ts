@@ -90,14 +90,6 @@ export async function getTasks(filter?: {
       where.projectId = filter.projectId;
     }
 
-    console.log("[getTasks] Query where clause:", JSON.stringify(where));
-    console.log("[getTasks] User role:", user.role);
-    console.log("[getTasks] Filter showAll:", filter?.showAll);
-    
-    // First, let's check raw count
-    const rawCount = await db.todo.count({ where });
-    console.log("[getTasks] Raw count with where clause:", rawCount);
-    
     // Use select instead of include to avoid selecting milestoneId which may not exist in DB
     const tasks = await db.todo.findMany({
       where,
@@ -152,13 +144,6 @@ export async function getTasks(filter?: {
       ],
     });
 
-    console.log("[getTasks] Found", tasks.length, "tasks");
-    if (tasks.length > 0) {
-      console.log("[getTasks] First task raw:", JSON.stringify(tasks[0], (key, value) => 
-        value instanceof Date ? value.toISOString() : value
-      ));
-    }
-
     // Use direct JSON serialization to avoid any toPlain issues
     const serializedTasks = JSON.parse(JSON.stringify(tasks, (key, value) => {
       if (value instanceof Date) {
@@ -174,29 +159,10 @@ export async function getTasks(filter?: {
       return value;
     }));
 
-    console.log("[getTasks] Serialized", serializedTasks?.length ?? 'null/undefined', "tasks");
-    if (serializedTasks && serializedTasks.length > 0) {
-      console.log("[getTasks] First serialized task:", JSON.stringify(serializedTasks[0]));
-    }
-
     return { success: true, tasks: serializedTasks };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorName = error instanceof Error ? error.name : 'Unknown';
-    const errorStack = error instanceof Error ? error.stack : '';
-    
-    console.error("[getTasks] FAILED:", error);
-    console.error("[getTasks] Error name:", errorName);
-    console.error("[getTasks] Error message:", errorMessage);
-    console.error("[getTasks] Error stack:", errorStack);
-    
-    // Return detailed error for debugging
-    return { 
-      success: false, 
-      error: `${errorName}: ${errorMessage}`, 
-      errorDetails: errorStack?.split('\n').slice(0, 5).join(' | ') || 'No stack',
-      tasks: [] 
-    };
+    console.error("Failed to fetch tasks:", error);
+    return { success: false, error: "Failed to fetch tasks", tasks: [] };
   }
 }
 

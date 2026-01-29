@@ -63,18 +63,6 @@ const COLUMNS = [
 export function TasksKanbanBoard({ initialTasks, onTaskUpdate }: TasksKanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  
-  // Debug logging
-  console.log("[TasksKanbanBoard] initialTasks count:", initialTasks?.length ?? 0);
-  if (initialTasks && initialTasks.length > 0) {
-    console.log("[TasksKanbanBoard] First task column:", initialTasks[0]?.column);
-    console.log("[TasksKanbanBoard] Tasks by column:", {
-      todo: initialTasks.filter(t => t.column === "todo").length,
-      "in-progress": initialTasks.filter(t => t.column === "in-progress").length,
-      review: initialTasks.filter(t => t.column === "review").length,
-      done: initialTasks.filter(t => t.column === "done").length,
-    });
-  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
