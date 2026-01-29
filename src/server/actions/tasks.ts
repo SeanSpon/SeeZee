@@ -113,15 +113,7 @@ export async function getTasks(filter?: {
             name: true,
           },
         },
-        // changeRequest: {
-        //   select: {
-        //     id: true,
-        //     status: true,
-        //     category: true,
-        //     priority: true,
-        //   },
-        // },
-      } as any,
+      },
       orderBy: [
         { status: "asc" },
         { priority: "desc" },
@@ -129,7 +121,18 @@ export async function getTasks(filter?: {
       ],
     });
 
-    return { success: true, tasks };
+    // Serialize tasks with proper date handling for client components
+    const serializedTasks = tasks.map((task) => ({
+      ...task,
+      dueDate: task.dueDate ? task.dueDate.toISOString() : null,
+      completedAt: task.completedAt ? task.completedAt.toISOString() : null,
+      createdAt: task.createdAt.toISOString(),
+      updatedAt: task.updatedAt.toISOString(),
+      submittedAt: task.submittedAt ? task.submittedAt.toISOString() : null,
+      approvedAt: task.approvedAt ? task.approvedAt.toISOString() : null,
+    }));
+
+    return { success: true, tasks: serializedTasks };
   } catch (error) {
     console.error("Failed to fetch tasks:", error);
     return { success: false, error: "Failed to fetch tasks", tasks: [] };
