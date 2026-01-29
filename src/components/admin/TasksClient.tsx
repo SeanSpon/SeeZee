@@ -61,8 +61,14 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const [tasks, setTasks] = useState(initialTasks);
   
   // Debug logging
+  console.log("[TasksClient] initialTasks:", initialTasks);
   console.log("[TasksClient] initialTasks count:", initialTasks?.length ?? 0);
+  console.log("[TasksClient] initialTasks type:", typeof initialTasks);
+  console.log("[TasksClient] Array.isArray(initialTasks):", Array.isArray(initialTasks));
   console.log("[TasksClient] stats:", stats);
+  if (initialTasks && initialTasks.length > 0) {
+    console.log("[TasksClient] First task:", JSON.stringify(initialTasks[0]));
+  }
   const [filter, setFilter] = useState<"all" | "TODO" | "IN_PROGRESS" | "DONE">("all");
   const [view, setView] = useState<"table" | "kanban">("kanban");
   const [updating, setUpdating] = useState<string | null>(null);

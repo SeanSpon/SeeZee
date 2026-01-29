@@ -91,6 +91,12 @@ export async function getTasks(filter?: {
     }
 
     console.log("[getTasks] Query where clause:", JSON.stringify(where));
+    console.log("[getTasks] User role:", user.role);
+    console.log("[getTasks] Filter showAll:", filter?.showAll);
+    
+    // First, let's check raw count
+    const rawCount = await db.todo.count({ where });
+    console.log("[getTasks] Raw count with where clause:", rawCount);
     
     const tasks = await db.todo.findMany({
       where,
@@ -133,7 +139,10 @@ export async function getTasks(filter?: {
 
     return { success: true, tasks: serializedTasks };
   } catch (error) {
-    console.error("Failed to fetch tasks:", error);
+    console.error("[getTasks] FAILED:", error);
+    console.error("[getTasks] Error name:", (error as Error)?.name);
+    console.error("[getTasks] Error message:", (error as Error)?.message);
+    console.error("[getTasks] Error stack:", (error as Error)?.stack);
     return { success: false, error: "Failed to fetch tasks", tasks: [] };
   }
 }
