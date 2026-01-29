@@ -98,9 +98,31 @@ export async function getTasks(filter?: {
     const rawCount = await db.todo.count({ where });
     console.log("[getTasks] Raw count with where clause:", rawCount);
     
+    // Use select instead of include to avoid selecting milestoneId which may not exist in DB
     const tasks = await db.todo.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        status: true,
+        priority: true,
+        dueDate: true,
+        completedAt: true,
+        createdAt: true,
+        updatedAt: true,
+        submittedAt: true,
+        approvedAt: true,
+        projectId: true,
+        assignedToId: true,
+        createdById: true,
+        changeRequestId: true,
+        assignedToRole: true,
+        assignedToTeamId: true,
+        column: true,
+        position: true,
+        estimatedHours: true,
+        actualHours: true,
         assignedTo: {
           select: {
             id: true,
