@@ -31,6 +31,10 @@ interface ProjectModalProps {
 const projectTypes = ["Website", "Web App", "E-commerce", "Maintenance", "Custom"];
 const projectStatuses = ["LEAD", "QUOTED", "DEPOSIT_PAID", "ACTIVE", "REVIEW", "COMPLETED", "MAINTENANCE", "CANCELLED"];
 const priorityLevels = ["Low", "Medium", "High", "Urgent"];
+const teamTypes = [
+  { value: "INDIVIDUAL", label: "Individual", description: "Single person project" },
+  { value: "TEAM_LEAD", label: "Team Lead", description: "Team project with lead" },
+];
 
 export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins }: ProjectModalProps) {
   const [loading, setLoading] = useState(false);
@@ -41,6 +45,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
     assigneeId: "",
     type: "Website",
     status: "LEAD",
+    teamType: "INDIVIDUAL",
     priority: "Medium",
     budget: "",
     startDate: new Date().toISOString().split("T")[0],
@@ -110,6 +115,7 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
           assigneeId: formData.assigneeId || null,
           type: formData.type,
           status: formData.status.toUpperCase(),
+          teamType: formData.teamType,
           priority: formData.priority,
           budget: formData.budget ? parseFloat(formData.budget) : null,
           startDate: new Date(formData.startDate).toISOString(),
@@ -133,7 +139,8 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
         organizationId: "",
         assigneeId: "",
         type: "Website",
-        status: "Planning",
+        status: "LEAD",
+        teamType: "INDIVIDUAL",
         priority: "Medium",
         budget: "",
         startDate: new Date().toISOString().split("T")[0],
@@ -278,6 +285,25 @@ export function CreateProjectModal({ isOpen, onClose, onSuccess, clients, admins
                 {projectStatuses.map((status) => (
                   <option key={status} value={status}>
                     {status}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Team Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Team Configuration
+              </label>
+              <select
+                name="teamType"
+                value={formData.teamType}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-700 bg-gray-900/50 text-white focus:outline-none focus:border-trinity-red transition-colors"
+              >
+                {teamTypes.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label} - {type.description}
                   </option>
                 ))}
               </select>
