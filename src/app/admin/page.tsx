@@ -129,9 +129,7 @@ export default async function AdminDashboardPage() {
       title: task.title,
       status: task.status,
       priority: task.priority,
-      dueDate: task.dueDate 
-        ? (typeof task.dueDate === 'string' ? task.dueDate : task.dueDate.toISOString())
-        : null,
+      dueDate: task.dueDate || null, // Already serialized as ISO string from getTasks
     }));
 
   // Get recent leads

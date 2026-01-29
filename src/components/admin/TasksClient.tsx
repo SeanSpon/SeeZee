@@ -18,9 +18,9 @@ type Task = {
   description: string | null;
   status: string;
   priority: string;
-  dueDate: Date | string | null;  // Can be string from RSC serialization
-  completedAt: Date | string | null;  // Can be string from RSC serialization
-  createdAt: Date | string;  // Can be string from RSC serialization
+  dueDate: string | null;  // Serialized as ISO string from server
+  completedAt: string | null;  // Serialized as ISO string from server
+  createdAt: string;  // Serialized as ISO string from server
   assignedTo: {
     id: string;
     name: string | null;
@@ -90,12 +90,8 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       name: task.assignedTo.name,
       image: null, // Map email to image if needed, or set to null
     } : null,
-    dueDate: task.dueDate 
-      ? (typeof task.dueDate === 'string' ? task.dueDate : task.dueDate.toISOString()) 
-      : null,
-    createdAt: typeof task.createdAt === 'string' 
-      ? task.createdAt 
-      : task.createdAt.toISOString(),
+    dueDate: task.dueDate, // Already serialized as ISO string from server
+    createdAt: task.createdAt, // Already serialized as ISO string from server
     dependencies: [],
     attachments: [],
   }));
@@ -515,11 +511,9 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
                     if ('status' in updates && updates.status !== undefined) {
                       taskUpdates.status = updates.status;
                     }
-                    // Convert dueDate from string to Date if present
+                    // dueDate stays as string (ISO format)
                     if ('dueDate' in updates && updates.dueDate !== undefined) {
-                      taskUpdates.dueDate = updates.dueDate 
-                        ? (typeof updates.dueDate === 'string' ? new Date(updates.dueDate) : updates.dueDate)
-                        : null;
+                      taskUpdates.dueDate = updates.dueDate;
                     }
                     return { ...t, ...taskUpdates };
                   }

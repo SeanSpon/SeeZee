@@ -114,15 +114,7 @@ export async function getTasks(filter?: {
             name: true,
           },
         },
-        // changeRequest: {
-        //   select: {
-        //     id: true,
-        //     status: true,
-        //     category: true,
-        //     priority: true,
-        //   },
-        // },
-      } as any,
+      },
       orderBy: [
         { status: "asc" },
         { priority: "desc" },
