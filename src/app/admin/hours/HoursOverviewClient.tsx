@@ -362,13 +362,17 @@ export function HoursOverviewClient({ plans, stats }: HoursOverviewClientProps) 
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/admin/clients/${plan.project.organization.id || plan.project.id}?tab=hours`}
-                        className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm"
-                      >
-                        Manage
-                        <ArrowRight className="w-3 h-3" />
-                      </Link>
+                      {plan.project.organization?.id ? (
+                        <Link
+                          href={`/admin/clients/${plan.project.organization.id}?tab=hours`}
+                          className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm"
+                        >
+                          Manage
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      ) : (
+                        <span className="text-gray-500 text-sm">No org</span>
+                      )}
                     </td>
                   </tr>
                 );

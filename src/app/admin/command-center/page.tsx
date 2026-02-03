@@ -251,6 +251,18 @@ interface Deployment {
   };
 }
 
+interface VercelProject {
+  id: string;
+  name: string;
+  framework: string | null;
+  link: string;
+  productionUrl: string | null;
+  gitRepo: string | null;
+  latestDeployments?: Deployment[];
+  createdAt?: number;
+  updatedAt?: number;
+}
+
 interface EmailAccount {
   email: string;
   name: string;
@@ -272,8 +284,10 @@ export default function CommandCenterPage() {
   const [gitEvents, setGitEvents] = useState<GitEvent[]>([]);
   const [gitRepos, setGitRepos] = useState<GitRepo[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
+  const [vercelProjects, setVercelProjects] = useState<VercelProject[]>([]);
   const [emailAccounts, setEmailAccounts] = useState<EmailAccount[]>([]);
   const [vercelWebhookActive, setVercelWebhookActive] = useState(false);
+  const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [services, setServices] = useState<ServiceStatus[]>([
     { name: "Vercel", status: "operational" },
     { name: "GitHub", status: "operational" },
@@ -357,11 +371,14 @@ export default function CommandCenterPage() {
       // Fallback: Fetch GitHub activity if context not available
       if (!gitContext) {
         try {
-          const gitRes = await fetch("/api/integrations/github/activity");
+          const [gitRes, reposRes] = await Promise.all([
+            fetch("/api/integrations/github/activity"),
+            fetch("/api/integrations/github/repos"),
+          ]);
+          
           if (gitRes.ok) {
             const gitData = await gitRes.json();
             setGitEvents(gitData.events || []);
-            setGitRepos(gitData.repos || []);
             
             const today = new Date().toDateString();
             const todayCommits = (gitData.events || []).filter(
@@ -377,6 +394,11 @@ export default function CommandCenterPage() {
               ));
             }
           }
+
+          if (reposRes.ok) {
+            const reposData = await reposRes.json();
+            setGitRepos(reposData.repos || []);
+          }
         } catch (e) {
           console.error("Failed to fetch GitHub data:", e);
           setServices(prev => prev.map(s => 
@@ -386,8 +408,12 @@ export default function CommandCenterPage() {
       }
 
       try {
-        // Fetch Vercel deployments
-        const vercelRes = await fetch("/api/integrations/vercel/deployments");
+        // Fetch Vercel deployments and projects
+        const [vercelRes, projectsRes] = await Promise.all([
+          fetch("/api/integrations/vercel/deployments"),
+          fetch("/api/integrations/vercel/projects"),
+        ]);
+        
         if (vercelRes.ok) {
           const vercelData = await vercelRes.json();
           setDeployments(vercelData.deployments || []);
@@ -417,6 +443,11 @@ export default function CommandCenterPage() {
               s.name === "Vercel" ? { ...s, status: "degraded" as const } : s
             ));
           }
+        }
+
+        if (projectsRes.ok) {
+          const projectsData = await projectsRes.json();
+          setVercelProjects(projectsData.projects || []);
         }
       } catch (e) {
         console.error("Failed to fetch Vercel data:", e);
@@ -932,6 +963,149 @@ export default function CommandCenterPage() {
                 ))
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Vercel Projects Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Deployments Column */}
+        <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Rocket className="w-4 h-4 text-cyan-400" />
+              <h3 className="font-semibold text-white">Deployments</h3>
+            </div>
+            <a
+              href="https://vercel.com/zach-robards-projects"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-white/40 hover:text-white flex items-center gap-1"
+            >
+              View All
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="divide-y divide-white/5 max-h-96 overflow-y-auto">
+            {loading ? (
+              <div className="px-4 py-6 text-center text-white/40 text-sm">
+                Loading deployments...
+              </div>
+            ) : deployments.length === 0 ? (
+              <div className="px-4 py-6 text-center text-white/40 text-sm">
+                No recent deployments
+              </div>
+            ) : (
+              deployments.map((deployment) => (
+                <div
+                  key={deployment.id}
+                  className="px-4 py-3 hover:bg-white/5 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <a
+                      href={`https://${deployment.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-white font-medium hover:text-[#ef4444] transition-colors truncate"
+                    >
+                      {deployment.name}
+                    </a>
+                    <DeploymentStatusBadge status={deployment.state} />
+                  </div>
+                  {deployment.meta?.message && (
+                    <p className="text-xs text-white/60 mb-2 line-clamp-1">
+                      {deployment.meta.message}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2 text-xs text-white/40">
+                    {deployment.meta?.branch && (
+                      <span className="flex items-center gap-1">
+                        <GitBranch className="w-3 h-3" />
+                        {deployment.meta.branch}
+                      </span>
+                    )}
+                    {deployment.meta?.commit && (
+                      <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded">
+                        {deployment.meta.commit}
+                      </span>
+                    )}
+                    <span>{formatTimeAgo(new Date(deployment.createdAt).toISOString())}</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* GitHub Repositories Column */}
+        <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Github className="w-4 h-4 text-purple-400" />
+              <h3 className="font-semibold text-white">GitHub Repositories</h3>
+            </div>
+            <a
+              href="https://github.com/SeanSpon"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-white/40 hover:text-white flex items-center gap-1"
+            >
+              View All
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="divide-y divide-white/5 max-h-96 overflow-y-auto">
+            {loading ? (
+              <div className="px-4 py-6 text-center text-white/40 text-sm">
+                Loading repositories...
+              </div>
+            ) : gitRepos.length === 0 ? (
+              <div className="px-4 py-6 text-center text-white/40 text-sm">
+                No repositories found
+              </div>
+            ) : (
+              gitRepos.map((repo) => (
+                <a
+                  key={repo.fullName}
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-3 hover:bg-white/5 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                        <Github className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm text-white font-semibold">
+                          {repo.name}
+                        </h4>
+                        {repo.description && (
+                          <p className="text-xs text-white/40 line-clamp-1">{repo.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <ExternalLink className="w-3 h-3 text-white/40" />
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-xs text-white/40">
+                    {repo.language && (
+                      <span className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                        {repo.language}
+                      </span>
+                    )}
+                    {repo.isPrivate && (
+                      <span className="flex items-center gap-1 text-amber-400">
+                        <Lock className="w-3 h-3" />
+                        Private
+                      </span>
+                    )}
+                  </div>
+                </a>
+              ))
+            )}
           </div>
         </div>
       </div>

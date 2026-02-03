@@ -149,109 +149,17 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
     });
   }
 
-  // If still not found, try as Project (using organizationId or leadId)
-  let project = null;
-  if (!organization && !lead) {
-    project = await prisma.project.findUnique({
-      where: { id },
-      include: {
-        organization: {
-          include: {
-            members: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    image: true,
-                    role: true,
-                  },
-                },
-              },
-            },
-            projects: {
-              include: {
-                assignee: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                  },
-                },
-                lead: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    status: true,
-                  },
-                },
-              },
-              orderBy: { createdAt: "desc" },
-            },
-            invoices: {
-              include: {
-                items: true,
-                project: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-              orderBy: { createdAt: "desc" },
-            },
-            leads: {
-              orderBy: { createdAt: "desc" },
-            },
-          },
-        },
-        lead: {
-          include: {
-            organization: true,
-          },
-        },
-        assignee: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-          },
-        },
-        invoices: {
-          include: {
-            items: true,
-          },
-          orderBy: { createdAt: "desc" },
-        },
-        milestones: {
-          orderBy: { createdAt: "desc" },
-        },
-      },
-    });
-
-    // If project found, use its organization as the client
-    if (project?.organization) {
-      organization = project.organization as NonNullable<typeof organization>;
-    } else if (project?.lead) {
-      lead = project.lead;
-    }
-  }
-
   // If nothing found, return 404
-  if (!organization && !lead && !project) {
+  if (!organization && !lead) {
     notFound();
   }
 
   // Build client data structure
   const clientData = {
     id,
-    type: (organization ? "organization" : lead ? "lead" : "project") as "organization" | "lead" | "project",
+    type: (organization ? "organization" : "lead") as "organization" | "lead",
     organization: organization ? toPlain(organization) : null,
     lead: lead ? toPlain(lead) : null,
-    project: project ? toPlain(project) : null,
   };
 
   return <ClientDetailClient clientData={clientData} user={user} />;

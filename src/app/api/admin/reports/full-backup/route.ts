@@ -5,7 +5,8 @@ import { getCurrentUser } from "@/lib/auth/requireRole";
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== "ADMIN") {
+    const ADMIN_ROLES = ["CEO", "CFO", "ADMIN", "DEV", "FRONTEND", "BACKEND"];
+    if (!user || !ADMIN_ROLES.includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -25,8 +26,8 @@ export async function GET(req: NextRequest) {
       users,
     ] = await Promise.all([
       db.organization.findMany({ include: { members: true } }),
-      db.project.findMany({ include: { tasks: true, milestones: true } }),
-      db.task.findMany({ include: { assignments: true } }),
+      db.project.findMany({ include: { clientTasks: true, milestones: true } }),
+      db.clientTask.findMany(),
       db.invoice.findMany({ include: { items: true, payments: true } }),
       db.payment.findMany(),
       db.businessExpense.findMany(),
@@ -77,7 +78,7 @@ export async function GET(req: NextRequest) {
         proj.status,
         proj.budget ? Number(proj.budget).toFixed(2) : "",
         proj.createdAt.toISOString(),
-        proj.tasks.length.toString(),
+        proj.clientTasks.length.toString(),
       ]);
     });
 
@@ -116,7 +117,7 @@ export async function GET(req: NextRequest) {
         exp.id,
         exp.category || "",
         Number(exp.amount).toFixed(2),
-        exp.date.toISOString().split('T')[0],
+        exp.expenseDate.toISOString().split('T')[0],
         (exp.description || "").replace(/"/g, '""'),
       ]);
     });

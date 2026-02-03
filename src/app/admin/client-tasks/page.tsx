@@ -77,7 +77,11 @@ export default async function ClientTasksPage() {
     completedAt: task.completedAt ? task.completedAt.toISOString() : null,
     submissionNotes: task.submissionNotes,
     data: task.data,
-    createdBy: task.createdBy,
+    createdBy: task.createdBy ? {
+      id: task.createdBy.id,
+      name: task.createdBy.name,
+      email: task.createdBy.email,
+    } : null,
   }));
 
   const overdue = rows.filter(

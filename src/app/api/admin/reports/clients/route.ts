@@ -5,7 +5,8 @@ import { getCurrentUser } from "@/lib/auth/requireRole";
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== "ADMIN") {
+    const ADMIN_ROLES = ["CEO", "CFO", "ADMIN", "DEV", "FRONTEND", "BACKEND"];
+    if (!user || !ADMIN_ROLES.includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -37,7 +38,6 @@ export async function GET(req: NextRequest) {
       "Phone",
       "Website",
       "Industry",
-      "Company Size",
       "Total Projects",
       "Active Projects",
       "Total Invoices",
@@ -65,7 +65,6 @@ export async function GET(req: NextRequest) {
         client.phone || "",
         client.website || "",
         client.industry || "",
-        client.companySize || "",
         client._count.projects,
         activeProjects,
         client._count.invoices,

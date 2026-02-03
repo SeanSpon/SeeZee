@@ -5,7 +5,8 @@ import { getCurrentUser } from "@/lib/auth/requireRole";
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== "ADMIN") {
+    const ADMIN_ROLES = ["CEO", "CFO", "ADMIN", "DEV", "FRONTEND", "BACKEND"];
+    if (!user || !ADMIN_ROLES.includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch tasks
-    const tasks = await db.task.findMany({
+    const tasks = await db.clientTask.findMany({
       where: dateFilter,
       include: {
         project: {
@@ -36,12 +37,7 @@ export async function GET(req: NextRequest) {
             organization: { select: { name: true } },
           },
         },
-        milestone: { select: { title: true } },
-        assignments: {
-          include: {
-            user: { select: { name: true, email: true } },
-          },
-        },
+        createdBy: { select: { name: true, email: true } },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -52,14 +48,11 @@ export async function GET(req: NextRequest) {
       "Title",
       "Description",
       "Status",
-      "Priority",
       "Type",
       "Project",
       "Client",
-      "Milestone",
-      "Assigned To",
-      "Estimated Hours",
-      "Actual Hours",
+      "Assigned To Client",
+      "Requires Upload",
       "Due Date",
       "Completed Date",
       "Created Date",
@@ -67,25 +60,20 @@ export async function GET(req: NextRequest) {
     ];
 
     const rows = tasks.map(task => {
-      const assignees = task.assignments.map(a => a.user?.name || "Unknown").join("; ");
-
       return [
         task.id,
         task.title,
         (task.description || "").replace(/"/g, '""'),
         task.status,
-        task.priority || "",
         task.type || "",
         task.project?.name || "No Project",
         task.project?.organization?.name || "No Client",
-        task.milestone?.title || "",
-        assignees || "Unassigned",
-        task.estimatedHours || "",
-        task.actualHours || "",
+        task.assignedToClient ? "Yes" : "No",
+        task.requiresUpload ? "Yes" : "No",
         task.dueDate ? task.dueDate.toISOString().split('T')[0] : "",
         task.completedAt ? task.completedAt.toISOString().split('T')[0] : "",
         task.createdAt.toISOString().split('T')[0],
-        task.createdBy || "",
+        task.createdBy?.name || "System",
       ];
     });
 

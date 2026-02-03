@@ -12,10 +12,9 @@ import { ClientHoursManager } from "@/components/admin/ClientHoursManager";
 interface ClientDetailClientProps {
   clientData: {
     id: string;
-    type: "organization" | "lead" | "project";
+    type: "organization" | "lead";
     organization: any;
     lead: any;
-    project: any;
   };
   user: CurrentUser;
 }
@@ -53,16 +52,15 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
   
   const org = clientData.organization;
   const lead = clientData.lead;
-  const project = clientData.project;
 
   // Determine client name and basic info
-  const clientName = org?.name || lead?.name || project?.name || "Unknown Client";
+  const clientName = org?.name || lead?.name || "Unknown Client";
   const clientEmail = org?.email || lead?.email || "No email";
-  const clientCompany = org?.name || lead?.company || project?.organization?.name || "N/A";
+  const clientCompany = org?.name || lead?.company || "N/A";
 
   // Get projects and invoices
-  const projects = org?.projects || (lead?.organization?.projects) || (project ? [project] : []) || [];
-  const invoices = org?.invoices || (lead?.organization?.invoices) || project?.invoices || [];
+  const projects = org?.projects || (lead?.organization?.projects) || [];
+  const invoices = org?.invoices || (lead?.organization?.invoices) || [];
   const leads = org?.leads || (lead ? [lead] : []) || [];
 
   // Calculate totals (invoice totals are stored in dollars)
@@ -92,7 +90,6 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
               <p className="text-sm text-slate-400 mt-1">
                 {clientData.type === "organization" && "Organization"}
                 {clientData.type === "lead" && "Lead"}
-                {clientData.type === "project" && "Project"}
                 {" • "}
                 {clientEmail}
               </p>

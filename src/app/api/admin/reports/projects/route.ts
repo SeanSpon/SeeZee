@@ -5,7 +5,8 @@ import { getCurrentUser } from "@/lib/auth/requireRole";
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== "ADMIN") {
+    const ADMIN_ROLES = ["CEO", "CFO", "ADMIN", "DEV", "FRONTEND", "BACKEND"];
+    if (!user || !ADMIN_ROLES.includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -32,10 +33,10 @@ export async function GET(req: NextRequest) {
       include: {
         organization: { select: { name: true, email: true } },
         assignee: { select: { name: true, email: true } },
-        tasks: { select: { id: true, status: true } },
+        clientTasks: { select: { id: true, status: true } },
         _count: {
           select: {
-            tasks: true,
+            clientTasks: true,
             milestones: true,
             invoices: true,
           },
@@ -51,7 +52,6 @@ export async function GET(req: NextRequest) {
       "Client Name",
       "Client Email",
       "Status",
-      "Type",
       "Budget",
       "Total Tasks",
       "Completed Tasks",
@@ -59,14 +59,13 @@ export async function GET(req: NextRequest) {
       "Invoices",
       "Assignee",
       "Start Date",
-      "Due Date",
-      "Completed Date",
+      "End Date",
       "Created Date",
       "Description",
     ];
 
     const rows = projects.map(project => {
-      const completedTasks = project.tasks.filter(t => t.status === "COMPLETED").length;
+      const completedTasks = project.clientTasks.filter(t => t.status === "COMPLETED").length;
 
       return [
         project.id,
@@ -74,16 +73,14 @@ export async function GET(req: NextRequest) {
         project.organization?.name || "No Client",
         project.organization?.email || "",
         project.status,
-        project.type || "",
         project.budget ? Number(project.budget).toFixed(2) : "",
-        project._count.tasks,
+        project._count.clientTasks,
         completedTasks,
         project._count.milestones,
         project._count.invoices,
         project.assignee?.name || "Unassigned",
         project.startDate ? project.startDate.toISOString().split('T')[0] : "",
-        project.dueDate ? project.dueDate.toISOString().split('T')[0] : "",
-        project.completedAt ? project.completedAt.toISOString().split('T')[0] : "",
+        project.endDate ? project.endDate.toISOString().split('T')[0] : "",
         project.createdAt.toISOString().split('T')[0],
         (project.description || "").replace(/"/g, '""'),
       ];

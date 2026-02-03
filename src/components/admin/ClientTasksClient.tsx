@@ -25,11 +25,11 @@ interface TaskRow {
   description?: string;
   submissionNotes?: string | null;
   data?: any;
-  createdBy?: {
+  createdBy: {
     id: string;
     name: string | null;
     email: string;
-  };
+  } | null;
 }
 
 interface ClientTasksClientProps {
@@ -222,7 +222,7 @@ export function ClientTasksClient({ rows, overdue, openTasks }: ClientTasksClien
               <option value="all">All Types</option>
               {uniqueTypes.map((type) => (
                 <option key={type} value={type}>
-                  {type?.charAt(0).toUpperCase() + type?.slice(1)}
+                  {type ? type.charAt(0).toUpperCase() + type.slice(1) : ""}
                 </option>
               ))}
             </select>

@@ -28,7 +28,7 @@ export default async function ReportsPage() {
       db.payment.count(),
       db.project.count(),
       db.organization.count(),
-      db.task.count(),
+      db.clientTask.count(),
       db.businessExpense.count(),
     ]);
 
