@@ -231,6 +231,12 @@ export function TransactionsManager({
     }
   };
 
+  // Subscription action handler
+  const handleViewSubscription = (subscriptionId: string) => {
+    const params = new URLSearchParams({ subscriptionId });
+    router.push(`/admin/maintenance?${params.toString()}`);
+  };
+
   const handleExportData = () => {
     let dataToExport: any[] = [];
     let filename = "";
@@ -830,13 +836,13 @@ export function TransactionsManager({
 
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
                   <button 
-                    onClick={() => router.push(`/admin/maintenance?subscriptionId=${sub.id}`)}
+                    onClick={() => handleViewSubscription(sub.id)}
                     className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
                   >
                     View Details
                   </button>
                   <button 
-                    onClick={() => router.push(`/admin/maintenance?subscriptionId=${sub.id}`)}
+                    onClick={() => handleViewSubscription(sub.id)}
                     className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
                   >
                     <FiEdit className="w-4 h-4" />
