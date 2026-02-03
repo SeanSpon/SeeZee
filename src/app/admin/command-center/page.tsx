@@ -86,7 +86,7 @@ const QUICK_LINKS: QuickLinksConfig = {
     },
     {
       name: "Vercel",
-      url: "https://vercel.com/seezeestudios",
+      url: "https://vercel.com/zach-robards-projects",
       icon: Globe,
       color: "from-black to-gray-800",
       description: "Deployments & Hosting",
@@ -273,6 +273,7 @@ export default function CommandCenterPage() {
   const [gitRepos, setGitRepos] = useState<GitRepo[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [emailAccounts, setEmailAccounts] = useState<EmailAccount[]>([]);
+  const [vercelWebhookActive, setVercelWebhookActive] = useState(false);
   const [services, setServices] = useState<ServiceStatus[]>([
     { name: "Vercel", status: "operational" },
     { name: "GitHub", status: "operational" },
@@ -391,14 +392,27 @@ export default function CommandCenterPage() {
           const vercelData = await vercelRes.json();
           setDeployments(vercelData.deployments || []);
           
+          // Check if webhooks are configured
+          setVercelWebhookActive(vercelData.webhookConfigured || false);
+          
           // Count active deployments
           const activeCount = (vercelData.deployments || []).filter(
             (d: Deployment) => d.state === "READY"
           ).length;
           setStats(prev => ({ ...prev, activeDeployments: activeCount }));
           
-          // Update Vercel service status if not configured
+          // Update Vercel service status
           if (vercelData.error) {
+            setServices(prev => prev.map(s => 
+              s.name === "Vercel" ? { ...s, status: "degraded" as const } : s
+            ));
+          } else if (vercelData.deployments && vercelData.deployments.length > 0) {
+            // Show connected if we have deployments (from webhook OR API)
+            setServices(prev => prev.map(s => 
+              s.name === "Vercel" ? { ...s, status: "operational" as const } : s
+            ));
+          } else {
+            // No deployments but no error - show degraded
             setServices(prev => prev.map(s => 
               s.name === "Vercel" ? { ...s, status: "degraded" as const } : s
             ));
@@ -448,7 +462,7 @@ export default function CommandCenterPage() {
     }
 
     fetchAllData();
-  }, [gitContext]);
+  }, []); // Run once on mount, don't depend on gitContext
 
   const filteredLinks = (Object.entries(QUICK_LINKS) as [keyof QuickLinksConfig, QuickLink[]][]).reduce((acc, [category, links]) => {
     const filtered = links.filter(
@@ -859,9 +873,15 @@ export default function CommandCenterPage() {
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-white" />
                 <h3 className="font-semibold text-white">Deployments</h3>
+                {vercelWebhookActive && (
+                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 rounded-full flex items-center gap-1">
+                    <Zap className="w-2.5 h-2.5" />
+                    LIVE
+                  </span>
+                )}
               </div>
               <a
-                href="https://vercel.com/seezeestudios"
+                href="https://vercel.com/zach-robards-projects"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-white/40 hover:text-white flex items-center gap-1"
@@ -927,7 +947,7 @@ export default function CommandCenterPage() {
           <QuickActionButton
             icon={Globe}
             label="Vercel"
-            href="https://vercel.com/seezeestudios"
+            href="https://vercel.com/zach-robards-projects"
           />
           <QuickActionButton
             icon={Mail}

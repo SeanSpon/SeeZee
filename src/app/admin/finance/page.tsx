@@ -20,7 +20,7 @@ export default async function FinancePage() {
   if (!user) redirect('/login');
 
   // Fetch all financial data in parallel including expenses
-  const [invoices, payments, maintenancePlans, projects, organizations, expenses] = await Promise.all([
+  const [invoices, payments, projects, organizations, expenses] = await Promise.all([
     // All invoices with relationships
     db.invoice.findMany({
       include: {
@@ -41,18 +41,6 @@ export default async function FinancePage() {
       },
       orderBy: { createdAt: "desc" },
       take: 10,
-    }),
-    
-    // Active maintenance plans (subscriptions)
-    db.maintenancePlan.findMany({
-      include: {
-        project: {
-          include: {
-            organization: { select: { id: true, name: true } },
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
     }),
     
     // Active projects for revenue tracking
@@ -161,14 +149,6 @@ export default async function FinancePage() {
   // Monthly recurring expense cost
   const monthlyRecurringExpenseCost = totalExpenseCalc.monthlyRecurringCost; // In cents
 
-  // Subscription metrics (monthlyPrice is stored in cents)
-  const activeSubscriptions = maintenancePlans.filter(plan => plan.status === "ACTIVE");
-  const monthlyRecurringRevenue = activeSubscriptions.reduce(
-    (sum, plan) => sum + Number(plan.monthlyPrice) / 100, // Convert cents to dollars
-    0
-  );
-  const annualRecurringRevenue = monthlyRecurringRevenue * 12;
-
   // Payment metrics
   const last30DaysPayments = payments.filter(
     payment => new Date(payment.createdAt) >= last30Days
@@ -199,11 +179,13 @@ export default async function FinancePage() {
       )
       .reduce((sum, inv) => sum + Number(inv.total), 0); // Invoice totals are in dollars
 
+    // Simple expense calculation: only count expenses that occurred in this month
+    // For recurring expenses, only count them in months where they were actually charged
     const monthExpenses = expenses
-      .filter(exp => 
-        new Date(exp.expenseDate) >= monthStart && 
-        new Date(exp.expenseDate) < monthEnd
-      )
+      .filter(exp => {
+        const expDate = new Date(exp.expenseDate);
+        return expDate >= monthStart && expDate < monthEnd;
+      })
       .reduce((sum, exp) => sum + Number(exp.amount), 0) / 100; // Convert cents to dollars
 
     const monthLabel = monthStart.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -226,7 +208,7 @@ export default async function FinancePage() {
     });
   }
 
-  // Prepare data for client component
+  // Prepare data for client component - focused on transactional revenue only
   const metrics = {
     totalRevenue,
     thisMonthRevenue,
@@ -235,10 +217,6 @@ export default async function FinancePage() {
     revenueGrowth,
     outstandingAmount,
     overdueAmount,
-    monthlyRecurringRevenue,
-    annualRecurringRevenue,
-    activeSubscriptions: activeSubscriptions.length,
-    totalSubscriptions: maintenancePlans.length,
     totalInvoices: invoices.length,
     paidInvoices: paidInvoices.length,
     outstandingInvoices: outstandingInvoices.length,
@@ -277,16 +255,6 @@ export default async function FinancePage() {
     method: payment.method || "Unknown",
   }));
 
-  const subscriptionData = activeSubscriptions.map(plan => ({
-    id: plan.id,
-    client: plan.project?.organization?.name || "Unknown",
-    project: plan.project?.name || "Unknown",
-    amount: Number(plan.monthlyPrice) / 100, // Convert cents to dollars
-    status: plan.status,
-    billingCycle: "monthly",
-    nextBillingDate: null,
-  }));
-
   // Recent expenses for display
   const recentExpenses = expenses.slice(0, 10).map(exp => ({
     id: exp.id,
@@ -304,7 +272,6 @@ export default async function FinancePage() {
       metrics={metrics}
       recentInvoices={recentInvoices}
       recentPayments={recentPayments}
-      subscriptions={subscriptionData}
       recentExpenses={recentExpenses}
     />
   );

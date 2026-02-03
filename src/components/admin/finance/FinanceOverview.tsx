@@ -38,10 +38,6 @@ interface FinanceMetrics {
   revenueGrowth: number;
   outstandingAmount: number;
   overdueAmount: number;
-  monthlyRecurringRevenue: number;
-  annualRecurringRevenue: number;
-  activeSubscriptions: number;
-  totalSubscriptions: number;
   totalInvoices: number;
   paidInvoices: number;
   outstandingInvoices: number;
@@ -104,7 +100,6 @@ interface FinanceOverviewProps {
   metrics: FinanceMetrics;
   recentInvoices: RecentInvoice[];
   recentPayments: RecentPayment[];
-  subscriptions: Subscription[];
   recentExpenses?: RecentExpense[];
 }
 
@@ -133,7 +128,6 @@ export function FinanceOverview({
   metrics, 
   recentInvoices, 
   recentPayments, 
-  subscriptions,
   recentExpenses = []
 }: FinanceOverviewProps) {
   const [timeframe, setTimeframe] = useState<"30d" | "month" | "all">("month");
@@ -298,27 +292,6 @@ export function FinanceOverview({
           )}
         </motion.div>
 
-        {/* MRR */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-6"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="p-2 bg-blue-500/20 rounded-lg">
-              <FiRefreshCw className="w-5 h-5 text-blue-400" />
-            </div>
-            <span className="text-xs text-gray-400">{metrics.activeSubscriptions} active</span>
-          </div>
-          <h3 className="text-2xl font-bold text-white">
-            {formatCurrency(metrics.monthlyRecurringRevenue)}
-          </h3>
-          <p className="text-gray-400 text-sm mt-1">MRR</p>
-          <div className="text-xs text-gray-400 mt-2">
-            ARR: {formatCurrency(metrics.annualRecurringRevenue)}
-          </div>
-        </motion.div>
 
         {/* Available Funds (NEW) */}
         {metrics.availableFunds !== undefined && (
@@ -739,45 +712,6 @@ export function FinanceOverview({
         </div>
       </div>
 
-      {/* Active Subscriptions */}
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Active Subscriptions</h2>
-          <Link
-            href="/admin/finance/transactions?tab=subscriptions"
-            className="text-sm text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
-          >
-            View All <FiArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {subscriptions.slice(0, 6).map((sub) => (
-            <div
-              key={sub.id}
-              className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-emerald-500/30 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
-                  <h3 className="text-white font-medium">{sub.client}</h3>
-                  <p className="text-sm text-gray-400">{sub.project}</p>
-                </div>
-                <span className={`text-xs px-2 py-1 rounded ${getStatusColor(sub.status)} bg-white/10`}>
-                  {sub.status}
-                </span>
-              </div>
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                <span className="text-sm text-gray-400">{sub.billingCycle}</span>
-                <span className="text-white font-semibold">{formatCurrency(sub.amount)}/mo</span>
-              </div>
-              {sub.nextBillingDate && (
-                <p className="text-xs text-gray-500 mt-2">
-                  Next: {new Date(sub.nextBillingDate).toLocaleDateString()}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

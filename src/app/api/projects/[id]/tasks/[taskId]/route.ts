@@ -74,6 +74,8 @@ export async function PATCH(
     if (body.column !== undefined) updateData.column = body.column;
     if (body.position !== undefined) updateData.position = body.position;
     if (body.assignedToId !== undefined) updateData.assignedToId = body.assignedToId || null;
+    if (body.assignedToRole !== undefined) updateData.assignedToRole = body.assignedToRole || null;
+    if (body.assignedToTeamId !== undefined) updateData.assignedToTeamId = body.assignedToTeamId || null;
     if (body.dueDate !== undefined) updateData.dueDate = body.dueDate ? new Date(body.dueDate) : null;
     if (body.estimatedHours !== undefined) updateData.estimatedHours = body.estimatedHours;
     if (body.actualHours !== undefined) updateData.actualHours = body.actualHours;

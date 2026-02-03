@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 
 const ADMIN_ROLES = ["CEO", "CFO", "ADMIN", "DEV", "FRONTEND", "BACKEND"];
 const VERCEL_API_URL = "https://api.vercel.com";
 
 /**
  * GET /api/integrations/vercel/deployments
- * Fetch recent Vercel deployments across all projects
+ * Fetch recent Vercel deployments from database (populated by webhooks)
+ * Falls back to API if no webhook data available
  */
 export async function GET(req: NextRequest) {
   try {
@@ -20,6 +22,43 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Admin role required" }, { status: 403 });
     }
 
+    // First, try to get deployments from database (webhook data)
+    const dbDeployments = await prisma.vercelDeployment.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    });
+
+    // If we have webhook data, use it
+    if (dbDeployments.length > 0) {
+      const deployments = dbDeployments.map((d) => ({
+        id: d.deploymentId,
+        name: d.name,
+        url: d.url,
+        inspectorUrl: d.inspectorUrl || "",
+        state: d.state,
+        target: d.target || "preview",
+        createdAt: d.createdAt.getTime(),
+        buildingAt: d.buildingAt?.getTime() || 0,
+        ready: d.readyAt?.getTime() || 0,
+        source: "webhook",
+        meta: {
+          branch: d.branch || "",
+          commit: d.commitSha?.substring(0, 7) || "",
+          message: d.commitMessage || "",
+          author: d.commitAuthor || "",
+          repo: d.repo || "",
+        },
+      }));
+
+      return NextResponse.json({
+        deployments,
+        projects: [],
+        source: "webhook",
+        webhookConfigured: true,
+      });
+    }
+
+    // Fallback to Vercel API if no webhook data
     const vercelToken = process.env.VERCEL_TOKEN;
     const teamId = process.env.VERCEL_TEAM_ID;
 
@@ -28,6 +67,8 @@ export async function GET(req: NextRequest) {
         deployments: [],
         projects: [],
         error: "Vercel integration not configured",
+        source: "none",
+        webhookConfigured: false,
       });
     }
 
@@ -65,7 +106,7 @@ export async function GET(req: NextRequest) {
         createdAt: d.createdAt,
         buildingAt: d.buildingAt,
         ready: d.ready,
-        source: d.source,
+        source: "api",
         meta: {
           branch: d.meta?.githubCommitRef,
           commit: d.meta?.githubCommitSha?.substring(0, 7),
@@ -92,6 +133,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       deployments,
       projects,
+      source: "api",
+      webhookConfigured: false,
     });
   } catch (error) {
     console.error("[GET /api/integrations/vercel/deployments]", error);

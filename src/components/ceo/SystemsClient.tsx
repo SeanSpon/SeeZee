@@ -371,13 +371,15 @@ export function SystemsClient({ stats, systemInfo }: SystemsClientProps) {
                       log.level === 'WARN' ? 'text-amber-400' :
                       'text-cyan-400'
                     }`}>
-                      {log.level}
+                      {log.level || 'INFO'}
                     </span>
                     <span className="text-xs text-slate-500">
                       {new Date(log.createdAt).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-300 truncate">{log.message}</p>
+                  <p className="text-sm text-slate-300 truncate">
+                    {log.message || log.action || 'System activity'}
+                  </p>
                 </div>
               ))
             ) : (

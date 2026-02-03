@@ -339,7 +339,7 @@ export function LeadsTableClient({ leads: initialLeads }: LeadsTableClientProps)
         );
         // Redirect to the new project
         if (result.projectId) {
-          router.push(`/admin/pipeline/projects/${result.projectId}`);
+          router.push(`/admin/projects/${result.projectId}`);
         } else {
           router.push(`/admin/pipeline/projects`);
         }

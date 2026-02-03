@@ -38,6 +38,15 @@ interface Deployment {
   };
 }
 
+interface VercelProject {
+  id: string;
+  name: string;
+  framework: string | null;
+  link: string;
+  productionUrl: string | null;
+  gitRepo: string | null;
+}
+
 interface VercelDeploymentsPanelProps {
   projectId: string;
   vercelUrl?: string | null;
@@ -62,6 +71,9 @@ export function VercelDeploymentsPanel({
   const [showLinkForm, setShowLinkForm] = useState(false);
   const [urlInput, setUrlInput] = useState(vercelUrl || "");
   const [saving, setSaving] = useState(false);
+  const [vercelProjects, setVercelProjects] = useState<VercelProject[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
 
   // Fetch deployments
   const fetchDeployments = async () => {
@@ -94,11 +106,49 @@ export function VercelDeploymentsPanel({
     }
   };
 
+  // Fetch available Vercel projects
+  const fetchVercelProjects = async () => {
+    setLoadingProjects(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/integrations/vercel/projects");
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to fetch Vercel projects");
+      }
+
+      setVercelProjects(data.projects || []);
+    } catch (e: any) {
+      setError(e.message);
+      setVercelProjects([]);
+    } finally {
+      setLoadingProjects(false);
+    }
+  };
+
   useEffect(() => {
     if (expanded && (vercelProjectId || vercelUrl)) {
       fetchDeployments();
     }
   }, [vercelProjectId, vercelUrl, projectId, expanded]);
+
+  // Fetch Vercel projects when form is shown
+  useEffect(() => {
+    if (showLinkForm && vercelProjects.length === 0) {
+      fetchVercelProjects();
+    }
+  }, [showLinkForm]);
+
+  // Handle project selection from dropdown
+  const handleProjectSelect = (projectId: string) => {
+    setSelectedProjectId(projectId);
+    const project = vercelProjects.find((p) => p.id === projectId);
+    if (project) {
+      setUrlInput(project.link || project.productionUrl || `https://${project.name}.vercel.app`);
+    }
+  };
 
   // Save Vercel URL
   const handleSaveUrl = async () => {
@@ -236,29 +286,101 @@ export function VercelDeploymentsPanel({
         >
           {/* Link Form */}
           {showLinkForm && isAdmin && (
-            <div className="p-4 bg-white/5 border-b border-white/10">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  placeholder="https://your-app.vercel.app"
-                  className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/30 focus:border-[#ef4444]/50 outline-none"
-                />
-                <button
-                  onClick={handleSaveUrl}
-                  disabled={saving}
-                  className="px-4 py-2 bg-[#ef4444] hover:bg-[#dc2626] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
-                </button>
-                <button
-                  onClick={() => setShowLinkForm(false)}
-                  className="px-3 py-2 text-white/60 hover:text-white text-sm transition-colors"
-                >
-                  Cancel
-                </button>
+            <div className="p-4 bg-white/5 border-b border-white/10 space-y-4">
+              <div className="text-sm text-white/70 mb-3">
+                Link this project to a Vercel deployment
               </div>
+
+              {/* Loading State */}
+              {loadingProjects && (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="w-5 h-5 text-white/40 animate-spin mr-2" />
+                  <span className="text-sm text-white/60">Loading Vercel projects...</span>
+                </div>
+              )}
+
+              {/* Form Fields */}
+              {!loadingProjects && (
+                <>
+                  {/* Vercel Project Dropdown */}
+                  <div>
+                    <label className="block text-xs font-medium text-white/70 uppercase tracking-wide mb-2">
+                      Vercel Project
+                    </label>
+                    {vercelProjects.length > 0 ? (
+                      <select
+                        value={selectedProjectId}
+                        onChange={(e) => handleProjectSelect(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-[#ef4444]/50 focus:ring-1 focus:ring-[#ef4444]/20 outline-none transition-all"
+                      >
+                        <option value="" className="bg-[#0a1128]">Select a Vercel project...</option>
+                        {vercelProjects.map((project) => (
+                          <option key={project.id} value={project.id} className="bg-[#0a1128]">
+                            {project.name} {project.framework ? `(${project.framework})` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <div className="px-3 py-2.5 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                        <p className="text-xs text-amber-400">
+                          No Vercel projects found. Make sure VERCEL_TOKEN is configured.
+                        </p>
+                      </div>
+                    )}
+                    <p className="text-xs text-white/40 mt-1.5">
+                      Select the Vercel project to link deployments from
+                    </p>
+                  </div>
+
+                  {/* Deployment URL Input */}
+                  <div>
+                    <label className="block text-xs font-medium text-white/70 uppercase tracking-wide mb-2">
+                      Deployment URL
+                    </label>
+                    <input
+                      type="text"
+                      value={urlInput}
+                      onChange={(e) => setUrlInput(e.target.value)}
+                      placeholder="https://your-app.vercel.app"
+                      className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/30 focus:border-[#ef4444]/50 focus:ring-1 focus:ring-[#ef4444]/20 outline-none transition-all"
+                    />
+                    <p className="text-xs text-white/40 mt-1.5">
+                      The live URL where your app is deployed (auto-filled from project selection)
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <button
+                      onClick={handleSaveUrl}
+                      disabled={saving || !urlInput}
+                      className="flex-1 px-4 py-2.5 bg-[#ef4444] hover:bg-[#dc2626] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      {saving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <LinkIcon className="w-4 h-4" />
+                          Save Connection
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowLinkForm(false);
+                        setSelectedProjectId("");
+                        setUrlInput(vercelUrl || "");
+                      }}
+                      className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 

@@ -12,7 +12,8 @@ export const dynamic = "force-dynamic";
 export default async function MaintenancePage() {
   // Auth check is handled in layout.tsx to prevent flash
 
-  const [schedulesResult, clientsResult, statsResult, plansResult] = await Promise.all([
+  try {
+    const [schedulesResult, clientsResult, statsResult, plansResult] = await Promise.all([
     getMaintenanceSchedules(),
     getMaintenanceClients(),
     getMaintenanceStats(),
@@ -84,16 +85,15 @@ export default async function MaintenancePage() {
     createdAt: cr.createdAt.toISOString(),
     updatedAt: cr.updatedAt.toISOString(),
     completedAt: cr.completedAt?.toISOString() || null,
+    subscription: cr.subscription || null,
   }));
 
-  // Calculate stats - include MaintenancePlan count and change requests
+  // Calculate stats - only count MaintenancePlan records (no legacy subscriptions)
   const activePlansCount = plans.filter((p: any) => p.status === "ACTIVE" || p.status === "PENDING").length;
   const pendingChangeRequests = changeRequests.filter((cr: any) => cr.status === "pending").length;
   
   const stats = {
-    activePlans: activePlansCount || clients.filter((c: any) => 
-      c.maintenancePlanRel || c.maintenanceSchedules?.some((s: any) => s.status === "ACTIVE")
-    ).length,
+    activePlans: activePlansCount, // Only count MaintenancePlan records
     pending: maintenanceStats.upcoming + maintenanceStats.overdue + pendingChangeRequests,
     resolvedThisWeek: schedules.filter((s: any) => {
       if (s.status !== "COMPLETED" || !s.completedAt) return false;
@@ -109,15 +109,40 @@ export default async function MaintenancePage() {
     avgResponseTime: maintenanceStats.avgResponseTime,
   };
 
-  return (
-    <MaintenanceClient 
-      initialSchedules={schedules} 
-      clients={clients} 
-      stats={stats} 
-      plans={plans}
-      initialChangeRequests={changeRequests}
-    />
-  );
+    return (
+      <MaintenanceClient 
+        initialSchedules={schedules} 
+        clients={clients} 
+        stats={stats} 
+        plans={plans}
+        initialChangeRequests={changeRequests}
+      />
+    );
+  } catch (error) {
+    console.error('Maintenance Page Error:', error);
+    
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-8 max-w-lg">
+          <h1 className="text-2xl font-bold text-red-400 mb-4">Error Loading Maintenance</h1>
+          <p className="text-gray-300 mb-4">
+            There was an error loading the maintenance page. This could be due to:
+          </p>
+          <ul className="list-disc list-inside text-gray-400 space-y-2 mb-6">
+            <li>Database connection issue</li>
+            <li>Missing environment variables</li>
+            <li>Data retrieval error</li>
+          </ul>
+          <details className="bg-black/30 p-4 rounded-lg">
+            <summary className="text-sm text-gray-400 cursor-pointer">Technical Details</summary>
+            <pre className="text-xs text-red-300 mt-2 overflow-auto">
+              {error instanceof Error ? error.message : String(error)}
+            </pre>
+          </details>
+        </div>
+      </div>
+    );
+  }
 }
 
 

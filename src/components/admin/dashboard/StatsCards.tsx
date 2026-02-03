@@ -18,6 +18,12 @@ export interface AdminStats {
   thisMonthRevenue?: number;
   thisMonthExpenses?: number;
   netProfit?: number;
+  // Maintenance metrics
+  activePlans?: number;
+  maintenanceMRR?: number;
+  maintenanceARR?: number;
+  totalHoursAvailable?: number;
+  pendingChangeRequests?: number;
 }
 
 interface StatsCardsProps {

@@ -10,6 +10,7 @@ import { DataTable, type Column } from "@/components/admin/DataTable";
 import { Wrench, Clock, CheckCircle, TrendingUp, FileText, AlertCircle } from "lucide-react";
 import { updateMaintenanceStatus } from "@/server/actions";
 import { useRouter } from "next/navigation";
+import { NONPROFIT_TIERS } from "@/lib/config/tiers";
 
 type MaintenanceSchedule = {
   id: string;
@@ -31,6 +32,7 @@ type MaintenanceSchedule = {
   };
 };
 
+// Legacy type - no longer used, kept for backward compatibility
 type Client = {
   id: string;
   name: string;
@@ -38,28 +40,6 @@ type Client = {
     name: string;
     email: string | null;
   };
-  subscriptions: {
-    id: string;
-    priceId: string;
-    currentPeriodEnd: string | null;
-  }[];
-  maintenancePlanRel?: {
-    id: string;
-    tier: string;
-    monthlyPrice: number | string;
-    status: string;
-    supportHoursIncluded: number;
-    supportHoursUsed: number;
-    changeRequestsIncluded: number;
-    changeRequestsUsed: number;
-    createdAt: string;
-  } | null;
-  maintenanceSchedules?: {
-    id: string;
-    title: string;
-    status: string;
-    scheduledFor: string;
-  }[];
 };
 
 type MaintenancePlan = {
@@ -109,7 +89,7 @@ type ChangeRequest = {
     id: string;
     planName: string | null;
     status: string;
-  };
+  } | null;
 };
 
 interface MaintenanceClientProps {
@@ -458,19 +438,19 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
         />
       ) : (
         <div className="space-y-4">
-          {/* Maintenance Plans from Form Submissions */}
-          {plans.length > 0 && (
-            <div className="seezee-glass rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Maintenance Plans</h3>
-              <p className="text-slate-400 mb-6">
-                {plans.length} maintenance plan{plans.length !== 1 ? 's' : ''} from client submissions
-              </p>
+          {/* Monthly Maintenance Schedules */}
+          <div className="seezee-glass rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">Monthly Maintenance Schedules</h3>
+            <p className="text-slate-400 mb-6">
+              {plans.length} active maintenance plan{plans.length !== 1 ? 's' : ''}
+            </p>
+            {plans.filter(plan => plan.project).length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {plans.filter(plan => plan.project).map((plan) => (
                   <div
                     key={plan.id}
                     className="bg-seezee-card-bg border border-white/10 rounded-xl p-4 text-left cursor-pointer hover:border-white/20 transition-all"
-                    onClick={() => router.push(`/admin/pipeline/projects/${plan.project!.id}`)}
+                    onClick={() => router.push(`/admin/projects/${plan.project!.id}`)}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-semibold text-white">{plan.project!.name}</h4>
@@ -488,7 +468,9 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Tier:</span>
-                        <span className="text-white font-medium">{plan.tier}</span>
+                        <span className="text-white font-medium">
+                          {NONPROFIT_TIERS[plan.tier as keyof typeof NONPROFIT_TIERS]?.shortName || plan.tier}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Monthly:</span>
@@ -503,6 +485,12 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-500">Change Requests:</span>
+                        <span className="text-slate-300">
+                          {plan.changeRequestsUsed}/{plan.changeRequestsIncluded} used
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Created:</span>
                         <span className="text-slate-400 text-xs">
                           {new Date(plan.createdAt).toLocaleDateString()}
@@ -512,58 +500,17 @@ export function MaintenanceClient({ initialSchedules, clients, stats, plans = []
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Legacy Clients with Subscriptions */}
-          <div className="seezee-glass rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Client Subscriptions</h3>
-            <p className="text-slate-400 mb-6">
-              {clients.length} clients with maintenance subscriptions
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {clients.map((client) => (
-                <div
-                  key={client.id}
-                  className="bg-seezee-card-bg border border-white/10 rounded-xl p-4 text-left cursor-pointer hover:border-white/20 transition-all"
-                  onClick={() => router.push(`/admin/pipeline/projects/${client.id}`)}
-                >
-                  <h4 className="font-semibold text-white mb-2">{client.name || client.organization.name}</h4>
-                  <div className="space-y-1">
-                    {client.maintenancePlanRel && (
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-seezee-red/20 text-seezee-red border border-seezee-red/30">
-                          {client.maintenancePlanRel.tier}
-                        </span>
-                        <span className="text-xs text-seezee-green">
-                          ${(Number(client.maintenancePlanRel.monthlyPrice) / 100).toFixed(0)}/mo
-                        </span>
-                      </div>
-                    )}
-                    <p className="text-sm text-slate-400">
-                      {client.maintenanceSchedules?.length || 0} scheduled tasks
-                    </p>
-                    {client.subscriptions && client.subscriptions.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 rounded text-xs font-medium bg-seezee-green/20 text-seezee-green border border-seezee-green/30">
-                          Active Subscription
-                        </span>
-                        {client.subscriptions[0].currentPeriodEnd && (
-                          <span className="text-xs text-slate-500">
-                            Renews {new Date(client.subscriptions[0].currentPeriodEnd).toLocaleDateString()}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Wrench className="w-8 h-8 text-slate-600" />
                 </div>
-              ))}
-              {clients.length === 0 && plans.length === 0 && (
-                <div className="col-span-full text-center py-8 text-slate-500">
-                  No maintenance clients yet
-                </div>
-              )}
-            </div>
+                <p className="text-slate-500 text-lg mb-2">No maintenance plans yet</p>
+                <p className="text-slate-600 text-sm">
+                  Maintenance plans will appear here once clients sign up
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

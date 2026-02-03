@@ -122,7 +122,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
             Convert Lead
           </button>
         }
-        onRowClick={(project) => router.push(`/admin/pipeline/projects/${project.id}`)}
+        onRowClick={(project) => router.push(`/admin/projects/${project.id}`)}
       />
     </div>
   );

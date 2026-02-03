@@ -106,6 +106,7 @@ export async function getTasks(filter?: {
         submittedAt: true,
         approvedAt: true,
         projectId: true,
+        milestoneId: true,
         assignedToId: true,
         createdById: true,
         changeRequestId: true,
@@ -134,6 +135,16 @@ export async function getTasks(filter?: {
           select: {
             id: true,
             name: true,
+          },
+        },
+        milestone: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            dueDate: true,
+            completed: true,
+            projectId: true,
           },
         },
       },
@@ -652,7 +663,7 @@ export async function getTaskStats() {
       ? {} 
       : { assignedToId: user.id };
 
-    const [total, todo, inProgress, done, overdue] = await Promise.all([
+    const [total, todo, inProgress, done, overdue, withMilestone] = await Promise.all([
       db.todo.count({ where: baseFilter }),
       db.todo.count({ where: { ...baseFilter, status: TodoStatus.TODO } }),
       db.todo.count({ where: { ...baseFilter, status: TodoStatus.IN_PROGRESS } }),
@@ -664,18 +675,24 @@ export async function getTaskStats() {
           dueDate: { lt: new Date() },
         },
       }),
+      db.todo.count({
+        where: {
+          ...baseFilter,
+          milestoneId: { not: null },
+        },
+      }),
     ]);
 
     return {
       success: true,
-      stats: { total, todo, inProgress, done, overdue },
+      stats: { total, todo, inProgress, done, overdue, withMilestone },
     };
   } catch (error) {
     console.error("Failed to fetch task stats:", error);
     return {
       success: false,
       error: "Failed to fetch task stats",
-      stats: { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 },
+      stats: { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0, withMilestone: 0 },
     };
   }
 }

@@ -315,15 +315,13 @@ export function InvoicesTable({ invoices, organizations = [] }: InvoicesTablePro
                               </button>
                             </>
                           )}
-                          {invoice.status === "DRAFT" && (
-                            <button
-                              onClick={() => handleDelete(invoice.id)}
-                              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-[#1a2235] transition border-t border-gray-700"
-                            >
-                              <X className="w-4 h-4" />
-                              Delete Invoice
-                            </button>
-                          )}
+                          <button
+                            onClick={() => handleDelete(invoice.id)}
+                            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-[#1a2235] transition border-t border-gray-700"
+                          >
+                            <X className="w-4 h-4" />
+                            Delete Invoice
+                          </button>
                         </div>
                       )}
                     </div>

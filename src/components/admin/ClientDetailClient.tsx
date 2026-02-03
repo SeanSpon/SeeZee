@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Building, Mail, Phone, DollarSign, Folder, FileText, Users, Calendar, MapPin, Globe, TrendingUp, Check, X, AlertCircle, Loader2, Clock } from "lucide-react";
+import { ArrowLeft, Building, Mail, Phone, DollarSign, Folder, FileText, Users, Calendar, MapPin, Globe, TrendingUp, Clock } from "lucide-react";
 import Link from "next/link";
 import type { CurrentUser } from "@/lib/auth/requireRole";
 import { useDialogContext } from "@/lib/dialog";
@@ -50,8 +50,6 @@ const projectStatusColors: Record<string, string> = {
 export function ClientDetailClient({ clientData, user }: ClientDetailClientProps) {
   const router = useRouter();
   const dialog = useDialogContext();
-  const [assigningSubscription, setAssigningSubscription] = useState<string | null>(null);
-  const [revokingSubscription, setRevokingSubscription] = useState<string | null>(null);
   
   const org = clientData.organization;
   const lead = clientData.lead;
@@ -77,92 +75,6 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
   const activeProjects = projects.filter((p: any) => 
     ["ACTIVE", "IN_PROGRESS", "REVIEW"].includes(p.status)
   ).length;
-
-  // Handle assigning subscription to a project
-  const handleAssignSubscription = async (projectId: string, projectName: string) => {
-    const confirmed = await dialog.confirm(
-      `Assign a quarterly maintenance subscription ($2,000/quarter) to ${projectName}? This will grant the client immediate access to their dashboard.`,
-      {
-        title: "Assign Subscription",
-        variant: "info",
-        confirmText: "Assign Subscription",
-        cancelText: "Cancel",
-      }
-    );
-
-    if (!confirmed) return;
-
-    setAssigningSubscription(projectId);
-    try {
-      const response = await fetch("/api/admin/subscriptions/assign", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId,
-          planName: "Quarterly Maintenance",
-          changeRequestsAllowed: 6,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to assign subscription");
-      }
-
-      await dialog.alert("Subscription assigned successfully! The client now has access to their dashboard.", {
-        variant: "success",
-      });
-
-      router.refresh();
-    } catch (error) {
-      await dialog.alert(
-        error instanceof Error ? error.message : "Failed to assign subscription",
-        { variant: "error" }
-      );
-    } finally {
-      setAssigningSubscription(null);
-    }
-  };
-
-  // Handle revoking subscription
-  const handleRevokeSubscription = async (subscriptionId: string, projectName: string) => {
-    const confirmed = await dialog.confirm(
-      `Revoke the maintenance subscription for ${projectName}? The client will lose dashboard access immediately.`,
-      {
-        title: "Revoke Subscription",
-        variant: "warning",
-        confirmText: "Revoke",
-        cancelText: "Cancel",
-      }
-    );
-
-    if (!confirmed) return;
-
-    setRevokingSubscription(subscriptionId);
-    try {
-      const response = await fetch(`/api/admin/subscriptions/assign?id=${subscriptionId}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to revoke subscription");
-      }
-
-      await dialog.alert("Subscription revoked successfully.", { variant: "success" });
-
-      router.refresh();
-    } catch (error) {
-      await dialog.alert(
-        error instanceof Error ? error.message : "Failed to revoke subscription",
-        { variant: "error" }
-      );
-    } finally {
-      setRevokingSubscription(null);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -245,7 +157,6 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="projects">Projects ({totalProjects})</TabsTrigger>
             <TabsTrigger value="invoices">Invoices ({totalInvoices})</TabsTrigger>
-            <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
             <TabsTrigger value="hours">Hours & Packages</TabsTrigger>
             <TabsTrigger value="contacts">Contacts</TabsTrigger>
           </TabsList>
@@ -370,7 +281,7 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
                 projects.map((proj: any) => (
                   <Link
                     key={proj.id}
-                    href={`/admin/pipeline/projects/${proj.id}`}
+                    href={`/admin/projects/${proj.id}`}
                     className="block rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 hover:border-white/[0.15] transition-all"
                   >
                     <div className="flex items-start justify-between">
@@ -488,173 +399,6 @@ export function ClientDetailClient({ clientData, user }: ClientDetailClientProps
             </div>
           </TabsContent>
 
-          <TabsContent value="subscriptions" className="mt-6">
-            <div className="space-y-3">
-              {projects.length > 0 ? (
-                projects.map((proj: any) => {
-                  const activeSubscription = proj.subscriptions?.find(
-                    (sub: any) => sub.status === "active"
-                  );
-                  const isManual = activeSubscription?.stripeId?.startsWith("manual_");
-
-                  return (
-                    <div
-                      key={proj.id}
-                      className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-white mb-1">
-                            {proj.name}
-                          </h4>
-                          <p className="text-sm text-gray-400">
-                            {activeSubscription ? (
-                              <>
-                                <span className="text-green-400">●</span> Active Subscription
-                                {isManual && (
-                                  <span className="ml-2 text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
-                                    Manually Assigned
-                                  </span>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                <span className="text-gray-500">●</span> No Active Subscription
-                              </>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-
-                      {activeSubscription ? (
-                        <div className="bg-white/5 rounded-lg p-4 mb-4">
-                          <div className="grid grid-cols-2 gap-4 mb-4">
-                            <div>
-                              <div className="text-xs text-gray-400 mb-1">Plan</div>
-                              <div className="text-sm font-medium text-white">
-                                {activeSubscription.planName || "Quarterly Maintenance"}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs text-gray-400 mb-1">Status</div>
-                              <div className="text-sm font-medium capitalize text-green-400">
-                                {activeSubscription.status}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs text-gray-400 mb-1">Change Requests</div>
-                              <div className="text-sm font-medium text-white">
-                                {activeSubscription.changeRequestsUsed || 0} /{" "}
-                                {activeSubscription.changeRequestsAllowed || 6}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs text-gray-400 mb-1">Period Ends</div>
-                              <div className="text-sm font-medium text-white">
-                                {activeSubscription.currentPeriodEnd
-                                  ? new Date(
-                                      activeSubscription.currentPeriodEnd
-                                    ).toLocaleDateString()
-                                  : "N/A"}
-                              </div>
-                            </div>
-                          </div>
-
-                          {isManual && (
-                            <button
-                              onClick={() =>
-                                handleRevokeSubscription(activeSubscription.id, proj.name)
-                              }
-                              disabled={revokingSubscription === activeSubscription.id}
-                              className="w-full py-2 px-4 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                            >
-                              {revokingSubscription === activeSubscription.id ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  Revoking...
-                                </>
-                              ) : (
-                                <>
-                                  <X className="w-4 h-4" />
-                                  Revoke Subscription
-                                </>
-                              )}
-                            </button>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-4">
-                          <div className="flex items-start gap-3">
-                            <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-                            <div className="flex-1">
-                              <p className="text-sm text-yellow-400 mb-2">
-                                This project doesn't have an active subscription. Assign one to grant
-                                dashboard access.
-                              </p>
-                              <button
-                                onClick={() => handleAssignSubscription(proj.id, proj.name)}
-                                disabled={assigningSubscription === proj.id}
-                                className="py-2 px-4 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                              >
-                                {assigningSubscription === proj.id ? (
-                                  <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Assigning...
-                                  </>
-                                ) : (
-                                  <>
-                                    <Check className="w-4 h-4" />
-                                    Assign Subscription ($2,000/quarter)
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-12 text-center">
-                  <Folder className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400 text-sm mb-1">No projects found</p>
-                  <p className="text-xs text-slate-500">
-                    Create a project first to assign subscriptions
-                  </p>
-                </div>
-              )}
-
-              <div className="bg-sky-500/5 border border-sky-500/20 rounded-xl p-5 mt-4">
-                <div className="flex items-start gap-4">
-                  <TrendingUp className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-white font-medium mb-2 text-sm">
-                      About Manual Subscriptions
-                    </h4>
-                    <ul className="text-sm text-slate-400 space-y-1.5">
-                      <li>
-                        • Manually assigned subscriptions grant immediate dashboard access
-                      </li>
-                      <li>
-                        • Use this feature to give clients access before their first payment
-                      </li>
-                      <li>
-                        • Clients can later upgrade to a paid plan through their dashboard
-                      </li>
-                      <li>
-                        • Manual subscriptions can be revoked at any time
-                      </li>
-                      <li>
-                        • Paid subscriptions (via Stripe) should be managed in the Stripe
-                        dashboard
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
 
           <TabsContent value="hours" className="mt-6">
             <ClientHoursManager

@@ -63,30 +63,6 @@ interface Payment {
   createdAt: string;
 }
 
-interface Subscription {
-  id: string;
-  type: "maintenance" | "legacy";
-  clientId: string;
-  clientName: string;
-  clientEmail: string | null;
-  projectId: string;
-  projectName: string;
-  monthlyPrice: number;
-  billingCycle: string;
-  status: string;
-  stripeSubscriptionId: string | null;
-  stripePriceId: string | null;
-  nextBillingDate: string | null;
-  startDate: string;
-  endDate: string | null;
-  createdAt: string;
-  hourPacks: Array<{
-    id: string;
-    totalHours: number;
-    hoursRemaining: number;
-    createdAt: string;
-  }>;
-}
 
 interface Organization {
   id: string;
@@ -105,7 +81,6 @@ interface Project {
 interface TransactionsManagerProps {
   invoices: Invoice[];
   payments: Payment[];
-  subscriptions: Subscription[];
   organizations: Organization[];
   projects: Project[];
 }
@@ -161,7 +136,6 @@ const getStatusColor = (status: string) => {
 export function TransactionsManager({
   invoices,
   payments,
-  subscriptions,
   organizations,
   projects,
 }: TransactionsManagerProps) {
@@ -169,7 +143,7 @@ export function TransactionsManager({
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab") || "invoices";
   
-  const [activeTab, setActiveTab] = useState<"invoices" | "payments" | "subscriptions">(
+  const [activeTab, setActiveTab] = useState<"invoices" | "payments">(
     tabParam as any || "invoices"
   );
   const [searchQuery, setSearchQuery] = useState("");
@@ -231,11 +205,6 @@ export function TransactionsManager({
     }
   };
 
-  // Subscription action handler
-  const handleViewSubscription = (subscriptionId: string) => {
-    const params = new URLSearchParams({ subscriptionId });
-    router.push(`/admin/maintenance?${params.toString()}`);
-  };
 
   const handleExportData = () => {
     let dataToExport: any[] = [];
@@ -262,15 +231,6 @@ export function TransactionsManager({
         "Status": payment.status,
       }));
       filename = "payments_export.csv";
-    } else if (activeTab === "subscriptions") {
-      dataToExport = filteredSubscriptions.map(sub => ({
-        "Client": sub.clientName,
-        "Project": sub.projectName,
-        "Monthly Price": sub.monthlyPrice,
-        "Status": sub.status,
-        "Start Date": new Date(sub.startDate).toLocaleDateString(),
-      }));
-      filename = "subscriptions_export.csv";
     }
 
     // Convert to CSV
@@ -328,15 +288,6 @@ export function TransactionsManager({
     return matchesSearch && matchesStatus;
   });
 
-  const filteredSubscriptions = subscriptions.filter(sub => {
-    const matchesSearch = 
-      sub.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sub.projectName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || sub.status.toLowerCase() === statusFilter.toLowerCase();
-    
-    return matchesSearch && matchesStatus;
-  });
 
   // Calculate totals
   const invoiceTotals = {
@@ -357,13 +308,6 @@ export function TransactionsManager({
     totalAmount: payments.reduce((sum, p) => sum + p.amount, 0),
   };
 
-  const subscriptionTotals = {
-    all: subscriptions.length,
-    active: subscriptions.filter(s => s.status === "ACTIVE").length,
-    canceled: subscriptions.filter(s => s.status === "CANCELED").length,
-    pastDue: subscriptions.filter(s => s.status === "PAST_DUE").length,
-    mrr: subscriptions.filter(s => s.status === "ACTIVE").reduce((sum, s) => sum + s.monthlyPrice, 0),
-  };
 
   return (
     <div className="space-y-6 p-6">
@@ -371,7 +315,7 @@ export function TransactionsManager({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white">Transactions</h1>
-          <p className="text-gray-400 mt-1">Manage invoices, payments, and subscriptions</p>
+          <p className="text-gray-400 mt-1">Manage invoices and payments</p>
         </div>
         <div className="flex gap-3">
           <button
@@ -432,29 +376,6 @@ export function TransactionsManager({
             </span>
           </div>
           {activeTab === "payments" && (
-            <motion.div
-              layoutId="activeTab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400"
-            />
-          )}
-        </button>
-        
-        <button
-          onClick={() => setActiveTab("subscriptions")}
-          className={`px-4 py-3 font-medium transition-colors relative ${
-            activeTab === "subscriptions"
-              ? "text-emerald-400"
-              : "text-gray-400 hover:text-white"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <FiRefreshCw className="w-4 h-4" />
-            Subscriptions
-            <span className="text-xs px-2 py-0.5 rounded-full bg-white/10">
-              {subscriptionTotals.all}
-            </span>
-          </div>
-          {activeTab === "subscriptions" && (
             <motion.div
               layoutId="activeTab"
               className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400"
@@ -522,35 +443,6 @@ export function TransactionsManager({
             </div>
           </>
         )}
-        
-        {activeTab === "subscriptions" && (
-          <>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <p className="text-gray-400 text-sm">MRR</p>
-              <p className="text-2xl font-bold text-white mt-1">
-                {formatCurrency(subscriptionTotals.mrr)}
-              </p>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <p className="text-gray-400 text-sm">Active</p>
-              <p className="text-2xl font-bold text-green-400 mt-1">
-                {subscriptionTotals.active}
-              </p>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <p className="text-gray-400 text-sm">Canceled</p>
-              <p className="text-2xl font-bold text-gray-400 mt-1">
-                {subscriptionTotals.canceled}
-              </p>
-            </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <p className="text-gray-400 text-sm">Past Due</p>
-              <p className="text-2xl font-bold text-red-400 mt-1">
-                {subscriptionTotals.pastDue}
-              </p>
-            </div>
-          </>
-        )}
       </div>
 
       {/* Filters */}
@@ -584,13 +476,6 @@ export function TransactionsManager({
               <option value="completed">Completed</option>
               <option value="pending">Pending</option>
               <option value="failed">Failed</option>
-            </>
-          )}
-          {activeTab === "subscriptions" && (
-            <>
-              <option value="active">Active</option>
-              <option value="canceled">Canceled</option>
-              <option value="past_due">Past Due</option>
             </>
           )}
         </select>
@@ -678,15 +563,13 @@ export function TransactionsManager({
                               <FiSend className="w-4 h-4" />
                             </button>
                           )}
-                          {invoice.status === "DRAFT" && (
-                            <button 
-                              onClick={() => handleDeleteInvoice(invoice.id)}
-                              className="p-2 hover:bg-red-500/20 rounded transition-colors text-gray-400 hover:text-red-400"
-                              title="Delete Invoice"
-                            >
-                              <FiTrash2 className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button 
+                            onClick={() => handleDeleteInvoice(invoice.id)}
+                            className="p-2 hover:bg-red-500/20 rounded transition-colors text-gray-400 hover:text-red-400"
+                            title="Delete Invoice"
+                          >
+                            <FiTrash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -776,89 +659,7 @@ export function TransactionsManager({
           </motion.div>
         )}
 
-        {activeTab === "subscriptions" && (
-          <motion.div
-            key="subscriptions"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {filteredSubscriptions.map((sub) => (
-              <div
-                key={sub.id}
-                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-emerald-500/30 transition-colors"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white mb-1">
-                      {sub.clientName}
-                    </h3>
-                    <p className="text-sm text-gray-400">{sub.projectName}</p>
-                  </div>
-                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs border ${getStatusColor(sub.status)}`}>
-                    {getStatusIcon(sub.status)}
-                    {sub.status}
-                  </span>
-                </div>
-                
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Monthly Price</span>
-                    <span className="text-white font-semibold">
-                      {formatCurrency(sub.monthlyPrice)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Billing Cycle</span>
-                    <span className="text-white capitalize">{sub.billingCycle}</span>
-                  </div>
-                  {sub.nextBillingDate && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-400">Next Billing</span>
-                      <span className="text-white">
-                        {new Date(sub.nextBillingDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {sub.hourPacks.length > 0 && (
-                  <div className="pt-4 border-t border-white/10">
-                    <p className="text-xs text-gray-400 mb-2">Hour Packs</p>
-                    {sub.hourPacks.map((pack) => (
-                      <div key={pack.id} className="text-xs text-gray-300">
-                        {pack.hoursRemaining} / {pack.totalHours} hours remaining
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                  <button 
-                    onClick={() => handleViewSubscription(sub.id)}
-                    className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
-                  >
-                    View Details
-                  </button>
-                  <button 
-                    onClick={() => handleViewSubscription(sub.id)}
-                    className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
-                  >
-                    <FiEdit className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
       </AnimatePresence>
-
-      {(activeTab === "subscriptions" && filteredSubscriptions.length === 0) && (
-        <div className="text-center py-12 text-gray-400 bg-white/5 border border-white/10 rounded-xl">
-          No subscriptions found
-        </div>
-      )}
 
       {/* Record Transaction Modal */}
       <RecordTransactionModal

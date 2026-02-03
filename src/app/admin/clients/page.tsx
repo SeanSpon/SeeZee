@@ -103,12 +103,8 @@ export default async function AdminClientsPage() {
     const existing = clientsMap.get(key);
 
     if (existing) {
-      // Update existing client
+      // Update existing client - don't add revenue here, it's already counted from org.invoices
       existing.invoices += 1;
-      if (invoice.status === "PAID") {
-        // Invoice totals are stored in dollars
-        existing.revenue += Number(invoice.total ?? 0);
-      }
       if (invoice.status) {
         existing.rawStatuses.push(String(invoice.status).toLowerCase());
       }

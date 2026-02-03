@@ -11,11 +11,12 @@ import { HoursOverviewClient } from "./HoursOverviewClient";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHoursPage() {
-  const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  try {
+    const user = await getCurrentUser();
+    if (!user) redirect('/login');
 
-  // Fetch all maintenance plans with their associated data
-  const plans = await prisma.maintenancePlan.findMany({
+    // Fetch all maintenance plans with their associated data
+    const plans = await prisma.maintenancePlan.findMany({
     where: {
       status: { in: ['ACTIVE'] },
     },
@@ -106,5 +107,31 @@ export default async function AdminHoursPage() {
       plan.rolloverRecords.reduce((sum: number, r) => sum + r.hoursRemaining, 0),
   }));
 
-  return <HoursOverviewClient plans={serializedPlans} stats={stats} />;
+    return <HoursOverviewClient plans={serializedPlans} stats={stats} />;
+  } catch (error) {
+    console.error('Admin Hours Page Error:', error);
+    
+    // Return error state
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-8 max-w-lg">
+          <h1 className="text-2xl font-bold text-red-400 mb-4">Error Loading Hours</h1>
+          <p className="text-gray-300 mb-4">
+            There was an error loading the hours management page. This could be due to:
+          </p>
+          <ul className="list-disc list-inside text-gray-400 space-y-2 mb-6">
+            <li>Database connection issue</li>
+            <li>Missing environment variables (DATABASE_URL)</li>
+            <li>Authentication error</li>
+          </ul>
+          <details className="bg-black/30 p-4 rounded-lg">
+            <summary className="text-sm text-gray-400 cursor-pointer">Technical Details</summary>
+            <pre className="text-xs text-red-300 mt-2 overflow-auto">
+              {error instanceof Error ? error.message : String(error)}
+            </pre>
+          </details>
+        </div>
+      </div>
+    );
+  }
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { SubscriptionStatus } from "@prisma/client";
+import { MaintenancePlanStatus } from "@prisma/client";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
@@ -57,11 +57,11 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
 
-        // Cancel the maintenance subscription
-        await prisma.maintenanceSubscription.updateMany({
+        // Cancel the maintenance plan
+        await prisma.maintenancePlan.updateMany({
           where: { stripeSubscriptionId: subscription.id },
           data: {
-            status: SubscriptionStatus.CANCELLED,
+            status: MaintenancePlanStatus.CANCELLED,
             cancelledAt: new Date(),
           },
         });
@@ -73,14 +73,14 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
 
-        // Build update data object, only including valid dates
+        // Build update data object for MaintenancePlan, only including valid dates
         const updateData: {
           currentPeriodStart?: Date;
           currentPeriodEnd?: Date;
-          status: SubscriptionStatus;
+          status: MaintenancePlanStatus;
         } = {
-          status: subscription.status === "active" ? SubscriptionStatus.ACTIVE : 
-                 subscription.status === "paused" ? SubscriptionStatus.PAUSED : SubscriptionStatus.CANCELLED,
+          status: subscription.status === "active" ? MaintenancePlanStatus.ACTIVE : 
+                 subscription.status === "paused" ? MaintenancePlanStatus.PAUSED : MaintenancePlanStatus.CANCELLED,
         };
 
         // Only add dates if they are valid numbers
@@ -92,8 +92,8 @@ export async function POST(request: NextRequest) {
           updateData.currentPeriodEnd = new Date(subscription.current_period_end * 1000);
         }
 
-        // Update subscription period
-        await prisma.maintenanceSubscription.updateMany({
+        // Update maintenance plan period
+        await prisma.maintenancePlan.updateMany({
           where: { stripeSubscriptionId: subscription.id },
           data: updateData,
         });

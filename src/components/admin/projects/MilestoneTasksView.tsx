@@ -166,43 +166,50 @@ export function MilestoneTasksView({
               {/* Milestone Header */}
               <button
                 onClick={() => toggleMilestone(milestone.id)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors"
+                className="w-full px-5 py-4 flex items-center justify-between hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-3">
                   {milestone.completed ? (
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border-2 border-emerald-500/30">
+                      <CheckCircle className="w-5 h-5 text-emerald-400" />
                     </div>
                   ) : (
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                      <Target className="w-4 h-4 text-purple-400" />
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center border-2 border-purple-500/30">
+                      <Target className="w-5 h-5 text-purple-400" />
                     </div>
                   )}
                   <div className="text-left">
                     <div className="flex items-center gap-2">
-                      <h3
-                        className={`font-semibold ${
-                          milestone.completed ? "text-white/50 line-through" : "text-white"
-                        }`}
-                      >
+                      <h3 className="font-semibold text-white group-hover:text-purple-300 transition-colors">
                         {milestone.name}
                       </h3>
+                      {milestone.completed && (
+                        <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] font-bold rounded-full uppercase">
+                          Done
+                        </span>
+                      )}
                       {hasOverdueTasks && !milestone.completed && (
-                        <AlertCircle className="w-4 h-4 text-red-400" />
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500/20 text-red-300 text-[10px] font-bold rounded-full uppercase">
+                          <AlertCircle className="w-3 h-3" />
+                          Overdue
+                        </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-white/40">
-                      <span>{milestoneTasks.length} tasks</span>
+                    <div className="flex items-center gap-3 text-xs text-white/50 mt-1">
+                      <span className="font-medium">{milestoneTasks.length} task{milestoneTasks.length !== 1 ? "s" : ""}</span>
                       {milestone.dueDate && (
-                        <span
-                          className={
-                            !milestone.completed && isOverdue(milestone.dueDate)
-                              ? "text-red-400"
-                              : ""
-                          }
-                        >
-                          Due {formatDate(milestone.dueDate)}
-                        </span>
+                        <>
+                          <span className="text-white/20">•</span>
+                          <span
+                            className={
+                              !milestone.completed && isOverdue(milestone.dueDate)
+                                ? "text-red-400 font-medium"
+                                : "text-white/50"
+                            }
+                          >
+                            Due {formatDate(milestone.dueDate)}
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>
@@ -211,20 +218,29 @@ export function MilestoneTasksView({
                 <div className="flex items-center gap-4">
                   {/* Progress Bar */}
                   {!milestone.completed && milestoneTasks.length > 0 && (
-                    <div className="hidden md:flex items-center gap-2 w-24">
-                      <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="hidden md:flex items-center gap-3 min-w-[140px]">
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-purple-500 rounded-full transition-all"
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            progress === 100 ? 'bg-emerald-500' : 'bg-purple-500'
+                          }`}
                           style={{ width: `${progress}%` }}
                         />
                       </div>
-                      <span className="text-xs text-white/40 w-8">{progress}%</span>
+                      <span className="text-sm font-semibold text-white w-12 text-right">
+                        {progress}%
+                      </span>
                     </div>
                   )}
+                  {milestone.completed && (
+                    <span className="hidden md:block text-sm font-semibold text-emerald-400">
+                      Completed
+                    </span>
+                  )}
                   {isExpanded ? (
-                    <ChevronDown className="w-4 h-4 text-white/40" />
+                    <ChevronDown className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 text-white/40" />
+                    <ChevronRight className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
                   )}
                 </div>
               </button>
@@ -239,16 +255,19 @@ export function MilestoneTasksView({
                     className="border-t border-white/10"
                   >
                     {milestoneTasks.length === 0 ? (
-                      <div className="px-4 py-6 text-center">
-                        <p className="text-sm text-white/40 mb-3">No tasks for this milestone</p>
+                      <div className="px-4 py-8 text-center bg-gradient-to-b from-white/5 to-transparent">
+                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+                          <Target className="w-6 h-6 text-white/30" />
+                        </div>
+                        <p className="text-sm text-white/50 mb-4 font-medium">No tasks for this milestone yet</p>
                         {isAdmin && (
                           <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => onAddTask?.(milestone.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white/60 hover:text-white text-xs rounded-lg transition-colors"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 hover:border-purple-500/50 text-purple-300 hover:text-white text-sm font-medium rounded-lg transition-colors"
                             >
-                              <Plus className="w-3 h-3" />
-                              Add Task
+                              <Plus className="w-4 h-4" />
+                              Add Task to Milestone
                             </button>
                           </div>
                         )}
@@ -263,18 +282,20 @@ export function MilestoneTasksView({
                             <div
                               key={task.id}
                               onClick={() => onTaskClick?.(task)}
-                              className={`px-4 py-3 flex items-center gap-3 hover:bg-white/5 cursor-pointer transition-colors ${
+                              className={`px-4 py-3 flex items-center gap-3 hover:bg-white/5 cursor-pointer transition-colors group ${
                                 task.completedAt ? "opacity-60" : ""
                               }`}
                             >
                               {/* Status Indicator */}
                               <div
-                                className={`w-5 h-5 rounded-full flex items-center justify-center ${statusConfig.bg}`}
+                                className={`w-6 h-6 rounded-lg flex items-center justify-center border-2 ${statusConfig.bg} ${
+                                  task.completedAt ? statusConfig.bg : 'border-white/10'
+                                }`}
                               >
                                 {task.completedAt ? (
-                                  <CheckCircle className={`w-3 h-3 ${statusConfig.text}`} />
+                                  <CheckCircle className={`w-4 h-4 ${statusConfig.text}`} />
                                 ) : (
-                                  <Circle className={`w-3 h-3 ${statusConfig.text}`} />
+                                  <Circle className={`w-4 h-4 ${statusConfig.text}`} />
                                 )}
                               </div>
 
@@ -282,20 +303,21 @@ export function MilestoneTasksView({
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   <span
-                                    className={`text-sm ${
-                                      task.completedAt ? "text-white/50 line-through" : "text-white"
+                                    className={`text-sm font-medium group-hover:text-purple-300 transition-colors ${
+                                      task.completedAt ? "text-white/40" : "text-white"
                                     }`}
                                   >
                                     {task.title}
                                   </span>
                                   {task.aiGenerated && (
-                                    <span title="AI Generated">
-                                      <Sparkles className="w-3 h-3 text-purple-400" />
+                                    <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 rounded text-[9px] text-purple-300 font-bold uppercase" title="AI Generated">
+                                      <Sparkles className="w-2.5 h-2.5" />
+                                      AI
                                     </span>
                                   )}
                                 </div>
                                 {task.description && (
-                                  <p className="text-xs text-white/40 truncate mt-0.5">
+                                  <p className="text-xs text-white/40 truncate mt-1">
                                     {task.description}
                                   </p>
                                 )}
@@ -339,10 +361,10 @@ export function MilestoneTasksView({
                         {isAdmin && (
                           <button
                             onClick={() => onAddTask?.(milestone.id)}
-                            className="w-full px-4 py-2 flex items-center gap-2 text-xs text-white/40 hover:text-white/60 hover:bg-white/5 transition-colors"
+                            className="w-full px-4 py-3 flex items-center justify-center gap-2 text-sm font-medium text-purple-300 hover:text-white bg-purple-500/5 hover:bg-purple-500/10 border-t border-white/5 hover:border-purple-500/20 transition-colors"
                           >
-                            <Plus className="w-3 h-3" />
-                            Add task to this milestone
+                            <Plus className="w-4 h-4" />
+                            Add task to {milestone.name}
                           </button>
                         )}
                       </div>
@@ -350,12 +372,21 @@ export function MilestoneTasksView({
 
                     {/* Complete Milestone Button */}
                     {isAdmin && !milestone.completed && milestoneTasks.length > 0 && progress === 100 && (
-                      <div className="px-4 py-3 bg-emerald-500/10 border-t border-emerald-500/20">
+                      <div className="px-4 py-4 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border-t-2 border-emerald-500/30">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <CheckCircle className="w-5 h-5 text-emerald-400" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-emerald-300">All tasks complete!</p>
+                            <p className="text-xs text-emerald-400/60">Ready to mark this milestone as done</p>
+                          </div>
+                        </div>
                         <button
                           onClick={() => onMilestoneComplete?.(milestone.id)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-lg transition-colors"
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-emerald-500/20"
                         >
-                          <CheckCircle className="w-4 h-4" />
+                          <CheckCircle className="w-5 h-5" />
                           Mark Milestone Complete
                         </button>
                       </div>

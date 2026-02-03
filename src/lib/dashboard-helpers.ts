@@ -303,22 +303,20 @@ export async function getBillingInfo(projectId: string): Promise<BillingInfo> {
     .filter(inv => ['SENT', 'OVERDUE'].includes(inv.status))
     .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0]?.dueDate;
   
-  // Check for active subscription
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
-    select: {
-      stripeSubscriptionId: true,
-      maintenancePlan: true,
-      maintenanceStatus: true,
+  // Check for active MaintenancePlan
+  const maintenancePlan = await prisma.maintenancePlan.findFirst({
+    where: {
+      projectId: projectId,
+      status: 'ACTIVE',
     },
   });
-  
+
   return {
     totalPaid,
     totalDue,
     nextPaymentDue,
-    hasActiveSubscription: !!project?.stripeSubscriptionId && project.maintenanceStatus === 'ACTIVE',
-    subscriptionPlan: project?.maintenancePlan || undefined,
+    hasActiveSubscription: !!maintenancePlan,
+    subscriptionPlan: maintenancePlan?.tier || undefined,
     invoices: invoices.map(inv => ({
       id: inv.id,
       number: inv.number,
@@ -368,9 +366,6 @@ export async function getDashboardData(
       organizationId: true,
       questionnaireId: true,
       stripeCustomerId: true,
-      stripeSubscriptionId: true,
-      maintenancePlan: true,
-      maintenanceStatus: true,
       nextBillingDate: true,
       githubRepo: true,
       vercelUrl: true,
@@ -379,6 +374,18 @@ export async function getDashboardData(
       },
       milestones: {
         orderBy: { dueDate: 'asc' },
+      },
+      maintenancePlanRel: {
+        select: {
+          id: true,
+          tier: true,
+          status: true,
+          monthlyPrice: true,
+          stripeSubscriptionId: true,
+          currentPeriodStart: true,
+          currentPeriodEnd: true,
+          billingDay: true,
+        },
       },
     },
   });

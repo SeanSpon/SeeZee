@@ -173,7 +173,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
     revalidatePath("/admin/pipeline/leads");
     revalidatePath(`/admin/pipeline/leads/${leadId}`);
     revalidatePath("/admin/pipeline/projects");
-    revalidatePath(`/admin/pipeline/projects/${project.id}`);
+    revalidatePath(`/admin/projects/${project.id}`);
     revalidatePath("/admin/pipeline");
     revalidatePath("/admin/projects");
     

@@ -1,6 +1,6 @@
 /**
  * Unified Transactions Page
- * All-in-one management for invoices, payments, and subscriptions
+ * All-in-one management for invoices and payments
  */
 
 import { db } from "@/server/db";
@@ -16,7 +16,7 @@ export default async function TransactionsPage() {
     if (!user) redirect('/login');
 
     // Test each query separately to identify which one is failing
-    let invoices, payments, maintenancePlans, legacySubscriptions, organizations, projects;
+    let invoices, payments, organizations, projects;
     
     try {
       console.log("[Transactions] Fetching invoices...");
@@ -61,46 +61,6 @@ export default async function TransactionsPage() {
     } catch (error) {
       console.error("[Transactions] Payment query failed:", error);
       throw new Error(`Payment query failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
-    
-    try {
-      console.log("[Transactions] Fetching maintenance plans...");
-      maintenancePlans = await db.maintenancePlan.findMany({
-        include: {
-          project: {
-            include: {
-              organization: {
-                select: { id: true, name: true, email: true },
-              },
-            },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-      });
-      console.log(`[Transactions] Found ${maintenancePlans.length} maintenance plans`);
-    } catch (error) {
-      console.error("[Transactions] Maintenance plan query failed:", error);
-      throw new Error(`Maintenance plan query failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
-    
-    try {
-      console.log("[Transactions] Fetching legacy subscriptions...");
-      legacySubscriptions = await db.subscription.findMany({
-        include: {
-          project: {
-            include: {
-              organization: {
-                select: { id: true, name: true, email: true },
-              },
-            },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-      });
-      console.log(`[Transactions] Found ${legacySubscriptions.length} legacy subscriptions`);
-    } catch (error) {
-      console.error("[Transactions] Legacy subscription query failed:", error);
-      throw new Error(`Legacy subscription query failed: ${error instanceof Error ? error.message : String(error)}`);
     }
     
     try {
@@ -195,58 +155,12 @@ export default async function TransactionsPage() {
       };
     });
 
-    // Serialize maintenance plans (monthlyPrice is stored in cents)
-    const serializedPlans = maintenancePlans.map(plan => ({
-      id: plan.id,
-      type: "maintenance" as const,
-      clientId: plan.project?.organization?.id || "",
-      clientName: plan.project?.organization?.name || "Unknown",
-      clientEmail: plan.project?.organization?.email || null,
-      projectId: plan.projectId,
-      projectName: plan.project?.name || "Unknown",
-      monthlyPrice: Number(plan.monthlyPrice) / 100, // Convert cents to dollars
-      billingCycle: "monthly",
-      status: plan.status,
-      stripeSubscriptionId: plan.stripeSubscriptionId,
-      stripePriceId: null,
-      nextBillingDate: null,
-      startDate: plan.createdAt.toISOString(),
-      endDate: null,
-      createdAt: plan.createdAt.toISOString(),
-      hourPacks: [],
-    }));
-
-    // Serialize legacy subscriptions
-    const serializedLegacy = legacySubscriptions.map(sub => ({
-      id: sub.id,
-      type: "legacy" as const,
-      clientId: sub.project?.organization?.id || "",
-      clientName: sub.project?.organization?.name || "Unknown",
-      clientEmail: sub.project?.organization?.email || null,
-      projectId: sub.projectId,
-      projectName: sub.project?.name || "Unknown",
-      monthlyPrice: 0, // Legacy don't have price
-      billingCycle: "monthly" as const,
-      status: sub.status,
-      stripeSubscriptionId: sub.stripeId,
-      stripePriceId: null,
-      nextBillingDate: null,
-      startDate: sub.createdAt.toISOString(),
-      endDate: null,
-      createdAt: sub.createdAt.toISOString(),
-      hourPacks: [],
-    }));
-
-    // Combine all subscriptions
-    const allSubscriptions = [...serializedPlans, ...serializedLegacy];
-
     console.log("[Transactions] Rendering component with data");
 
     return (
       <TransactionsManager
         invoices={serializedInvoices}
         payments={serializedPayments}
-        subscriptions={allSubscriptions}
         organizations={organizations}
         projects={projects}
       />

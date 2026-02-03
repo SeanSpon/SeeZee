@@ -16,7 +16,7 @@ export default async function TasksPage() {
   ]);
 
   const tasks = tasksResult.success ? tasksResult.tasks : [];
-  const stats = statsResult.success ? statsResult.stats : { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 };
+  const stats = statsResult.success ? statsResult.stats : { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0, withMilestone: 0 };
 
   return (
     <div className="space-y-6">

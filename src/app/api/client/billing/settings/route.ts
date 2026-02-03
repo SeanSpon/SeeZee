@@ -29,12 +29,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get active subscriptions
+    // Get active maintenance plans (primary) or legacy subscriptions (fallback)
     const projects = await db.project.findMany({
       where: {
         organizationId: orgMembership.organizationId,
       },
       include: {
+        maintenancePlanRel: {
+          where: {
+            status: "ACTIVE",
+          },
+        },
         subscriptions: {
           where: {
             status: "active",
@@ -42,7 +47,7 @@ export async function GET(req: NextRequest) {
           orderBy: {
             createdAt: "desc",
           },
-          take: 1, // Get the most recent active subscription
+          take: 1,
         },
       },
       orderBy: {
@@ -50,12 +55,16 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Get the first active subscription
-    const activeSubscription = projects
-      .flatMap((p) => p.subscriptions)
-      .find((sub) => sub.status === "active");
+    // Prefer maintenance plan, fallback to legacy subscription
+    const activePlan = projects
+      .map((p) => p.maintenancePlanRel)
+      .find((plan) => plan && plan.status === "ACTIVE");
+    
+    const activeSubscription = !activePlan 
+      ? projects.flatMap((p) => p.subscriptions).find((sub) => sub.status === "active")
+      : null;
 
-    if (!activeSubscription) {
+    if (!activePlan && !activeSubscription) {
       return NextResponse.json({
         plan: null,
         settings: {
@@ -74,46 +83,68 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Get plan details from subscription plans
-    const planDetails = getSubscriptionPlanByName(
-      activeSubscription.planName || "Standard Monthly"
-    );
-
-    // Calculate period dates
-    const periodEnd =
-      activeSubscription.currentPeriodEnd ||
-      new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    // Calculate period start from period end (30 days back) or use createdAt
-    const periodStart = activeSubscription.currentPeriodEnd
-      ? new Date(activeSubscription.currentPeriodEnd.getTime() - 30 * 24 * 60 * 60 * 1000)
-      : activeSubscription.createdAt || new Date();
-
-    // Map subscription to plan info
-    const planInfo = {
-      tierName: planDetails?.displayName || activeSubscription.planName || "Standard Support",
-      monthlyPrice: planDetails
-        ? planDetails.price / 100
-        : activeSubscription.planName?.includes("Premium")
-        ? 90
-        : 50,
-      hoursIncluded: planDetails
-        ? planDetails.billingCycle === "quarterly"
-          ? 30 // 30 hours per quarter
-          : planDetails.billingCycle === "annual"
-          ? 120 // 120 hours per year
-          : 10 // fallback
-        : 10, // Default fallback
-      changeRequestsIncluded:
-        activeSubscription.changeRequestsAllowed || planDetails?.changeRequestsAllowed || -1, // Unlimited
-      isUnlimited: false,
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
-    };
-
-    // Return billing settings (for now, using defaults - can be stored in DB later)
-    return NextResponse.json({
-      plan: planInfo,
-      settings: {
+    // Use maintenance plan data if available, otherwise fallback to legacy subscription
+    let planInfo;
+    let settings;
+    
+    if (activePlan) {
+      // Use MaintenancePlan
+      const periodStart = activePlan.currentPeriodStart || activePlan.createdAt;
+      const periodEnd = activePlan.currentPeriodEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      
+      planInfo = {
+        tierName: `${activePlan.tier} Plan`,
+        monthlyPrice: Number(activePlan.monthlyPrice) / 100,
+        hoursIncluded: activePlan.supportHoursIncluded,
+        changeRequestsIncluded: activePlan.changeRequestsIncluded,
+        isUnlimited: activePlan.tier === 'COO', // COO tier is unlimited
+        periodStart: periodStart.toISOString(),
+        periodEnd: periodEnd.toISOString(),
+      };
+      
+      settings = {
+        onDemandEnabled: activePlan.onDemandEnabled,
+        dailySpendCap: activePlan.dailySpendCap / 100,
+        monthlySpendCap: activePlan.monthlySpendCap / 100,
+        dailyRequestLimit: activePlan.dailyRequestLimit,
+        urgentRequestsPerWeek: activePlan.urgentRequestsPerWeek,
+        rolloverEnabled: activePlan.rolloverEnabled,
+        notifyAt80Percent: true,
+        notifyAt2Hours: true,
+        notifyBeforeOverage: true,
+        notifyRolloverExpiring: true,
+        autoPayEnabled: false,
+      };
+    } else if (activeSubscription) {
+      // Fallback to legacy subscription
+      const planDetails = getSubscriptionPlanByName(
+        activeSubscription.planName || "Standard Monthly"
+      );
+      
+      const periodEnd = activeSubscription.currentPeriodEnd || 
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      const periodStart = activeSubscription.currentPeriodEnd
+        ? new Date(activeSubscription.currentPeriodEnd.getTime() - 30 * 24 * 60 * 60 * 1000)
+        : activeSubscription.createdAt || new Date();
+      
+      planInfo = {
+        tierName: planDetails?.displayName || activeSubscription.planName || "Standard Support",
+        monthlyPrice: planDetails
+          ? planDetails.price / 100
+          : activeSubscription.planName?.includes("Premium") ? 90 : 50,
+        hoursIncluded: planDetails
+          ? planDetails.billingCycle === "quarterly" ? 30
+          : planDetails.billingCycle === "annual" ? 120
+          : 10
+          : 10,
+        changeRequestsIncluded: activeSubscription.changeRequestsAllowed || 
+          planDetails?.changeRequestsAllowed || -1,
+        isUnlimited: false,
+        periodStart: periodStart.toISOString(),
+        periodEnd: periodEnd.toISOString(),
+      };
+      
+      settings = {
         onDemandEnabled: false,
         dailySpendCap: 500,
         monthlySpendCap: 2000,
@@ -125,7 +156,13 @@ export async function GET(req: NextRequest) {
         notifyBeforeOverage: true,
         notifyRolloverExpiring: true,
         autoPayEnabled: false,
-      },
+      };
+    }
+
+    // Return billing settings
+    return NextResponse.json({
+      plan: planInfo,
+      settings: settings,
     });
   } catch (error: any) {
     console.error("[GET /api/client/billing/settings]", error);

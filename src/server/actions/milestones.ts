@@ -31,7 +31,7 @@ export async function createMilestone(data: {
       },
     });
 
-    revalidatePath(`/admin/pipeline/projects/${data.projectId}`);
+    revalidatePath(`/admin/projects/${data.projectId}`);
     revalidatePath(`/client/projects/${data.projectId}`);
 
     return { success: true, milestone };
@@ -74,7 +74,7 @@ export async function toggleMilestone(milestoneId: string) {
       await feedHelpers.paymentSucceeded(milestone.project.id, 0, milestone.title);
     }
 
-    revalidatePath(`/admin/pipeline/projects/${milestone.project.id}`);
+    revalidatePath(`/admin/projects/${milestone.project.id}`);
     revalidatePath(`/client/projects/${milestone.project.id}`);
 
     return { success: true, milestone: updated };
@@ -108,7 +108,7 @@ export async function deleteMilestone(milestoneId: string) {
       where: { id: milestoneId },
     });
 
-    revalidatePath(`/admin/pipeline/projects/${milestone.project.id}`);
+    revalidatePath(`/admin/projects/${milestone.project.id}`);
     revalidatePath(`/client/projects/${milestone.project.id}`);
 
     return { success: true };

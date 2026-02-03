@@ -79,6 +79,8 @@ export async function POST(
         projectId,
         createdById: session.user.id,
         assignedToId: body.assignedToId || null,
+        assignedToRole: body.assignedToRole || null,
+        assignedToTeamId: body.assignedToTeamId || null,
         dueDate: body.dueDate ? new Date(body.dueDate) : null,
         estimatedHours: body.estimatedHours || null,
       },

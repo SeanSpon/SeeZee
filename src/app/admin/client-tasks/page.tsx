@@ -4,8 +4,12 @@ import { prisma } from "@/lib/prisma";
 interface TaskRow {
   id: string;
   title: string;
+  description: string;
   project: string;
+  projectId: string;
   client: string;
+  organizationId: string;
+  organizationName: string;
   status: string;
   priority: string;
   dueDate: string | null;
@@ -13,6 +17,13 @@ interface TaskRow {
   requiresUpload: boolean;
   createdAt: string;
   completedAt: string | null;
+  submissionNotes: string | null;
+  data: any;
+  createdBy: {
+    id: string;
+    name: string | null;
+    email: string;
+  } | null;
 }
 
 export const dynamic = "force-dynamic";
@@ -51,8 +62,12 @@ export default async function ClientTasksPage() {
   const rows: TaskRow[] = clientTasks.map((task) => ({
     id: task.id,
     title: task.title,
+    description: task.description,
     project: task.project?.name ?? "Unassigned",
+    projectId: task.projectId,
     client: task.project?.organization?.name ?? "—",
+    organizationId: task.project?.organizationId ?? "",
+    organizationName: task.project?.organization?.name ?? "—",
     status: task.status,
     priority: "medium", // ClientTask doesn't have priority, using default
     dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,
@@ -60,6 +75,9 @@ export default async function ClientTasksPage() {
     requiresUpload: task.requiresUpload,
     createdAt: task.createdAt.toISOString(),
     completedAt: task.completedAt ? task.completedAt.toISOString() : null,
+    submissionNotes: task.submissionNotes,
+    data: task.data,
+    createdBy: task.createdBy,
   }));
 
   const overdue = rows.filter(

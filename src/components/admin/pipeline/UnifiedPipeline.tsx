@@ -84,11 +84,11 @@ interface UnifiedPipelineProps {
 
 // Stage configuration
 const LEAD_STAGES = [
-  { id: "NEW", label: "New", color: "from-blue-500 to-blue-600", bgColor: "bg-blue-500/10", borderColor: "border-blue-500/30" },
-  { id: "CONTACTED", label: "Contacted", color: "from-purple-500 to-purple-600", bgColor: "bg-purple-500/10", borderColor: "border-purple-500/30" },
-  { id: "QUALIFIED", label: "Qualified", color: "from-amber-500 to-orange-500", bgColor: "bg-amber-500/10", borderColor: "border-amber-500/30" },
-  { id: "PROPOSAL_SENT", label: "Proposal", color: "from-cyan-500 to-teal-500", bgColor: "bg-cyan-500/10", borderColor: "border-cyan-500/30" },
-  { id: "CONVERTED", label: "Won", color: "from-emerald-500 to-green-500", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-500/30" },
+  { id: "NEW", label: "New", color: "from-blue-500 to-blue-600", bgColor: "bg-blue-500/5", borderColor: "border-blue-500/20" },
+  { id: "CONTACTED", label: "Contacted", color: "from-purple-500 to-purple-600", bgColor: "bg-purple-500/5", borderColor: "border-purple-500/20" },
+  { id: "QUALIFIED", label: "Qualified", color: "from-amber-500 to-orange-500", bgColor: "bg-amber-500/5", borderColor: "border-amber-500/20" },
+  { id: "PROPOSAL_SENT", label: "Proposal", color: "from-cyan-500 to-teal-500", bgColor: "bg-cyan-500/5", borderColor: "border-cyan-500/20" },
+  { id: "CONVERTED", label: "Won", color: "from-emerald-500 to-green-500", bgColor: "bg-emerald-500/5", borderColor: "border-emerald-500/20" },
 ];
 
 const STATUS_ACTIONS: Record<string, { next: string; label: string; icon: any }> = {
@@ -236,56 +236,56 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Metrics Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <MetricCard
           icon={Users}
           label="Total Leads"
           value={metrics.total}
           color="text-blue-400"
-          bgColor="bg-blue-500/10"
+          bgColor="bg-blue-500/20"
         />
         <MetricCard
           icon={Zap}
           label="New Today"
           value={metrics.newLeads}
           color="text-purple-400"
-          bgColor="bg-purple-500/10"
+          bgColor="bg-purple-500/20"
         />
         <MetricCard
           icon={Target}
           label="Conversion"
           value={`${metrics.conversionRate}%`}
           color="text-emerald-400"
-          bgColor="bg-emerald-500/10"
+          bgColor="bg-emerald-500/20"
         />
         <MetricCard
           icon={CheckCircle}
           label="Converted"
           value={metrics.converted}
           color="text-green-400"
-          bgColor="bg-green-500/10"
+          bgColor="bg-green-500/20"
         />
         <MetricCard
           icon={DollarSign}
           label="Pipeline Value"
           value={`$${(metrics.pipelineValue / 1000).toFixed(0)}k`}
           color="text-amber-400"
-          bgColor="bg-amber-500/10"
+          bgColor="bg-amber-500/20"
         />
       </div>
 
       {/* Search and Actions Bar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-md">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
+        <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search leads..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-white/40 focus:border-[#ef4444]/50 focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-white/40 focus:border-[#ef4444]/50 outline-none"
           />
         </div>
 
@@ -293,10 +293,10 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setSelectedStage(null)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
               !selectedStage
-                ? "bg-white/20 text-white"
-                : "bg-white/5 text-white/60 hover:bg-white/10"
+                ? "bg-[#ef4444] text-white"
+                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
             }`}
           >
             All
@@ -305,10 +305,10 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
             <button
               key={stage.id}
               onClick={() => setSelectedStage(selectedStage === stage.id ? null : stage.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                 selectedStage === stage.id
-                  ? `${stage.bgColor} ${stage.borderColor} border text-white`
-                  : "bg-white/5 text-white/60 hover:bg-white/10"
+                  ? "bg-white/10 text-white border border-white/20"
+                  : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
               }`}
             >
               {stage.label} ({leadsByStage[stage.id]?.length || 0})
@@ -316,36 +316,34 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
           ))}
         </div>
 
-        <div className="flex items-center gap-2 ml-auto">
-          <Link
-            href="/admin/projects/create"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white text-sm font-medium hover:shadow-lg hover:shadow-[#ef4444]/25 transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            New Project
-          </Link>
-        </div>
+        <Link
+          href="/admin/projects/create"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white text-sm font-medium hover:shadow-lg transition-all lg:ml-auto"
+        >
+          <Plus className="w-4 h-4" />
+          New Project
+        </Link>
       </div>
 
       {/* Main Content */}
       <div className="flex gap-6">
         {/* Board */}
         <div className="flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {LEAD_STAGES.filter(s => s.id !== "CONVERTED" || leadsByStage[s.id]?.length > 0).map((stage) => (
               <div
                 key={stage.id}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, stage.id)}
-                className={`rounded-2xl p-4 ${stage.bgColor} border ${stage.borderColor} transition-all min-h-[400px]`}
+                className="bg-white/5 rounded-xl border border-white/10 p-5 min-h-[600px] transition-all hover:border-white/20"
               >
                 {/* Stage Header */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/10">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${stage.color}`} />
                     <h3 className="text-sm font-semibold text-white">{stage.label}</h3>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-white/10 text-xs font-medium text-white/70">
+                  <span className="px-2 py-1 rounded-md bg-white/10 text-xs font-semibold text-white">
                     {leadsByStage[stage.id]?.length || 0}
                   </span>
                 </div>
@@ -353,7 +351,7 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
                 {/* Lead Cards */}
                 <div className="space-y-3">
                   {leadsByStage[stage.id]?.length === 0 ? (
-                    <div className="rounded-xl border border-dashed border-white/10 p-6 text-center text-xs text-white/40">
+                    <div className="rounded-xl border-2 border-dashed border-white/10 p-12 text-center text-sm text-white/30">
                       {stage.id === "NEW" ? "No new leads" : "Drop leads here"}
                     </div>
                   ) : (
@@ -381,104 +379,106 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
 
         {/* Activity Sidebar */}
         {showActivity && (
-          <div className="hidden xl:block w-80 space-y-4">
+          <div className="hidden xl:block w-80 space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white/5 rounded-xl border border-white/10 p-4">
-              <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-400" />
-                Quick Actions
-              </h3>
-              <div className="space-y-2">
+                <h3 className="font-semibold text-white">Quick Actions</h3>
+              </div>
+              <div className="p-4 space-y-2">
                 <Link
                   href="/admin/leads"
-                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
                 >
                   <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
                     <Users className="w-4 h-4 text-blue-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-white group-hover:text-[#ef4444] transition-colors">Lead Finder</p>
-                    <p className="text-xs text-white/40">Find new prospects</p>
+                    <p className="text-sm font-medium text-white">Lead Finder</p>
+                    <p className="text-xs text-white/50">Find new prospects</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/40" />
+                  <ChevronRight className="w-4 h-4 text-white/30" />
                 </Link>
                 <Link
                   href="/admin/marketing"
-                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
                 >
                   <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <Send className="w-4 h-4 text-purple-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-white group-hover:text-[#ef4444] transition-colors">Email Campaign</p>
-                    <p className="text-xs text-white/40">Reach out to leads</p>
+                    <p className="text-sm font-medium text-white">Email Campaign</p>
+                    <p className="text-xs text-white/50">Reach out to leads</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/40" />
+                  <ChevronRight className="w-4 h-4 text-white/30" />
                 </Link>
                 <Link
                   href="/admin/projects/create"
-                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
                 >
                   <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
                     <Rocket className="w-4 h-4 text-emerald-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-white group-hover:text-[#ef4444] transition-colors">Create Project</p>
-                    <p className="text-xs text-white/40">From existing lead</p>
+                    <p className="text-sm font-medium text-white">Create Project</p>
+                    <p className="text-xs text-white/50">From existing lead</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/40" />
+                  <ChevronRight className="w-4 h-4 text-white/30" />
                 </Link>
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white/5 rounded-xl border border-white/10 p-4">
-              <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-cyan-400" />
-                Recent Activity
-              </h3>
-              <div className="space-y-3">
+                <h3 className="font-semibold text-white">Recent Activity</h3>
+              </div>
+              <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
                 {leads.slice(0, 5).map((lead) => (
-                  <div key={lead.id} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-[10px] font-bold text-white/60">
-                        {lead.name?.charAt(0) || "?"}
-                      </span>
+                  <div key={lead.id} className="px-4 py-3 hover:bg-white/5 transition-colors">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">
+                          {lead.name?.charAt(0)?.toUpperCase() || "?"}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-white truncate">{lead.name}</p>
+                        <p className="text-xs text-white/50 mt-0.5">
+                          {lead.status === "NEW" ? "New lead added" : `Moved to ${lead.status.toLowerCase()}`}
+                        </p>
+                        <span className="text-xs text-white/30 mt-1 inline-block">
+                          {formatTimeAgo(lead.updatedAt || lead.createdAt)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-white truncate">{lead.name}</p>
-                      <p className="text-[10px] text-white/40">
-                        {lead.status === "NEW" ? "New lead added" : `Moved to ${lead.status.toLowerCase()}`}
-                      </p>
-                    </div>
-                    <span className="text-[10px] text-white/30 flex-shrink-0">
-                      {formatTimeAgo(lead.updatedAt || lead.createdAt)}
-                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* AI Suggestions */}
-            <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20 p-4">
-              <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-purple-400" />
-                AI Insights
-              </h3>
-              <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-xs text-white/80 mb-2">
-                    <span className="text-emerald-400">↑ 3 leads</span> ready to be contacted
+                <h3 className="font-semibold text-white">AI Insights</h3>
+              </div>
+              <div className="p-4 space-y-3">
+                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-xs text-white/90 mb-2">
+                    <span className="text-emerald-400 font-bold">↑ 3 leads</span> ready to be contacted
                   </p>
-                  <button className="text-[10px] text-purple-400 hover:text-purple-300 flex items-center gap-1">
+                  <button className="text-xs font-medium text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
                     Review leads <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
-                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                  <p className="text-xs text-white/80 mb-2">
-                    <span className="text-amber-400">2 proposals</span> pending follow-up
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                  <p className="text-xs text-white/90 mb-2">
+                    <span className="text-amber-400 font-bold">2 proposals</span> pending follow-up
                   </p>
-                  <button className="text-[10px] text-purple-400 hover:text-purple-300 flex items-center gap-1">
+                  <button className="text-xs font-medium text-amber-400 hover:text-amber-300 flex items-center gap-1">
                     View proposals <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -512,7 +512,7 @@ function MetricCard({
           <Icon className={`w-5 h-5 ${color}`} />
         </div>
         <div>
-          <p className="text-xl font-bold text-white">{value}</p>
+          <p className="text-2xl font-bold text-white">{value}</p>
           <p className="text-xs text-white/50">{label}</p>
         </div>
       </div>
@@ -553,72 +553,78 @@ function LeadCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
-      className={`group relative rounded-xl bg-[#0f172a]/80 border border-white/10 p-3 cursor-move transition-all hover:border-white/20 ${
-        isUpdating ? "opacity-50" : ""
+      className={`group relative rounded-xl bg-white/5 border border-white/10 p-5 cursor-move transition-all hover:border-white/20 hover:bg-white/10 ${
+        isUpdating ? "opacity-50 pointer-events-none" : ""
       }`}
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="flex items-start justify-between gap-2 mb-4">
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm text-white truncate">{lead.name}</p>
+          <p className="font-semibold text-white truncate">{lead.name}</p>
           {lead.company && (
-            <p className="text-xs text-white/50 truncate flex items-center gap-1 mt-0.5">
-              <Building2 className="w-3 h-3" />
-              {lead.company}
+            <p className="text-sm text-white/50 truncate flex items-center gap-2 mt-1">
+              <Building2 className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">{lead.company}</span>
             </p>
           )}
         </div>
         <button
           onClick={onExpand}
-          className="p-1 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-white/10 transition-all"
+          className="p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-white/10 transition-all flex-shrink-0"
         >
-          <MoreHorizontal className="w-4 h-4 text-white/40" />
+          <MoreHorizontal className="w-4 h-4 text-white/50" />
         </button>
       </div>
 
       {/* Quick Info */}
-      <div className="space-y-1 mb-3">
+      <div className="space-y-2 mb-4">
         {lead.email && (
-          <p className="text-xs text-white/40 truncate flex items-center gap-1.5">
-            <Mail className="w-3 h-3" />
-            {lead.email}
+          <p className="text-sm text-white/50 truncate flex items-center gap-2">
+            <Mail className="w-4 h-4 flex-shrink-0 text-blue-400" />
+            <span className="truncate">{lead.email}</span>
           </p>
         )}
         {lead.phone && (
-          <p className="text-xs text-white/40 truncate flex items-center gap-1.5">
-            <Phone className="w-3 h-3" />
-            {lead.phone}
+          <p className="text-sm text-white/50 truncate flex items-center gap-2">
+            <Phone className="w-4 h-4 flex-shrink-0 text-emerald-400" />
+            <span className="truncate">{lead.phone}</span>
           </p>
         )}
       </div>
 
       {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        {lead.budget && (
-          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-medium text-emerald-400">
-            {lead.budget}
-          </span>
-        )}
-        {lead.timeline && (
-          <span className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-[10px] font-medium text-blue-400">
-            {lead.timeline}
-          </span>
-        )}
-        {lead.serviceType && (
-          <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[10px] font-medium text-purple-400">
-            {lead.serviceType}
-          </span>
-        )}
-      </div>
+      {(lead.budget || lead.timeline || lead.serviceType) && (
+        <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-white/10">
+          {lead.budget && (
+            <span className="px-2 py-1 rounded-md bg-emerald-500/20 text-xs font-medium text-emerald-400">
+              {lead.budget}
+            </span>
+          )}
+          {lead.timeline && (
+            <span className="px-2 py-1 rounded-md bg-blue-500/20 text-xs font-medium text-blue-400">
+              {lead.timeline}
+            </span>
+          )}
+          {lead.serviceType && (
+            <span className="px-2 py-1 rounded-md bg-purple-500/20 text-xs font-medium text-purple-400">
+              {lead.serviceType}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Quick Action Button */}
       {nextAction && lead.status !== "CONVERTED" && (
         <button
           onClick={() => onStageChange(lead.id, nextAction.next)}
           disabled={isUpdating}
-          className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r ${stage.color} text-white text-xs font-medium transition-all hover:shadow-lg disabled:opacity-50`}
+          className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r ${stage.color} text-white text-sm font-medium transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-          <nextAction.icon className="w-3.5 h-3.5" />
+          {isUpdating ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <nextAction.icon className="w-4 h-4" />
+          )}
           {nextAction.label}
         </button>
       )}
@@ -627,9 +633,13 @@ function LeadCard({
         <button
           onClick={() => onConvert(lead.id)}
           disabled={isUpdating}
-          className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-medium transition-all hover:shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50"
+          className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-medium transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Rocket className="w-3.5 h-3.5" />
+          {isUpdating ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <Rocket className="w-4 h-4" />
+          )}
           Create Project
         </button>
       )}
@@ -641,25 +651,25 @@ function LeadCard({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-3 pt-3 border-t border-white/10 space-y-2"
+            className="mt-4 pt-4 border-t border-white/10 space-y-2"
           >
             {/* Quick Contact */}
-            <div className="flex gap-2 mb-2">
+            <div className="grid grid-cols-2 gap-2 mb-2">
               {lead.email && (
                 <a
                   href={`mailto:${lead.email}?subject=Following up on your inquiry&body=Hi ${lead.name},%0D%0A%0D%0AThank you for reaching out to SeeZee Studios.%0D%0A%0D%0A`}
-                  className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-xs text-blue-400 transition-colors"
+                  className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-sm font-medium text-blue-400 transition-all"
                 >
-                  <Mail className="w-3.5 h-3.5" />
+                  <Mail className="w-4 h-4" />
                   Email
                 </a>
               )}
               {lead.phone && (
                 <a
                   href={`tel:${lead.phone}`}
-                  className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-xs text-emerald-400 transition-colors"
+                  className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-sm font-medium text-emerald-400 transition-all"
                 >
-                  <Phone className="w-3.5 h-3.5" />
+                  <Phone className="w-4 h-4" />
                   Call
                 </a>
               )}
@@ -667,23 +677,23 @@ function LeadCard({
             
             <Link
               href={`/admin/pipeline/leads/${lead.id}`}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 text-xs text-white/70 hover:text-white transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-sm font-medium text-white/70 hover:text-white transition-all"
             >
-              <Eye className="w-3.5 h-3.5" />
+              <Eye className="w-4 h-4" />
               View Details
             </Link>
             <Link
               href={`/admin/marketing?email=${encodeURIComponent(lead.email || "")}&name=${encodeURIComponent(lead.name)}`}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 text-xs text-white/70 hover:text-white transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-sm font-medium text-white/70 hover:text-white transition-all"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
               Add to Campaign
             </Link>
             <button
               onClick={() => onDelete(lead.id)}
-              className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-red-500/10 text-xs text-red-400 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 text-sm font-medium text-red-400 hover:text-red-300 transition-all"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
               Delete Lead
             </button>
           </motion.div>
@@ -691,7 +701,7 @@ function LeadCard({
       </AnimatePresence>
 
       {/* Time indicator */}
-      <div className="absolute top-2 right-2 text-[10px] text-white/30 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-4 right-4 px-2 py-1 rounded-md bg-black/50 text-xs text-white/40 opacity-0 group-hover:opacity-100 transition-opacity">
         {formatTimeAgo(lead.createdAt)}
       </div>
     </motion.div>

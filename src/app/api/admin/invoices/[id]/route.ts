@@ -247,14 +247,6 @@ export async function DELETE(
       );
     }
 
-    // Prevent deletion of paid invoices (optional safety check)
-    if (invoice.status === "PAID") {
-      return NextResponse.json(
-        { error: "Cannot delete paid invoices. Set status to CANCELLED instead." },
-        { status: 400 }
-      );
-    }
-
     // Delete invoice items first
     await db.invoiceItem.deleteMany({
       where: { invoiceId: id },

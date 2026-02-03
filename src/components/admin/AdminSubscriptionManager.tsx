@@ -371,7 +371,7 @@ export function AdminSubscriptionManager({
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2 flex-wrap">
                         <Link
-                          href={`/admin/pipeline/projects/${sub.project.id}`}
+                          href={`/admin/projects/${sub.project.id}`}
                           className="px-2 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 rounded-lg text-xs font-medium transition-colors whitespace-nowrap"
                         >
                           View

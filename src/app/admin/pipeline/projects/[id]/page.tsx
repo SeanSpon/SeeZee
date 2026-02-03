@@ -40,12 +40,18 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
       organizationId: true,
       questionnaireId: true,
       stripeCustomerId: true,
-      stripeSubscriptionId: true,
-      maintenancePlan: true,
-      maintenanceStatus: true,
       nextBillingDate: true,
       githubRepo: true,
       vercelUrl: true,
+      maintenancePlanRel: {
+        select: {
+          id: true,
+          tier: true,
+          status: true,
+          monthlyPrice: true,
+          stripeSubscriptionId: true,
+        },
+      },
       organization: {
         select: {
           id: true,

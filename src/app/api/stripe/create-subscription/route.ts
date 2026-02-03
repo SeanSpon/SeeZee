@@ -8,13 +8,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
 });
 
-// Maintenance tier pricing (in cents)
-const TIER_PRICING = {
-  BASIC: { price: 15000, hours: 2 },      // $150/mo, 2 hours
-  STANDARD: { price: 35000, hours: 5 },   // $350/mo, 5 hours
-  PREMIUM: { price: 75000, hours: 12 },   // $750/mo, 12 hours
-};
-
+/**
+ * @deprecated This endpoint is deprecated. Use MaintenancePlan checkout flow instead.
+ * Organization-level subscriptions have been replaced with project-based MaintenancePlan.
+ * See /api/checkout/maintenance for the new flow.
+ */
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
@@ -35,16 +33,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { organizationId, tier, startDate } = body;
 
-    // Validate tier
+    // Validate tier (deprecated - this endpoint should not be used)
     const tierUpper = tier.toUpperCase();
-    if (!TIER_PRICING[tierUpper as keyof typeof TIER_PRICING]) {
+    const TIER_PRICING: Record<string, { price: number }> = {
+      BASIC: { price: 99 },
+      STANDARD: { price: 199 },
+      PREMIUM: { price: 399 },
+    };
+    
+    if (!TIER_PRICING[tierUpper]) {
       return NextResponse.json(
         { error: "Invalid tier. Must be BASIC, STANDARD, or PREMIUM" },
         { status: 400 }
       );
     }
-
-    const tierConfig = TIER_PRICING[tierUpper as keyof typeof TIER_PRICING];
+    
+    const tierConfig = TIER_PRICING[tierUpper];
 
     // Get organization
     const organization = await db.organization.findUnique({
@@ -98,31 +102,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create maintenance subscription in database
-    const now = new Date();
-    const periodEnd = new Date(now);
-    periodEnd.setMonth(periodEnd.getMonth() + 1);
-
-    await db.maintenanceSubscription.create({
-      data: {
-        organizationId,
-        tier: tierUpper as any,
-        monthlyRate: tierConfig.price,
-        hoursIncluded: tierConfig.hours,
-        hoursUsed: 0,
-        status: "ACTIVE",
-        stripeSubscriptionId: subscription.id,
-        currentPeriodStart: now,
-        currentPeriodEnd: periodEnd,
-      },
-    });
-
+    // NOTE: MaintenanceSubscription model has been removed.
+    // This endpoint is deprecated. Return error directing to new flow.
     return NextResponse.json({
-      success: true,
-      subscriptionId: subscription.id,
-      status: subscription.status,
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-    });
+      error: "This endpoint is deprecated. Please use project-based MaintenancePlan checkout instead.",
+      redirectTo: "/api/checkout/maintenance",
+    }, { status: 410 }); // 410 Gone
   } catch (error) {
     console.error("Error creating subscription:", error);
     return NextResponse.json(

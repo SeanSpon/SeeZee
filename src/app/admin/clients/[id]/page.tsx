@@ -55,9 +55,6 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
               status: true,
             },
           },
-          subscriptions: {
-            orderBy: { createdAt: "desc" },
-          },
         },
         orderBy: { createdAt: "desc" },
       },

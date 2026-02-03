@@ -48,13 +48,15 @@ export default function PipelinePage() {
   if (loading) {
     return (
       <div className="space-y-8">
-        <header className="space-y-3">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ef4444] inline-block">
-            Growth Engine
-          </span>
-          <h1 className="text-4xl font-heading font-bold gradient-text">
-            Pipeline
-          </h1>
+        <header className="space-y-4">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ef4444] inline-block mb-2">
+              Growth Engine
+            </span>
+            <h1 className="text-4xl font-heading font-bold gradient-text">
+              Pipeline
+            </h1>
+          </div>
           <p className="text-white/60 max-w-2xl">
             Track deals from discovery to close. Drag leads between stages, take quick actions, and monitor your conversion funnel.
           </p>
@@ -71,13 +73,15 @@ export default function PipelinePage() {
 
   return (
     <div className="space-y-8">
-      <header className="space-y-3">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ef4444] inline-block">
-          Growth Engine
-        </span>
-        <h1 className="text-4xl font-heading font-bold gradient-text">
-          Pipeline
-        </h1>
+      <header className="space-y-4">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ef4444] inline-block mb-2">
+            Growth Engine
+          </span>
+          <h1 className="text-4xl font-heading font-bold gradient-text">
+            Pipeline
+          </h1>
+        </div>
         <p className="text-white/60 max-w-2xl">
           Track deals from discovery to close. Drag leads between stages, take quick actions, and monitor your conversion funnel.
         </p>

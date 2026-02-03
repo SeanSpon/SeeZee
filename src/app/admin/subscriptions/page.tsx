@@ -1,10 +1,10 @@
 /**
- * Redirect to unified finance transactions page
+ * Redirect to hours and packages management page
  */
 
 import { redirect } from "next/navigation";
 
 export default async function SubscriptionsRedirect() {
-  redirect("/admin/finance/transactions?tab=subscriptions");
+  redirect("/admin/hours");
 }
 

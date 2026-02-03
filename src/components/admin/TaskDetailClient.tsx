@@ -55,6 +55,8 @@ type Task = {
   dueDate: Date | string | null;  // Can be string from serialization
   completedAt: Date | string | null;  // Can be string from serialization
   createdAt: Date | string;  // Can be string from serialization
+  projectId?: string | null;
+  milestoneId?: string | null;
   materials?: TaskMaterial[];
   assignedTo: {
     id: string;
@@ -70,6 +72,18 @@ type Task = {
     image: string | null;
     role: string;
   };
+  project?: {
+    id: string;
+    name: string;
+  } | null;
+  milestone?: {
+    id: string;
+    title: string;
+    description: string | null;
+    dueDate: Date | string | null;
+    completed: boolean;
+    projectId: string;
+  } | null;
 };
 
 type ActivityLog = {
@@ -127,6 +141,12 @@ export function TaskDetailClient({
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [assignmentType, setAssignmentType] = useState<"person" | "role" | "team">("person");
+  const [selectedAssignment, setSelectedAssignment] = useState({
+    personId: task.assignedTo?.id || "",
+    role: "",
+    teamId: "",
+  });
 
   const currentStatus = statusOptions.find((s) => s.value === task.status) || statusOptions[0];
   const currentPriority = priorityOptions.find((p) => p.value === task.priority) || priorityOptions[1];
@@ -147,18 +167,40 @@ export function TaskDetailClient({
     setLoading(false);
   };
 
-  const handleAssigneeChange = async (assigneeId: string) => {
+  const handleAssigneeChange = async () => {
     setLoading(true);
-    const result = await assignTask(task.id, assigneeId);
     
-    if (result.success) {
-      const assignee = teamMembers.find((m) => m.id === assigneeId);
-      toast(`Task assigned to ${assignee?.name || assignee?.email}`, "success");
-      router.refresh();
-    } else {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}/assign`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assignedToId: assignmentType === "person" ? selectedAssignment.personId || null : null,
+          assignedToRole: assignmentType === "role" ? selectedAssignment.role || null : null,
+          assignedToTeamId: assignmentType === "team" ? selectedAssignment.teamId || null : null,
+        }),
+      });
+
+      if (response.ok) {
+        let message = "Task assignment updated";
+        if (assignmentType === "person" && selectedAssignment.personId) {
+          const assignee = teamMembers.find((m) => m.id === selectedAssignment.personId);
+          message = `Task assigned to ${assignee?.name || assignee?.email}`;
+        } else if (assignmentType === "role" && selectedAssignment.role) {
+          message = `Task assigned to ${selectedAssignment.role} role`;
+        } else if (assignmentType === "team" && selectedAssignment.teamId) {
+          message = `Task assigned to team`;
+        }
+        toast(message, "success");
+        router.refresh();
+      } else {
+        toast("Failed to assign task", "error");
+      }
+    } catch (error) {
       toast("Failed to assign task", "error");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDelete = async () => {
@@ -317,6 +359,46 @@ export function TaskDetailClient({
                 </div>
               )}
 
+              {/* Project & Milestone */}
+              {(task.project || task.milestone) && (
+                <div className="space-y-3">
+                  {task.project && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-2">
+                        Project
+                      </label>
+                      <Link
+                        href={`/admin/projects/${task.project.id}`}
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30 transition-all"
+                      >
+                        {task.project.name}
+                      </Link>
+                    </div>
+                  )}
+                  {task.milestone && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-2">
+                        Milestone
+                      </label>
+                      <Link
+                        href={`/admin/projects/${task.milestone.projectId}?tab=tasks`}
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 transition-all"
+                      >
+                        <span className="font-medium">{task.milestone.title}</span>
+                        {task.milestone.completed && (
+                          <CheckCircle className="w-4 h-4" />
+                        )}
+                      </Link>
+                      {task.milestone.dueDate && (
+                        <div className="mt-2 text-xs text-slate-400">
+                          Milestone due: {format(new Date(task.milestone.dueDate), "MMM d, yyyy")}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Completed At */}
               {task.completedAt && (
                 <div>
@@ -388,19 +470,99 @@ export function TaskDetailClient({
           {/* Assignee */}
           <SectionCard title="Assignee">
             {isEditing ? (
-              <select
-                value={task.assignedTo?.id || ""}
-                onChange={(e) => handleAssigneeChange(e.target.value)}
-                disabled={loading}
-                className="w-full px-4 py-2 rounded-lg bg-slate-900/60 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-              >
-                <option value="">Unassigned</option>
-                {teamMembers.map((member) => (
-                  <option key={member.id} value={member.id}>
-                    {member.name || member.email} ({member.role})
-                  </option>
-                ))}
-              </select>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAssignmentType("person")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition ${
+                      assignmentType === "person"
+                        ? "bg-blue-500 text-white"
+                        : "bg-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Person
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAssignmentType("role")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition ${
+                      assignmentType === "role"
+                        ? "bg-blue-500 text-white"
+                        : "bg-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Role
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAssignmentType("team")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition ${
+                      assignmentType === "team"
+                        ? "bg-blue-500 text-white"
+                        : "bg-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Team
+                  </button>
+                </div>
+
+                {assignmentType === "person" && (
+                  <select
+                    value={selectedAssignment.personId}
+                    onChange={(e) => setSelectedAssignment({ ...selectedAssignment, personId: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-2 rounded-lg bg-slate-900/60 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  >
+                    <option value="">Select person...</option>
+                    {teamMembers.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.name || member.email} ({member.role})
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                {assignmentType === "role" && (
+                  <select
+                    value={selectedAssignment.role}
+                    onChange={(e) => setSelectedAssignment({ ...selectedAssignment, role: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-2 rounded-lg bg-slate-900/60 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  >
+                    <option value="">Select role...</option>
+                    <option value="ADMIN">Admin Team</option>
+                    <option value="CEO">CEO</option>
+                    <option value="CFO">CFO</option>
+                    <option value="DEV">Developers</option>
+                    <option value="FRONTEND">Frontend Developers</option>
+                    <option value="BACKEND">Backend Developers</option>
+                    <option value="DESIGNER">Designers</option>
+                    <option value="OUTREACH">Outreach Team</option>
+                    <option value="STAFF">Staff</option>
+                    <option value="INTERN">Interns</option>
+                  </select>
+                )}
+
+                {assignmentType === "team" && (
+                  <input
+                    type="text"
+                    value={selectedAssignment.teamId}
+                    onChange={(e) => setSelectedAssignment({ ...selectedAssignment, teamId: e.target.value })}
+                    placeholder="Enter team/organization ID..."
+                    disabled={loading}
+                    className="w-full px-4 py-2 rounded-lg bg-slate-900/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                )}
+
+                <button
+                  onClick={handleAssigneeChange}
+                  disabled={loading}
+                  className="w-full px-4 py-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 disabled:opacity-50 transition"
+                >
+                  {loading ? "Updating..." : "Update Assignment"}
+                </button>
+              </div>
             ) : task.assignedTo ? (
               <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/40 border border-white/5">
                 {task.assignedTo.image ? (

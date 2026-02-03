@@ -27,11 +27,14 @@ export function CreateTaskModal({
   onCreated,
 }: CreateTaskModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [assignmentType, setAssignmentType] = useState<"person" | "role" | "team">("person");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     priority: "MEDIUM",
     assignedToId: "",
+    assignedToRole: "",
+    assignedToTeamId: "",
     dueDate: "",
     estimatedHours: "",
   });
@@ -45,13 +48,17 @@ export function CreateTaskModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          description: formData.description,
+          priority: formData.priority,
           column,
           estimatedHours: formData.estimatedHours
             ? parseFloat(formData.estimatedHours)
             : null,
           dueDate: formData.dueDate || null,
-          assignedToId: formData.assignedToId || null,
+          assignedToId: assignmentType === "person" ? formData.assignedToId || null : null,
+          assignedToRole: assignmentType === "role" ? formData.assignedToRole || null : null,
+          assignedToTeamId: assignmentType === "team" ? formData.assignedToTeamId || null : null,
         }),
       });
 
@@ -133,28 +140,64 @@ export function CreateTaskModal({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
-                  Priority
-                </label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) =>
-                    setFormData({ ...formData, priority: e.target.value })
-                  }
-                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Priority
+              </label>
+              <select
+                value={formData.priority}
+                onChange={(e) =>
+                  setFormData({ ...formData, priority: e.target.value })
+                }
+                className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+              >
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Assignment
+              </label>
+              <div className="flex gap-2 mb-2">
+                <button
+                  type="button"
+                  onClick={() => setAssignmentType("person")}
+                  className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    assignmentType === "person"
+                      ? "bg-trinity-red text-white"
+                      : "bg-[#151b2e] text-gray-400 hover:text-white border border-gray-700"
+                  }`}
                 >
-                  <option value="LOW">Low</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HIGH">High</option>
-                </select>
+                  Person
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAssignmentType("role")}
+                  className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    assignmentType === "role"
+                      ? "bg-trinity-red text-white"
+                      : "bg-[#151b2e] text-gray-400 hover:text-white border border-gray-700"
+                  }`}
+                >
+                  Role/Group
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAssignmentType("team")}
+                  className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    assignmentType === "team"
+                      ? "bg-trinity-red text-white"
+                      : "bg-[#151b2e] text-gray-400 hover:text-white border border-gray-700"
+                  }`}
+                >
+                  Team
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
-                  Assign To
-                </label>
+              {assignmentType === "person" && (
                 <select
                   value={formData.assignedToId}
                   onChange={(e) =>
@@ -162,14 +205,48 @@ export function CreateTaskModal({
                   }
                   className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
                 >
-                  <option value="">Unassigned</option>
+                  <option value="">Select a person...</option>
                   {teamMembers.map((member) => (
                     <option key={member.id} value={member.id}>
                       {member.name || member.role}
                     </option>
                   ))}
                 </select>
-              </div>
+              )}
+
+              {assignmentType === "role" && (
+                <select
+                  value={formData.assignedToRole}
+                  onChange={(e) =>
+                    setFormData({ ...formData, assignedToRole: e.target.value })
+                  }
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white focus:border-trinity-red focus:outline-none"
+                >
+                  <option value="">Select a role...</option>
+                  <option value="ADMIN">Admin Team</option>
+                  <option value="CEO">CEO</option>
+                  <option value="CFO">CFO</option>
+                  <option value="DEV">Developers</option>
+                  <option value="FRONTEND">Frontend Developers</option>
+                  <option value="BACKEND">Backend Developers</option>
+                  <option value="DESIGNER">Designers</option>
+                  <option value="OUTREACH">Outreach Team</option>
+                  <option value="STAFF">Staff</option>
+                  <option value="INTERN">Interns</option>
+                </select>
+              )}
+
+              {assignmentType === "team" && (
+                <input
+                  type="text"
+                  value={formData.assignedToTeamId}
+                  onChange={(e) =>
+                    setFormData({ ...formData, assignedToTeamId: e.target.value })
+                  }
+                  placeholder="Enter team/organization ID..."
+                  className="w-full rounded-lg border-2 border-gray-700 bg-[#151b2e] px-4 py-2.5 text-white placeholder-gray-500 focus:border-trinity-red focus:outline-none"
+                />
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { DataTable, type Column } from "@/components/admin/DataTable";
 import { updateTaskStatus, createTask, assignTask, bulkUpdateTaskStatus, bulkAssignTasks, bulkDeleteTasks } from "@/server/actions";
-import { Plus, CheckSquare, Clock, AlertCircle, Trash2, UserPlus, LayoutGrid, List } from "lucide-react";
+import { Plus, CheckSquare, Clock, AlertCircle, Trash2, UserPlus, LayoutGrid, List, Target } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { TasksKanbanBoard } from "./tasks/TasksKanbanBoard";
@@ -21,6 +21,8 @@ type Task = {
   dueDate: string | null;  // Serialized as ISO string from server
   completedAt: string | null;  // Serialized as ISO string from server
   createdAt: string;  // Serialized as ISO string from server
+  projectId: string | null;
+  milestoneId: string | null;
   assignedTo: {
     id: string;
     name: string | null;
@@ -31,6 +33,18 @@ type Task = {
     name: string | null;
     email: string | null;
   };
+  project?: {
+    id: string;
+    name: string;
+  } | null;
+  milestone?: {
+    id: string;
+    title: string;
+    description: string | null;
+    dueDate: string | null;
+    completed: boolean;
+    projectId: string;
+  } | null;
 };
 
 interface TasksClientProps {
@@ -41,6 +55,7 @@ interface TasksClientProps {
     inProgress: number;
     done: number;
     overdue: number;
+    withMilestone: number;
   };
 }
 
@@ -60,6 +75,7 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   const router = useRouter();
   const [tasks, setTasks] = useState(initialTasks);
   const [filter, setFilter] = useState<"all" | "TODO" | "IN_PROGRESS" | "DONE">("all");
+  const [milestoneFilter, setMilestoneFilter] = useState<string | "all">("all");
   const [view, setView] = useState<"table" | "kanban">("kanban");
   const [updating, setUpdating] = useState<string | null>(null);
   const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
@@ -71,6 +87,15 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
     priority: "MEDIUM",
     dueDate: "",
   });
+
+  // Extract unique milestones from tasks
+  const milestones = Array.from(
+    new Map(
+      tasks
+        .filter((t) => t.milestone)
+        .map((t) => [t.milestone!.id, t.milestone!])
+    ).values()
+  );
 
   // Map tasks to kanban format
   // Note: Dates come as strings from RSC serialization, so handle both Date and string types
@@ -97,8 +122,16 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   }));
 
   const filteredTasks = tasks.filter((t) => {
-    if (filter === "all") return true;
-    return t.status === filter;
+    // Status filter
+    if (filter !== "all" && t.status !== filter) return false;
+    
+    // Milestone filter
+    if (milestoneFilter !== "all") {
+      if (milestoneFilter === "none" && t.milestoneId !== null) return false;
+      if (milestoneFilter !== "none" && t.milestoneId !== milestoneFilter) return false;
+    }
+    
+    return true;
   });
 
   const handleStatusChange = async (taskId: string, newStatus: string) => {
@@ -227,6 +260,23 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       ),
     },
     {
+      key: "milestone",
+      label: "Milestone",
+      render: (task) => {
+        if (!task.milestone) {
+          return <span className="text-slate-500 text-sm">-</span>;
+        }
+        return (
+          <div className="flex flex-col">
+            <span className="text-sm text-white font-medium">{task.milestone.title}</span>
+            {task.project && (
+              <span className="text-xs text-slate-400">{task.project.name}</span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       key: "assignedTo",
       label: "Assignee",
       render: (task) => {
@@ -304,6 +354,13 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
       iconBg: "bg-[#10b981]/20",
     },
     {
+      label: "In Milestones",
+      value: stats.withMilestone,
+      icon: Target,
+      iconColor: "text-[#a855f7]",
+      iconBg: "bg-[#a855f7]/20",
+    },
+    {
       label: "Overdue",
       value: stats.overdue,
       icon: AlertCircle,
@@ -315,7 +372,7 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
   return (
     <div className="space-y-8">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
         {statCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -341,7 +398,7 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
 
       {/* Filter Buttons and View Toggle */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           {/* View Toggle */}
           <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#1e293b]/40 p-1">
             <button
@@ -359,6 +416,26 @@ export function TasksClient({ initialTasks, stats }: TasksClientProps) {
               Table
             </button>
           </div>
+
+          {/* Milestone Filter */}
+          {milestones.length > 0 && (
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-400 font-medium">Milestone:</label>
+              <select
+                value={milestoneFilter}
+                onChange={(e) => setMilestoneFilter(e.target.value)}
+                className="px-3 py-1.5 rounded-lg text-sm bg-[#1e293b]/40 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#ef4444]/30 focus:border-[#ef4444]/50 transition-all"
+              >
+                <option value="all">All Milestones</option>
+                <option value="none">No Milestone</option>
+                {milestones.map((milestone) => (
+                  <option key={milestone.id} value={milestone.id}>
+                    {milestone.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           
           {/* Filters */}
           <div className="flex gap-2 flex-wrap">

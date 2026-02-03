@@ -84,6 +84,9 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
   const [vercelUrl, setVercelUrl] = useState(project.vercelUrl || "");
   const [savingVercel, setSavingVercel] = useState(false);
   const [editingVercel, setEditingVercel] = useState(false);
+  const [vercelProjects, setVercelProjects] = useState<any[]>([]);
+  const [loadingVercelProjects, setLoadingVercelProjects] = useState(false);
+  const [selectedVercelProject, setSelectedVercelProject] = useState<string>("");
   
   // Messages state
   const [messageContent, setMessageContent] = useState("");
@@ -357,6 +360,29 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
   };
 
   // Vercel linking handler
+  // Fetch Vercel projects for dropdown
+  const fetchVercelProjects = async () => {
+    setLoadingVercelProjects(true);
+    try {
+      const response = await fetch("/api/integrations/vercel/projects");
+      if (response.ok) {
+        const data = await response.json();
+        setVercelProjects(data.projects || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch Vercel projects:", error);
+    } finally {
+      setLoadingVercelProjects(false);
+    }
+  };
+
+  // Fetch Vercel projects on mount if no URL is set
+  useEffect(() => {
+    if (!project.vercelUrl) {
+      fetchVercelProjects();
+    }
+  }, [project.vercelUrl]);
+
   const handleSaveVercel = async () => {
     setSavingVercel(true);
     try {
@@ -1291,6 +1317,7 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
                     onClick={() => {
                       setVercelUrl(project.vercelUrl || "");
                       setEditingVercel(true);
+                      fetchVercelProjects();
                     }}
                     className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium rounded-lg transition-colors"
                   >
@@ -1298,33 +1325,72 @@ export function ProjectDetailClient({ project, admins }: ProjectDetailClientProp
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={vercelUrl}
-                    onChange={(e) => setVercelUrl(e.target.value)}
-                    placeholder="https://project-name.vercel.app"
-                    className="flex-1 px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
-                  />
-                  <button
-                    onClick={handleSaveVercel}
-                    disabled={savingVercel}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors inline-flex items-center gap-2"
-                  >
-                    <Check className="w-4 h-4" />
-                    {savingVercel ? "..." : "Save"}
-                  </button>
-                  {editingVercel && (
-                    <button
-                      onClick={() => {
-                        setVercelUrl(project.vercelUrl || "");
-                        setEditingVercel(false);
+                <div className="space-y-3">
+                  {/* Dropdown for Vercel Projects */}
+                  <div>
+                    <label className="text-xs text-white/60 mb-1.5 block">
+                      Select from your Vercel projects
+                    </label>
+                    <select
+                      value={selectedVercelProject}
+                      onChange={(e) => {
+                        setSelectedVercelProject(e.target.value);
+                        const selected = vercelProjects.find(p => p.id === e.target.value);
+                        if (selected) {
+                          setVercelUrl(selected.link);
+                        }
                       }}
-                      className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+                      disabled={loadingVercelProjects}
+                      className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-white focus:border-blue-500 focus:outline-none disabled:opacity-50"
                     >
-                      Cancel
+                      <option value="">
+                        {loadingVercelProjects ? "Loading projects..." : "-- Select a project --"}
+                      </option>
+                      {vercelProjects.map((proj) => (
+                        <option key={proj.id} value={proj.id}>
+                          {proj.name} {proj.framework ? `(${proj.framework})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Manual URL Input */}
+                  <div>
+                    <label className="text-xs text-white/60 mb-1.5 block">
+                      Or enter URL manually
+                    </label>
+                    <input
+                      type="text"
+                      value={vercelUrl}
+                      onChange={(e) => setVercelUrl(e.target.value)}
+                      placeholder="https://project-name.vercel.app"
+                      className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveVercel}
+                      disabled={savingVercel || !vercelUrl}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors inline-flex items-center gap-2"
+                    >
+                      <Check className="w-4 h-4" />
+                      {savingVercel ? "Saving..." : "Save"}
                     </button>
-                  )}
+                    {editingVercel && (
+                      <button
+                        onClick={() => {
+                          setVercelUrl(project.vercelUrl || "");
+                          setEditingVercel(false);
+                          setSelectedVercelProject("");
+                        }}
+                        className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
               <p className="text-xs text-slate-500 mt-2">

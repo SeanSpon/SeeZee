@@ -16,7 +16,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
   }
 
   // Check if user has admin role
-  const adminRoles = ["ADMIN", "CEO", "STAFF", "FRONTEND", "BACKEND", "OUTREACH", "DESIGNER", "DEV"];
+  const adminRoles = ["ADMIN", "CEO", "CFO", "STAFF", "FRONTEND", "BACKEND", "OUTREACH", "DESIGNER", "DEV"];
   if (!adminRoles.includes(user.role || "")) {
     redirect("/client");
   }

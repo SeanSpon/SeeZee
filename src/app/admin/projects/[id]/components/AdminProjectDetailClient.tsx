@@ -340,92 +340,161 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
     );
   };
 
-  const renderClientTab = () => (
-    <div className="space-y-6">
-      {/* Client Info */}
-      <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Client Organization</h3>
-        <p className="text-xl font-semibold text-white mb-2">{project.organization.name}</p>
-        {project.organization.members.length > 0 && (
-          <div className="mt-4 space-y-2">
-            <p className="text-xs text-white/50 uppercase tracking-wide">Team Members</p>
-            {project.organization.members.slice(0, 5).map((member) => (
-              <div key={member.userId} className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
-                  <User className="w-3 h-3 text-white/60" />
-                </div>
-                <span className="text-sm text-white/80">{member.user.name || member.user.email}</span>
+  const renderClientTab = () => {
+    // Get the primary client contact (first member of organization)
+    const primaryClient = project.organization.members.length > 0 
+      ? project.organization.members[0].user 
+      : null;
+
+    return (
+      <div className="space-y-6">
+        {/* Primary Client Profile Card */}
+        {primaryClient && (
+          <div className="p-6 bg-gradient-to-br from-white/10 to-white/5 rounded-xl border border-white/20 shadow-lg">
+            <div className="flex items-start gap-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#ef4444] to-[#dc2626] flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                {primaryClient.name ? primaryClient.name.charAt(0).toUpperCase() : (primaryClient.email ? primaryClient.email.charAt(0).toUpperCase() : '?')}
               </div>
-            ))}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">Primary Contact</h3>
+                <p className="text-2xl font-bold text-white mb-1">{primaryClient.name || "Unnamed Client"}</p>
+                <p className="text-sm text-white/60 mb-3">{primaryClient.email}</p>
+                
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={`mailto:${primaryClient.email}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-medium rounded-lg transition-colors"
+                  >
+                    <Send className="w-3 h-3" />
+                    Email Client
+                  </a>
+                  <Link
+                    href={`/admin/clients/${primaryClient.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-medium rounded-lg transition-colors"
+                  >
+                    <User className="w-3 h-3" />
+                    View Full Profile
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Client Organization */}
+        <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+          <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Organization</h3>
+          <p className="text-xl font-semibold text-white mb-2">{project.organization.name}</p>
+          
+          {project.organization.members.length > 0 && (
+            <div className="mt-4 space-y-2">
+              <p className="text-xs text-white/50 uppercase tracking-wide mb-3">
+                Team Members ({project.organization.members.length})
+              </p>
+              <div className="space-y-2">
+                {project.organization.members.slice(0, 5).map((member, index) => (
+                  <div key={member.userId} className="flex items-center justify-between p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-sm font-semibold">
+                        {member.user.name ? member.user.name.charAt(0).toUpperCase() : (member.user.email ? member.user.email.charAt(0).toUpperCase() : '?')}
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">{member.user.name || "Unnamed"}</p>
+                        <p className="text-xs text-white/50">{member.user.email}</p>
+                      </div>
+                    </div>
+                    {index === 0 && (
+                      <span className="text-xs px-2 py-0.5 bg-[#ef4444]/20 text-[#ef4444] rounded-full font-medium">
+                        Primary
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {project.organization.members.length > 5 && (
+                  <p className="text-xs text-white/40 text-center py-2">
+                    +{project.organization.members.length - 5} more members
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Key Notes / Questionnaire */}
+        {project.questionnaire && (
+          <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Project Brief</h3>
+            <p className="text-sm text-white/60">Questionnaire responses available</p>
+            <button className="mt-3 text-xs text-[#ef4444] hover:text-white transition-colors">
+              View Responses →
+            </button>
+          </div>
+        )}
+
+        {/* Quick Links */}
+        {(project.githubRepo || project.vercelUrl) && (
+          <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Project Links</h3>
+            <div className="space-y-2">
+              {project.vercelUrl && (
+                <a
+                  href={project.vercelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 bg-white/5 rounded-lg hover:bg-white/10 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="flex-1">Live Site</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+              {project.githubRepo && (
+                <a
+                  href={project.githubRepo.startsWith("http") ? project.githubRepo : `https://github.com/${project.githubRepo}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 bg-white/5 rounded-lg hover:bg-white/10 text-sm text-white/60 hover:text-white transition-colors"
+                >
+                  <Github className="w-4 h-4" />
+                  <span className="flex-1">Repository</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Files (compact) */}
+        {project.files.length > 0 && (
+          <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
+              Project Files ({project.files.length})
+            </h3>
+            <div className="space-y-1">
+              {project.files.slice(0, 5).map((file) => (
+                <a
+                  key={file.id}
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 bg-white/5 rounded-lg hover:bg-white/10 text-sm text-white/60 hover:text-white transition-colors"
+                >
+                  <Folder className="w-3 h-3" />
+                  <span className="truncate flex-1">{file.originalName || file.name}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              ))}
+              {project.files.length > 5 && (
+                <p className="text-xs text-white/40 text-center py-2">
+                  +{project.files.length - 5} more files
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>
-
-      {/* Key Notes / Questionnaire */}
-      {project.questionnaire && (
-        <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-          <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Project Brief</h3>
-          <p className="text-sm text-white/60">Questionnaire responses available</p>
-        </div>
-      )}
-
-      {/* Quick Links */}
-      {(project.githubRepo || project.vercelUrl) && (
-        <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-          <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Project Links</h3>
-          <div className="space-y-2">
-            {project.vercelUrl && (
-              <a
-                href={project.vercelUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-              >
-                <Globe className="w-4 h-4" />
-                Live Site
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-            {project.githubRepo && (
-              <a
-                href={project.githubRepo.startsWith("http") ? project.githubRepo : `https://github.com/${project.githubRepo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-              >
-                <Github className="w-4 h-4" />
-                Repository
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Files (compact) */}
-      {project.files.length > 0 && (
-        <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-          <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">
-            Files ({project.files.length})
-          </h3>
-          <div className="space-y-1">
-            {project.files.slice(0, 5).map((file) => (
-              <a
-                key={file.id}
-                href={file.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-              >
-                <Folder className="w-3 h-3" />
-                <span className="truncate">{file.originalName || file.name}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    );
+  };
 
   const renderFinancialsTab = () => (
     <div className="space-y-6">

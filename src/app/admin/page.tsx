@@ -8,6 +8,7 @@ import { getPipeline, getProjects, getInvoices } from "@/server/actions/pipeline
 import { getTasks, getTaskStats } from "@/server/actions/tasks";
 import { getActivityFeed } from "@/server/actions/activity";
 import { getCurrentUser } from "@/lib/auth/requireRole";
+import { db } from "@/server/db";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
 
   // Fetch all data in parallel
+  
   const [
     pipelineResult,
     projectsResult,
@@ -23,6 +25,8 @@ export default async function AdminDashboardPage() {
     tasksResult,
     taskStatsResult,
     activityResult,
+    maintenancePlans,
+    pendingChangeRequests,
   ] = await Promise.all([
     getPipeline(),
     getProjects(),
@@ -30,6 +34,22 @@ export default async function AdminDashboardPage() {
     getTasks(),
     getTaskStats(),
     getActivityFeed({ limit: 10 }),
+    // Fetch active maintenance plans for recurring revenue tracking
+    db.maintenancePlan.findMany({
+      where: { status: "ACTIVE" },
+      select: {
+        id: true,
+        monthlyPrice: true,
+        supportHoursIncluded: true,
+        supportHoursUsed: true,
+        rolloverHours: true,
+        tier: true,
+      },
+    }),
+    // Fetch pending change requests count
+    db.changeRequest.count({
+      where: { status: "pending" },
+    }),
   ]);
 
   const leads = pipelineResult.success ? pipelineResult.leads : [];
@@ -62,7 +82,6 @@ export default async function AdminDashboardPage() {
   ).length;
 
   // Fetch expenses for this month to calculate net profit (PROPERLY)
-  const { db } = await import("@/server/db");
   const { calculateCurrentMonthExpenses } = await import("@/lib/finance/expense-calculator");
   
   const now = new Date();
@@ -96,6 +115,20 @@ export default async function AdminDashboardPage() {
   
   const netProfit = thisMonthRevenue - (totalExpenses / 100); // Convert cents to dollars
 
+  // Calculate maintenance metrics
+  const activePlansCount = maintenancePlans.length;
+  const monthlyRecurringRevenue = maintenancePlans.reduce((sum, plan) => 
+    sum + (Number(plan.monthlyPrice) || 0), 0
+  );
+  const totalHoursAvailable = maintenancePlans.reduce((sum, plan) => {
+    const included = plan.supportHoursIncluded || 0;
+    const used = plan.supportHoursUsed || 0;
+    const rollover = plan.rolloverHours || 0;
+    // For COO tier (unlimited), treat as -1
+    if (plan.tier === 'COO') return sum;
+    return sum + (included - used + rollover);
+  }, 0);
+
   const stats = {
     activeProjects,
     totalRevenue,
@@ -104,6 +137,12 @@ export default async function AdminDashboardPage() {
     thisMonthRevenue,
     thisMonthExpenses: totalExpenses / 100, // Convert cents to dollars
     netProfit,
+    // Maintenance metrics
+    activePlans: activePlansCount,
+    maintenanceMRR: monthlyRecurringRevenue,
+    maintenanceARR: monthlyRecurringRevenue * 12,
+    totalHoursAvailable,
+    pendingChangeRequests,
   };
 
   // Transform activities to match ActivityFeed format

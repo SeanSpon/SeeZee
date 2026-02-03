@@ -76,30 +76,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check for active subscription first, then maintenance plan
-    let activeSubscription = project.subscriptions[0];
+    // Check for maintenance plan (primary) or fallback to legacy subscription
     let maintenancePlan = project.maintenancePlanRel;
-    
-    // If no subscription but we have a maintenance plan, create a Subscription record
-    if (!activeSubscription && maintenancePlan) {
-      // Create a Subscription record from the MaintenancePlan
-      // This allows ChangeRequests to work with MaintenancePlans
-      activeSubscription = await prisma.subscription.create({
-        data: {
-          projectId: project.id,
-          stripeId: maintenancePlan.stripeSubscriptionId || `mp_${maintenancePlan.id}`,
-          priceId: '', // Not needed for maintenance plan-based subscriptions
-          status: maintenancePlan.status === 'ACTIVE' ? 'active' : 'paused',
-          planName: `${maintenancePlan.tier} Monthly`,
-          changeRequestsAllowed: maintenancePlan.changeRequestsIncluded || 3,
-          changeRequestsUsed: maintenancePlan.changeRequestsUsed || 0,
-          resetDate: maintenancePlan.currentPeriodEnd || null,
-          currentPeriodEnd: maintenancePlan.currentPeriodEnd || null,
-        },
-      });
-      
-      console.log(`Created Subscription ${activeSubscription.id} from MaintenancePlan ${maintenancePlan.id}`);
-    }
+    let activeSubscription = project.subscriptions[0];
     
     if (!activeSubscription && !maintenancePlan) {
       return NextResponse.json(
@@ -248,7 +227,8 @@ export async function POST(req: NextRequest) {
     const changeRequest = await prisma.changeRequest.create({
       data: {
         projectId: project.id,
-        subscriptionId: activeSubscription.id, // Use the subscription ID (created from maintenance plan if needed)
+        maintenancePlanId: maintenancePlan?.id || null, // Primary relationship
+        subscriptionId: activeSubscription?.id || null, // Legacy fallback
         description: fullDescription,
         status: 'pending',
         category: category as any,
@@ -391,6 +371,14 @@ export async function GET(req: NextRequest) {
           select: {
             id: true,
             planName: true,
+          },
+        },
+        maintenancePlan: {
+          select: {
+            id: true,
+            tier: true,
+            monthlyPrice: true,
+            status: true,
           },
         },
       },

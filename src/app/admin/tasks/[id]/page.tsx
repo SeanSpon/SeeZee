@@ -22,7 +22,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { id } = await params;
   const user = await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
-  // Fetch task with full details including materials
+  // Fetch task with full details including materials and milestone
   const task = await db.todo.findUnique({
     where: { id },
     include: {
@@ -42,6 +42,22 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
           email: true,
           image: true,
           role: true,
+        },
+      },
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      milestone: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          dueDate: true,
+          completed: true,
+          projectId: true,
         },
       },
       materials: {

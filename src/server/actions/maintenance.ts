@@ -207,107 +207,16 @@ export async function getMaintenanceStats() {
 
 /**
  * Get clients with active maintenance subscriptions
+ * NOTE: This is now deprecated - use getMaintenancePlans() instead
+ * Kept for backward compatibility but returns empty array
  */
 export async function getMaintenanceClients() {
   await requireRole([ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH]);
 
   try {
-    // Get projects with either Stripe subscriptions OR MaintenancePlan records
-    const clients = await db.project.findMany({
-      where: {
-        OR: [
-          {
-            subscriptions: {
-              some: {
-                status: "active",
-              },
-            },
-          },
-          {
-            maintenancePlanRel: {
-              isNot: null,
-            },
-          },
-        ],
-      },
-      include: {
-        organization: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-        subscriptions: {
-          where: {
-            status: "active",
-          },
-          select: {
-            id: true,
-            priceId: true,
-            currentPeriodEnd: true,
-          },
-        },
-        maintenancePlanRel: {
-          select: {
-            id: true,
-            tier: true,
-            monthlyPrice: true,
-            status: true,
-            supportHoursIncluded: true,
-            supportHoursUsed: true,
-            changeRequestsIncluded: true,
-            changeRequestsUsed: true,
-            createdAt: true,
-          },
-        },
-        maintenanceSchedules: {
-          where: {
-            status: {
-              in: ["ACTIVE", "UPCOMING", "OVERDUE"],
-            },
-          },
-          select: {
-            id: true,
-            title: true,
-            scheduledFor: true,
-            status: true,
-          },
-          orderBy: {
-            scheduledFor: "asc",
-          },
-          take: 5,
-        },
-      },
-    });
-
-    // Convert Decimal to number and Date to string for client components
-    const serializedClients = clients.map(client => ({
-      ...client,
-      budget: client.budget ? client.budget.toNumber() : null,
-      startDate: client.startDate?.toISOString() || null,
-      endDate: client.endDate?.toISOString() || null,
-      createdAt: client.createdAt.toISOString(),
-      updatedAt: client.updatedAt.toISOString(),
-      designApprovedAt: client.designApprovedAt?.toISOString() || null,
-      launchedAt: client.launchedAt?.toISOString() || null,
-      nextBillingDate: client.nextBillingDate?.toISOString() || null,
-      subscriptions: client.subscriptions.map(sub => ({
-        ...sub,
-        currentPeriodEnd: sub.currentPeriodEnd?.toISOString() || null,
-      })),
-      maintenancePlanRel: client.maintenancePlanRel ? {
-        ...client.maintenancePlanRel,
-        monthlyPrice: client.maintenancePlanRel.monthlyPrice.toNumber(),
-        supportHoursUsed: Number(client.maintenancePlanRel.supportHoursUsed),
-        createdAt: client.maintenancePlanRel.createdAt.toISOString(),
-      } : null,
-      maintenanceSchedules: client.maintenanceSchedules.map(schedule => ({
-        ...schedule,
-        scheduledFor: schedule.scheduledFor.toISOString(),
-      })),
-    }));
-
-    return { success: true, clients: serializedClients };
+    // Return empty array - legacy subscriptions are no longer used
+    // All maintenance is now managed through MaintenancePlan records
+    return { success: true, clients: [] };
   } catch (error) {
     console.error("Failed to fetch maintenance clients:", error);
     return { success: false, error: "Failed to fetch maintenance clients", clients: [] };

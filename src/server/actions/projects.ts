@@ -102,7 +102,6 @@ export async function updateProjectAssignee(projectId: string, assigneeId: strin
       timestamp: new Date().toISOString(),
     });
 
-    revalidatePath(`/admin/pipeline/projects/${projectId}`);
     revalidatePath(`/admin/projects/${projectId}`);
     revalidatePath("/admin/pipeline");
 
@@ -171,7 +170,6 @@ export async function updateProjectBudget(
     });
 
     // Revalidate paths
-    revalidatePath(`/admin/pipeline/projects/${projectId}`);
     revalidatePath(`/admin/projects/${projectId}`);
     revalidatePath("/admin/pipeline");
 

@@ -195,7 +195,11 @@ export default async function CEOSystemsPage() {
       total: systemLogs.length,
       errors: systemLogs.filter(l => l.action?.toLowerCase().includes('error')).length,
       warnings: systemLogs.filter(l => l.action?.toLowerCase().includes('warn')).length,
-      recent: systemLogs.slice(0, 10),
+      recent: systemLogs.slice(0, 10).map(log => ({
+        ...log,
+        level: log.action?.toLowerCase().includes('error') ? 'ERROR' :
+               log.action?.toLowerCase().includes('warn') ? 'WARN' : 'INFO'
+      })),
     },
     notifications: {
       total: notifications.length,

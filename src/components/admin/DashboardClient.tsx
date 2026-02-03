@@ -29,6 +29,7 @@ import StatsCards, {
 } from "@/components/admin/dashboard/StatsCards";
 import { RevenueChart } from "@/components/admin/dashboard/RevenueChart";
 import { AlertsPanel, Alert } from "@/components/admin/dashboard/AlertsPanel";
+import { TeamGitActivity } from "@/components/admin/dashboard/TeamGitActivity";
 
 // Get current date formatted nicely
 function getCurrentDate() {
@@ -205,12 +206,12 @@ export function DashboardClient({
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#22d3ee]/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       
       <header className="space-y-4 relative z-10">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="space-y-3">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6">
+          <div className="space-y-2 md:space-y-3">
             <motion.p 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-sm text-slate-400 font-medium tracking-wide uppercase"
+              className="text-xs md:text-sm text-slate-400 font-medium tracking-wide uppercase"
             >
               {getCurrentDate()}
             </motion.p>
@@ -218,7 +219,7 @@ export function DashboardClient({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-3xl lg:text-4xl font-heading font-bold"
+              className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-300">
                 Welcome back, {userName}
@@ -228,7 +229,7 @@ export function DashboardClient({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-base text-slate-400 max-w-xl"
+              className="text-sm md:text-base text-slate-400 max-w-xl"
             >
               Here's what's happening with your business today.
             </motion.p>
@@ -237,18 +238,18 @@ export function DashboardClient({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
-            className="flex flex-wrap items-center gap-3"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3"
           >
             <Link
               href="/admin/leads"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.08] hover:border-white/[0.12]"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.08] hover:border-white/[0.12]"
             >
               <FiMapPin className="h-4 w-4" />
               Find Leads
             </Link>
             <Link
               href="/admin/projects"
-              className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-sky-400"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-sky-400"
             >
               <FiPlus className="h-4 w-4" />
               New Project
@@ -262,8 +263,11 @@ export function DashboardClient({
       {/* Revenue Chart */}
       <RevenueChart data={revenueData} isLoading={isLoadingRevenue} />
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-8 lg:col-span-2">
+      <div className="grid gap-6 md:gap-8 lg:grid-cols-3">
+        <div className="space-y-6 md:space-y-8 lg:col-span-2 order-2 lg:order-1">
+          {/* Team GitHub Activity */}
+          <TeamGitActivity />
+
           <ActivityFeed activities={activities} />
 
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
@@ -341,7 +345,7 @@ export function DashboardClient({
           </section>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6 order-1 lg:order-2">
           {/* Core Business Section */}
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="mb-4">
@@ -521,21 +525,65 @@ export function DashboardClient({
           {/* Alerts Panel */}
           <AlertsPanel alerts={alerts} isLoading={isLoadingAlerts} />
 
+          {/* Maintenance Business Metrics */}
+          <section className="rounded-xl border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-violet-500/5 backdrop-blur-xl p-5 transition-all duration-300 hover:border-violet-500/30">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-violet-500/20">
+                <FiLayers className="h-4 w-4 text-violet-400" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-white">Maintenance Business</h2>
+                <p className="text-xs text-slate-500">Recurring revenue & support</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="p-3 rounded-lg bg-white/[0.05]">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Active Plans</p>
+                <p className="text-2xl font-semibold text-violet-400">
+                  {stats.activePlans ?? 0}
+                </p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.05]">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Monthly Recurring Revenue</p>
+                <p className="text-2xl font-semibold text-emerald-400">
+                  {currencyFormatter.format((stats.maintenanceMRR ?? 0) / 100)}
+                </p>
+              </div>
+              <div className="p-3 rounded-lg bg-white/[0.05]">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Total Hours Available</p>
+                <p className="text-xl font-semibold text-sky-400">
+                  {stats.totalHoursAvailable ?? 0}h
+                </p>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05]">
+                <span className="text-slate-400 text-sm">Pending Requests</span>
+                <span className="font-semibold text-lg text-white">{stats.pendingChangeRequests ?? 0}</span>
+              </div>
+              <Link 
+                href="/admin/maintenance"
+                className="block w-full text-center py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-400 hover:bg-violet-500/25 transition-colors text-sm font-medium"
+              >
+                View Maintenance Hub →
+              </Link>
+            </div>
+          </section>
+
+          {/* Financial Overview */}
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-lg bg-emerald-500/10">
                 <FiDollarSign className="h-4 w-4 text-emerald-400" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-white">Financial Snapshot</h2>
-                <p className="text-xs text-slate-500">This month's overview</p>
+                <h2 className="text-base font-semibold text-white">Financial Overview</h2>
+                <p className="text-xs text-slate-500">Invoices & expenses</p>
               </div>
             </div>
             <div className="space-y-3">
               <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Revenue (This Month)</p>
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Invoice Revenue (This Month)</p>
                 <p className="text-2xl font-semibold text-emerald-400">
-                  {currencyFormatter.format(stats.thisMonthRevenue ?? stats.totalRevenue ?? 0)}
+                  {currencyFormatter.format(stats.thisMonthRevenue ?? 0)}
                 </p>
               </div>
               {stats.thisMonthExpenses !== undefined && (
@@ -555,14 +603,14 @@ export function DashboardClient({
                 </div>
               )}
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
-                <span className="text-slate-400 text-sm">Open invoices</span>
+                <span className="text-slate-400 text-sm">Open Invoices</span>
                 <span className="font-semibold text-lg text-white">{stats.unpaidInvoices ?? 0}</span>
               </div>
               <Link 
                 href="/admin/finance"
                 className="block w-full text-center py-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 hover:bg-sky-500/15 transition-colors text-sm font-medium"
               >
-                View Full Finance Dashboard →
+                View Finance Dashboard →
               </Link>
             </div>
           </section>

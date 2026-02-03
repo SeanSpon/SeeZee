@@ -193,7 +193,7 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
         router.refresh();
         setTimeout(() => {
           if (result.projectId) {
-            router.push(`/admin/pipeline/projects/${result.projectId}`);
+            router.push(`/admin/projects/${result.projectId}`);
           } else {
             router.push(`/admin/pipeline/projects`);
           }
@@ -678,7 +678,7 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
               {/* Show link to project if already converted */}
               {lead.status === 'CONVERTED' && lead.project && (
                 <a
-                  href={`/admin/pipeline/projects/${lead.project.id}`}
+                  href={`/admin/projects/${lead.project.id}`}
                   className="block w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-center font-medium transition-colors"
                 >
                   View Project →
