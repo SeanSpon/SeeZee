@@ -828,10 +828,16 @@ export function TransactionsManager({
                 )}
 
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                  <button className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
+                  <button 
+                    onClick={() => window.location.href = `/admin/maintenance`}
+                    className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
+                  >
                     View Details
                   </button>
-                  <button className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
+                  <button 
+                    onClick={() => window.location.href = `/admin/maintenance`}
+                    className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
+                  >
                     <FiEdit className="w-4 h-4" />
                   </button>
                 </div>
