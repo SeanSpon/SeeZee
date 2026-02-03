@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { 
   FiFileText, 
   FiCreditCard, 
@@ -165,6 +165,7 @@ export function TransactionsManager({
   organizations,
   projects,
 }: TransactionsManagerProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab") || "invoices";
   
@@ -228,6 +229,12 @@ export function TransactionsManager({
       console.error("Failed to delete invoice:", error);
       alert("Failed to delete invoice. Please try again.");
     }
+  };
+
+  // Subscription action handler
+  const handleViewSubscription = (subscriptionId: string) => {
+    const params = new URLSearchParams({ subscriptionId });
+    router.push(`/admin/maintenance?${params.toString()}`);
   };
 
   const handleExportData = () => {
@@ -828,10 +835,16 @@ export function TransactionsManager({
                 )}
 
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                  <button className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
+                  <button 
+                    onClick={() => handleViewSubscription(sub.id)}
+                    className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
+                  >
                     View Details
                   </button>
-                  <button className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors">
+                  <button 
+                    onClick={() => handleViewSubscription(sub.id)}
+                    className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
+                  >
                     <FiEdit className="w-4 h-4" />
                   </button>
                 </div>
