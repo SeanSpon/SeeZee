@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { 
   FiFileText, 
   FiCreditCard, 
@@ -165,6 +165,7 @@ export function TransactionsManager({
   organizations,
   projects,
 }: TransactionsManagerProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab") || "invoices";
   
@@ -829,13 +830,13 @@ export function TransactionsManager({
 
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
                   <button 
-                    onClick={() => window.location.href = `/admin/maintenance`}
+                    onClick={() => router.push(`/admin/maintenance?subscriptionId=${sub.id}`)}
                     className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
                   >
                     View Details
                   </button>
                   <button 
-                    onClick={() => window.location.href = `/admin/maintenance`}
+                    onClick={() => router.push(`/admin/maintenance?subscriptionId=${sub.id}`)}
                     className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded text-sm text-white transition-colors"
                   >
                     <FiEdit className="w-4 h-4" />
