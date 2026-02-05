@@ -20,7 +20,21 @@ interface EditUserModalProps {
   onSuccess: () => void;
 }
 
-const ROLES: UserRole[] = ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH", "CLIENT"];
+// All roles from Prisma schema UserRole enum
+const ROLES: UserRole[] = [
+  "CEO",
+  "CFO", 
+  "ADMIN",
+  "STAFF",
+  "FRONTEND",
+  "BACKEND",
+  "DEV",
+  "DESIGNER",
+  "OUTREACH",
+  "INTERN",
+  "PARTNER",
+  "CLIENT"
+];
 
 export function EditUserModal({ user, isOpen, onClose, onSuccess }: EditUserModalProps) {
   const [name, setName] = useState(user.name || "");
