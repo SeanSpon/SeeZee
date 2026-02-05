@@ -176,13 +176,20 @@ export function TeamClient({ users }: TeamClientProps) {
   };
 
   // Define role order for consistent display and sorting
+  // Includes all roles from Prisma schema UserRole enum
   const roleOrder: Record<string, number> = {
     CEO: 1,
     CFO: 2,
-    FRONTEND: 3,
-    BACKEND: 4,
-    OUTREACH: 5,
-    CLIENT: 6,
+    ADMIN: 3,
+    STAFF: 4,
+    FRONTEND: 5,
+    BACKEND: 6,
+    DEV: 7,
+    DESIGNER: 8,
+    OUTREACH: 9,
+    INTERN: 10,
+    PARTNER: 11,
+    CLIENT: 12,
   };
 
   // Get team users (staff only) and clients separately
