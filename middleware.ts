@@ -171,12 +171,25 @@ export async function middleware(req: NextRequest) {
     
     // Role-based route protection
     if (isAdminRoute) {
-      const role = token.role as string;      if (role !== 'CEO' && role !== 'ADMIN') {        return NextResponse.redirect(new URL('/client', req.url));
+      const role = token.role as string;
+      // Allow staff and admin roles to access admin routes
+      // Staff roles: CEO, CFO, ADMIN, STAFF, FRONTEND, BACKEND, DESIGNER, DEV, OUTREACH, INTERN, PARTNER
+      const allowedAdminRoles = ['CEO', 'CFO', 'ADMIN', 'STAFF', 'FRONTEND', 'BACKEND', 'DESIGNER', 'DEV', 'OUTREACH', 'INTERN', 'PARTNER'];
+      if (!allowedAdminRoles.includes(role)) {
+        return NextResponse.redirect(new URL('/client', req.url));
       }
     }
     
     if (isClientRoute) {
-      const role = token.role as string;      if (role !== 'CLIENT') {        return NextResponse.redirect(new URL('/admin', req.url));
+      const role = token.role as string;
+      // Only CLIENT role should be restricted to client routes
+      // All other roles should access admin dashboard
+      if (role === 'CLIENT') {
+        // CLIENT users should stay on client routes
+        return NextResponse.next();
+      } else {
+        // Non-CLIENT users (staff/admin) trying to access client routes should be redirected to admin
+        return NextResponse.redirect(new URL('/admin', req.url));
       }
     }    return NextResponse.next();
   } catch (err) {
