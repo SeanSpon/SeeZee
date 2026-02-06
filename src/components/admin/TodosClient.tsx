@@ -49,6 +49,7 @@ interface TodosClientProps {
   userId: string;
   userRole: string;
   projects: { id: string; name: string; githubRepo: string | null }[];
+  staffUsers: { id: string; name: string | null; email: string; image: string | null; role: string }[];
 }
 
 type FilterType = "mine" | "available" | "all";
@@ -66,7 +67,7 @@ const statusColors = {
   DONE: "bg-green-500/20 text-green-400 border-green-500/30",
 };
 
-export function TodosClient({ tasks, userId, userRole, projects }: TodosClientProps) {
+export function TodosClient({ tasks, userId, userRole, projects, staffUsers }: TodosClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [filter, setFilter] = useState<FilterType>("mine");
@@ -77,6 +78,7 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
     projectId: "",
     priority: "MEDIUM",
     dueDate: "",
+    assignedToId: userId, // Default to current user
   });
 
   // Filter tasks
@@ -111,14 +113,18 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
             projectId: newTask.projectId || null,
             priority: newTask.priority,
             dueDate: newTask.dueDate ? new Date(newTask.dueDate).toISOString() : null,
-            assignedToId: userId, // Assign to self
+            assignedToId: newTask.assignedToId || null,
           }),
         });
 
         if (response.ok) {
-          setNewTask({ title: "", description: "", projectId: "", priority: "MEDIUM", dueDate: "" });
+          setNewTask({ title: "", description: "", projectId: "", priority: "MEDIUM", dueDate: "", assignedToId: userId });
           setShowCreateForm(false);
           router.refresh();
+        } else {
+          const errorData = await response.json();
+          console.error("Failed to create task:", errorData);
+          alert(errorData.error || "Failed to create task");
         }
       } catch (error) {
         console.error("Failed to create task:", error);
@@ -384,6 +390,25 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
               />
             </div>
 
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Assign To
+              </label>
+              <select
+                value={newTask.assignedToId}
+                onChange={(e) => setNewTask({ ...newTask, assignedToId: e.target.value })}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red [&>option]:bg-gray-900 [&>option]:text-white"
+              >
+                <option value={userId}>Me (default)</option>
+                <option value="">Unassigned</option>
+                {staffUsers.filter(u => u.id !== userId).map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name || user.email} ({user.role})
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Project
@@ -391,7 +416,7 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
               <select
                 value={newTask.projectId}
                 onChange={(e) => setNewTask({ ...newTask, projectId: e.target.value })}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red"
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red [&>option]:bg-gray-900 [&>option]:text-white"
               >
                 <option value="">No project</option>
                 {projects.map((project) => (
@@ -409,7 +434,7 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
               <select
                 value={newTask.priority}
                 onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red"
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-trinity-red [&>option]:bg-gray-900 [&>option]:text-white"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -434,7 +459,7 @@ export function TodosClient({ tasks, userId, userRole, projects }: TodosClientPr
             <button
               onClick={() => {
                 setShowCreateForm(false);
-                setNewTask({ title: "", description: "", projectId: "", priority: "MEDIUM", dueDate: "" });
+                setNewTask({ title: "", description: "", projectId: "", priority: "MEDIUM", dueDate: "", assignedToId: userId });
               }}
               className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
             >
