@@ -52,27 +52,41 @@ export async function POST(
       },
     });
 
-    // Create activity log
-    await db.activity.create({
-      data: {
-        type: "STATUS_CHANGE",
-        title: "Task assignment updated",
-        description: body.assignedToId 
-          ? `Task assigned to user`
-          : body.assignedToRole
-          ? `Task assigned to ${body.assignedToRole} role`
-          : body.assignedToTeamId
-          ? `Task assigned to team`
-          : "Task unassigned",
-        userId: session.user.id,
-        entityType: "TODO",
-        entityId: taskId,
-      },
-    });
+    // Create activity log (non-blocking)
+    try {
+      await db.activity.create({
+        data: {
+          type: "STATUS_CHANGE",
+          title: "Task assignment updated",
+          description: body.assignedToId 
+            ? `Task assigned to user`
+            : body.assignedToRole
+            ? `Task assigned to ${body.assignedToRole} role`
+            : body.assignedToTeamId
+            ? `Task assigned to team`
+            : "Task unassigned",
+          userId: session.user.id,
+          entityType: "TODO",
+          entityId: taskId,
+        },
+      });
+    } catch (activityError) {
+      console.error("Failed to create activity log:", activityError);
+      // Continue anyway - activity log is not critical
+    }
 
+    // Serialize dates properly for JSON response
     return NextResponse.json({
       success: true,
-      task,
+      task: {
+        ...task,
+        createdAt: task.createdAt.toISOString(),
+        updatedAt: task.updatedAt.toISOString(),
+        dueDate: task.dueDate?.toISOString() || null,
+        completedAt: task.completedAt?.toISOString() || null,
+        submittedAt: task.submittedAt?.toISOString() || null,
+        approvedAt: task.approvedAt?.toISOString() || null,
+      },
     });
   } catch (error) {
     console.error("Error updating task assignment:", error);
