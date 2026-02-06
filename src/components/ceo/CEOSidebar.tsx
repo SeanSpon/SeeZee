@@ -23,6 +23,7 @@ import {
   FileText,
   Zap,
   ChevronDown,
+  Cloud,
 } from "lucide-react";
 
 interface NavItem {
@@ -117,6 +118,12 @@ export function CEOSidebar({ userRole }: CEOSidebarProps) {
     {
       label: "Systems & Control",
       items: [
+        {
+          label: "Cloud / API",
+          href: "/admin/ceo/cloud-api",
+          icon: <Cloud className="w-4 h-4" />,
+          badge: "SDK",
+        },
         {
           label: "Database",
           href: "/admin/ceo/database",
