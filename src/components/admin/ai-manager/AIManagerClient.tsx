@@ -19,6 +19,8 @@ import {
   FiActivity,
   FiZap,
   FiCode,
+  FiCopy,
+  FiMonitor,
 } from "react-icons/fi";
 
 // ─── Types ───────────────────────────────────────────────────────────
@@ -56,6 +58,8 @@ interface ConnectedBot {
   status: "online" | "offline" | "busy";
   currentTask: string | null;
   machine: string;
+  lastSeen?: string | null;
+  registrationKey?: string;
 }
 
 // ─── Provider Icons & Colors ─────────────────────────────────────────
@@ -86,27 +90,44 @@ export function AIManagerClient() {
   const [newKeyValue, setNewKeyValue] = useState("");
   const [revealedKeys, setRevealedKeys] = useState<Set<string>>(new Set());
 
-  // Connected bots (demo data for now)
-  const [bots, setBots] = useState<ConnectedBot[]>([
-    { id: "1", name: "Clawd-Primary", status: "online", currentTask: null, machine: "Dev Workstation" },
-    { id: "2", name: "Clawd-Builder", status: "offline", currentTask: null, machine: "Build Server" },
-  ]);
+  // Connected bots (loaded from API)
+  const [bots, setBots] = useState<ConnectedBot[]>([]);
+  const [botsLoading, setBotsLoading] = useState(false);
   const [newTaskBotId, setNewTaskBotId] = useState<string | null>(null);
   const [newTaskText, setNewTaskText] = useState("");
+
+  // Register new bot
+  const [showRegisterBot, setShowRegisterBot] = useState(false);
+  const [newBotName, setNewBotName] = useState("");
+  const [newBotMachine, setNewBotMachine] = useState("");
+  const [registeredKey, setRegisteredKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState(false);
 
   // Active tab
   const [activeTab, setActiveTab] = useState<"chat" | "keys" | "bots">("chat");
 
-  // ─── Load integrations ─────────────────────────────────────────────
-  useEffect(() => {
+  // ─── Load integrations & bots ──────────────────────────────────────
+  const fetchData = useCallback(() => {
+    setBotsLoading(true);
     fetch("/api/admin/ai-manager")
       .then((res) => res.json())
       .then((data) => {
         setIntegrations(data.integrations);
+        if (data.bots) {
+          setBots(data.bots);
+        }
         setLoading(false);
+        setBotsLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setLoading(false);
+        setBotsLoading(false);
+      });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // ─── Scroll chat to bottom ────────────────────────────────────────
   useEffect(() => {
@@ -216,20 +237,101 @@ export function AIManagerClient() {
     });
   }, []);
 
+  // ─── Register new bot ─────────────────────────────────────────────
+  const registerBot = useCallback(async () => {
+    if (!newBotName.trim() || !newBotMachine.trim()) return;
+    try {
+      const res = await fetch("/api/admin/ai-manager", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "register-bot",
+          name: newBotName.trim(),
+          machineId: newBotMachine.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (data.bot) {
+        setRegisteredKey(data.bot.registrationKey);
+        setBots((prev) => [
+          {
+            id: data.bot.id,
+            name: data.bot.name,
+            machine: data.bot.machine,
+            status: data.bot.status,
+            currentTask: null,
+            registrationKey: data.bot.registrationKey,
+          },
+          ...prev,
+        ]);
+      }
+    } catch {
+      // error handled silently
+    }
+  }, [newBotName, newBotMachine]);
+
+  // ─── Remove bot ───────────────────────────────────────────────────
+  const removeBot = useCallback(async (botId: string) => {
+    try {
+      await fetch("/api/admin/ai-manager", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "remove-bot", botId }),
+      });
+      setBots((prev) => prev.filter((b) => b.id !== botId));
+    } catch {
+      // error handled silently
+    }
+  }, []);
+
   // ─── Assign task to bot ───────────────────────────────────────────
   const assignTask = useCallback(
-    (botId: string) => {
+    async (botId: string) => {
       if (!newTaskText.trim()) return;
-      setBots((prev) =>
-        prev.map((b) =>
-          b.id === botId ? { ...b, status: "busy" as const, currentTask: newTaskText.trim() } : b
-        )
-      );
+      try {
+        const res = await fetch("/api/admin/ai-manager", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "assign-task",
+            botId,
+            task: newTaskText.trim(),
+          }),
+        });
+        const data = await res.json();
+        if (data.task) {
+          setBots((prev) =>
+            prev.map((b) =>
+              b.id === botId ? { ...b, currentTask: newTaskText.trim() } : b
+            )
+          );
+        }
+      } catch {
+        // error handled silently
+      }
       setNewTaskBotId(null);
       setNewTaskText("");
     },
     [newTaskText]
   );
+
+  // ─── Copy to clipboard ────────────────────────────────────────────
+  const copyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedKey(true);
+      setTimeout(() => setCopiedKey(false), 2000);
+    });
+  }, []);
+
+  // ─── Time ago helper ──────────────────────────────────────────────
+  const timeAgo = (dateStr: string | null | undefined) => {
+    if (!dateStr) return "Never";
+    const diff = Date.now() - new Date(dateStr).getTime();
+    if (diff < 60000) return "Just now";
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return `${Math.floor(diff / 86400000)}d ago`;
+  };
 
   // ─── Status badge ─────────────────────────────────────────────────
   const StatusBadge = ({ status }: { status: string }) => {
@@ -556,11 +658,161 @@ export function AIManagerClient() {
       {/* ─── Connected Bots Tab ─────────────────────────────────── */}
       {activeTab === "bots" && (
         <div className="space-y-4">
-          <p className="text-sm text-slate-400">
-            Connected Clawd bots that can receive tasks and auto-generate code on their assigned machines.
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-slate-400">
+              Connected Clawd bots that can receive tasks and auto-generate code on their assigned machines.
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={fetchData}
+                disabled={botsLoading}
+                className="flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-1.5 text-xs text-white transition-colors"
+                title="Refresh"
+              >
+                <FiRefreshCw className={`w-3.5 h-3.5 ${botsLoading ? "animate-spin" : ""}`} />
+              </button>
+              <button
+                onClick={() => {
+                  setShowRegisterBot(true);
+                  setRegisteredKey(null);
+                  setNewBotName("");
+                  setNewBotMachine("");
+                }}
+                className="flex items-center gap-2 rounded-lg bg-purple-600 hover:bg-purple-500 px-3 py-2 text-sm text-white transition-colors"
+              >
+                <FiPlus className="w-4 h-4" />
+                Connect New PC
+              </button>
+            </div>
+          </div>
 
+          {/* Register New Bot Form */}
+          {showRegisterBot && (
+            <div className="rounded-xl border border-purple-500/30 bg-purple-500/5 p-5 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <FiMonitor className="w-5 h-5 text-purple-400" />
+                <h3 className="text-sm font-semibold text-white">Connect a New Machine</h3>
+              </div>
+
+              {!registeredKey ? (
+                <>
+                  <p className="text-xs text-slate-400">
+                    Register a Clawd bot for a remote PC. You&apos;ll get a connection key to install on that machine.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={newBotName}
+                      onChange={(e) => setNewBotName(e.target.value)}
+                      placeholder="Bot name (e.g., Clawd-Home)"
+                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-500/50 focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      value={newBotMachine}
+                      onChange={(e) => setNewBotMachine(e.target.value)}
+                      placeholder="Machine name (e.g., Home PC, Build Server)"
+                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-500/50 focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={registerBot}
+                      disabled={!newBotName.trim() || !newBotMachine.trim()}
+                      className="flex items-center gap-1 rounded-lg bg-green-600 hover:bg-green-500 disabled:bg-green-600/30 px-3 py-1.5 text-sm text-white transition-colors"
+                    >
+                      <FiCheck className="w-3.5 h-3.5" />
+                      Generate Connection Key
+                    </button>
+                    <button
+                      onClick={() => setShowRegisterBot(false)}
+                      className="flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-1.5 text-sm text-white transition-colors"
+                    >
+                      <FiX className="w-3.5 h-3.5" />
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-4">
+                  <div className="rounded-lg bg-green-500/10 border border-green-500/30 p-4">
+                    <p className="text-sm text-green-400 font-medium mb-2">✓ Bot registered! Copy this connection key:</p>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 rounded-lg bg-black/40 px-3 py-2 text-xs text-green-300 font-mono break-all">
+                        {registeredKey}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(registeredKey)}
+                        className="flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-xs text-white transition-colors"
+                      >
+                        {copiedKey ? <FiCheck className="w-4 h-4 text-green-400" /> : <FiCopy className="w-4 h-4" />}
+                        {copiedKey ? "Copied!" : "Copy"}
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-amber-400/80 mt-2">
+                      🔒 Keep this key secret — it authenticates your bot. Do not share publicly.
+                    </p>
+                  </div>
+
+                  {/* Setup instructions */}
+                  <div className="rounded-lg bg-white/5 border border-white/10 p-4">
+                    <h4 className="text-sm font-medium text-white mb-3">Setup on Your Remote PC</h4>
+                    <div className="space-y-3 text-xs text-slate-400">
+                      <div>
+                        <p className="text-slate-300 font-medium mb-1">1. Register the bot from your PC:</p>
+                        <code className="block rounded bg-black/40 p-3 text-green-300/80 font-mono whitespace-pre overflow-x-auto">
+{`curl -X POST ${typeof window !== "undefined" ? window.location.origin : ""}/api/bot \\
+  -H "Content-Type: application/json" \\
+  -d '{"action":"register","registrationKey":"${registeredKey}"}'`}
+                        </code>
+                      </div>
+                      <div>
+                        <p className="text-slate-300 font-medium mb-1">2. Poll for tasks (run periodically):</p>
+                        <code className="block rounded bg-black/40 p-3 text-green-300/80 font-mono whitespace-pre overflow-x-auto">
+{`curl -H "x-bot-key: ${registeredKey}" \\
+  ${typeof window !== "undefined" ? window.location.origin : ""}/api/bot`}
+                        </code>
+                      </div>
+                      <div>
+                        <p className="text-slate-300 font-medium mb-1">3. Complete a task:</p>
+                        <code className="block rounded bg-black/40 p-3 text-green-300/80 font-mono whitespace-pre overflow-x-auto">
+{`curl -X POST ${typeof window !== "undefined" ? window.location.origin : ""}/api/bot \\
+  -H "Content-Type: application/json" \\
+  -H "x-bot-key: ${registeredKey}" \\
+  -d '{"action":"task-complete","taskId":"TASK_ID","result":"Done!"}'`}
+                        </code>
+                      </div>
+                      <p className="text-slate-500 mt-2">
+                        The bot polls <code className="text-purple-400">GET /api/bot</code> for new tasks and reports results via <code className="text-purple-400">POST /api/bot</code>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setShowRegisterBot(false);
+                      setRegisteredKey(null);
+                    }}
+                    className="flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-1.5 text-sm text-white transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Bot List */}
           <div className="space-y-3">
+            {bots.length === 0 && !showRegisterBot && (
+              <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+                <FiTerminal className="w-10 h-10 text-slate-500 mx-auto mb-3" />
+                <p className="text-slate-400">No bots connected yet</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Click &quot;Connect New PC&quot; to register a Clawd bot on your remote machine
+                </p>
+              </div>
+            )}
             {bots.map((bot) => (
               <div
                 key={bot.id}
@@ -594,11 +846,14 @@ export function AIManagerClient() {
                       </div>
                       <p className="text-xs text-slate-400 mt-0.5">
                         Machine: {bot.machine}
+                        {bot.lastSeen && (
+                          <span className="ml-2 text-slate-500">· Last seen: {timeAgo(bot.lastSeen)}</span>
+                        )}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {bot.status === "online" && (
+                    {(bot.status === "online" || bot.status === "offline") && (
                       <button
                         onClick={() => setNewTaskBotId(bot.id)}
                         className="flex items-center gap-1 rounded-lg bg-purple-600 hover:bg-purple-500 px-3 py-1.5 text-xs text-white transition-colors"
@@ -607,6 +862,13 @@ export function AIManagerClient() {
                         Assign Task
                       </button>
                     )}
+                    <button
+                      onClick={() => removeBot(bot.id)}
+                      className="p-2 text-slate-400 hover:text-red-400 rounded-lg hover:bg-white/10 transition-colors"
+                      title="Remove bot"
+                    >
+                      <FiTrash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 
@@ -660,10 +922,11 @@ export function AIManagerClient() {
               How It Works
             </h3>
             <ul className="space-y-1.5 text-xs text-slate-400">
-              <li>• Each Clawd bot connects to a machine with VS Code / Cursor installed</li>
-              <li>• Assign coding tasks and the bot auto-generates code using its connected IDE</li>
+              <li>• Click <strong className="text-white">&quot;Connect New PC&quot;</strong> to register a Clawd bot for your remote machine</li>
+              <li>• Copy the connection key and run the bot client script on that PC</li>
+              <li>• The bot polls <code className="text-purple-400 bg-purple-400/10 px-1 rounded">GET /api/bot</code> for tasks you assign here</li>
+              <li>• Assign coding tasks and the bot executes them using its connected IDE</li>
               <li>• Bots can commit to Git, deploy to Vercel, and report back progress</li>
-              <li>• Use the API key from the Keys tab to authenticate bot connections</li>
             </ul>
           </div>
         </div>

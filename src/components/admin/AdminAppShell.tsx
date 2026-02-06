@@ -150,6 +150,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/ceo", label: "Overview", icon: FiStar, description: "Executive overview" },
       { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
+      { href: "/admin/ceo/cloud-api", label: "Cloud / API", icon: FiCpu, description: "Clawd bots, API keys & SDK" },
     ],
     []
   );

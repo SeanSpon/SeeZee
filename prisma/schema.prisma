@@ -2613,3 +2613,49 @@ enum UnifiedRequestPriority {
   URGENT // Same day (may incur fee)
   EMERGENCY // Immediate (production down)
 }
+
+// ============================================
+// CLAWD BOT SYSTEM
+// Remote bot connections for coding automation
+// ============================================
+
+model ClawdBot {
+  id              String        @id @default(cuid())
+  name            String
+  machineId       String        // Human-readable machine name (e.g. "Home PC")
+  registrationKey String        @unique
+  status          BotStatus     @default(OFFLINE)
+  currentTask     String?
+  lastSeen        DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  tasks           BotTask[]
+
+  @@map("clawd_bots")
+}
+
+model BotTask {
+  id        String        @id @default(cuid())
+  botId     String
+  bot       ClawdBot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  task      String
+  status    BotTaskStatus @default(PENDING)
+  result    String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("bot_tasks")
+}
+
+enum BotStatus {
+  ONLINE
+  OFFLINE
+  BUSY
+}
+
+enum BotTaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}

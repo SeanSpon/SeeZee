@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { randomBytes } from "crypto";
 
 const ADMIN_ROLES = ["ADMIN", "CEO", "STAFF", "FRONTEND", "BACKEND", "OUTREACH", "DESIGNER", "DEV"];
+const CEO_ROLES = ["CEO"];
 
 function unauthorizedResponse() {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -18,6 +21,13 @@ async function requireAdminSession() {
   return session;
 }
 
+async function requireCEOSession() {
+  const session = await auth();
+  if (!session?.user) return null;
+  if (!CEO_ROLES.includes(session.user.role || "")) return null;
+  return session;
+}
+
 // GET - Retrieve stored API keys (masked) and connected bots
 export async function GET(req: NextRequest) {
   try {
@@ -25,7 +35,6 @@ export async function GET(req: NextRequest) {
     if (!session) return unauthorizedResponse();
 
     // Return integration configuration status
-    // API keys are stored in environment variables - we just show connection status
     const integrations = {
       claude: {
         name: "Claude (Anthropic)",
@@ -57,7 +66,40 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    return NextResponse.json({ integrations });
+    // Fetch connected bots from database
+    let bots: Array<{
+      id: string;
+      name: string;
+      machineId: string;
+      status: string;
+      currentTask: string | null;
+      lastSeen: Date | null;
+      registrationKey: string;
+    }> = [];
+    try {
+      bots = await prisma.clawdBot.findMany({
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (e) {
+      // Table might not exist yet if migration hasn't run
+      console.warn("[AI Manager] Could not fetch bots:", e instanceof Error ? e.message : e);
+    }
+
+    return NextResponse.json({
+      integrations,
+      bots: bots.map((b) => ({
+        id: b.id,
+        name: b.name,
+        machine: b.machineId,
+        status: b.status.toLowerCase(),
+        currentTask: b.currentTask,
+        lastSeen: b.lastSeen,
+        // Only show key to CEO
+        registrationKey: CEO_ROLES.includes(session.user.role || "")
+          ? b.registrationKey
+          : `••••${b.registrationKey.slice(-6)}`,
+      })),
+    });
   } catch (error) {
     console.error("[AI Manager] GET error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -80,7 +122,6 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: "Message is required" }, { status: 400 });
         }
 
-        // Use provided API key or fall back to environment variable
         const claudeKey = apiKey || process.env.ANTHROPIC_API_KEY;
         if (!claudeKey) {
           return NextResponse.json(
@@ -126,7 +167,6 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: "Provider and API key are required" }, { status: 400 });
         }
 
-        // Simple validation by checking key format
         let valid = false;
         let message = "Invalid key format";
 
@@ -152,6 +192,82 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ valid, message });
+      }
+
+      // ── Bot Management (CEO only) ─────────────────────────────
+      case "register-bot": {
+        const ceoSession = await requireCEOSession();
+        if (!ceoSession) return forbiddenResponse();
+
+        const { name, machineId } = body;
+        if (!name || !machineId) {
+          return NextResponse.json({ error: "name and machineId are required" }, { status: 400 });
+        }
+
+        const registrationKey = `czbot_${randomBytes(24).toString("hex")}`;
+
+        const bot = await prisma.clawdBot.create({
+          data: { name, machineId, registrationKey },
+        });
+
+        return NextResponse.json({
+          bot: {
+            id: bot.id,
+            name: bot.name,
+            machine: bot.machineId,
+            status: bot.status.toLowerCase(),
+            registrationKey: bot.registrationKey,
+          },
+        });
+      }
+
+      case "remove-bot": {
+        const ceoRemoveSession = await requireCEOSession();
+        if (!ceoRemoveSession) return forbiddenResponse();
+
+        const { botId } = body;
+        if (!botId) {
+          return NextResponse.json({ error: "botId is required" }, { status: 400 });
+        }
+
+        await prisma.clawdBot.delete({ where: { id: botId } });
+        return NextResponse.json({ ok: true });
+      }
+
+      case "assign-task": {
+        const { botId, task } = body;
+        if (!botId || !task) {
+          return NextResponse.json({ error: "botId and task are required" }, { status: 400 });
+        }
+
+        const newTask = await prisma.botTask.create({
+          data: { botId, task },
+        });
+
+        // Update bot's currentTask display
+        await prisma.clawdBot.update({
+          where: { id: botId },
+          data: { currentTask: task },
+        });
+
+        return NextResponse.json({
+          task: { id: newTask.id, task: newTask.task, status: newTask.status },
+        });
+      }
+
+      case "list-tasks": {
+        const { botId: taskBotId } = body;
+        if (!taskBotId) {
+          return NextResponse.json({ error: "botId is required" }, { status: 400 });
+        }
+
+        const tasks = await prisma.botTask.findMany({
+          where: { botId: taskBotId },
+          orderBy: { createdAt: "desc" },
+          take: 20,
+        });
+
+        return NextResponse.json({ tasks });
       }
 
       default:
