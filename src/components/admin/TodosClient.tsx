@@ -401,6 +401,7 @@ export function TodosClient({ tasks, userId, userRole, projects, staffUsers }: T
               >
                 <option value={userId}>Me (default)</option>
                 <option value="">Unassigned</option>
+                {/* Exclude current user from staff list since they're already shown as "Me (default)" */}
                 {staffUsers.filter(u => u.id !== userId).map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.name || user.email} ({user.role})
