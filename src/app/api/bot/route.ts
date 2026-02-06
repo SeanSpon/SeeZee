@@ -107,13 +107,13 @@ export async function POST(req: NextRequest) {
         if (!taskId) {
           return NextResponse.json({ error: "taskId required" }, { status: 400 });
         }
-        await prisma.botTask.update({
+        const taskRecord = await prisma.botTask.update({
           where: { id: taskId },
           data: { status: "IN_PROGRESS" },
         });
         await prisma.clawdBot.update({
           where: { id: bot.id },
-          data: { status: "BUSY", currentTask: (await prisma.botTask.findUnique({ where: { id: taskId } }))?.task },
+          data: { status: "BUSY", currentTask: taskRecord.task },
         });
         return NextResponse.json({ ok: true });
       }

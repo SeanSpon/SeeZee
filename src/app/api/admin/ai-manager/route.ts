@@ -80,8 +80,9 @@ export async function GET(req: NextRequest) {
       bots = await prisma.clawdBot.findMany({
         orderBy: { createdAt: "desc" },
       });
-    } catch {
+    } catch (e) {
       // Table might not exist yet if migration hasn't run
+      console.warn("[AI Manager] Could not fetch bots:", e instanceof Error ? e.message : e);
     }
 
     return NextResponse.json({
@@ -221,8 +222,8 @@ export async function POST(req: NextRequest) {
       }
 
       case "remove-bot": {
-        const ceoSession2 = await requireCEOSession();
-        if (!ceoSession2) return forbiddenResponse();
+        const ceoRemoveSession = await requireCEOSession();
+        if (!ceoRemoveSession) return forbiddenResponse();
 
         const { botId } = body;
         if (!botId) {

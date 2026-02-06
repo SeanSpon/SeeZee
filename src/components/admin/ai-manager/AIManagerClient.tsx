@@ -749,6 +749,9 @@ export function AIManagerClient() {
                         {copiedKey ? "Copied!" : "Copy"}
                       </button>
                     </div>
+                    <p className="text-[11px] text-amber-400/80 mt-2">
+                      🔒 Keep this key secret — it authenticates your bot. Do not share publicly.
+                    </p>
                   </div>
 
                   {/* Setup instructions */}
