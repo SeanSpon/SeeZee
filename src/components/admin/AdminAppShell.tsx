@@ -42,6 +42,7 @@ import {
   FiMessageSquare,
   FiClock,
   FiBookmark,
+  FiCpu,
 } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import Avatar from "@/components/ui/Avatar";
@@ -163,6 +164,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
       { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
       { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
+      { href: "/admin/ai-manager", label: "AI Manager", icon: FiCpu, description: "AI bots and API keys" },
       { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
       { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
       { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance plans" },
