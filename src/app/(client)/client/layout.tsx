@@ -20,13 +20,15 @@ export default async function ClientDashboardLayout({
     redirect("/login?returnUrl=/client");
   }
 
-  // CEO email always has access to client dashboard
+  // CEO email whitelist allows specific emails to access client dashboard
+  // This is useful for CEOs to view the client perspective for testing/monitoring
+  // Note: CEO role users (without whitelisted email) will be redirected to admin dashboard
   const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
   const isCEOEmail = user.email && CEO_EMAILS.includes(user.email.toLowerCase());
 
   // Check access permissions
-  // Allow: CLIENT role or CEO email
-  // Redirect staff to admin, unknown roles to login
+  // Allow: CLIENT role OR CEO email (whitelist)
+  // Redirect: Staff roles → /admin, Unknown roles → /login
   if (!isCEOEmail && user.role !== ROLE.CLIENT) {
     // Non-CLIENT users should be redirected based on their role
     if (isStaffRole(user.role)) {

@@ -182,12 +182,12 @@ export async function middleware(req: NextRequest) {
       const role = token.role as string;
       // CLIENT role should access client routes
       // Staff/admin roles should be redirected to admin dashboard
-      if (role === 'CLIENT') {
-        return NextResponse.next();
-      }
-      // Non-CLIENT users should be redirected to admin if they are staff, otherwise to login
+      // Unknown roles should be redirected to login
       if (isStaffRole(role)) {
         return NextResponse.redirect(new URL('/admin', req.url));
+      }
+      if (role === 'CLIENT') {
+        return NextResponse.next();
       }
       // Unknown role - redirect to login
       return NextResponse.redirect(new URL('/login', req.url));
