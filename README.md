@@ -291,7 +291,7 @@ src/
 - `Invoice`, `InvoiceItem`, `Payment` - Invoicing system
 - `FinanceTransaction`, `BusinessExpense`, `MonthlyBudget` - Accounting
 - `RevenueSplit` - Team payouts
-- `MaintenancePlan` - Subscription tiers (Nonprofits: Essentials/Director/COO)
+- `MaintenancePlan` - Subscription tiers (Nonprofit: Essentials/Director/COO)
 - `HourPack`, `RolloverHours`, `MaintenanceLog` - Hour tracking
 
 **Communications**:
@@ -389,7 +389,7 @@ grep "\[MIDDLEWARE\]" logs/*.log
 - Verify `AUTH_SECRET` is set (64+ characters)
 - Check `AUTH_URL` matches your domain
 - Ensure Google OAuth callback URL is registered
-- Review `middleware.ts` logs (search for `#region agent log`)
+- Review `middleware.ts` logs (search for `[MIDDLEWARE]` or `#region agent log` for auth flow details)
 
 **Database Errors:**
 - Verify `DATABASE_URL` uses connection pooling
