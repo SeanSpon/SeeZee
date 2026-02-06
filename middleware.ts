@@ -180,14 +180,17 @@ export async function middleware(req: NextRequest) {
     
     if (isClientRoute) {
       const role = token.role as string;
-      // Only CLIENT role should be restricted to client routes
-      // All other roles should access admin dashboard
+      // CLIENT role should access client routes
+      // Staff/admin roles should be redirected to admin dashboard
       if (role === 'CLIENT') {
-        // CLIENT users should stay on client routes
         return NextResponse.next();
       }
-      // Non-CLIENT users (staff/admin) trying to access client routes should be redirected to admin
-      return NextResponse.redirect(new URL('/admin', req.url));
+      // Non-CLIENT users should be redirected to admin if they are staff, otherwise to login
+      if (isStaffRole(role)) {
+        return NextResponse.redirect(new URL('/admin', req.url));
+      }
+      // Unknown role - redirect to login
+      return NextResponse.redirect(new URL('/login', req.url));
     }    return NextResponse.next();
   } catch (err) {
     console.error('Middleware error:', err);

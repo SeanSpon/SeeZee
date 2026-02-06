@@ -24,18 +24,16 @@ export default async function ClientDashboardLayout({
   const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
   const isCEOEmail = user.email && CEO_EMAILS.includes(user.email.toLowerCase());
 
-  // CLIENT role should stay on client dashboard
-  // Staff/admin roles (except CEO) should be redirected to admin dashboard
-  if (!isCEOEmail) {
-    if (user.role !== ROLE.CLIENT) {
-      // Non-CLIENT and non-CEO users trying to access client routes should be redirected
-      if (isStaffRole(user.role)) {
-        redirect("/admin");
-      } else {
-        // Unknown role - redirect to login
-        redirect("/login");
-      }
+  // Check access permissions
+  // Allow: CLIENT role or CEO email
+  // Redirect staff to admin, unknown roles to login
+  if (!isCEOEmail && user.role !== ROLE.CLIENT) {
+    // Non-CLIENT users should be redirected based on their role
+    if (isStaffRole(user.role)) {
+      redirect("/admin");
     }
+    // Unknown or invalid role
+    redirect("/login");
   }
 
   // Allow access: CLIENT role or CEO email
