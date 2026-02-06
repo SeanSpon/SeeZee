@@ -97,8 +97,11 @@ export async function middleware(req: NextRequest) {
 
     // CRITICAL FIX: Check authentication first, then onboarding status
     // If NOT logged in → redirect to login with returnUrl = original path
-    if (!isLoggedIn || !token) {      const loginUrl = new URL('/login', req.url);
-      loginUrl.searchParams.set('returnUrl', pathname + searchParams.toString());
+    if (!isLoggedIn || !token) {
+      const loginUrl = new URL('/login', req.url);
+      const search = searchParams.toString();
+      const returnUrl = search ? `${pathname}?${search}` : pathname;
+      loginUrl.searchParams.set('returnUrl', returnUrl);
       return NextResponse.redirect(loginUrl);
     }
 
@@ -118,7 +121,8 @@ export async function middleware(req: NextRequest) {
       // If token shows onboarding is complete, redirect to dashboard (handles case where token was refreshed)
       if (tosAccepted && profileDone) {
         const role = token.role as string;
-        const dashboardUrl = role === 'CEO' || role === 'ADMIN' ? '/admin' : '/client';        return NextResponse.redirect(new URL(dashboardUrl, req.url));
+        const dashboardUrl = role === 'CLIENT' ? '/client' : '/admin';
+        return NextResponse.redirect(new URL(dashboardUrl, req.url));
       }
       
       // Otherwise, allow access - the page will call /api/auth/session which triggers JWT callback to refresh token
@@ -170,13 +174,19 @@ export async function middleware(req: NextRequest) {
     }
     
     // Role-based route protection
+    // Allow all staff/team roles to access admin routes (not just CEO/ADMIN)
     if (isAdminRoute) {
-      const role = token.role as string;      if (role !== 'CEO' && role !== 'ADMIN') {        return NextResponse.redirect(new URL('/client', req.url));
+      const role = token.role as string;
+      const staffRoles = ['CEO', 'ADMIN', 'CFO', 'FRONTEND', 'BACKEND', 'OUTREACH', 'STAFF', 'DEV', 'DESIGNER', 'INTERN', 'PARTNER'];
+      if (!staffRoles.includes(role)) {
+        return NextResponse.redirect(new URL('/client', req.url));
       }
     }
     
     if (isClientRoute) {
-      const role = token.role as string;      if (role !== 'CLIENT') {        return NextResponse.redirect(new URL('/admin', req.url));
+      const role = token.role as string;
+      if (role !== 'CLIENT') {
+        return NextResponse.redirect(new URL('/admin', req.url));
       }
     }    return NextResponse.next();
   } catch (err) {

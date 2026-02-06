@@ -37,7 +37,7 @@ function LoginContent() {
         // Need to complete profile        router.push("/onboarding/profile");
       } else {
         // Onboarding complete - redirect to appropriate dashboard or callbackUrl
-        const defaultUrl = session.user.role === 'CEO' || session.user.role === 'ADMIN' ? '/admin' : '/client';
+        const defaultUrl = session.user.role === 'CLIENT' ? '/client' : '/admin';
         const redirectUrl = callbackUrl === '/' ? defaultUrl : callbackUrl;        router.push(redirectUrl);
       }
     }
@@ -68,16 +68,20 @@ function LoginContent() {
     setIsLoading(true);
 
     try {
-      // Get reCAPTCHA token
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA not ready");
+      // Get reCAPTCHA token (optional -- skip if not configured)
+      let recaptchaToken: string | undefined;
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha("login");
+        } catch (recaptchaError) {
+          console.warn("reCAPTCHA failed, continuing without it:", recaptchaError);
+        }
       }
-      const recaptchaToken = await executeRecaptcha("login");
 
       const result = await signIn("credentials", {
         email,
         password,
-        recaptchaToken,
+        ...(recaptchaToken ? { recaptchaToken } : {}),
         redirect: false,
       });      
       if (result?.error) {
@@ -117,7 +121,7 @@ function LoginContent() {
               // Check if onboarding is complete (using DB data, not token)
               if (userData.tosAcceptedAt && userData.profileDoneAt) {
                 // Onboarding complete - go to dashboard
-                redirectUrl = userData.role === 'CEO' || userData.role === 'ADMIN' ? '/admin' : '/client';
+                redirectUrl = userData.role === 'CLIENT' ? '/client' : '/admin';
               } else if (!userData.tosAcceptedAt) {
                 // Need to accept ToS
                 redirectUrl = '/onboarding/tos';

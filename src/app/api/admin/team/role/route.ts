@@ -2,16 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
+import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
-// CEO-only role management endpoint
+// CEO/CFO role management endpoint
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth();
 
-    // Check if user is authenticated and is CEO
-    if (!session?.user?.email || session.user.email !== "seanspm1007@gmail.com") {
+    // Check if user is authenticated and has CEO or CFO role
+    if (!session?.user?.role || !['CEO', 'CFO'].includes(session.user.role)) {
       return NextResponse.json(
-        { error: "Unauthorized. CEO access required." },
+        { error: "Unauthorized. CEO or CFO access required." },
         { status: 403 }
       );
     }
@@ -48,8 +50,8 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Prevent CEO from changing their own role
-    if (currentUser.email === "seanspm1007@gmail.com") {
+    // Prevent changing CEO role
+    if (currentUser.role === "CEO") {
       return NextResponse.json(
         { error: "Cannot change CEO role" },
         { status: 400 }
@@ -69,21 +71,9 @@ export async function PUT(req: NextRequest) {
       }
     });
 
-    // TODO: Log the role change after migration
-    // await prisma.systemLog.create({
-    //   data: {
-    //     action: "ROLE_CHANGE",
-    //     entityType: "User",
-    //     entityId: userId,
-    //     userId: session.user.id!,
-    //     metadata: {
-    //       oldRole: currentUser.role,
-    //       newRole: role,
-    //       userName: currentUser.name || currentUser.email,
-    //       changedBy: session.user.email
-    //     }
-    //   }
-    // });
+    // Revalidate team data so the UI reflects the change
+    revalidateTag("team");
+    revalidatePath("/admin/team");
 
     return NextResponse.json({
       success: true,

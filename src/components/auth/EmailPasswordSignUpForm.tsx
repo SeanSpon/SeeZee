@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { signupSchema } from "@/lib/auth/validation";
 import { Input } from "@/components/ui/Input";
 import { PasswordStrengthIndicator } from "./PasswordStrengthIndicator";
@@ -46,11 +47,15 @@ function SignUpFormContent() {
       };
       const validated = signupSchema.parse(dataToValidate);
 
-      // Get reCAPTCHA token
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA not loaded");
+      // Get reCAPTCHA token (optional -- skip if not configured)
+      let recaptchaToken: string | undefined;
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha("signup");
+        } catch (recaptchaError) {
+          console.warn("reCAPTCHA failed, continuing without it:", recaptchaError);
+        }
       }
-      const recaptchaToken = await executeRecaptcha("signup");
 
       // Submit to API
       const response = await fetch("/api/auth/signup", {
@@ -58,7 +63,7 @@ function SignUpFormContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...validated,
-          recaptchaToken,
+          ...(recaptchaToken ? { recaptchaToken } : {}),
         }),
       });
 
@@ -79,8 +84,23 @@ function SignUpFormContent() {
         throw new Error(data.error || "Failed to sign up");
       }
 
-      showToast("Account created! Please check your email to verify.", "success");
-      router.push("/verify-email");
+      // Account created successfully -- auto-sign-in the user
+      showToast("Account created! Signing you in...", "success");
+
+      const signInResult = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        // Sign-in failed -- redirect to login so they can sign in manually
+        showToast("Account created! Please sign in.", "success");
+        router.push("/login");
+      } else {
+        // Sign-in succeeded -- redirect to onboarding (emails are auto-verified)
+        window.location.href = "/onboarding/tos";
+      }
     } catch (error: any) {
       if (error.errors) {
         // Zod validation errors
@@ -192,12 +212,9 @@ function SignUpFormContent() {
 export function EmailPasswordSignUpForm() {
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
+  // If reCAPTCHA is not configured, still show the form (reCAPTCHA is optional)
   if (!recaptchaSiteKey) {
-    return (
-      <div className="p-4 bg-red-500/10 border border-red-500 rounded-lg text-red-400 text-sm">
-        reCAPTCHA is not configured. Please add NEXT_PUBLIC_RECAPTCHA_SITE_KEY to your environment variables.
-      </div>
-    );
+    return <SignUpFormContent />;
   }
 
   return (
