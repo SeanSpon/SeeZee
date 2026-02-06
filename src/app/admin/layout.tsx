@@ -5,7 +5,7 @@
  */
 
 import { getCurrentUser } from "@/lib/auth/requireRole";
-import { ROLE } from "@/lib/role";
+import { isStaffRole } from "@/lib/role";
 import { redirect } from "next/navigation";
 import { AdminAppShell } from "@/components/admin/AdminAppShell";
 import { NotificationsProvider } from "@/providers/NotificationsProvider";
@@ -23,9 +23,9 @@ export default async function AdminLayout({
     redirect("/login");
   }
   
-  // Allow anyone who isn't a CLIENT (CEO, CFO, FRONTEND, BACKEND, OUTREACH)
-  const allowedRoles = [ROLE.CEO, ROLE.CFO, ROLE.FRONTEND, ROLE.BACKEND, ROLE.OUTREACH];
-  if (!allowedRoles.includes(user.role as any)) {
+  // Allow all staff/admin roles (CEO, CFO, ADMIN, STAFF, FRONTEND, BACKEND, DESIGNER, DEV, OUTREACH, etc.)
+  // CLIENT role is not allowed in admin area
+  if (!isStaffRole(user.role)) {
     redirect("/no-access");
   }
 
