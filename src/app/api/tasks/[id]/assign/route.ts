@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { db } from "@/server/db";
 import { isStaffRole } from "@/lib/role";
 
-export async function PATCH(
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {

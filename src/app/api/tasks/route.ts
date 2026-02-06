@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withInternalStaff, getSession } from "@/server/http";
 import { getTasks } from "@/server/actions/tasks";
+import { auth } from "@/auth";
+import { db } from "@/server/db";
+import { isStaffRole } from "@/lib/role";
+import { TodoPriority, TodoStatus } from "@prisma/client";
 
 /**
  * GET /api/tasks
@@ -40,4 +44,86 @@ export const GET = withInternalStaff(async (req: NextRequest) => {
     );
   }
 });
+
+/**
+ * POST /api/tasks
+ * Create a new task
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (!user || !isStaffRole(user.role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const body = await request.json();
+
+    // Validate required fields
+    if (!body.title) {
+      return NextResponse.json(
+        { error: "Title is required" },
+        { status: 400 }
+      );
+    }
+
+    const task = await db.todo.create({
+      data: {
+        title: body.title,
+        description: body.description || null,
+        status: TodoStatus.TODO,
+        priority: body.priority ? (body.priority as TodoPriority) : TodoPriority.MEDIUM,
+        dueDate: body.dueDate ? new Date(body.dueDate) : null,
+        projectId: body.projectId || null,
+        assignedToId: body.assignedToId || null,
+        assignedToRole: body.assignedToRole || null,
+        assignedToTeamId: body.assignedToTeamId || null,
+        createdById: session.user.id,
+        estimatedHours: body.estimatedHours || null,
+        column: "todo",
+        position: 0,
+      },
+      include: {
+        assignedTo: {
+          select: { id: true, name: true, email: true, image: true, role: true },
+        },
+        project: {
+          select: { id: true, name: true },
+        },
+      },
+    });
+
+    // Create activity log
+    await db.activity.create({
+      data: {
+        type: "TASK_CREATED",
+        title: "Task created",
+        description: `Created task: ${body.title}`,
+        userId: session.user.id,
+        entityType: "TODO",
+        entityId: task.id,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      task,
+    });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    return NextResponse.json(
+      { error: "Failed to create task" },
+      { status: 500 }
+    );
+  }
+}
 

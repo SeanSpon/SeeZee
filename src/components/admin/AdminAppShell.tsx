@@ -88,7 +88,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
 
   // ===========================================
   // CORE PAGES (Always visible, not collapsible)
-  // These are the 4 main "rooms" of the admin
+  // These are the 5 main "rooms" of the admin
   // ===========================================
   const coreItems = useMemo<NavItem[]>(
     () => [
@@ -96,6 +96,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
       { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
       { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
+      { href: "/admin/todos", label: "My Todos", icon: FiTarget, description: "Personal task queue" },
     ],
     []
   );

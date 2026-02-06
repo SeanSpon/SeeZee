@@ -1,44 +1,56 @@
 import { TodosClient } from "@/components/admin/TodosClient";
-
-interface TodoRow {
-  id: string;
-  title: string;
-  project: string;
-  dueDate: string | null;
-  status: string;
-}
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTodosPage() {
   // Auth check is handled in layout.tsx to prevent flash
+  const session = await auth();
+  
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
 
   try {
     const { getTasks } = await import("@/server/actions/tasks");
-    const tasksResult = await getTasks({ status: "TODO" as any });
+    const { db } = await import("@/server/db");
+    
+    // Fetch user's tasks and available tasks (not filtered by status - show all)
+    const tasksResult = await getTasks({});
     const tasks = tasksResult.success ? tasksResult.tasks : [];
-
-    const rows: TodoRow[] = tasks.map((task: any) => ({
-      id: task.id,
-      title: task.title,
-      project: task.project?.name ?? "—",
-      dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,
-      status: String(task.status ?? "todo").toLowerCase(),
-    }));
+    
+    // Fetch all projects with GitHub repos for linking
+    const projects = await db.project.findMany({
+      select: {
+        id: true,
+        name: true,
+        githubRepo: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     return (
       <div className="space-y-8">
         <header className="space-y-2">
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-trinity-red">
-            Execution Queue
+            Personal Task Queue
           </span>
-          <h1 className="text-3xl font-heading font-bold text-white">Todos</h1>
+          <h1 className="text-3xl font-heading font-bold text-white">My Todos</h1>
           <p className="max-w-2xl text-sm text-gray-400">
-            Focus mode for tasks that need action. Knock out deliverables, clear blockers, and keep velocity high.
+            Your personal task queue. Track what's assigned to you, claim available tasks, and manage your workflow. 
+            Tasks connected to projects with GitHub repos can link directly to issues.
           </p>
         </header>
 
-        <TodosClient rows={rows} />
+        <TodosClient 
+          tasks={tasks as any} 
+          userId={session.user.id}
+          userRole={session.user.role || ""}
+          projects={projects}
+        />
       </div>
     );
   } catch (error) {
@@ -47,7 +59,7 @@ export default async function AdminTodosPage() {
     return (
       <div className="space-y-8">
         <header className="space-y-2">
-          <h1 className="text-3xl font-heading font-bold text-white">Todos</h1>
+          <h1 className="text-3xl font-heading font-bold text-white">My Todos</h1>
         </header>
         <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
           <h2 className="text-xl font-bold text-red-400 mb-2">Error Loading Todos</h2>
