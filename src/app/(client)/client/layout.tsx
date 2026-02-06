@@ -55,3 +55,4 @@ export default async function ClientDashboardLayout({
     // Unknown role or no access - redirect to login
     redirect("/login");
   }
+}
