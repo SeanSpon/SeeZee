@@ -124,7 +124,7 @@ export function AIManagerClient() {
     if (!input.trim() || sending) return;
 
     const userMessage: ChatMessage = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       role: "user",
       content: input.trim(),
       timestamp: new Date(),
@@ -148,7 +148,7 @@ export function AIManagerClient() {
       const data = await res.json();
 
       const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: crypto.randomUUID(),
         role: "assistant",
         content: data.reply || data.error || "No response received.",
         timestamp: new Date(),
@@ -159,7 +159,7 @@ export function AIManagerClient() {
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           role: "assistant",
           content: "Failed to connect. Check your API key and try again.",
           timestamp: new Date(),
@@ -174,11 +174,11 @@ export function AIManagerClient() {
   const addKey = useCallback(() => {
     if (!newKeyLabel.trim() || !newKeyValue.trim()) return;
     const key: ManagedKey = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       label: newKeyLabel.trim(),
       provider: newKeyProvider,
       key: newKeyValue.trim(),
-      isActive: managedKeys.filter((k) => k.provider === newKeyProvider).length === 0,
+      isActive: !managedKeys.some((k) => k.provider === newKeyProvider),
     };
     setManagedKeys((prev) => [...prev, key]);
     setNewKeyLabel("");
@@ -397,7 +397,7 @@ export function AIManagerClient() {
                 <FiSend className="w-4 h-4" />
               </button>
             </div>
-            {!integrations?.claude.connected && managedKeys.filter((k) => k.provider === "claude").length === 0 && (
+            {!integrations?.claude.connected && !managedKeys.some((k) => k.provider === "claude") && (
               <p className="text-xs text-amber-400 mt-2">
                 ⚠ No Claude API key configured. Add one in the API Keys tab to start chatting.
               </p>
@@ -512,7 +512,7 @@ export function AIManagerClient() {
                         <p className="text-xs text-slate-400 font-mono mt-0.5">
                           {revealedKeys.has(mk.id)
                             ? mk.key
-                            : `${"•".repeat(20)}${mk.key.slice(-4)}`}
+                            : `••••••••••••${mk.key.slice(-4)}`}
                         </p>
                       </div>
                     </div>
