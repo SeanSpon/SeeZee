@@ -1,7 +1,7 @@
-// src/middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { isStaffRole } from '@/lib/role';
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -172,10 +172,8 @@ export async function middleware(req: NextRequest) {
     // Role-based route protection
     if (isAdminRoute) {
       const role = token.role as string;
-      // Allow staff and admin roles to access admin routes
-      // Staff roles: CEO, CFO, ADMIN, STAFF, FRONTEND, BACKEND, DESIGNER, DEV, OUTREACH, INTERN, PARTNER
-      const allowedAdminRoles = ['CEO', 'CFO', 'ADMIN', 'STAFF', 'FRONTEND', 'BACKEND', 'DESIGNER', 'DEV', 'OUTREACH', 'INTERN', 'PARTNER'];
-      if (!allowedAdminRoles.includes(role)) {
+      // Allow staff and admin roles to access admin routes using isStaffRole() helper
+      if (!isStaffRole(role)) {
         return NextResponse.redirect(new URL('/client', req.url));
       }
     }
@@ -187,10 +185,9 @@ export async function middleware(req: NextRequest) {
       if (role === 'CLIENT') {
         // CLIENT users should stay on client routes
         return NextResponse.next();
-      } else {
-        // Non-CLIENT users (staff/admin) trying to access client routes should be redirected to admin
-        return NextResponse.redirect(new URL('/admin', req.url));
       }
+      // Non-CLIENT users (staff/admin) trying to access client routes should be redirected to admin
+      return NextResponse.redirect(new URL('/admin', req.url));
     }    return NextResponse.next();
   } catch (err) {
     console.error('Middleware error:', err);
