@@ -366,6 +366,7 @@ model Project {
   name                 String
   description          String?
   status               ProjectStatus         @default(LEAD)
+  teamType             ProjectTeamType       @default(INDIVIDUAL)
   isNonprofit          Boolean               @default(false)
   budget               Decimal?
   startDate            DateTime?
@@ -1548,6 +1549,11 @@ enum ServiceType {
   MOBILE
   BRANDING
   OTHER
+}
+
+enum ProjectTeamType {
+  INDIVIDUAL // Single person project
+  TEAM_LEAD // Team project with lead
 }
 
 enum ProjectStatus {
