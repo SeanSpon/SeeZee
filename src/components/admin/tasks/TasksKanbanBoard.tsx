@@ -58,6 +58,7 @@ const COLUMNS = [
   { id: "in-progress", title: "In Progress", color: "border-blue-500" },
   { id: "review", title: "Review", color: "border-yellow-500" },
   { id: "done", title: "Done", color: "border-green-500" },
+  { id: "archive", title: "Archive", color: "border-red-500" },
 ];
 
 export function TasksKanbanBoard({ initialTasks, onTaskUpdate }: TasksKanbanBoardProps) {
@@ -129,6 +130,36 @@ export function TasksKanbanBoard({ initialTasks, onTaskUpdate }: TasksKanbanBoar
     const overColumn = COLUMNS.find((col) => col.id === overId)?.id || 
                       tasks.find((t) => t.id === overId)?.column || activeTask.column;
 
+    // Handle archiving - special case
+    if (overColumn === "archive") {
+      if (!confirm("Archive this task? You can restore it from the Archive page.")) {
+        setActiveTask(null);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/tasks/${activeId}/archive`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ archived: true }),
+        });
+
+        if (response.ok) {
+          // Remove task from list
+          setTasks((prev) => prev.filter((t) => t.id !== activeId));
+          onTaskUpdate?.(activeId, { column: "archive", status: "ARCHIVED" } as any);
+        } else {
+          alert("Failed to archive task");
+        }
+      } catch (error) {
+        console.error("Failed to archive task:", error);
+        alert("Failed to archive task");
+      }
+
+      setActiveTask(null);
+      return;
+    }
+
     // Update task status based on column
     const statusMap: Record<string, string> = {
       todo: "TODO",
@@ -174,7 +205,7 @@ export function TasksKanbanBoard({ initialTasks, onTaskUpdate }: TasksKanbanBoar
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-4 gap-4">
-          {COLUMNS.map((column) => (
+          {COLUMNS.filter(col => col.id !== "archive").map((column) => (
             <KanbanColumn
               key={column.id}
               id={column.id}
@@ -192,6 +223,27 @@ export function TasksKanbanBoard({ initialTasks, onTaskUpdate }: TasksKanbanBoar
               }}
             />
           ))}
+        </div>
+
+        {/* Archive Drop Zone */}
+        <div className="mt-6">
+          <div className="mb-2 text-center">
+            <p className="text-sm text-gray-400">
+              Drag tasks here to archive them. View archived items in the{" "}
+              <a href="/admin/archive" className="text-cyan-400 hover:text-cyan-300 underline">
+                Archive page
+              </a>
+            </p>
+          </div>
+          <KanbanColumn
+            key="archive"
+            id="archive"
+            title="🗄️ Archive (Drag Here)"
+            color="border-red-500"
+            tasks={[]}
+            onAddClick={() => {}}
+            onTaskClick={() => {}}
+          />
         </div>
 
         <DragOverlay>

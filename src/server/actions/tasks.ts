@@ -90,6 +90,9 @@ export async function getTasks(filter?: {
       where.projectId = filter.projectId;
     }
 
+    // Exclude archived tasks by default
+    where.archived = false;
+
     // Use select instead of include to avoid selecting milestoneId which may not exist in DB
     const tasks = await db.todo.findMany({
       where,

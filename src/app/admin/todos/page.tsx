@@ -32,6 +32,25 @@ export default async function AdminTodosPage() {
       },
     });
 
+    // Fetch staff users for assignment
+    const staffUsers = await db.user.findMany({
+      where: {
+        role: {
+          in: ["CEO", "ADMIN", "CFO", "STAFF", "DEV", "DESIGNER", "FRONTEND", "BACKEND"],
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+
     return (
       <div className="space-y-8">
         <header className="space-y-2">
@@ -50,6 +69,7 @@ export default async function AdminTodosPage() {
           userId={session.user.id}
           userRole={session.user.role || ""}
           projects={projects}
+          staffUsers={staffUsers}
         />
       </div>
     );

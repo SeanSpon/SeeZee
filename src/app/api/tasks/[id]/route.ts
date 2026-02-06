@@ -82,23 +82,37 @@ export async function PATCH(
       },
     });
 
-    // Create activity log
-    await db.activity.create({
-      data: {
-        type: "STATUS_CHANGE",
-        title: "Task updated",
-        description: body.status 
-          ? `Task status changed to ${body.status}`
-          : "Task details updated",
-        userId: session.user.id,
-        entityType: "TODO",
-        entityId: taskId,
-      },
-    });
+    // Create activity log (non-blocking)
+    try {
+      await db.activity.create({
+        data: {
+          type: "STATUS_CHANGE",
+          title: "Task updated",
+          description: body.status 
+            ? `Task status changed to ${body.status}`
+            : "Task details updated",
+          userId: session.user.id,
+          entityType: "TODO",
+          entityId: taskId,
+        },
+      });
+    } catch (activityError) {
+      console.error("Failed to create activity log:", activityError);
+      // Continue anyway - activity log is not critical
+    }
 
+    // Serialize dates properly for JSON response
     return NextResponse.json({
       success: true,
-      task,
+      task: {
+        ...task,
+        createdAt: task.createdAt.toISOString(),
+        updatedAt: task.updatedAt.toISOString(),
+        dueDate: task.dueDate?.toISOString() || null,
+        completedAt: task.completedAt?.toISOString() || null,
+        submittedAt: task.submittedAt?.toISOString() || null,
+        approvedAt: task.approvedAt?.toISOString() || null,
+      },
     });
   } catch (error) {
     console.error("Error updating task:", error);

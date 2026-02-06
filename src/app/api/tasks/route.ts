@@ -102,21 +102,35 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create activity log
-    await db.activity.create({
-      data: {
-        type: "TASK_CREATED",
-        title: "Task created",
-        description: `Created task: ${body.title}`,
-        userId: session.user.id,
-        entityType: "TODO",
-        entityId: task.id,
-      },
-    });
+    // Create activity log (non-blocking - don't fail task creation if this fails)
+    try {
+      await db.activity.create({
+        data: {
+          type: "TASK_CREATED",
+          title: "Task created",
+          description: `Created task: ${body.title}`,
+          userId: session.user.id,
+          entityType: "TODO",
+          entityId: task.id,
+        },
+      });
+    } catch (activityError) {
+      console.error("Failed to create activity log:", activityError);
+      // Continue anyway - activity log is not critical
+    }
 
+    // Serialize dates properly for JSON response
     return NextResponse.json({
       success: true,
-      task,
+      task: {
+        ...task,
+        createdAt: task.createdAt.toISOString(),
+        updatedAt: task.updatedAt.toISOString(),
+        dueDate: task.dueDate?.toISOString() || null,
+        completedAt: task.completedAt?.toISOString() || null,
+        submittedAt: task.submittedAt?.toISOString() || null,
+        approvedAt: task.approvedAt?.toISOString() || null,
+      },
     });
   } catch (error) {
     console.error("Error creating task:", error);
