@@ -22,37 +22,30 @@ export default async function ClientDashboardLayout({
 
   // CEO email always has access to client dashboard
   const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
-  if (user.email && CEO_EMAILS.includes(user.email.toLowerCase())) {
-    // CEO can access client dashboard
-    return (
-      <ClientErrorBoundary>
-        <div className="min-h-screen" style={{ paddingTop: 'var(--h-nav)' }}>
-          <ClientShell>{children}</ClientShell>
-          <Toaster />
-          <ToastContainer />
-        </div>
-      </ClientErrorBoundary>
-    );
-  }
+  const isCEOEmail = user.email && CEO_EMAILS.includes(user.email.toLowerCase());
 
   // CLIENT role should stay on client dashboard
-  // Staff/admin roles should be redirected to admin dashboard
-  if (user.role === ROLE.CLIENT) {
-    // Allow CLIENT role to access client dashboard
-    return (
-      <ClientErrorBoundary>
-        <div className="min-h-screen" style={{ paddingTop: 'var(--h-nav)' }}>
-          <ClientShell>{children}</ClientShell>
-          <Toaster />
-          <ToastContainer />
-        </div>
-      </ClientErrorBoundary>
-    );
-  } else if (isStaffRole(user.role)) {
-    // Staff/admin roles trying to access client dashboard should be redirected to admin
-    redirect("/admin");
-  } else {
-    // Unknown role or no access - redirect to login
-    redirect("/login");
+  // Staff/admin roles (except CEO) should be redirected to admin dashboard
+  if (!isCEOEmail) {
+    if (user.role !== ROLE.CLIENT) {
+      // Non-CLIENT and non-CEO users trying to access client routes should be redirected
+      if (isStaffRole(user.role)) {
+        redirect("/admin");
+      } else {
+        // Unknown role - redirect to login
+        redirect("/login");
+      }
+    }
   }
+
+  // Allow access: CLIENT role or CEO email
+  return (
+    <ClientErrorBoundary>
+      <div className="min-h-screen" style={{ paddingTop: 'var(--h-nav)' }}>
+        <ClientShell>{children}</ClientShell>
+        <Toaster />
+        <ToastContainer />
+      </div>
+    </ClientErrorBoundary>
+  );
 }
