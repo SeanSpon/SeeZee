@@ -72,7 +72,7 @@ export async function PUT(req: NextRequest) {
     });
 
     // Revalidate team data so the UI reflects the change
-    revalidateTag("team");
+    revalidateTag("team", {});
     revalidatePath("/admin/team");
 
     return NextResponse.json({
