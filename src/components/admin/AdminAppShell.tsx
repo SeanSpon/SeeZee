@@ -303,7 +303,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                   items={ceoItems}
                   isActive={isActive}
                   onNavigate={handleNavigate}
-                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center") || pathname.startsWith("/admin/ceo/cloud-api")}
+                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center")}
                   badge="CEO"
                   collapsed={isCollapsed}
                 />
