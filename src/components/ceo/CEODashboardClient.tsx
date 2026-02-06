@@ -824,16 +824,28 @@ export function CEODashboardClient({
             <p className="text-sm text-slate-400">Manage team tasks</p>
           </Link>
 
-          <Link
-            href="/admin/ceo/team-management"
-            className="group p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-slate-900 border border-purple-500/20 hover:border-purple-500/40 transition-all"
+          <button
+            onClick={() => setActiveTab("team")}
+            className="group p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-slate-900 border border-purple-500/20 hover:border-purple-500/40 transition-all text-left"
           >
             <div className="flex items-center justify-between mb-2">
               <Users className="w-6 h-6 text-purple-400" />
               <ArrowUpRight className="w-4 h-4 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Team</h3>
-            <p className="text-sm text-slate-400">Manage members</p>
+            <p className="text-sm text-slate-400">Assign & manage</p>
+          </button>
+
+          <Link
+            href="/admin/learning"
+            className="group p-4 rounded-xl bg-gradient-to-br from-rose-500/10 to-slate-900 border border-rose-500/20 hover:border-rose-500/40 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <BookOpen className="w-6 h-6 text-rose-400" />
+              <ArrowUpRight className="w-4 h-4 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Learning Hub</h3>
+            <p className="text-sm text-slate-400">Resources & tools</p>
           </Link>
 
           <Link
@@ -845,19 +857,7 @@ export function CEODashboardClient({
               <ArrowUpRight className="w-4 h-4 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Systems</h3>
-            <p className="text-sm text-slate-400">Automations & logs</p>
-          </Link>
-
-          <Link
-            href="/admin/database"
-            className="group p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-slate-900 border border-emerald-500/20 hover:border-emerald-500/40 transition-all"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <Database className="w-6 h-6 text-emerald-400" />
-              <ArrowUpRight className="w-4 h-4 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-1">Database</h3>
-            <p className="text-sm text-slate-400">View all data</p>
+            <p className="text-sm text-slate-400">Database & logs</p>
           </Link>
 
           <Link
@@ -869,7 +869,7 @@ export function CEODashboardClient({
               <ArrowUpRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Command Center</h3>
-            <p className="text-sm text-slate-400">Full Git dashboard</p>
+            <p className="text-sm text-slate-400">Git & deployments</p>
           </Link>
         </div>
       </div>
@@ -1030,7 +1030,7 @@ export function CEODashboardClient({
         )}
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link
             href="/admin/ceo/analytics"
             className="group p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-slate-900 border border-purple-500/20 hover:border-purple-500/40 transition-all"
@@ -1053,6 +1053,18 @@ export function CEODashboardClient({
             </div>
             <h3 className="text-lg font-semibold text-white mb-1">Export Reports</h3>
             <p className="text-sm text-slate-400">Download data</p>
+          </Link>
+
+          <Link
+            href="/admin/learning"
+            className="group p-4 rounded-xl bg-gradient-to-br from-rose-500/10 to-slate-900 border border-rose-500/20 hover:border-rose-500/40 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <BookOpen className="w-6 h-6 text-rose-400" />
+              <ArrowUpRight className="w-4 h-4 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-1">Learning Hub</h3>
+            <p className="text-sm text-slate-400">Manage resources</p>
           </Link>
 
           <Link
@@ -1263,6 +1275,140 @@ export function CEODashboardClient({
           color="cyan"
           stats={`${utilization?.resources?.automations || 0} active`}
         />
+      </div>
+
+      {/* Team Resources Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <SectionCard title={`Learning Resources (${availableResources.length})`}>
+          <div className="space-y-3">
+            {availableResources.length === 0 ? (
+              <div className="text-center py-6">
+                <BookOpen className="w-12 h-12 text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-slate-400">No learning resources yet</p>
+                <Link 
+                  href="/admin/learning/resources"
+                  className="mt-2 inline-block text-xs text-purple-400 hover:text-purple-300"
+                >
+                  Add resources →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {availableResources.slice(0, 5).map((resource: any, idx: number) => (
+                  <div
+                    key={resource.id || idx}
+                    className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors border border-white/5"
+                  >
+                    <div className="p-2 rounded-lg bg-purple-500/20">
+                      <BookOpen className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-white font-medium truncate">{resource.title}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{resource.type || "Resource"}</p>
+                    </div>
+                  </div>
+                ))}
+                <Link
+                  href="/admin/learning/resources"
+                  className="block w-full text-center text-sm text-purple-400 hover:text-purple-300 transition-colors pt-2"
+                >
+                  View all resources →
+                </Link>
+              </>
+            )}
+          </div>
+        </SectionCard>
+
+        <SectionCard title={`Tools (${availableTools.length})`}>
+          <div className="space-y-3">
+            {availableTools.length === 0 ? (
+              <div className="text-center py-6">
+                <Wrench className="w-12 h-12 text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-slate-400">No tools configured yet</p>
+                <Link 
+                  href="/admin/learning/tools"
+                  className="mt-2 inline-block text-xs text-cyan-400 hover:text-cyan-300"
+                >
+                  Manage tools →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {availableTools.slice(0, 5).map((tool: any, idx: number) => (
+                  <div
+                    key={tool.id || idx}
+                    className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors border border-white/5"
+                  >
+                    <div className="p-2 rounded-lg bg-cyan-500/20">
+                      <Wrench className="w-4 h-4 text-cyan-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-white font-medium truncate">{tool.name}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{tool.category || "Tool"}</p>
+                    </div>
+                  </div>
+                ))}
+                <Link
+                  href="/admin/learning/tools"
+                  className="block w-full text-center text-sm text-cyan-400 hover:text-cyan-300 transition-colors pt-2"
+                >
+                  View all tools →
+                </Link>
+              </>
+            )}
+          </div>
+        </SectionCard>
+
+        <SectionCard title={`Tasks Available (${availableTasks.length})`}>
+          <div className="space-y-3">
+            {availableTasks.length === 0 ? (
+              <div className="text-center py-6">
+                <CheckCircle2 className="w-12 h-12 text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-slate-400">No tasks to assign</p>
+                <Link 
+                  href="/admin/tasks"
+                  className="mt-2 inline-block text-xs text-blue-400 hover:text-blue-300"
+                >
+                  Create tasks →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {availableTasks.slice(0, 5).map((task: any, idx: number) => (
+                  <div
+                    key={task.id || idx}
+                    className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors border border-white/5"
+                  >
+                    <div className="p-2 rounded-lg bg-blue-500/20">
+                      <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-white font-medium truncate">{task.title}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-slate-400">{task.status}</span>
+                        {task.priority && (
+                          <span className={`text-xs px-1.5 py-0.5 rounded ${
+                            task.priority === 'HIGH' ? 'bg-red-500/20 text-red-400' :
+                            task.priority === 'MEDIUM' ? 'bg-amber-500/20 text-amber-400' :
+                            'bg-blue-500/20 text-blue-400'
+                          }`}>
+                            {task.priority}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  onClick={() => setActiveTab("team")}
+                  className="block w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors pt-2"
+                >
+                  Assign tasks →
+                </button>
+              </>
+            )}
+          </div>
+        </SectionCard>
       </div>
 
       {/* Recent Activity */}

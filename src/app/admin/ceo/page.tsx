@@ -30,6 +30,7 @@ export default async function CEODashboardPage() {
     taskStatsResult,
     activityResult,
     tasksResult,
+    allTasksResult,
     resourcesResult,
     toolsResult,
     expensesResult,
@@ -46,6 +47,7 @@ export default async function CEODashboardPage() {
     getTaskStats(),
     getActivityFeed({ limit: 10 }),
     getTasks({ status: "TODO" }),
+    getTasks({}), // Get ALL tasks for assignment
     getLearningResources(),
     getTools(),
     getExpenses(),
@@ -76,6 +78,7 @@ export default async function CEODashboardPage() {
   const taskStats = taskStatsResult.success ? taskStatsResult.stats : { total: 0, todo: 0, inProgress: 0, done: 0, overdue: 0 };
   const activities = activityResult.success ? activityResult.activities : [];
   const tasks = tasksResult.success ? (tasksResult.tasks || []) : [];
+  const allTasks = allTasksResult.success ? (allTasksResult.tasks || []) : []; // All tasks for assignment
   const resources = resourcesResult.success ? (resourcesResult.resources || []) : [];
   const tools = toolsResult.success ? (toolsResult.tools || []) : [];
   const expenses = expensesResult.success ? expensesResult.expenses : [];
@@ -94,7 +97,7 @@ export default async function CEODashboardPage() {
       invoices={invoices}
       taskStats={taskStats}
       activities={activities}
-      availableTasks={tasks}
+      availableTasks={allTasks}
       availableResources={resources}
       availableTools={tools}
       expenses={expenses}
