@@ -20,6 +20,12 @@
     "fix-subscription": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/fix-user-subscription.ts",
     "cleanup-duplicates": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/cleanup-duplicate-leads.ts",
     "deduplicate": "tsx scripts/deduplicate-data.ts",
+    "check:state": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/check-state.ts",
+    "seed:node": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/seed-node.ts",
+    "worker:git-agent": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/workers/git-agent.ts",
+    "worker:bus": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" scripts/workers/bus-worker.ts",
+    "mcp:build": "tsc mcp-server.ts --outDir . --module nodenext --target es2022",
+    "mcp:start": "node mcp-server.js",
     "test:e2e": "playwright test"
   },
   "dependencies": {
@@ -30,6 +36,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@googlemaps/google-maps-services-js": "^3.4.2",
     "@hookform/resolvers": "^3.3.2",
+    "@octokit/rest": "^22.0.1",
     "@prisma/client": "^5.6.0",
     "@radix-ui/react-tabs": "^1.1.13",
     "@react-google-maps/api": "^2.20.8",

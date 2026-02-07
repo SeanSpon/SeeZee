@@ -101,6 +101,7 @@ model User {
   ownedGoals               Goal[]                   @relation("GoalOwner")
   createdGoals             Goal[]                   @relation("GoalCreator")
   blogPosts                BlogPost[]               @relation("BlogAuthor")
+  vaultEntries             VaultEntry[]             @relation("VaultCreator")
 
   @@map("users")
 }
@@ -790,6 +791,9 @@ model Todo {
 
   // Learning materials and resources
   materials TaskMaterial[]
+  
+  // Execution requests (AI Nodes system)
+  executionRequests ExecutionRequest[]
 
   @@index([projectId, column])
   @@index([milestoneId])
@@ -834,6 +838,135 @@ enum TaskMaterialType {
   LINK // External links/resources
   ASSIGNMENT // Assignments with due dates
   RESOURCE // General resources
+}
+
+// ============================================
+// AI NODES + GIT AGENTS EXECUTION SYSTEM
+// ============================================
+
+model WorkflowNode {
+  id              String            @id @default(cuid())
+  name            String
+  type            String            @default("GIT_AGENT") // GIT_AGENT, PC_WORKER, etc.
+  status          NodeStatus        @default(OFFLINE)
+  apiKeyId        String            @unique // Public key ID for lookup
+  apiKeyHash      String // Bcrypt hash of the secret
+  capabilities    Json?             @default("{}") // { git: true, build: true, test: true }
+  lastHeartbeatAt DateTime?
+  currentJobId    String? // Current ExecutionRun ID if busy
+  metadata        Json?             @default("{}") // Extra config (repo defaults, etc.)
+  
+  executionRuns   ExecutionRun[]
+  claimedRequests ExecutionRequest[] @relation("ClaimedByNode")
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([lastHeartbeatAt])
+  @@index([status])
+  @@map("workflow_nodes")
+}
+
+model ExecutionRequest {
+  id              String               @id @default(cuid())
+  todoId          String
+  todo            Todo                 @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  
+  targetNodeId    String? // Optional: assign to specific node
+  targetNode      WorkflowNode?        @relation("ClaimedByNode", fields: [targetNodeId], references: [id], onDelete: SetNull)
+  
+  repoUrl         String // GitHub repo URL
+  branchName      String // Generated: seezee/req-{requestId}
+  priority        RequestPriority      @default(MEDIUM)
+  status          ExecutionRequestStatus @default(QUEUED)
+  
+  claimedByNodeId String? // Node that claimed this request
+  claimedAt       DateTime?
+  expiresAt       DateTime? // Claim expires after 10 minutes
+  completedAt     DateTime?
+  
+  runs            ExecutionRun[]
+  
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([status, priority, createdAt])
+  @@index([todoId])
+  @@map("execution_requests")
+}
+
+model ExecutionRun {
+  id              String        @id @default(cuid())
+  requestId       String
+  request         ExecutionRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  
+  nodeId          String
+  node            WorkflowNode  @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  
+  status          RunStatus     @default(RUNNING)
+  branchName      String // Copied from request
+  prUrl           String? // GitHub PR URL
+  previewUrl      String? // Vercel preview URL
+  errorMessage    String? // Error details if FAILED
+  summary         String?       @db.Text // What changed + how to test
+  questions       Json? // Questions for Ask Sean flow
+  answers         Json? // Answers from Sean
+  
+  startedAt       DateTime      @default(now())
+  completedAt     DateTime?
+  
+  logs            RunLog[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status, nodeId, createdAt])
+  @@index([requestId])
+  @@index([branchName])
+  @@map("execution_runs")
+}
+
+model RunLog {
+  id        String   @id @default(cuid())
+  runId     String
+  run       ExecutionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  
+  timestamp DateTime @default(now())
+  level     String   @default("info") // info, warn, error
+  message   String   @db.Text
+  truncated Boolean  @default(false)
+  
+  @@index([runId, timestamp])
+  @@map("run_logs")
+}
+
+// ============================================
+// VAULT - Secret References & Key Storage
+// ============================================
+
+model VaultEntry {
+  id             String     @id @default(cuid())
+  key            String // Display name / label
+  encryptedValue String     @db.Text // AES-256 encrypted value
+  lastFour       String // Last 4 chars for display
+  scope          VaultScope @default(GLOBAL)
+  scopeRef       String? // Project ID or repo URL when scoped
+  notes          String? // Optional description
+  createdById    String
+  createdBy      User       @relation("VaultCreator", fields: [createdById], references: [id])
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([key, scope, scopeRef])
+  @@index([scope])
+  @@index([createdById])
+  @@map("vault_entries")
+}
+
+enum VaultScope {
+  GLOBAL
+  PROJECT
+  REPO
 }
 
 model Goal {
@@ -2623,4 +2756,36 @@ model VercelDeployment {
   @@index([target])
   @@index([createdAt])
   @@map("vercel_deployments")
+}
+
+// ============================================
+// AI NODES EXECUTION SYSTEM ENUMS
+// ============================================
+
+enum NodeStatus {
+  ONLINE
+  BUSY
+  OFFLINE
+  ERROR
+}
+
+enum ExecutionRequestStatus {
+  QUEUED
+  CLAIMED
+  COMPLETED
+  CANCELLED
+}
+
+enum RunStatus {
+  RUNNING
+  DONE
+  FAILED
+  NEEDS_ANSWER
+}
+
+enum RequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

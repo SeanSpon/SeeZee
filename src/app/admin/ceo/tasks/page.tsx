@@ -37,6 +37,13 @@ export default async function CEOTasksPage() {
             id: true,
             name: true,
           }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true,
+            githubRepo: true,
+          }
         }
       },
       orderBy: { createdAt: 'desc' },
