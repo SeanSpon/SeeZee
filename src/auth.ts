@@ -76,7 +76,7 @@ if (!AUTH_URL && !NEXTAUTH_URL) {
   
   // In production, require AUTH_URL to be set for OAuth to work
   // Allow preview/dev builds to proceed without it
-  if (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV?.includes("preview")) {
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV && !process.env.VERCEL_ENV.includes("preview")) {
     console.error("❌ AUTH_URL is required in production for OAuth callbacks");
     console.error("💡 Set AUTH_URL=https://seezeestudios.com in Vercel environment variables");
     // Still warn but don't throw - trustHost will handle it, but log clearly

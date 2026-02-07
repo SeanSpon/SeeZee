@@ -42,7 +42,7 @@ The OAuth redirect URI configured in Google Cloud Console doesn't match the actu
 
 **Fix:**
 1. Go to [Google Cloud Console → Credentials](https://console.cloud.google.com/apis/credentials)
-2. Find your OAuth 2.0 Client ID: `659797017979-sipunrpq0tlabjqthklic4kvoi81rfe7.apps.googleusercontent.com`
+2. Find your OAuth 2.0 Client ID: `YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com`
 3. Click "Edit" and verify **Authorized redirect URIs** includes:
    ```
    https://seezeestudios.com/api/auth/callback/google
@@ -77,7 +77,7 @@ The OAuth redirect URI configured in Google Cloud Console doesn't match the actu
 1. Go to Vercel Project Settings → Environment Variables
 2. Add/verify these variables for **Production**:
    ```env
-   AUTH_GOOGLE_ID=659797017979-sipunrpq0tlabjqthklic4kvoi81rfe7.apps.googleusercontent.com
+   AUTH_GOOGLE_ID=YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com
    AUTH_GOOGLE_SECRET=GOCSPX-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    ```
 3. Get the values from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
