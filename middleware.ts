@@ -77,7 +77,16 @@ export async function middleware(req: NextRequest) {
     try {
       const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
       if (!secret) {
-        console.error('Middleware: AUTH_SECRET or NEXTAUTH_SECRET is missing');
+        console.error('❌ [MIDDLEWARE] AUTH_SECRET or NEXTAUTH_SECRET is missing');
+        console.error('💡 Set AUTH_SECRET in Vercel environment variables');
+        console.error('   Without AUTH_SECRET, JWT tokens cannot be verified');
+        // Redirect to a clear error page instead of failing silently
+        if (isProtectedRoute) {
+          const errorUrl = new URL('/login', req.url);
+          errorUrl.searchParams.set('error', 'Configuration');
+          return NextResponse.redirect(errorUrl);
+        }
+        return NextResponse.next();
       }      
       token = await getToken({
         req,

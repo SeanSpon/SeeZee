@@ -20,11 +20,10 @@ function validateAuthConfig() {
   if (!hasSecret) {
     const error = new Error("AUTH_SECRET or NEXTAUTH_SECRET is required");
     console.error("❌ Auth configuration error:", error.message);
-    // Only throw in development - in production, log and continue
-    if (process.env.NODE_ENV === "development") {
-      throw error;
-    }
-    console.warn("⚠️ Continuing without AUTH_SECRET in production - auth may not work");
+    console.error("❌ JWT signing will fail without AUTH_SECRET");
+    console.error("💡 Set AUTH_SECRET in Vercel environment variables");
+    // CRITICAL: Always throw - auth cannot work without a secret
+    throw error;
   }
 
   if (!hasGoogleId || !hasGoogleSecret) {
@@ -32,11 +31,12 @@ function validateAuthConfig() {
       `Google OAuth credentials missing. GOOGLE_ID: ${hasGoogleId}, GOOGLE_SECRET: ${hasGoogleSecret}`
     );
     console.error("❌ Auth configuration error:", error.message);
-    // Only throw in development - in production, log and continue
+    console.error("💡 Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET in Vercel environment variables");
+    // Only throw in development - in production, log warning but allow credentials provider to work
     if (process.env.NODE_ENV === "development") {
       throw error;
     }
-    console.warn("⚠️ Continuing without Google OAuth credentials - OAuth sign-in will not work");
+    console.warn("⚠️ Continuing without Google OAuth credentials - OAuth sign-in will not work (credentials provider still available)");
   }
 
   // Validate Google Secret format - only if it exists
@@ -63,18 +63,24 @@ const AUTH_URL = process.env.AUTH_URL;
 const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
 
 // Validate URL configuration - this is critical for OAuth to work
-// NOTE: Don't throw at build time - only warn. The error will surface at runtime
-// when auth operations are actually performed. This allows builds to succeed
-// even when env vars aren't configured (e.g., Vercel preview deployments).
+// NOTE: In production, AUTH_URL or NEXTAUTH_URL MUST be set for OAuth callbacks to work
+// We only allow missing URLs in preview/development builds
 if (!AUTH_URL && !NEXTAUTH_URL) {
-  console.warn(
+  const warningMessage = 
     "⚠️ AUTH_URL or NEXTAUTH_URL is not set. " +
     "OAuth sign-in may not work correctly. " +
     "Set AUTH_URL to your production domain (e.g., https://seezeestudios.com) or " +
-    "NEXTAUTH_URL for NextAuth compatibility."
-  );
-  // Only warn during build - runtime errors will be caught by NextAuth
-  // Don't throw - this breaks Vercel preview builds that may not have all env vars
+    "NEXTAUTH_URL for NextAuth compatibility.";
+  
+  console.warn(warningMessage);
+  
+  // In production, require AUTH_URL to be set for OAuth to work
+  // Allow preview/dev builds to proceed without it
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV && !process.env.VERCEL_ENV.includes("preview")) {
+    console.error("❌ AUTH_URL is required in production for OAuth callbacks");
+    console.error("💡 Set AUTH_URL=https://seezeestudios.com in Vercel environment variables");
+    // Still warn but don't throw - trustHost will handle it, but log clearly
+  }
 }
 
 // URL configuration validated (logs removed to prevent console spam)
