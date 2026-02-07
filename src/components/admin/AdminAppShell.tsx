@@ -42,6 +42,10 @@ import {
   FiMessageSquare,
   FiClock,
   FiBookmark,
+  FiCpu,
+  FiInbox,
+  FiShield,
+  FiMap,
 } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import Avatar from "@/components/ui/Avatar";
@@ -150,6 +154,10 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/ceo", label: "Overview", icon: FiStar, description: "Executive overview" },
       { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
+      { href: "/admin/ceo/nodes", label: "Dispatch Yard", icon: FiCpu, description: "Crew, buses, and routes" },
+      { href: "/admin/ceo/map", label: "City Map", icon: FiMap, description: "Live pixel-art fleet map" },
+      { href: "/admin/ceo/inbox", label: "Return Bay", icon: FiInbox, description: "Returned buses and cargo" },
+      { href: "/admin/ceo/vault", label: "Armory", icon: FiShield, description: "Encrypted keycards" },
     ],
     []
   );
@@ -301,7 +309,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                   items={ceoItems}
                   isActive={isActive}
                   onNavigate={handleNavigate}
-                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center")}
+                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center") || pathname.startsWith("/admin/ceo/inbox") || pathname.startsWith("/admin/ceo/vault")}
                   badge="CEO"
                   collapsed={isCollapsed}
                 />
