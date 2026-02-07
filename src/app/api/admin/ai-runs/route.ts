@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
     const stats = {
       total: runs.length,
       running: runs.filter((r) => r.status === "RUNNING").length,
-      success: runs.filter((r) => r.status === "SUCCESS").length,
+      success: runs.filter((r) => r.status === "DONE").length,
       failed: runs.filter((r) => r.status === "FAILED").length,
     };
 

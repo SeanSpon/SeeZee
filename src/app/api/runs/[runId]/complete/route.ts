@@ -8,15 +8,16 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { runId: string } }
+  { params }: { params: Promise<{ runId: string }> }
 ) {
   try {
+    const { runId } = await params;
     const { status, prUrl, errorMessage, summary } = await req.json();
 
     const run = await prisma.executionRun.update({
-      where: { id: params.runId },
+      where: { id: runId },
       data: {
-        status: status === "SUCCESS" ? "SUCCESS" : "FAILED",
+        status: status === "SUCCESS" || status === "DONE" ? "DONE" : "FAILED",
         prUrl,
         errorMessage,
         summary,

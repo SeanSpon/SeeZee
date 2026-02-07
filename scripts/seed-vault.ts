@@ -37,7 +37,10 @@ interface VaultEntryData {
   scope: VaultScope;
   scopeRef?: string | null;
   notes: string;
-} Secrets
+}
+
+const secrets: VaultEntryData[] = [
+  // Authentication & Core
   {
     key: 'AUTH_SECRET',
     value: process.env.AUTH_SECRET || '',
@@ -232,10 +235,7 @@ interface VaultEntryData {
     key: 'NODE_API_KEY',
     value: process.env.NODE_API_KEY || '',
     scope: 'GLOBAL' as VaultScope,
-    notes: 'AI workflow node API key (optional)
-    value: process.env.CRON_SECRET || '',
-    scope: 'GLOBAL' as VaultScope,
-    notes: 'Secret token for securing cron job endpoints',
+    notes: 'AI workflow node API key (optional)',
   },
 ];
 
@@ -264,7 +264,7 @@ async function main() {
   let updated = 0;
   let skipped = 0;
 
-  for (const entry of vaultEntries) {
+  for (const entry of secrets) {
     try {
       // Skip if no value provided
       if (!entry.value || entry.value.trim() === '') {

@@ -9,13 +9,14 @@ import { requireAdmin } from "@/lib/authz";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { runId: string } }
+  { params }: { params: Promise<{ runId: string }> }
 ) {
   try {
     await requireAdmin();
+    const { runId } = await params;
 
     const logs = await prisma.runLog.findMany({
-      where: { runId: params.runId },
+      where: { runId },
       orderBy: { timestamp: "asc" },
     });
 
@@ -31,15 +32,16 @@ export async function GET(
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { runId: string } }
+  { params }: { params: Promise<{ runId: string }> }
 ) {
   try {
+    const { runId } = await params;
     const { level, message } = await req.json();
 
     // Could add node auth here, but for now allow it
     const log = await prisma.runLog.create({
       data: {
-        runId: params.runId,
+        runId,
         level: level || "info",
         message,
         truncated: message.length > 10000,

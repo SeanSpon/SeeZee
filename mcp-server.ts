@@ -19,6 +19,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  type CallToolRequest,
 } from "@modelcontextprotocol/sdk/types.js";
 import { PrismaClient } from "@prisma/client";
 
@@ -110,7 +111,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
   const { name, arguments: args } = request.params;
 
   try {
@@ -119,7 +120,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const projects = await prisma.project.findMany({
           where: args?.status ? { status: args.status } : undefined,
           include: {
-            client: { select: { name: true, email: true } },
             organization: { select: { name: true } },
           },
           take: 50,

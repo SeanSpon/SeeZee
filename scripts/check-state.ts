@@ -9,7 +9,7 @@ async function main() {
     include: {
       _count: {
         select: {
-          runs: true,
+          executionRuns: true,
           claimedRequests: true,
         },
       },
@@ -22,7 +22,7 @@ async function main() {
   } else {
     nodes.forEach((n) => {
       console.log(
-        `   - ${n.name} (${n.status}) | ${n._count.runs} runs | ${n._count.claimedRequests} claimed | Last seen: ${n.lastHeartbeatAt ? new Date(n.lastHeartbeatAt).toLocaleTimeString() : "never"}`
+        `   - ${n.name} (${n.status}) | ${(n._count as any).executionRuns || 0} runs | ${(n._count as any).claimedRequests || 0} claimed | Last seen: ${n.lastHeartbeatAt ? new Date(n.lastHeartbeatAt).toLocaleTimeString() : "never"}`
       );
     });
   }
@@ -65,7 +65,7 @@ async function main() {
     console.log(`\n   Recent requests:`);
     requests.slice(0, 5).forEach((r) => {
       console.log(
-        `     - ${r.todo?.title || r.task || "No title"} (${r.status}) | Priority: ${r.priority} | Node: ${r.targetNode?.name || "any"}`
+        `     - ${r.todo?.title || "No title"} (${r.status}) | Priority: ${r.priority} | Node: ${r.targetNode?.name || "any"}`
       );
     });
   }
