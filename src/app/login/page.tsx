@@ -12,6 +12,9 @@ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recapt
 import Link from "next/link";
 import LogoHeader from "@/components/brand/LogoHeader";
 
+// Configuration constants
+const USER_DATA_FETCH_TIMEOUT_MS = 10000; // 10 seconds
+
 function LoginContent() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -66,9 +69,6 @@ function LoginContent() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
-    // Configuration constants
-    const USER_DATA_FETCH_TIMEOUT_MS = 10000; // 10 seconds
 
     try {
       // Log signin attempt (email redacted in production for security)
