@@ -68,7 +68,12 @@ function LoginContent() {
     setIsLoading(true);
 
     try {
-      console.log("🔍 SignIn attempt:", { email, hasPassword: !!password });
+      // Log signin attempt (email redacted in production for security)
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔍 SignIn attempt:", { email, hasPassword: !!password });
+      } else {
+        console.log("🔍 SignIn attempt:", { emailProvided: !!email, hasPassword: !!password });
+      }
 
       // Get reCAPTCHA token with graceful fallback
       let recaptchaToken = "";
@@ -193,7 +198,10 @@ function LoginContent() {
           }
           
           console.error("🔴 Error fetching user data:", fetchError);
-          console.error("🔴 Full error:", { message: fetchError.message, stack: fetchError.stack });
+          // Only log stack trace in development to avoid exposing sensitive details
+          if (process.env.NODE_ENV === "development") {
+            console.error("🔴 Full error:", { message: fetchError.message, stack: fetchError.stack });
+          }
           
           // Fallback redirect
           console.log("⚠️ Using fallback redirect due to error");
@@ -202,7 +210,10 @@ function LoginContent() {
       }
     } catch (err: any) {
       console.error("🔴 Sign in exception:", err);
-      console.error("🔴 Full error details:", { message: err.message, name: err.name, stack: err.stack });
+      // Only log full stack trace in development to avoid exposing sensitive details
+      if (process.env.NODE_ENV === "development") {
+        console.error("🔴 Full error details:", { message: err.message, name: err.name, stack: err.stack });
+      }
       
       // Provide user-friendly error messages
       if (err.name === 'AbortError') {
