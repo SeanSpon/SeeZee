@@ -32,9 +32,11 @@ function LoginContent() {
       // User is already signed in, redirect them away from login page
       // Check onboarding status to redirect appropriately
       if (!session.user.tosAcceptedAt) {
-        // Need to accept ToS - redirect to onboarding        router.push("/onboarding/tos");
+        // Need to accept ToS - redirect to onboarding
+        router.push("/onboarding/tos");
       } else if (!session.user.profileDoneAt) {
-        // Need to complete profile        router.push("/onboarding/profile");
+        // Need to complete profile
+        router.push("/onboarding/profile");
       } else {
         // Onboarding complete - redirect to appropriate dashboard or callbackUrl
         const defaultUrl = session.user.role === 'CLIENT' ? '/client' : '/admin';
@@ -133,7 +135,8 @@ function LoginContent() {
             // Use window.location.href for full page reload to ensure fresh session
             window.location.href = redirectUrl;
           } else {
-            // Fallback if user data fetch fails            window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
+            // Fallback if user data fetch fails
+            window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
           }
         } catch (fetchError) {
           console.error("Error fetching user data:", fetchError);          // Fallback redirect
