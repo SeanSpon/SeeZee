@@ -68,19 +68,44 @@ function LoginContent() {
     setIsLoading(true);
 
     try {
-      // Get reCAPTCHA token
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA not ready");
+      console.log("🔍 SignIn attempt:", { email, hasPassword: !!password });
+
+      // Get reCAPTCHA token with graceful fallback
+      let recaptchaToken = "";
+      try {
+        if (!executeRecaptcha) {
+          // In development, allow proceeding without reCAPTCHA
+          if (process.env.NODE_ENV === "development") {
+            console.warn("⚠️ reCAPTCHA not loaded - proceeding without it in development mode");
+          } else {
+            throw new Error("reCAPTCHA not ready. Please refresh the page and try again.");
+          }
+        } else {
+          recaptchaToken = await executeRecaptcha("login");
+        }
+      } catch (recaptchaError: any) {
+        console.error("🔴 reCAPTCHA error:", recaptchaError);
+        // In production, fail fast if reCAPTCHA is required
+        if (process.env.NODE_ENV !== "development") {
+          setError("Security verification failed. Please refresh the page and try again.");
+          setIsLoading(false);
+          return;
+        }
+        // In development, continue without reCAPTCHA
+        console.warn("⚠️ Continuing without reCAPTCHA in development mode");
       }
-      const recaptchaToken = await executeRecaptcha("login");
 
       const result = await signIn("credentials", {
         email,
         password,
         recaptchaToken,
         redirect: false,
-      });      
+      });
+
+      console.log("🔍 SignIn result:", { ok: result?.ok, error: result?.error, status: result?.status });
+      
       if (result?.error) {
+        console.error("🔴 SignIn failed:", result.error);
         if (result.error === "CredentialsSignin") {
           setError("Invalid email or password. Please try again.");
         } else {
@@ -88,6 +113,8 @@ function LoginContent() {
         }
         setIsLoading(false);
       } else {
+        console.log("✅ SignIn successful, processing post-login flow...");
+        
         // Success - track session creation
         try {
           await fetch('/api/settings/sessions/track', {
@@ -95,7 +122,7 @@ function LoginContent() {
           });
         } catch (trackError) {
           // Silently fail session tracking - not critical
-          console.error("Failed to track session:", trackError);
+          console.error("⚠️ Failed to track session:", trackError);
         }
 
         // CRITICAL: Force session refresh to ensure token has latest DB data
@@ -104,12 +131,27 @@ function LoginContent() {
           // Wait a moment for NextAuth to finish creating the session
           await new Promise(resolve => setTimeout(resolve, 500));
           
-          // Fetch fresh user data from database (bypasses token cache)
+          console.log("🔍 Fetching user data from /api/user/me...");
+          
+          // Fetch fresh user data from database with timeout (bypasses token cache)
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+          
           const userResponse = await fetch('/api/user/me', {
             cache: 'no-store',
-          });          
+            signal: controller.signal,
+          });
+          
+          clearTimeout(timeoutId);
+          
           if (userResponse.ok) {
-            const userData = await userResponse.json();            
+            const userData = await userResponse.json();
+            console.log("🔍 User data fetched:", { 
+              role: userData.role, 
+              tosAccepted: !!userData.tosAcceptedAt, 
+              profileDone: !!userData.profileDoneAt 
+            });
+            
             // Determine redirect based on onboarding status from DB
             let redirectUrl = callbackUrl;
             
@@ -125,20 +167,51 @@ function LoginContent() {
                 // Need to complete profile
                 redirectUrl = '/onboarding/profile';
               }
-            }            
+            }
+            
+            console.log("🔍 Redirecting to:", redirectUrl);
             // Use window.location.href for full page reload to ensure fresh session
             window.location.href = redirectUrl;
           } else {
-            // Fallback if user data fetch fails            window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
+            console.error("🔴 User data fetch failed:", { 
+              status: userResponse.status, 
+              statusText: userResponse.statusText 
+            });
+            const errorText = await userResponse.text().catch(() => "No error details");
+            console.error("🔴 Error response:", errorText);
+            
+            // Fallback if user data fetch fails
+            console.log("⚠️ Using fallback redirect");
+            window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
           }
-        } catch (fetchError) {
-          console.error("Error fetching user data:", fetchError);          // Fallback redirect
+        } catch (fetchError: any) {
+          if (fetchError.name === 'AbortError') {
+            console.error("🔴 User data fetch timed out after 10 seconds");
+            setError("Login is taking too long. Please try again or contact support if this persists.");
+            setIsLoading(false);
+            return;
+          }
+          
+          console.error("🔴 Error fetching user data:", fetchError);
+          console.error("🔴 Full error:", { message: fetchError.message, stack: fetchError.stack });
+          
+          // Fallback redirect
+          console.log("⚠️ Using fallback redirect due to error");
           window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
         }
       }
     } catch (err: any) {
-      console.error("Sign in exception:", err);
-      setError(err.message || "Failed to sign in. Please try again.");
+      console.error("🔴 Sign in exception:", err);
+      console.error("🔴 Full error details:", { message: err.message, name: err.name, stack: err.stack });
+      
+      // Provide user-friendly error messages
+      if (err.name === 'AbortError') {
+        setError("Request timed out. Please check your internet connection and try again.");
+      } else if (err.message?.includes("reCAPTCHA")) {
+        setError(err.message);
+      } else {
+        setError(err.message || "Failed to sign in. Please try again or contact support if this persists.");
+      }
       setIsLoading(false);
     }
   };
