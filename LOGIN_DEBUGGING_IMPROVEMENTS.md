@@ -80,7 +80,11 @@ console.error("🔴 User data fetch failed:", {
   statusText: userResponse.statusText 
 });
 console.error("🔴 Error response:", errorText);
-console.error("🔴 Full error:", { message: fetchError.message, stack: fetchError.stack });
+
+// Full error details only in development mode (security)
+if (process.env.NODE_ENV === "development") {
+  console.error("🔴 Full error:", { message: fetchError.message, stack: fetchError.stack });
+}
 ```
 
 **Benefits:**
@@ -114,7 +118,7 @@ clearTimeout(timeoutId);
 **Timeout Error Handling:**
 ```typescript
 if (fetchError.name === 'AbortError') {
-  console.error("🔴 User data fetch timed out after 10 seconds");
+  console.error(`🔴 User data fetch timed out after ${USER_DATA_FETCH_TIMEOUT_MS / 1000} seconds`);
   setError("Login is taking too long. Please try again or contact support if this persists.");
   setIsLoading(false);
   return;
@@ -122,7 +126,7 @@ if (fetchError.name === 'AbortError') {
 ```
 
 **Benefits:**
-- ✅ 10-second timeout prevents indefinite hangs
+- ✅ Configurable timeout via `USER_DATA_FETCH_TIMEOUT_MS` constant (default: 10 seconds)
 - ✅ Clear error message for timeout scenario
 - ✅ User can retry login immediately
 - ✅ Logs show timeout vs other errors
@@ -157,6 +161,29 @@ catch (err: any) {
 - ✅ Actionable feedback (e.g., "check your internet connection")
 - ✅ Full error details logged for developer debugging
 - ✅ Users know whether to retry or contact support
+
+## Security Considerations
+
+### Development vs Production Logging
+
+The implementation uses `process.env.NODE_ENV` to control logging verbosity:
+
+**Development Mode (`NODE_ENV === "development"`):**
+- Logs full email addresses for easier debugging
+- Logs complete error stack traces
+- Allows bypass of reCAPTCHA (for testing without API keys)
+
+**Production Mode:**
+- Email addresses redacted (only logs `emailProvided: true/false`)
+- Error messages only (no stack traces)
+- reCAPTCHA required for all login attempts
+
+### Important Security Notes
+
+1. **Development logs should never be sent to production monitoring systems** - Ensure your logging configuration keeps dev logs separate
+2. **If using centralized logging** - Make sure development logs are filtered/scrubbed before aggregation
+3. **Sensitive PII** - Even in development, consider whether full email addresses should be logged based on your organization's security policy
+4. **Environment variable validation** - Always verify `NODE_ENV` is correctly set in production
 
 ## Testing the Changes
 
@@ -310,9 +337,9 @@ The logs will show why the redirect logic chose that destination.
 
 ### Issue: Timeout is too short/long
 
-**Solution:** Adjust the timeout value by searching for "10000" in the handleEmailLogin function:
+**Solution:** Adjust the `USER_DATA_FETCH_TIMEOUT_MS` constant at the top of the `handleEmailLogin` function:
 ```typescript
-const timeoutId = setTimeout(() => controller.abort(), 10000); // Change 10000 (10 seconds)
+const USER_DATA_FETCH_TIMEOUT_MS = 10000; // Change to desired milliseconds (e.g., 15000 for 15 seconds)
 ```
 
 ### Issue: Too many console logs in production

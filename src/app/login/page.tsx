@@ -67,6 +67,9 @@ function LoginContent() {
     setError("");
     setIsLoading(true);
 
+    // Configuration constants
+    const USER_DATA_FETCH_TIMEOUT_MS = 10000; // 10 seconds
+
     try {
       // Log signin attempt (email redacted in production for security)
       if (process.env.NODE_ENV === "development") {
@@ -140,7 +143,7 @@ function LoginContent() {
           
           // Fetch fresh user data from database with timeout (bypasses token cache)
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+          const timeoutId = setTimeout(() => controller.abort(), USER_DATA_FETCH_TIMEOUT_MS);
           
           const userResponse = await fetch('/api/user/me', {
             cache: 'no-store',
@@ -191,7 +194,7 @@ function LoginContent() {
           }
         } catch (fetchError: any) {
           if (fetchError.name === 'AbortError') {
-            console.error("🔴 User data fetch timed out after 10 seconds");
+            console.error(`🔴 User data fetch timed out after ${USER_DATA_FETCH_TIMEOUT_MS / 1000} seconds`);
             setError("Login is taking too long. Please try again or contact support if this persists.");
             setIsLoading(false);
             return;
