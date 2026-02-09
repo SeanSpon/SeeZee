@@ -24,7 +24,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-white mb-6 max-w-md leading-relaxed">
-              Your community technology partner. Technical support, consulting, web development, and automation solutions for schools, nonprofits, and local organizations. Based in Louisville, Kentucky.
+              Your community technology partner. Technical support, consulting, web development, and automation solutions for businesses, schools, and local organizations. Based in Louisville, Kentucky.
             </p>
             <div className="flex space-x-4">
               <motion.a

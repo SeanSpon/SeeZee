@@ -159,7 +159,8 @@ export async function processDripCampaigns(): Promise<{
         });
 
         // Send email via Resend
-        const emailResult = await resend.emails.send({
+        const resendClient = getResend();
+        const emailResult = await resendClient.emails.send({
           from: "SeeZee Studio <outreach@seezeestudios.com>",
           to: enrollment.prospect.email,
           subject,

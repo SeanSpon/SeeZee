@@ -34,11 +34,8 @@ function LoginContent() {
       if (!session.user.tosAcceptedAt) {
         // Need to accept ToS - redirect to onboarding
         router.push("/onboarding/tos");
-      } else if (!session.user.profileDoneAt) {
-        // Need to complete profile
-        router.push("/onboarding/profile");
       } else {
-        // Onboarding complete - redirect to appropriate dashboard or callbackUrl
+        // ToS accepted - redirect to dashboard (profile is now optional)
         const defaultUrl = session.user.role === 'CLIENT' ? '/client' : '/admin';
         const redirectUrl = callbackUrl === '/' ? defaultUrl : callbackUrl;        router.push(redirectUrl);
       }
@@ -121,15 +118,12 @@ function LoginContent() {
             
             if (callbackUrl === '/') {
               // Check if onboarding is complete (using DB data, not token)
-              if (userData.tosAcceptedAt && userData.profileDoneAt) {
-                // Onboarding complete - go to dashboard
+              if (userData.tosAcceptedAt) {
+                // ToS accepted - go to dashboard (profile is now optional)
                 redirectUrl = userData.role === 'CLIENT' ? '/client' : '/admin';
-              } else if (!userData.tosAcceptedAt) {
+              } else {
                 // Need to accept ToS
                 redirectUrl = '/onboarding/tos';
-              } else {
-                // Need to complete profile
-                redirectUrl = '/onboarding/profile';
               }
             }            
             // Use window.location.href for full page reload to ensure fresh session

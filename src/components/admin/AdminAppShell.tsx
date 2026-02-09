@@ -98,6 +98,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin", label: "Dashboard", icon: FiHome, description: "Overview and quick stats" },
       { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
+      { href: "/admin/pipeline", label: "Pipeline", icon: FiLayers, description: "Project workflow stages" },
       { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
       { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
       { href: "/admin/todos", label: "My Todos", icon: FiTarget, description: "Personal task queue" },
@@ -105,18 +106,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     []
   );
 
-  // ===========================================
-  // PIPELINE & GROWTH (Lead to Revenue flow)
-  // ===========================================
-  const pipelineItems = useMemo<NavItem[]>(
-    () => [
-      { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
-      { href: "/admin/leads", label: "Leads", icon: FiMapPin, description: "Lead management and finder" },
-      { href: "/admin/marketing", label: "Email Hub", icon: FiMail, description: "Campaigns and outreach" },
-      { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
-    ],
-    []
-  );
+
 
   // ===========================================
   // FINANCIAL (Consolidated money management)
@@ -141,6 +131,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/calendar", label: "Calendar", icon: FiCalendar, description: "Schedule overview" },
       { href: "/admin/goals", label: "Goals", icon: FiTarget, description: "OKRs and targets" },
       { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget, description: "Client deliverables" },
+      { href: "/admin/leads", label: "Leads", icon: FiUsers, description: "Outreach and prospecting" },
     ],
     []
   );
@@ -153,11 +144,12 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/command-center", label: "Hub", icon: FiLayers, description: "All-in-one access hub" },
       { href: "/admin/ceo", label: "Overview", icon: FiStar, description: "Executive overview" },
       { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
+      { href: "/admin/ceo/finances", label: "Finances", icon: FiDollarSign, description: "Financial deep dive" },
+      { href: "/admin/ceo/tasks", label: "Tasks", icon: FiCheckSquare, description: "Task management" },
+      { href: "/admin/ceo/team-management", label: "Team Mgmt", icon: FiTeamUsers, description: "Team oversight" },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
-      { href: "/admin/ceo/nodes", label: "Dispatch Yard", icon: FiCpu, description: "Crew, buses, and routes" },
-      { href: "/admin/ceo/map", label: "City Map", icon: FiMap, description: "Live pixel-art fleet map" },
-      { href: "/admin/ceo/inbox", label: "Return Bay", icon: FiInbox, description: "Returned buses and cargo" },
-      { href: "/admin/ceo/vault", label: "Armory", icon: FiShield, description: "Encrypted keycards" },
+      { href: "/admin/ceo/learning-hub", label: "Learning", icon: FiBookOpen, description: "Resources & tools" },
+      { href: "/admin/ceo/vault", label: "Armory", icon: FiShield, description: "API keys & secrets" },
     ],
     []
   );
@@ -207,14 +199,14 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       <div className="relative flex min-h-screen">
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-40 transform border-r border-white/10 bg-[#0f172a]/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 transform border-r border-slate-800 bg-[#0f172a]/98 backdrop-blur-xl transition-all duration-300 ease-in-out lg:translate-x-0 ${
             isCollapsed ? "w-20 lg:w-20" : "w-64 lg:w-64"
           } ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex h-full flex-col">
-            <div className={`border-b border-white/10 px-6 py-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+            <div className={`border-b border-slate-800 px-6 py-6 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
               {!isCollapsed && <LogoHeader href="/admin" />}
               {/* Desktop Collapse Toggle */}
               <button
@@ -229,13 +221,13 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 )}
               </button>
             </div>
-            <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+            <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-6">
               {/* ========================================= */}
               {/* CORE PAGES - Always visible, prominent */}
               {/* ========================================= */}
               {!isCollapsed && (
-                <div className="mb-2 px-3">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Core</p>
+                <div className="mb-4 px-3">
+                  <p className="text-[9px] uppercase tracking-widest text-slate-600 font-bold">Core Rooms</p>
                 </div>
               )}
               {coreItems.map(({ href, label, icon: Icon }) => (
@@ -247,31 +239,18 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                     isCollapsed ? 'justify-center' : ''
                   } ${
                     isActive(href)
-                      ? "bg-gradient-to-r from-[#ef4444]/20 to-[#ef4444]/10 text-white border-l-2 border-[#ef4444]"
-                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      ? "bg-[#ef4444]/15 text-white border-l-2 border-[#ef4444]"
+                      : "text-slate-400 hover:bg-white/8 hover:text-slate-100"
                   }`}
                   title={isCollapsed ? label : undefined}
                 >
-                  <Icon className={`h-5 w-5 flex-shrink-0 ${isActive(href) ? 'text-[#ef4444]' : ''}`} />
+                  <Icon className={`h-5 w-5 flex-shrink-0 transition-colors ${isActive(href) ? 'text-[#ef4444]' : 'text-slate-500 group-hover:text-slate-300'}`} />
                   {!isCollapsed && <span className="font-medium text-sm">{label}</span>}
                 </motion.button>
               ))}
               
               {/* Divider */}
-              <div className="my-4 border-t border-white/5" />
-
-              {/* ========================================= */}
-              {/* PIPELINE & GROWTH - Lead to Revenue */}
-              {/* ========================================= */}
-              <CollapsibleNavGroup
-                title="Pipeline & Growth"
-                icon={FiTrendingUp}
-                items={pipelineItems}
-                isActive={isActive}
-                onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
-                collapsed={isCollapsed}
-              />
+              <div className="my-4 border-t border-slate-800" />
 
               {/* ========================================= */}
               {/* FINANCIAL - Consolidated money management */}
@@ -295,7 +274,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={teamItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/feed") || pathname.startsWith("/admin/calendar") || pathname.startsWith("/admin/goals") || pathname.startsWith("/admin/client-tasks")}
+                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/feed") || pathname.startsWith("/admin/calendar") || pathname.startsWith("/admin/goals") || pathname.startsWith("/admin/client-tasks") || pathname.startsWith("/admin/leads")}
                 collapsed={isCollapsed}
               />
 
@@ -309,14 +288,14 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                   items={ceoItems}
                   isActive={isActive}
                   onNavigate={handleNavigate}
-                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center") || pathname.startsWith("/admin/ceo/inbox") || pathname.startsWith("/admin/ceo/vault")}
+                  defaultOpen={pathname.startsWith("/admin/ceo") || pathname.startsWith("/admin/command-center")}
                   badge="CEO"
                   collapsed={isCollapsed}
                 />
               )}
 
               {/* Divider before System */}
-              <div className="my-4 border-t border-white/5" />
+              <div className="my-4 border-t border-slate-800" />
 
               {/* ========================================= */}
               {/* SYSTEM & TOOLS - De-emphasized, rare use */}
@@ -331,7 +310,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 collapsed={isCollapsed}
               />
             </nav>
-            <div className="border-t border-white/10 px-4 py-4">
+            <div className="border-t border-slate-800 px-4 py-4">
               {!isCollapsed ? (
                 <>
                   <div className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3">
@@ -406,7 +385,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
         )}
 
         <div className={`flex min-h-screen flex-1 flex-col transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
-          <header className="border-b border-white/10 bg-[#0f172a]/80 backdrop-blur-xl px-4 py-4 lg:px-8">
+          <header className="border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur-xl px-4 py-4 lg:px-8">
             <div className="flex items-center justify-between gap-4">
               <button
                 onClick={() => setIsSidebarOpen((prev) => !prev)}
@@ -418,7 +397,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               <div className="flex flex-1 items-center justify-end gap-3">
                 <GlobalSearch 
                   variant="admin" 
-                  placeholder="Search projects, clients, leads, tasks..." 
+                  placeholder="Search projects, clients, tasks..." 
                 />
               </div>
             </div>

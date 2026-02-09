@@ -50,7 +50,7 @@ const getInitialMessage = (): ChatMessage => {
     return {
       id: "welcome",
       role: "assistant",
-      content: `Hey! I'm here to help you learn about our web development services for nonprofits.
+      content: `Hey! I'm here to help you learn about our web development services.
 
 What brings you here today?`,
       createdAt: new Date(),

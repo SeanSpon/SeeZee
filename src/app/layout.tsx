@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: '%s | SeeZee Studio',
   },
   description:
-    'Professional web development in Louisville, KY. SeeZee Studio builds fast, modern websites and custom apps for nonprofits, businesses, and community organizations. Expert website design and development services.',
+    'Professional web development in Louisville, KY. SeeZee Studio builds fast, modern websites and custom apps for businesses and community organizations. Expert website design and development services.',
   keywords: [
     'professional web development',
     'professional web developer',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     'full-stack development Louisville',
     'custom software development',
     'business websites Louisville',
-    'nonprofit websites',
+    'business websites',
     'e-commerce development Louisville',
     '48 hour website',
     'fast website development',
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'SeeZee Studio | Professional Web Development Louisville KY',
-    description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps for businesses, nonprofits, and community organizations.',
+    description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps for businesses and community organizations.',
     url: 'https://seezeestudios.com',
     siteName: 'SeeZee Studio',
     images: [
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SeeZee Studio | Professional Web Developer Louisville KY',
-    description: 'Professional websites and apps built fast in Louisville, KY. Expert web development for businesses and nonprofits.',
+    description: 'Professional websites and apps built fast in Louisville, KY. Expert web development for businesses and organizations.',
     images: ['https://seezeestudios.com/opengraph-image.png'],
     creator: '@seezee_studio',
   },
@@ -143,7 +143,7 @@ export default function RootLayout({
           width: 512,
           height: 512,
         },
-        description: 'Professional web development services in Louisville, KY. Fast, modern websites and custom apps for businesses, nonprofits, and community organizations.',
+        description: 'Professional web development services in Louisville, KY. Fast, modern websites and custom apps for businesses and community organizations.',
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Louisville',

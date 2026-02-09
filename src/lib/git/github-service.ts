@@ -585,7 +585,9 @@ export async function fetchUserActivity(
           type = "push";
           const commits = event.payload?.commits || [];
           action = "pushed";
-          description = commits.length > 0 ? commits[0].message : `${commits.length} commits`;
+          description = commits.length > 0 
+            ? (commits.length === 1 ? commits[0].message : `${commits.length} commits - ${commits[0].message}`)
+            : `pushed to ${event.repo?.name?.split("/")[1] || event.repo?.name || "repo"}`;
           break;
         case "PullRequestEvent":
           type = "pr";

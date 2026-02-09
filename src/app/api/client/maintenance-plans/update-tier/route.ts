@@ -412,7 +412,6 @@ export async function POST(req: NextRequest) {
             currency: 'usd',
             product_data: {
               name: `${tierConfig.name} - Monthly Subscription`,
-              description: tierConfig.description,
               metadata: {
                 tier: tier,
                 maintenancePlanId: maintenancePlan.id,

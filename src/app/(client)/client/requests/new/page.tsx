@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { 
   FileText, 
@@ -398,6 +399,7 @@ function FileUpload({
 
 export default function NewChangeRequestPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hoursBalance, setHoursBalance] = useState<HoursBalanceData | null>(null);
@@ -412,6 +414,24 @@ export default function NewChangeRequestPage() {
     attachments: [],
     agreeToTerms: false,
   });
+  
+  // Check if user needs to complete profile before creating a request
+  useEffect(() => {
+    if (session?.user && !session.user.profileDoneAt) {
+      // User needs to complete profile to create requests
+      setError(
+        <div className="space-y-3">
+          <p>You need to complete your profile before creating a request.</p>
+          <button
+            onClick={() => router.push('/onboarding/profile')}
+            className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors"
+          >
+            Complete Profile
+          </button>
+        </div> as any
+      );
+    }
+  }, [session, router]);
   
   // Fetch hours balance and check subscription status on mount
   useEffect(() => {

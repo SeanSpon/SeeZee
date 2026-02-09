@@ -188,7 +188,7 @@ model Lead {
   project        Project?
 
   // Prospect/Client Finder fields
-  ein                String? // Tax ID for nonprofits
+  ein                String? // Tax ID (legacy field)
   websiteUrl         String?
   address            String?
   city               String?
@@ -367,7 +367,7 @@ model Project {
   name                 String
   description          String?
   status               ProjectStatus         @default(LEAD)
-  isNonprofit          Boolean               @default(false)
+  isNonprofit          Boolean               @default(false) // DEPRECATED: Legacy field, system now hour/project-based
   budget               Decimal?
   startDate            DateTime?
   endDate              DateTime?
@@ -417,6 +417,9 @@ model Project {
   vercelProjectId String?
   vercelTeamId    String?
   // vercelUrl is defined above with githubRepo
+
+  // Revenue tracking
+  monthlyRecurringRevenue Decimal?  // Custom MRR for clients (for non-Stripe billing)
 
   // Relations
   financeTransactions FinanceTransaction[]
@@ -515,7 +518,7 @@ model Payment {
 model MaintenancePlan {
   id                      String                @id @default(cuid())
   projectId               String                @unique
-  tier                    String // NonprofitTier value: ESSENTIALS, DIRECTOR, COO
+  tier                    String // Plan type: QUARTERLY or ANNUAL (legacy: ESSENTIALS, DIRECTOR, COO)
   monthlyPrice            Decimal
   features                Json?
   billingDay              Int                   @default(1)
@@ -1852,7 +1855,7 @@ enum CompletionStatus {
 
 enum ServiceCategory {
   BUSINESS_WEBSITE
-  NONPROFIT_WEBSITE
+  NONPROFIT_WEBSITE // DEPRECATED: Legacy category, all clients now use hour/project-based model
   PERSONAL_WEBSITE
   MAINTENANCE_PLAN
 }
@@ -1901,11 +1904,13 @@ enum TransactionStatus {
   CANCELLED
 }
 
-// New nonprofit tiers aligned with business model
+// LEGACY: Old nonprofit tier system - DEPRECATED
+// Current system uses QUARTERLY ($2k/quarter, 30 hours) and ANNUAL ($6.8k/year, 120 hours)
+// Legacy tiers (ESSENTIALS, DIRECTOR, COO) map to QUARTERLY plan for backwards compatibility
 enum NonprofitTier {
-  ESSENTIALS // $500/mo, 8 hours, max 3 subscriptions
-  DIRECTOR // $750/mo, 16 hours, max 6 subscriptions
-  COO // $2,000/mo, unlimited requests (fair-use), unlimited subscriptions
+  ESSENTIALS // LEGACY: Now maps to QUARTERLY plan
+  DIRECTOR // LEGACY: Now maps to QUARTERLY plan
+  COO // LEGACY: Now maps to QUARTERLY plan
 }
 
 // Hour pack types for marketplace purchases

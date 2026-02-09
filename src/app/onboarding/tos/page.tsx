@@ -38,15 +38,10 @@ export default function OnboardingTosPage() {
   useEffect(() => {
     if (status === "authenticated" && session?.user?.id) {      // Check token first
       if (session?.user?.tosAcceptedAt) {
-        if (session.user.profileDoneAt) {
-          const dashboardUrl = session.user.role === 'CEO' || session.user.role === 'ADMIN' ? '/admin' : '/client';
-          // Only redirect if we're not already going there
-          if (typeof window !== "undefined" && !window.location.pathname.startsWith(dashboardUrl)) {            router.push(dashboardUrl);
-          }
-        } else {
-          // Only redirect if we're not already on profile page
-          if (typeof window !== "undefined" && !window.location.pathname.startsWith('/onboarding/profile')) {            router.push("/onboarding/profile");
-          }
+        // ToS already accepted - redirect to dashboard (profile is now optional)
+        const dashboardUrl = session.user.role === 'CEO' || session.user.role === 'ADMIN' ? '/admin' : '/client';
+        // Only redirect if we're not already going there
+        if (typeof window !== "undefined" && !window.location.pathname.startsWith(dashboardUrl)) {          router.push(dashboardUrl);
         }
       } else {
         // Token doesn't show TOS accepted, but check DB to be sure (handles stale token case)
@@ -57,26 +52,16 @@ export default function OnboardingTosPage() {
             if (userData.tosAcceptedAt) {
               // DB says TOS is accepted but token doesn't - token is stale, force refresh
               update().then(() => {
-                // After update, redirect based on profile status
-                if (userData.profileDoneAt) {
-                  const dashboardUrl = userData.role === 'CEO' || userData.role === 'ADMIN' ? '/admin' : '/client';
-                  if (!window.location.pathname.startsWith(dashboardUrl)) {
-                    router.push(dashboardUrl);
-                  }
-                } else {
-                  if (!window.location.pathname.startsWith('/onboarding/profile')) {
-                    router.push("/onboarding/profile");
-                  }
+                // After update, redirect to dashboard (profile is now optional)
+                const dashboardUrl = userData.role === 'CEO' || userData.role === 'ADMIN' ? '/admin' : '/client';
+                if (!window.location.pathname.startsWith(dashboardUrl)) {
+                  router.push(dashboardUrl);
                 }
               }).catch(err => {
                 console.error("Failed to update session:", err);
                 // Fallback: redirect anyway based on DB data
-                if (userData.profileDoneAt) {
-                  const dashboardUrl = userData.role === 'CEO' || userData.role === 'ADMIN' ? '/admin' : '/client';
-                  window.location.href = dashboardUrl;
-                } else {
-                  window.location.href = "/onboarding/profile";
-                }
+                const dashboardUrl = userData.role === 'CEO' || userData.role === 'ADMIN' ? '/admin' : '/client';
+                window.location.href = dashboardUrl;
               });
             }
           })

@@ -149,7 +149,7 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              We started SeeZee to help community organizations get the technology support they deserve — schools, nonprofits, and local groups doing meaningful work.
+              We started SeeZee to help organizations get the technology support they deserve — businesses, schools, and local groups doing meaningful work.
             </motion.p>
             <motion.p 
               className="text-lg text-gray-400 leading-relaxed"

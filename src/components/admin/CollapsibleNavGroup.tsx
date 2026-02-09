@@ -60,12 +60,12 @@ export function CollapsibleNavGroup({
             onClick={toggle}
             className={`relative flex w-full items-center justify-center rounded-xl p-3 transition-all duration-200 ${
               hasActiveItem
-                ? "bg-gradient-to-r from-[#ef4444]/20 to-[#ef4444]/10 text-white border border-[#ef4444]/30"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                ? "bg-[#ef4444]/15 text-white border border-[#ef4444]/30"
+                : "text-slate-500 hover:bg-white/8 hover:text-slate-100"
             }`}
             title={title}
           >
-            <Icon className={`h-5 w-5 ${hasActiveItem ? "text-[#ef4444]" : ""}`} />
+            <Icon className={`h-5 w-5 transition-colors ${hasActiveItem ? "text-[#ef4444]" : "text-slate-500 group-hover:text-slate-300"}`} />
           </button>
           {/* Tooltip on hover */}
           <div className="absolute left-full ml-2 top-0 z-50 hidden group-hover:block">
@@ -84,16 +84,16 @@ export function CollapsibleNavGroup({
                   const active = isActive(href);
                   if (!ItemIcon) return null;
                   return (
-                    <button
+                  <button
                       key={href}
                       onClick={() => onNavigate(href)}
                       className={`w-full flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-all duration-200 ${
                         active
-                          ? "bg-[#ef4444]/20 text-white"
-                          : "text-slate-400 hover:bg-white/5 hover:text-white"
+                          ? "bg-[#ef4444]/20 text-white border-l-2 border-[#ef4444]"
+                          : "text-slate-400 hover:bg-white/8 hover:text-slate-200"
                       }`}
                     >
-                      <ItemIcon className={`h-3.5 w-3.5 ${active ? "text-[#ef4444]" : ""}`} />
+                      <ItemIcon className={`h-3.5 w-3.5 flex-shrink-0 transition-colors ${active ? "text-[#ef4444]" : "text-slate-500"}`} />
                       <span>{label}</span>
                     </button>
                   );
@@ -113,14 +113,14 @@ export function CollapsibleNavGroup({
       {/* Group Header - Compact */}
       <button
         onClick={toggle}
-        className={`group relative flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition-all duration-200 ${
+        className={`group relative flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-all duration-200 ${
           hasActiveItem
-            ? "bg-white/5 text-white"
-            : "text-slate-500 hover:bg-white/5 hover:text-slate-300"
+            ? "bg-[#ef4444]/10 text-white border-l-2 border-[#ef4444]"
+            : "text-slate-500 hover:bg-white/8 hover:text-slate-200"
         }`}
       >
         <div className="flex items-center gap-2.5">
-          <Icon className={`h-4 w-4 ${hasActiveItem ? "text-[#ef4444]" : "text-slate-500"}`} />
+          <Icon className={`h-4 w-4 transition-colors ${hasActiveItem ? "text-[#ef4444]" : "text-slate-600 group-hover:text-slate-400"}`} />
           <span className="font-medium text-sm">{title}</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -131,9 +131,9 @@ export function CollapsibleNavGroup({
           )}
           <motion.div
             animate={{ rotate: shouldBeOpen ? 90 : 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.2 }}
           >
-            <FiChevronRight className="h-3.5 w-3.5 text-slate-500" />
+            <FiChevronRight className={`h-3.5 w-3.5 transition-colors ${hasActiveItem ? 'text-[#ef4444]' : 'text-slate-600'}`} />
           </motion.div>
         </div>
       </button>
@@ -148,7 +148,14 @@ export function CollapsibleNavGroup({
             transition={{ duration: 0.15 }}
             className="overflow-hidden"
           >
-            <div className="ml-3 space-y-0.5 border-l border-white/5 pl-3 py-1">
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="ml-3 space-y-1 border-l border-slate-700 pl-3 py-2">
               {items.map(({ href, label, icon: ItemIcon }) => {
                 const active = isActive(href);
                 if (!ItemIcon) return null;
@@ -159,16 +166,17 @@ export function CollapsibleNavGroup({
                     onClick={() => onNavigate(href)}
                     className={`group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-all duration-150 ${
                       active
-                        ? "bg-[#ef4444]/10 text-white border-l-2 border-[#ef4444] -ml-[1px]"
-                        : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                        ? "bg-[#ef4444]/15 text-white border-l-2 border-[#ef4444]"
+                        : "text-slate-500 hover:bg-white/8 hover:text-slate-200"
                     }`}
                   >
-                    <ItemIcon className={`h-3.5 w-3.5 flex-shrink-0 ${active ? "text-[#ef4444]" : ""}`} />
-                    <span className="text-[13px]">{label}</span>
+                    <ItemIcon className={`h-3.5 w-3.5 flex-shrink-0 transition-colors ${active ? "text-[#ef4444]" : "text-slate-600 group-hover:text-slate-300"}`} />
+                    <span className="text-[13px] font-medium">{label}</span>
                   </motion.button>
                 );
               })}
             </div>
+          </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

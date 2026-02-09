@@ -88,7 +88,9 @@ export async function GET(req: NextRequest) {
         case "PushEvent":
           const commits = event.payload.commits || [];
           action = "pushed";
-          details = commits.length > 0 ? commits[0].message : `${commits.length} commits`;
+          details = commits.length > 0 
+            ? (commits.length === 1 ? commits[0].message : `${commits.length} commits - ${commits[0].message}`)
+            : `pushed to ${event.repo.name.split("/")[1] || event.repo.name}`;
           break;
         case "PullRequestEvent":
           action = event.payload.action;

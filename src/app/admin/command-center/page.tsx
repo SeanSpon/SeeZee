@@ -302,6 +302,8 @@ export default function CommandCenterPage() {
     activeDeployments: 0,
     unreadEmails: 0,
     mrr: "$0",
+    stripeMrr: "$0",
+    projectMrr: "$0",
     openPRs: 0,
     openIssues: 0,
   });
@@ -473,7 +475,8 @@ export default function CommandCenterPage() {
         if (stripeRes.ok) {
           const stripeData = await stripeRes.json();
           if (stripeData.metrics) {
-            setStats(prev => ({ ...prev, mrr: stripeData.metrics.mrr }));
+            const stripeMrrValue = stripeData.metrics.mrr;
+            setStats(prev => ({ ...prev, stripeMrr: stripeMrrValue, mrr: stripeMrrValue }));
           }
           // Update Stripe service status
           if (!stripeData.configured) {
@@ -487,6 +490,20 @@ export default function CommandCenterPage() {
         setServices(prev => prev.map(s => 
           s.name === "Stripe" ? { ...s, status: "down" as const } : s
         ));
+      }
+
+      try {
+        // Fetch project MRR
+        const projectMrrRes = await fetch("/api/admin/projects/mrr");
+        if (projectMrrRes.ok) {
+          const projectMrrData = await projectMrrRes.json();
+          if (projectMrrData.data) {
+            const projectMrrValue = `$${projectMrrData.data.totalMrr.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+            setStats(prev => ({ ...prev, projectMrr: projectMrrValue }));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch project MRR:", e);
       }
 
       setLoading(false);
@@ -614,10 +631,17 @@ export default function CommandCenterPage() {
         />
         <QuickStat
           icon={CreditCard}
-          label="MRR"
-          value={stats.mrr}
+          label="Stripe MRR"
+          value={stats.stripeMrr}
           color="text-pink-400"
           bgColor="bg-pink-500/20"
+        />
+        <QuickStat
+          icon={DollarSign}
+          label="Project MRR"
+          value={stats.projectMrr}
+          color="text-emerald-400"
+          bgColor="bg-emerald-500/20"
         />
       </div>
 

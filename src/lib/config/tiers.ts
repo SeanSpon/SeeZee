@@ -1,125 +1,170 @@
 /**
- * SeeZee Studios - Centralized Tier & Billing Configuration
+ * SeeZee Studios - Centralized Pricing & Billing Configuration
  * 
- * This file contains all pricing, hours, and limits for the nonprofit tier system.
+ * This file contains all pricing, hours, and limits for the SeeZee service model.
  * Import from here instead of hardcoding values throughout the codebase.
+ * 
+ * Pricing model (matches seezeestudios.com/services):
+ * - Development: $75/hour flat rate
+ * - Maintenance Quarterly: $2,000/quarter (30 hours included)
+ * - Maintenance Annual: $6,800/year (120 hours included, 15% savings)
  */
 
 // =============================================================================
-// NONPROFIT TIERS - Main service tiers
+// DEVELOPMENT RATE
 // =============================================================================
 
-export const NONPROFIT_TIERS = {
-  ESSENTIALS: {
-    id: 'ESSENTIALS',
-    name: 'Nonprofit Essentials',
-    shortName: 'Tier 1',
-    description: 'Best for small sites that just need stability and fixes. We keep your site safe, fast, and running.',
-    
-    // Pricing
-    buildPrice: 600000,           // $6,000 in cents
-    monthlyPrice: 50000,          // $500/month in cents
-    annualPrice: 510000,          // $5,100/year (15% discount) in cents
-    annualDiscount: 0.15,         // 15% off annual
-    
-    // Hours & Requests
-    supportHoursIncluded: 8,      // Monthly support hours (doubled from 4)
-    changeRequestsIncluded: 3,    // Change requests per month
-    
-    // Subscription Limits
-    subscriptionsIncluded: 2,     // Included in base price
-    maxSubscriptions: 3,          // Hard cap
-    addonCost: 20000,             // $200/month per additional subscription
-    addonHours: 2,                // Additional hours per addon
-    
-    // Rollover Settings
-    rolloverEnabled: true,
-    rolloverCap: 16,              // 2x monthly hours (doubled from 8)
-    rolloverExpiryDays: 60,       // Days until rollover expires
-    
-    // Warnings
-    warningDays: [30, 14, 7],     // Days before expiry to warn
-    
-    // Stripe
-    stripePriceId: process.env.STRIPE_PRICE_NONPROFIT_T1,
-    stripeAnnualPriceId: process.env.STRIPE_PRICE_NONPROFIT_T1_ANNUAL,
+export const DEV_RATE = {
+  hourlyRate: 7500,               // $75/hour in cents
+  rushMultiplier: 1.5,            // 1.5x for rush delivery (1 week)
+} as const;
+
+// =============================================================================
+// MAINTENANCE PLANS - Hour-based support plans
+// These are the actual plans sold on seezeestudios.com/services
+// =============================================================================
+
+export const MAINTENANCE_PLANS = {
+  QUARTERLY: {
+    id: 'QUARTERLY',
+    name: 'Quarterly Maintenance',
+    shortName: 'Quarterly',
+    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
+    price: 200000,                // $2,000 per quarter in cents
+    monthlyPrice: 66667,          // ~$667/month in cents (for legacy compatibility)
+    billingPeriod: 'quarterly' as const,
+    effectiveMonthlyPrice: 66667, // ~$667/month in cents
+    effectiveHourlyRate: 6667,    // ~$67/hour in cents
+    hoursIncluded: 30,            // 30 hours per quarter
+    hoursPerMonth: 10,            // ~10 hours/month
+    supportHoursIncluded: 10,     // For compatibility with existing code
+    changeRequestsIncluded: -1,   // Unlimited change requests
+    features: [
+      'Priority 24hr response time',
+      'Security updates & backups',
+      'Unlimited change requests',
+      'Emergency same-day fixes',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
   },
-  
-  DIRECTOR: {
-    id: 'DIRECTOR',
-    name: 'Digital Director Platform',
-    shortName: 'Tier 2',
-    description: 'Best for orgs that update content often and want real momentum. We actively manage and improve your digital presence.',
-    
-    // Pricing
-    buildPrice: 750000,           // $7,500 in cents
-    monthlyPrice: 75000,          // $750/month in cents
-    annualPrice: 765000,          // $7,650/year (15% discount) in cents
-    annualDiscount: 0.15,
-    
-    // Hours & Requests
-    supportHoursIncluded: 16,     // Monthly support hours (16 hours for better value)
-    changeRequestsIncluded: 5,    // Change requests per month
-    
-    // Subscription Limits
-    subscriptionsIncluded: 3,
-    maxSubscriptions: 6,
-    addonCost: 20000,             // $200/month
-    addonHours: 3,                // Hours per addon
-    
-    // Rollover Settings
-    rolloverEnabled: true,
-    rolloverCap: 32,              // 2x monthly hours (2x 16 = 32)
-    rolloverExpiryDays: 90,
-    
-    // Warnings
-    warningDays: [60, 30, 14, 7],
-    
-    // Stripe
-    stripePriceId: process.env.STRIPE_PRICE_NONPROFIT_T2,
-    stripeAnnualPriceId: process.env.STRIPE_PRICE_NONPROFIT_T2_ANNUAL,
-  },
-  
-  COO: {
-    id: 'COO',
-    name: 'Digital COO System',
-    shortName: 'Tier 3',
-    description: 'Best for serious organizations that want you as their tech lead. Your outsourced digital leadership.',
-    
-    // Pricing
-    buildPrice: 1250000,          // $12,500 in cents
-    monthlyPrice: 200000,         // $2,000/month in cents
-    annualPrice: 2040000,         // $20,400/year (15% discount) in cents
-    annualDiscount: 0.15,
-    
-    // Hours & Requests - UNLIMITED (fair-use policy applies)
-    // Fair-use definition: Unlimited requests, worked on continuously. 
-    // Large rebuilds, migrations, or major new systems scoped separately.
-    supportHoursIncluded: -1,     // -1 = unlimited
-    changeRequestsIncluded: -1,   // -1 = unlimited
-    
-    // Subscription Limits - UNLIMITED
-    subscriptionsIncluded: -1,    // -1 = unlimited
-    maxSubscriptions: -1,
-    addonCost: 0,                 // No addon fees
-    addonHours: 0,
-    
-    // Rollover Settings - N/A for unlimited
-    rolloverEnabled: false,
-    rolloverCap: 0,
-    rolloverExpiryDays: 0,
-    
-    // Warnings - N/A
-    warningDays: [],
-    
-    // Stripe
-    stripePriceId: process.env.STRIPE_PRICE_NONPROFIT_T3,
-    stripeAnnualPriceId: process.env.STRIPE_PRICE_NONPROFIT_T3_ANNUAL,
+  ANNUAL: {
+    id: 'ANNUAL',
+    name: 'Annual Maintenance',
+    shortName: 'Annual',
+    description: 'Everything in Quarterly plus strategy reviews and performance monitoring. Save 15%.',
+    price: 680000,                // $6,800 per year in cents
+    monthlyPrice: 56667,          // ~$567/month in cents (for legacy compatibility)
+    billingPeriod: 'annual' as const,
+    effectiveMonthlyPrice: 56667, // ~$567/month in cents
+    effectiveHourlyRate: 5667,    // ~$57/hour in cents
+    savings: 120000,              // Save $1,200 vs 4x quarterly
+    savingsPercent: 0.15,
+    hoursIncluded: 120,           // 120 hours per year
+    hoursPerMonth: 10,
+    supportHoursIncluded: 10,     // For compatibility with existing code
+    changeRequestsIncluded: -1,   // Unlimited change requests
+    features: [
+      'Everything in Quarterly',
+      'Quarterly strategy reviews',
+      'Performance monitoring',
+      '$57/hour effective rate',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_ANNUAL,
   },
 } as const;
 
-export type NonprofitTierId = keyof typeof NONPROFIT_TIERS;
-export type NonprofitTier = typeof NONPROFIT_TIERS[NonprofitTierId];
+// Export NONPROFIT_TIERS with full backwards compatibility
+// All legacy tiers (ESSENTIALS, DIRECTOR, COO) map to QUARTERLY plan
+export const NONPROFIT_TIERS = {
+  ...MAINTENANCE_PLANS,
+  ESSENTIALS: {
+    id: 'QUARTERLY',
+    name: 'Quarterly Maintenance',
+    shortName: 'Quarterly',
+    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
+    price: 200000,
+    monthlyPrice: 66667,
+    billingPeriod: 'quarterly' as const,
+    effectiveMonthlyPrice: 66667,
+    effectiveHourlyRate: 6667,
+    hoursIncluded: 30,
+    hoursPerMonth: 10,
+    supportHoursIncluded: 10,
+    changeRequestsIncluded: -1,
+    features: [
+      'Priority 24hr response time',
+      'Security updates & backups',
+      'Unlimited change requests',
+      'Emergency same-day fixes',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
+  },
+  DIRECTOR: {
+    id: 'QUARTERLY',
+    name: 'Quarterly Maintenance',
+    shortName: 'Quarterly',
+    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
+    price: 200000,
+    monthlyPrice: 66667,
+    billingPeriod: 'quarterly' as const,
+    effectiveMonthlyPrice: 66667,
+    effectiveHourlyRate: 6667,
+    hoursIncluded: 30,
+    hoursPerMonth: 10,
+    supportHoursIncluded: 10,
+    changeRequestsIncluded: -1,
+    features: [
+      'Priority 24hr response time',
+      'Security updates & backups',
+      'Unlimited change requests',
+      'Emergency same-day fixes',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
+  },
+  COO: {
+    id: 'QUARTERLY',
+    name: 'Quarterly Maintenance',
+    shortName: 'Quarterly',
+    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
+    price: 200000,
+    monthlyPrice: 66667,
+    billingPeriod: 'quarterly' as const,
+    effectiveMonthlyPrice: 66667,
+    effectiveHourlyRate: 6667,
+    hoursIncluded: 30,
+    hoursPerMonth: 10,
+    supportHoursIncluded: 10,
+    changeRequestsIncluded: -1,
+    features: [
+      'Priority 24hr response time',
+      'Security updates & backups',
+      'Unlimited change requests',
+      'Emergency same-day fixes',
+    ],
+    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
+  },
+} as const;
+
+export type MaintenancePlanId = keyof typeof MAINTENANCE_PLANS;
+export type MaintenancePlanConfig = typeof MAINTENANCE_PLANS[MaintenancePlanId];
+
+// =============================================================================
+// LEGACY TIER MAPPING
+// The database stores tier as a string (ESSENTIALS, DIRECTOR, COO, QUARTERLY, ANNUAL)
+// This maps all values to current pricing. All legacy tiers now map to the new
+// QUARTERLY/ANNUAL plans for consistency.
+// =============================================================================
+
+export const LEGACY_TIER_MAP: Record<string, { monthlyPrice: number; hoursIncluded: number; name: string }> = {
+  // Legacy nonprofit tiers - map to QUARTERLY plan
+  ESSENTIALS: { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
+  DIRECTOR:   { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
+  COO:        { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
+  // Current plans
+  QUARTERLY:  { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly' },
+  ANNUAL:     { monthlyPrice: 56667, hoursIncluded: 10, name: 'Annual' },
+};
+
 
 // =============================================================================
 // HOUR PACKS - Purchasable hour bundles
@@ -137,7 +182,6 @@ export const HOUR_PACKS = {
     popular: false,
     savings: 0,
   },
-  
   MEDIUM: {
     id: 'MEDIUM',
     name: 'Power Pack',
@@ -146,10 +190,9 @@ export const HOUR_PACKS = {
     pricePerHour: 6500,           // $65/hour
     expiryDays: 90,
     neverExpires: false,
-    popular: true,                // "Most Popular" badge
-    savings: 5000,                // Save $50
+    popular: true,
+    savings: 5000,
   },
-  
   LARGE: {
     id: 'LARGE',
     name: 'Mega Pack',
@@ -159,9 +202,8 @@ export const HOUR_PACKS = {
     expiryDays: 120,
     neverExpires: false,
     popular: false,
-    savings: 20000,               // Save $200
+    savings: 20000,
   },
-  
   PREMIUM: {
     id: 'PREMIUM',
     name: 'Never Expire Pack',
@@ -179,60 +221,15 @@ export type HourPackId = keyof typeof HOUR_PACKS;
 export type HourPack = typeof HOUR_PACKS[HourPackId];
 
 // =============================================================================
-// EXTENSION OPTIONS - Extend expiring hours/packs
-// =============================================================================
-
-export const EXTENSION_OPTIONS = {
-  EXTEND_30_DAYS: {
-    id: 'EXTEND_30_DAYS',
-    name: 'Add 30 Days',
-    cost: 5000,                   // $50 in cents
-    additionalDays: 30,
-  },
-  
-  EXTEND_60_DAYS: {
-    id: 'EXTEND_60_DAYS',
-    name: 'Add 60 Days',
-    cost: 8500,                   // $85 in cents
-    additionalDays: 60,
-  },
-  
-  CONVERT_TO_NEVER_EXPIRE: {
-    id: 'CONVERT_TO_NEVER_EXPIRE',
-    name: 'Never Expire',
-    costPerHour: 1500,            // $15/hour to convert
-    additionalDays: -1,           // -1 = infinite
-  },
-} as const;
-
-// =============================================================================
-// ON-DEMAND BILLING SETTINGS
+// ON-DEMAND / OVERAGE SETTINGS
 // =============================================================================
 
 export const ON_DEMAND_SETTINGS = {
-  // Hourly rate for overage
-  hourlyRate: 7500,               // $75/hour in cents
-  
-  // Request limits
-  defaultDailyLimit: 3,           // Default max requests per day
-  minDailyLimit: 1,               // Client can set as low as 1
-  maxDailyLimit: 10,              // Client can set as high as 10
-  
-  // Weekly limits
-  defaultWeeklyLimit: 15,
-  urgentRequestsPerWeek: 2,       // Max urgent requests per week
-  
-  // Spend caps
-  defaultDailySpendCap: 50000,    // $500/day in cents
-  defaultMonthlySpendCap: 200000, // $2,000/month in cents
-  minMonthlySpendCap: 50000,      // $500 minimum
-  maxMonthlySpendCap: 500000,     // $5,000 maximum
-  
-  // Time between requests
-  minTimeBetweenRequests: 2,      // Hours between requests (prevents spam)
-  
-  // Auto-approval thresholds
-  requireApprovalOver: 20000,     // Requests >$200 need approval
+  hourlyRate: 7500,               // $75/hour in cents (same as dev rate)
+  defaultDailyLimit: 3,
+  urgentRequestsPerWeek: 2,
+  defaultDailySpendCap: 50000,    // $500/day
+  defaultMonthlySpendCap: 200000, // $2,000/month
 } as const;
 
 // =============================================================================
@@ -243,8 +240,8 @@ export const URGENCY_FEES = {
   LOW: { fee: 0, days: '3-5 days', label: 'Low Priority' },
   NORMAL: { fee: 0, days: '2-3 days', label: 'Normal' },
   HIGH: { fee: 0, days: '1 day', label: 'High Priority' },
-  URGENT: { fee: 5000, days: 'Same day', label: 'Urgent (+$50)' },     // $50 in cents
-  EMERGENCY: { fee: 10000, days: 'Immediate', label: 'Emergency (+$100)' }, // $100, bypasses limits
+  URGENT: { fee: 5000, days: 'Same day', label: 'Urgent (+$50)' },
+  EMERGENCY: { fee: 10000, days: 'Immediate', label: 'Emergency (+$100)' },
 } as const;
 
 // =============================================================================
@@ -252,19 +249,49 @@ export const URGENCY_FEES = {
 // =============================================================================
 
 export const GRACE_PERIOD = {
-  // Allow finishing current in-progress request
   finishCurrentRequest: true,
-  
-  // One-time overage allowance
   firstTimeOverageAllowed: true,
-  maxFirstTimeOverage: 1.0,       // 1 hour max grace
-  
-  // Failed payment grace periods
+  maxFirstTimeOverage: 1.0,
   paymentGraceDays: {
-    warning1: 1,                  // Day 1: First warning
-    warning2: 3,                  // Day 3: Second warning
-    suspend: 7,                   // Day 7: Suspend account
-    cancel: 14,                   // Day 14: Cancel subscription
+    warning1: 1,
+    warning2: 3,
+    suspend: 7,
+    cancel: 14,
+  },
+} as const;
+
+// =============================================================================
+// HOUR EXTENSION OPTIONS (for when clients run out of hours)
+// =============================================================================
+
+export const EXTENSION_OPTIONS = {
+  SMALL: {
+    id: 'SMALL',
+    hours: 5,
+    price: 37500, // $375 in cents
+    description: 'Quick 5-hour boost',
+  },
+  MEDIUM: {
+    id: 'MEDIUM',
+    hours: 10,
+    price: 70000, // $700 in cents
+    description: '10 hours for ongoing work',
+  },
+  LARGE: {
+    id: 'LARGE',
+    hours: 20,
+    price: 130000, // $1,300 in cents
+    description: '20 hours for major projects',
+  },
+  EXTEND_30_DAYS: {
+    id: 'EXTEND_30_DAYS',
+    cost: 5000, // $50 in cents to extend expiry by 30 days
+    description: 'Extend pack expiry by 30 days',
+  },
+  CONVERT_TO_NEVER_EXPIRE: {
+    id: 'CONVERT_TO_NEVER_EXPIRE',
+    costPerHour: 2000, // $20 per hour in cents to convert to never-expire
+    description: 'Convert hours to never expire',
   },
 } as const;
 
@@ -273,27 +300,44 @@ export const GRACE_PERIOD = {
 // =============================================================================
 
 export const WARNING_THRESHOLDS = {
-  // Percentage-based
-  AT_80_PERCENT: 0.8,             // Warn at 80% usage
-  
-  // Hours remaining
-  AT_2_HOURS: 2,                  // Warn at 2 hours remaining
-  
-  // Days before expiry (for rollover/packs)
+  AT_80_PERCENT: 0.8,
+  AT_2_HOURS: 2,
   EXPIRY_WARNING_DAYS: [60, 30, 14, 7, 3],
 } as const;
 
 // =============================================================================
-// ANNUAL HOUR RESERVE (Bulk discount)
+// PROJECT TYPE ESTIMATES (matches seezeestudios.com/services pricing)
 // =============================================================================
 
-export const ANNUAL_HOUR_RESERVE = {
-  hours: 120,                     // 120 hours for the year
-  normalCost: 720000,             // $7,200 at $60/hour
-  discountedCost: 600000,         // $6,000 (17% off)
-  discount: 0.17,
-  pricePerHour: 5000,             // $50/hour
-  expiryDays: 365,
+export const PROJECT_ESTIMATES = {
+  MARKETING_WEBSITE: {
+    name: 'Marketing Website',
+    minHours: 40,
+    maxHours: 80,
+    minPrice: 300000,
+    maxPrice: 600000,
+  },
+  ECOMMERCE: {
+    name: 'E-commerce Store',
+    minHours: 80,
+    maxHours: 150,
+    minPrice: 600000,
+    maxPrice: 1200000,
+  },
+  WEB_APP: {
+    name: 'Web Application',
+    minHours: 100,
+    maxHours: 200,
+    minPrice: 800000,
+    maxPrice: 2000000,
+  },
+  LANDING_PAGE: {
+    name: 'Landing Page',
+    minHours: 15,
+    maxHours: 30,
+    minPrice: 120000,
+    maxPrice: 240000,
+  },
 } as const;
 
 // =============================================================================
@@ -301,11 +345,28 @@ export const ANNUAL_HOUR_RESERVE = {
 // =============================================================================
 
 /**
- * Get tier by ID
+ * Get tier config by ID (supports legacy tier names)
+ * Returns legacy tier mapping data with full compatibility fields
  */
-export function getTier(tierId: string): NonprofitTier | null {
-  const tier = NONPROFIT_TIERS[tierId as NonprofitTierId];
-  return tier || null;
+export function getTier(tierId: string): { 
+  id: string;
+  monthlyPrice: number; 
+  hoursIncluded: number; 
+  name: string;
+  supportHoursIncluded: number;
+  changeRequestsIncluded: number;
+  rolloverExpiryDays: number;
+} | null {
+  const tier = LEGACY_TIER_MAP[tierId];
+  if (!tier) return null;
+  
+  return {
+    id: tierId,
+    ...tier,
+    supportHoursIncluded: tier.hoursIncluded,
+    changeRequestsIncluded: -1, // All plans now have unlimited change requests
+    rolloverExpiryDays: 90, // Default 90 days for rollover hours
+  };
 }
 
 /**
@@ -321,46 +382,30 @@ export function getHourPack(packId: string): HourPack | null {
  */
 export function hasUnlimitedHours(tierId: string): boolean {
   const tier = getTier(tierId);
-  return tier?.supportHoursIncluded === -1;
+  return tier?.hoursIncluded === -1;
 }
 
 /**
  * Check if tier has unlimited subscriptions
+ * Note: Legacy tiers don't have subscription limits, returns false
  */
 export function hasUnlimitedSubscriptions(tierId: string): boolean {
-  const tier = getTier(tierId);
-  return tier?.maxSubscriptions === -1;
+  // Legacy tier system doesn't track subscription limits
+  return false;
 }
 
 /**
- * Calculate monthly cost with addons
+ * Get the monthly price for a tier (from DB or config)
  */
-export function calculateMonthlyCost(tierId: string, addonCount: number): number {
-  const tier = getTier(tierId);
-  if (!tier) return 0;
-  
-  const includedSubs = tier.subscriptionsIncluded === -1 ? Infinity : tier.subscriptionsIncluded;
-  const addonsNeeded = Math.max(0, addonCount - includedSubs);
-  
-  return tier.monthlyPrice + (addonsNeeded * tier.addonCost);
+export function getTierMonthlyPrice(tierId: string, dbMonthlyPrice?: number): number {
+  if (dbMonthlyPrice && dbMonthlyPrice > 0) return dbMonthlyPrice;
+  const legacy = LEGACY_TIER_MAP[tierId];
+  if (legacy) return legacy.monthlyPrice;
+  return 0;
 }
 
 /**
- * Calculate total hours available (base + addons)
- */
-export function calculateTotalHours(tierId: string, addonCount: number): number {
-  const tier = getTier(tierId);
-  if (!tier) return 0;
-  if (tier.supportHoursIncluded === -1) return -1; // Unlimited
-  
-  const includedSubs = tier.subscriptionsIncluded;
-  const addonsNeeded = Math.max(0, addonCount - includedSubs);
-  
-  return tier.supportHoursIncluded + (addonsNeeded * tier.addonHours);
-}
-
-/**
- * Format price for display
+ * Format price for display (cents to dollars)
  */
 export function formatPrice(cents: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -379,54 +424,4 @@ export function formatHours(hours: number): string {
   if (hours === 0) return '0 hours';
   if (hours === 1) return '1 hour';
   return `${hours} hours`;
-}
-
-/**
- * Get recommended tier based on usage
- */
-export function getRecommendedTier(avgMonthlyHours: number, subscriptionCount: number): NonprofitTierId {
-  // If consistently using more than 10 hours or need >6 subscriptions, recommend COO
-  if (avgMonthlyHours > 10 || subscriptionCount > 6) {
-    return 'COO';
-  }
-  
-  // If using more than 4 hours or need >3 subscriptions, recommend Director
-  if (avgMonthlyHours > 4 || subscriptionCount > 3) {
-    return 'DIRECTOR';
-  }
-  
-  // Otherwise, Essentials is sufficient
-  return 'ESSENTIALS';
-}
-
-/**
- * Calculate savings from upgrading
- */
-export function calculateUpgradeSavings(
-  currentTier: NonprofitTierId,
-  avgMonthlyOverageHours: number,
-  avgMonthlyAddonCost: number
-): { recommendedTier: NonprofitTierId; monthlySavings: number } | null {
-  const current = NONPROFIT_TIERS[currentTier];
-  if (!current) return null;
-  
-  // Current total cost
-  const currentCost = current.monthlyPrice + avgMonthlyAddonCost + 
-    (avgMonthlyOverageHours * ON_DEMAND_SETTINGS.hourlyRate);
-  
-  // Check each higher tier
-  const tierOrder: NonprofitTierId[] = ['ESSENTIALS', 'DIRECTOR', 'COO'];
-  const currentIndex = tierOrder.indexOf(currentTier);
-  
-  for (let i = currentIndex + 1; i < tierOrder.length; i++) {
-    const higherTier = NONPROFIT_TIERS[tierOrder[i]];
-    if (higherTier.monthlyPrice < currentCost) {
-      return {
-        recommendedTier: tierOrder[i],
-        monthlySavings: currentCost - higherTier.monthlyPrice,
-      };
-    }
-  }
-  
-  return null;
 }

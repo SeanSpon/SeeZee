@@ -145,9 +145,9 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/onboarding/tos', req.url));
       }
       
-      if (!profileDone) {        // User is logged in, TOS accepted, but profile not done - redirect DIRECTLY to profile
-        return NextResponse.redirect(new URL('/onboarding/profile', req.url));
-      }
+      // Profile completion is now OPTIONAL - only required for specific actions
+      // Users can access their dashboard and browse without completing profile
+      // Profile will be required when they try to create a project request
     }    
     // NOTE: Onboarding route check moved above to handle stale tokens
     // This section is now unreachable for onboarding routes, but kept for safety

@@ -464,7 +464,7 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
             >
-              Technical support, consulting, web development, and automation solutions for schools, nonprofits, and community organizations that need technology to be{' '}
+              Technical support, consulting, web development, and automation solutions for businesses, schools, and community organizations that need technology to be{' '}
               <span className="text-white font-semibold">reliable, accessible, and human</span>.
             </motion.p>
 
@@ -639,7 +639,7 @@ export default function HomePage() {
             {/* Stats Cards - Enhanced */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
               {[
-                { icon: '🤝', title: 'Community Focused', subtitle: 'Serving schools & nonprofits' },
+                { icon: '🤝', title: 'Community Focused', subtitle: 'Serving schools & businesses' },
                 { icon: '⚡', title: '<24 Hour', subtitle: 'Average response time' },
                 { icon: '✅', title: 'Available Now', subtitle: 'Accepting new partners' }
               ].map((stat, index) => (
@@ -695,7 +695,7 @@ export default function HomePage() {
               },
               {
                 icon: <FiHeart className="w-12 h-12" />,
-                title: 'Nonprofits',
+                title: 'Community',
                 description: 'Accessible solutions for mission-driven organizations',
                 color: 'text-indigo-400',
                 bgColor: 'bg-indigo-400/10'
@@ -1032,7 +1032,7 @@ export default function HomePage() {
               </h2>
               <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-300 leading-relaxed mb-8 sm:mb-10">
                 <p>
-                  Too many schools, nonprofits, and community organizations struggle with unreliable systems, confusing technology, and vendors who disappear after the sale.
+                  Too many businesses, schools, and community organizations struggle with unreliable systems, confusing technology, and vendors who disappear after the sale.
                 </p>
                 <p>
                   We provide hands-on support, practical solutions, and long-term partnership — so you can focus on your mission, not your technology problems.

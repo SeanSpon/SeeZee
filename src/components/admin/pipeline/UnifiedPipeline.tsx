@@ -84,11 +84,11 @@ interface UnifiedPipelineProps {
 
 // Stage configuration
 const LEAD_STAGES = [
-  { id: "NEW", label: "New", color: "from-blue-500 to-blue-600", bgColor: "bg-blue-500/5", borderColor: "border-blue-500/20" },
-  { id: "CONTACTED", label: "Contacted", color: "from-purple-500 to-purple-600", bgColor: "bg-purple-500/5", borderColor: "border-purple-500/20" },
-  { id: "QUALIFIED", label: "Qualified", color: "from-amber-500 to-orange-500", bgColor: "bg-amber-500/5", borderColor: "border-amber-500/20" },
-  { id: "PROPOSAL_SENT", label: "Proposal", color: "from-cyan-500 to-teal-500", bgColor: "bg-cyan-500/5", borderColor: "border-cyan-500/20" },
-  { id: "CONVERTED", label: "Won", color: "from-emerald-500 to-green-500", bgColor: "bg-emerald-500/5", borderColor: "border-emerald-500/20" },
+  { id: "NEW", label: "New", color: "from-blue-500 to-blue-600", bgColor: "bg-blue-500/10", borderColor: "border-blue-500/30", columnBg: "bg-slate-900/40", accentColor: "text-blue-400" },
+  { id: "CONTACTED", label: "Contacted", color: "from-purple-500 to-purple-600", bgColor: "bg-purple-500/10", borderColor: "border-purple-500/30", columnBg: "bg-slate-900/40", accentColor: "text-purple-400" },
+  { id: "QUALIFIED", label: "Qualified", color: "from-amber-500 to-orange-500", bgColor: "bg-amber-500/10", borderColor: "border-amber-500/30", columnBg: "bg-slate-900/40", accentColor: "text-amber-400" },
+  { id: "PROPOSAL_SENT", label: "Proposal", color: "from-cyan-500 to-teal-500", bgColor: "bg-cyan-500/10", borderColor: "border-cyan-500/30", columnBg: "bg-slate-900/40", accentColor: "text-cyan-400" },
+  { id: "CONVERTED", label: "Won", color: "from-emerald-500 to-green-500", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-500/30", columnBg: "bg-slate-900/40", accentColor: "text-emerald-400" },
 ];
 
 const STATUS_ACTIONS: Record<string, { next: string; label: string; icon: any }> = {
