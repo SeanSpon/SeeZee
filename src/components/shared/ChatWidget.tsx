@@ -5,7 +5,23 @@ import { X, Minimize2, User, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoHeader } from "@/components/brand/LogoHeader";
 import { usePathname, useRouter } from "next/navigation";
-import { extractPageContext, formatPageContextForAI } from "@/lib/ai/page-context";
+
+// Simple page context extraction
+function extractPageContext() {
+  if (typeof window === 'undefined') return { url: '/', title: '', headings: [], links: [], mainContent: '' };
+  
+  return {
+    url: window.location.pathname,
+    title: document.title,
+    headings: Array.from(document.querySelectorAll('h1, h2, h3')).map(h => h.textContent || '').slice(0, 10),
+    links: Array.from(document.querySelectorAll('a')).map(a => ({ text: a.textContent || '', href: a.href })).slice(0, 20),
+    mainContent: document.querySelector('main')?.textContent?.slice(0, 500) || '',
+  };
+}
+
+function formatPageContextForAI(context: ReturnType<typeof extractPageContext>) {
+  return `Current page: ${context.url}\nTitle: ${context.title}`;
+}
 
 interface ChatMessage {
   id: string;

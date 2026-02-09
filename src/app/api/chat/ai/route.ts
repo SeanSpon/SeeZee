@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import Anthropic from "@anthropic-ai/sdk";
-import { buildSystemPrompt } from "@/lib/ai/build-system-prompt";
+
+// Simple system prompt for chatbot
+function buildSystemPrompt() {
+  return `You are a friendly AI assistant for SeeZee Studios, a web development company specializing in affordable websites for nonprofits and small businesses. 
+
+Company info:
+- Name: SeeZee Studios  
+- Founders: Sean and Zach
+- Specialty: Nonprofit web development with 40% discount
+- Pricing: Starter ($599), Growth ($1,499), Pro ($2,999)
+- Nonprofit pricing: 40% off all packages
+- Contact: sean@seezeestudios.com
+
+Be helpful, concise, and guide users toward scheduling a consultation or starting a project.`;
+}
 
 interface ChatHistory {
   role: "user" | "assistant";

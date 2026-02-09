@@ -2,7 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth/requireRole";
 import { ROLE } from "@/lib/role";
-import { generateCallScript } from "@/lib/ai/generate-call-script";
+
+// Simple call script generator
+function generateCallScript(data: any) {
+  const script = `Hi, this is [Your Name] from SeeZee Studios. 
+
+I noticed ${data.company || data.name} ${data.city ? `in ${data.city}` : ''} and wanted to reach out about your website.
+
+${data.hasWebsite ? 
+  `I took a look at your current site and noticed some opportunities for improvement.` : 
+  `I noticed you don't currently have a website. In today's digital world, having a strong online presence is crucial.`
+}
+
+SeeZee Studios specializes in affordable, modern websites${data.category?.toLowerCase().includes('nonprofit') || data.category?.toLowerCase().includes('501') ? `, especially for nonprofits like yours. We actually offer a 40% discount for 501(c)(3) organizations` : ''}.
+
+${data.opportunities ? `\nI noticed: ${data.opportunities}` : ''}
+
+Would you have 10 minutes this week to discuss how we could help grow your online presence?`;
+
+  return { script, error: null };
+}
 
 /**
  * POST /api/prospects/[id]/generate-call-script
