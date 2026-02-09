@@ -30,13 +30,10 @@ function validateAuthConfig() {
     const error = new Error(
       `Google OAuth credentials missing. GOOGLE_ID: ${hasGoogleId}, GOOGLE_SECRET: ${hasGoogleSecret}`
     );
-    console.error("❌ Auth configuration error:", error.message);
-    console.error("💡 Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET in Vercel environment variables");
-    // Only throw in development - in production, log warning but allow credentials provider to work
-    if (process.env.NODE_ENV === "development") {
-      throw error;
-    }
-    console.warn("⚠️ Continuing without Google OAuth credentials - OAuth sign-in will not work (credentials provider still available)");
+    console.warn("⚠️ Auth configuration warning:", error.message);
+    console.warn("💡 Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET to enable Google OAuth");
+    console.warn("⚠️ Continuing without Google OAuth - OAuth sign-in will not work (credentials provider still available)");
+    // Don't throw - allow credentials provider to work without Google OAuth
   }
 
   // Validate Google Secret format - only if it exists
