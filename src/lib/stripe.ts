@@ -5,11 +5,27 @@ if (typeof window !== 'undefined') {
   throw new Error('Stripe client can only be used on the server');
 }
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables');
+let stripeInstance: Stripe | null = null;
+
+export function getStripe(): Stripe {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set in environment variables');
+  }
+  
+  if (!stripeInstance) {
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-06-20',
+    });
+  }
+  
+  return stripeInstance;
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20',
+// For backward compatibility
+export const stripe = new Proxy({} as Stripe, {
+  get: (target, prop) => {
+    const stripeClient = getStripe();
+    return (stripeClient as any)[prop];
+  }
 });
 
