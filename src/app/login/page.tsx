@@ -50,17 +50,21 @@ function LoginContent() {
     const errorParam = searchParams.get("error");
     if (errorParam) {
       console.log("🔴 Login error detected:", errorParam);
-      setError(
-        errorParam === "OAuthAccountNotLinked"
-          ? "Unable to link your Google account. If you have an existing account with this email, please try signing in again or contact support."
-          : errorParam === "Configuration"
-          ? "Authentication configuration error. Please check /auth-check for details."
-          : errorParam === "AccessDenied"
-          ? "Access denied. Please try again or contact support."
-          : errorParam === "unexpected"
-          ? "An unexpected error occurred. Please try again."
-          : `Error: ${errorParam}. Please try again or contact support.`
-      );
+      if (errorParam === "OAuthAccountNotLinked") {
+        setError("Unable to link your Google account. If you have an existing account with this email, please try signing in again or contact support.");
+      } else if (errorParam === "Configuration") {
+        setError("Authentication is not properly configured. This is a server configuration issue - please contact support or check the auth-check page for details.");
+      } else if (errorParam === "AccessDenied") {
+        setError("Access denied. Please try again or contact support.");
+      } else if (errorParam === "CredentialsSignin") {
+        setError("Invalid email or password. Please check your credentials and try again.");
+      } else if (errorParam === "unexpected") {
+        setError("An unexpected error occurred. Please try again.");
+      } else if (errorParam === "OAuthCallback") {
+        setError("OAuth callback error. Please ensure your browser allows cookies and third-party authentication, then try again.");
+      } else {
+        setError(`Sign in error: ${errorParam}. Please try again or contact support if the problem persists.`);
+      }
     }
   }, [searchParams]);
 
@@ -270,7 +274,17 @@ function LoginContent() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               className="mb-6 bg-gradient-to-br from-red-900/40 to-red-900/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm backdrop-blur-sm shadow-lg"
             >
-              {error}
+              <div>{error}</div>
+              {searchParams.get("error") === "Configuration" && (
+                <div className="mt-2 pt-2 border-t border-red-500/20">
+                  <Link 
+                    href="/auth-check" 
+                    className="text-red-200 hover:text-white underline font-medium inline-flex items-center gap-1"
+                  >
+                    → Check detailed configuration status
+                  </Link>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -379,7 +393,7 @@ function LoginContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-6 text-center"
+            className="mt-6 text-center space-y-3"
           >
             <p className="text-xs text-gray-500">
               By signing in, you agree to our{" "}
@@ -390,6 +404,12 @@ function LoginContent() {
               <Link href="/legal/privacy-policy" className="underline hover:text-[#ef4444] transition-colors">
                 Privacy Policy
               </Link>.
+            </p>
+            <p className="text-xs text-gray-400">
+              Having trouble signing in?{" "}
+              <Link href="/help/sign-in" className="underline hover:text-[#ef4444] transition-colors font-medium">
+                Get help
+              </Link>
             </p>
           </motion.div>
             </div>
