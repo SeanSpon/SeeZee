@@ -11,6 +11,7 @@ export default function SidebarWrapper({ children }: { children: React.ReactNode
   const isDashboardRoute = pathname?.startsWith('/client') || 
                            pathname?.startsWith('/admin') || 
                            pathname === '/login' ||
+                           pathname === '/signin' ||
                            pathname === '/register' ||
                            pathname === '/forgot-password' ||
                            pathname === '/reset-password' ||
