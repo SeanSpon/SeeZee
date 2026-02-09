@@ -5,6 +5,9 @@ import { FiArrowLeft, FiCheck, FiX, FiAlertCircle } from "react-icons/fi";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
+// Configuration
+const SUPPORT_EMAIL = "support@seezeestudios.com";
+
 function SignInHelpContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
@@ -161,8 +164,8 @@ function SignInHelpContent() {
                 <div className="space-y-2 text-sm">
                   <p className="text-gray-300">
                     <span className="font-medium text-white">Email:</span>{" "}
-                    <a href="mailto:support@seezeestudios.com" className="text-[#ef4444] hover:text-[#dc2626]">
-                      support@seezeestudios.com
+                    <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[#ef4444] hover:text-[#dc2626]">
+                      {SUPPORT_EMAIL}
                     </a>
                   </p>
                   <p className="text-gray-400">

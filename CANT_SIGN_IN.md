@@ -1,5 +1,7 @@
 # Can't Sign In? Quick Troubleshooting Guide
 
+> **Note:** This guide uses `seezeestudios.com` as the example domain. Replace with your actual deployment domain if different.
+
 If you're having trouble signing into your SeeZee account, this guide will help you diagnose and fix the most common issues.
 
 ## 🚨 Quick Fixes (Try These First)

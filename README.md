@@ -72,7 +72,7 @@ SeeZee is a full-featured digital agency management platform that bridges the ga
    
    ```env
    # Authentication (NextAuth v5)
-   AUTH_SECRET=your-64-character-secret-here
+   AUTH_SECRET=your-secret-here-minimum-32-characters
    AUTH_URL=http://localhost:3000
    AUTH_GOOGLE_ID=your-google-client-id
    AUTH_GOOGLE_SECRET=your-google-client-secret
@@ -131,7 +131,7 @@ SeeZee is a full-featured digital agency management platform that bridges the ga
    
    ```env
    # Authentication
-   AUTH_SECRET=<64-char-random-string>
+   AUTH_SECRET=<random-string-min-32-chars>
    AUTH_URL=https://your-domain.vercel.app
    AUTH_GOOGLE_ID=<from-google-console>
    AUTH_GOOGLE_SECRET=<GOCSPX-format-secret>
@@ -387,7 +387,7 @@ grep "\[MIDDLEWARE\]" logs/*.log
 
 **Authentication Issues:**
 - **Can't sign in?** See [CANT_SIGN_IN.md](./CANT_SIGN_IN.md) for user-friendly troubleshooting
-- Verify `AUTH_SECRET` is set (64+ characters)
+- Verify `AUTH_SECRET` is set (minimum 32 characters, recommended 44+)
 - Check `AUTH_URL` matches your domain
 - Ensure Google OAuth callback URL is registered
 - Review `middleware.ts` logs (search for `[MIDDLEWARE]` or `#region agent log` for auth flow details)
