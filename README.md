@@ -386,10 +386,12 @@ grep "\[MIDDLEWARE\]" logs/*.log
 ```
 
 **Authentication Issues:**
+- **Can't sign in?** See [CANT_SIGN_IN.md](./CANT_SIGN_IN.md) for user-friendly troubleshooting
 - Verify `AUTH_SECRET` is set (64+ characters)
 - Check `AUTH_URL` matches your domain
 - Ensure Google OAuth callback URL is registered
 - Review `middleware.ts` logs (search for `[MIDDLEWARE]` or `#region agent log` for auth flow details)
+- For detailed debugging: See [docs/PRODUCTION_LOGIN_TROUBLESHOOTING.md](./docs/PRODUCTION_LOGIN_TROUBLESHOOTING.md)
 
 **Database Errors:**
 - Verify `DATABASE_URL` uses connection pooling
