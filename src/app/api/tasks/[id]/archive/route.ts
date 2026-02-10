@@ -3,6 +3,10 @@ import { auth } from "@/auth";
 import { db } from "@/server/db";
 import { isStaffRole } from "@/lib/role";
 
+/**
+ * POST /api/tasks/[id]/archive
+ * Archive or restore a task
+ */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -25,29 +29,21 @@ export async function POST(
 
     const { id: taskId } = await params;
     const body = await request.json();
-
-    // Clear all assignment fields first, then set the appropriate one
-    const updateData: any = {
-      assignedToId: null,
-      assignedToRole: null,
-      assignedToTeamId: null,
-    };
-
-    // Set the appropriate assignment based on what's provided
-    if (body.assignedToId) {
-      updateData.assignedToId = body.assignedToId;
-    } else if (body.assignedToRole) {
-      updateData.assignedToRole = body.assignedToRole;
-    } else if (body.assignedToTeamId) {
-      updateData.assignedToTeamId = body.assignedToTeamId;
-    }
+    const archived = body.archived ?? true;
 
     const task = await db.todo.update({
       where: { id: taskId },
-      data: updateData,
+      data: {
+        archived,
+        archivedAt: archived ? new Date() : null,
+        archivedBy: archived ? session.user.id : null,
+      },
       include: {
         assignedTo: {
           select: { id: true, name: true, email: true, image: true, role: true },
+        },
+        project: {
+          select: { id: true, name: true },
         },
       },
     });
@@ -57,14 +53,10 @@ export async function POST(
       await db.activity.create({
         data: {
           type: "STATUS_CHANGE",
-          title: "Task assignment updated",
-          description: body.assignedToId 
-            ? `Task assigned to user`
-            : body.assignedToRole
-            ? `Task assigned to ${body.assignedToRole} role`
-            : body.assignedToTeamId
-            ? `Task assigned to team`
-            : "Task unassigned",
+          title: archived ? "Task archived" : "Task restored",
+          description: archived 
+            ? `Archived task: ${task.title}`
+            : `Restored task: ${task.title}`,
           userId: session.user.id,
           entityType: "TODO",
           entityId: taskId,
@@ -72,7 +64,6 @@ export async function POST(
       });
     } catch (activityError) {
       console.error("Failed to create activity log:", activityError);
-      // Continue anyway - activity log is not critical
     }
 
     // Serialize dates properly for JSON response
@@ -86,12 +77,13 @@ export async function POST(
         completedAt: task.completedAt?.toISOString() || null,
         submittedAt: task.submittedAt?.toISOString() || null,
         approvedAt: task.approvedAt?.toISOString() || null,
+        archivedAt: task.archivedAt?.toISOString() || null,
       },
     });
   } catch (error) {
-    console.error("Error updating task assignment:", error);
+    console.error("Error archiving/restoring task:", error);
     return NextResponse.json(
-      { error: "Failed to update task assignment" },
+      { error: "Failed to update task archive status" },
       { status: 500 }
     );
   }
