@@ -38,7 +38,7 @@ export function isCFO(role?: string | null): boolean {
 
 /**
  * Check if user is staff member (FRONTEND, BACKEND, OUTREACH)
- * Also accepts legacy roles STAFF, DEV, DESIGNER for backwards compatibility
+ * Also accepts legacy roles STAFF, DEV, DESIGNER, INTERN, PARTNER for backwards compatibility
  */
 export function isStaff(role?: string | null): boolean {
   return (
@@ -47,7 +47,9 @@ export function isStaff(role?: string | null): boolean {
     role === ROLE.OUTREACH ||
     role === "STAFF" ||
     role === "DEV" ||
-    role === "DESIGNER"
+    role === "DESIGNER" ||
+    role === "INTERN" ||
+    role === "PARTNER"
   );
 }
 
