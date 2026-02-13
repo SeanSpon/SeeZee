@@ -13,21 +13,23 @@ const notificationSettingsSchema = z.object({
 
 /**
  * GET /api/client/settings/notifications
- * Returns user notification preferences
+ * Returns user notification preferences from database
  */
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // For now, return defaults since we don't have a notification preferences table
-    // In the future, you can add a UserPreferences model to Prisma
+    const prefs = await prisma.notificationPreferences.findUnique({
+      where: { userId: session.user.id },
+    });
+
     return NextResponse.json({
-      emailNotifications: true,
-      projectUpdates: true,
-      invoiceReminders: true,
+      emailNotifications: prefs?.securityEmail ?? true,
+      projectUpdates: prefs?.projectUpdatesEmail ?? true,
+      invoiceReminders: prefs?.billingEmail ?? true,
       systemAlerts: true,
       executiveReports: true,
     });
@@ -39,12 +41,12 @@ export async function GET(req: NextRequest) {
 
 /**
  * PUT /api/client/settings/notifications
- * Update user notification preferences
+ * Update user notification preferences in database
  */
 export async function PUT(req: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -54,32 +56,32 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Invalid input", details: parsed.error }, { status: 400 });
     }
 
-    // For now, just return success
-    // In the future, you can add a UserPreferences model to Prisma and save these settings
-    // Example:
-    // await prisma.userPreferences.upsert({
-    //   where: { userId: session.user.id },
-    //   update: parsed.data,
-    //   create: { userId: session.user.id, ...parsed.data },
-    // });
+    const data = parsed.data;
+
+    // Map client field names to Prisma schema fields
+    const dbUpdate: Record<string, any> = {};
+    if (data.emailNotifications !== undefined) dbUpdate.securityEmail = data.emailNotifications;
+    if (data.projectUpdates !== undefined) dbUpdate.projectUpdatesEmail = data.projectUpdates;
+    if (data.invoiceReminders !== undefined) dbUpdate.billingEmail = data.invoiceReminders;
+
+    await prisma.notificationPreferences.upsert({
+      where: { userId: session.user.id },
+      update: {
+        ...dbUpdate,
+        updatedAt: new Date(),
+      },
+      create: {
+        userId: session.user.id,
+        ...dbUpdate,
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      settings: parsed.data,
+      settings: data,
     });
   } catch (error: any) {
     console.error("[PUT /api/client/settings/notifications]", error);
     return NextResponse.json({ error: "Failed to update notification settings" }, { status: 500 });
   }
 }
-
-
-
-
-
-
-
-
-
-
-

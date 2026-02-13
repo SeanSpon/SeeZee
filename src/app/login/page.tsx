@@ -29,16 +29,10 @@ function LoginContent() {
   useEffect(() => {
     if (status === "loading") return; // Wait for session to load    
     if (session?.user) {
-      // User is already signed in, redirect them away from login page
-      // Check onboarding status to redirect appropriately
-      if (!session.user.tosAcceptedAt) {
-        // Need to accept ToS - redirect to onboarding
-        router.push("/onboarding/tos");
-      } else {
-        // ToS accepted - redirect to dashboard (profile is now optional)
-        const defaultUrl = session.user.role === 'CLIENT' ? '/client' : '/admin';
-        const redirectUrl = callbackUrl === '/' ? defaultUrl : callbackUrl;        router.push(redirectUrl);
-      }
+      // User is already signed in, redirect to dashboard
+      const defaultUrl = session.user.role === 'CLIENT' ? '/client' : '/admin';
+      const redirectUrl = callbackUrl === '/' ? defaultUrl : callbackUrl;
+      router.push(redirectUrl);
     }
   }, [session, status, router, callbackUrl]);
 
@@ -112,29 +106,24 @@ function LoginContent() {
             cache: 'no-store',
           });          
           if (userResponse.ok) {
-            const userData = await userResponse.json();            
-            // Determine redirect based on onboarding status from DB
+            const userData = await userResponse.json();
+            // Determine redirect - always go to dashboard
             let redirectUrl = callbackUrl;
-            
+
             if (callbackUrl === '/') {
-              // Check if onboarding is complete (using DB data, not token)
-              if (userData.tosAcceptedAt) {
-                // ToS accepted - go to dashboard (profile is now optional)
-                redirectUrl = userData.role === 'CLIENT' ? '/client' : '/admin';
-              } else {
-                // Need to accept ToS
-                redirectUrl = '/onboarding/tos';
-              }
-            }            
+              redirectUrl = userData.role === 'CLIENT' ? '/client' : '/admin';
+            }
+
             // Use window.location.href for full page reload to ensure fresh session
             window.location.href = redirectUrl;
           } else {
             // Fallback if user data fetch fails
-            window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
+            window.location.href = callbackUrl === '/' ? '/client' : callbackUrl;
           }
         } catch (fetchError) {
-          console.error("Error fetching user data:", fetchError);          // Fallback redirect
-          window.location.href = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
+          console.error("Error fetching user data:", fetchError);
+          // Fallback redirect
+          window.location.href = callbackUrl === '/' ? '/client' : callbackUrl;
         }
       }
     } catch (err: any) {
@@ -148,9 +137,8 @@ function LoginContent() {
     setError("");
     setIsLoading(true);
     try {
-      // For OAuth, redirect to onboarding/tos as default
-      // Middleware will handle redirects if already completed
-      const oauthCallback = callbackUrl === '/' ? '/onboarding/tos' : callbackUrl;
+      // For OAuth, redirect to client dashboard as default
+      const oauthCallback = callbackUrl === '/' ? '/client' : callbackUrl;
       await signIn("google", { callbackUrl: oauthCallback });
     } catch (err: any) {
       console.error("Sign in exception:", err);

@@ -92,52 +92,70 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
 
   // ===========================================
   // CORE PAGES (Always visible, not collapsible)
-  // These are the 5 main "rooms" of the admin
   // ===========================================
   const coreItems = useMemo<NavItem[]>(
     () => [
       { href: "/admin", label: "Dashboard", icon: FiHome, description: "Overview and quick stats" },
-      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
-      { href: "/admin/pipeline", label: "Pipeline", icon: FiLayers, description: "Project workflow stages" },
       { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
-      { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
-      { href: "/admin/todos", label: "My Todos", icon: FiTarget, description: "Personal task queue" },
+      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
     ],
     []
   );
 
-
+  // ===========================================
+  // WORK (Day-to-day tasks and activity)
+  // ===========================================
+  const workItems = useMemo<NavItem[]>(
+    () => [
+      { href: "/admin/todos", label: "My Todos", icon: FiTarget, description: "Personal task queue" },
+      { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
+      { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget, description: "Client deliverables" },
+      { href: "/admin/calendar", label: "Calendar", icon: FiCalendar, description: "Schedule overview" },
+      { href: "/admin/feed", label: "Activity Feed", icon: FiActivity, description: "Recent activity" },
+    ],
+    []
+  );
 
   // ===========================================
-  // FINANCIAL (Consolidated money management)
+  // PIPELINE & GROWTH (Lead to Revenue flow)
   // ===========================================
-  const financialItems = useMemo<NavItem[]>(
+  const pipelineItems = useMemo<NavItem[]>(
+    () => [
+      { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
+      { href: "/admin/leads", label: "Leads", icon: FiMapPin, description: "Lead management and finder" },
+      { href: "/admin/marketing", label: "Email Hub", icon: FiMail, description: "Campaigns and outreach" },
+      { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
+    ],
+    []
+  );
+
+  // ===========================================
+  // FINANCE (Money management + maintenance)
+  // ===========================================
+  const financeItems = useMemo<NavItem[]>(
     () => [
       { href: "/admin/finance", label: "Overview", icon: FiDollarSign, description: "Revenue and profit metrics" },
       { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices and payments" },
       { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Cost tracking" },
       { href: "/admin/hours", label: "Hours", icon: FiClock, description: "Time and packages" },
+      { href: "/admin/maintenance", label: "Maintenance Plans", icon: FiServer, description: "Maintenance plans" },
     ],
     []
   );
 
   // ===========================================
-  // TEAM & OPERATIONS (Internal coordination)
+  // TEAM (Internal coordination)
   // ===========================================
   const teamItems = useMemo<NavItem[]>(
     () => [
       { href: "/admin/team", label: "Team", icon: FiTeamUsers, description: "Team members" },
-      { href: "/admin/feed", label: "Activity", icon: FiActivity, description: "Recent activity" },
-      { href: "/admin/calendar", label: "Calendar", icon: FiCalendar, description: "Schedule overview" },
       { href: "/admin/goals", label: "Goals", icon: FiTarget, description: "OKRs and targets" },
-      { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget, description: "Client deliverables" },
-      { href: "/admin/leads", label: "Leads", icon: FiUsers, description: "Outreach and prospecting" },
     ],
     []
   );
 
   // ===========================================
-  // CEO COMMAND CENTER (CEO only - simplified)
+  // CEO COMMAND CENTER (CEO only)
   // ===========================================
   const ceoItems = useMemo<NavItem[]>(
     () => [
@@ -166,7 +184,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
       { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
       { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
-      { href: "/admin/maintenance", label: "Maintenance", icon: FiServer, description: "Maintenance plans" },
     ],
     []
   );
@@ -253,28 +270,54 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               <div className="my-4 border-t border-slate-800" />
 
               {/* ========================================= */}
-              {/* FINANCIAL - Consolidated money management */}
+              {/* WORK - Day-to-day tasks and activity */}
               {/* ========================================= */}
               <CollapsibleNavGroup
-                title="Financial"
-                icon={FiDollarSign}
-                items={financialItems}
+                title="Work"
+                icon={FiCheckSquare}
+                items={workItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/finance") || pathname.startsWith("/admin/hours")}
+                defaultOpen={pathname.startsWith("/admin/todos") || pathname.startsWith("/admin/tasks") || pathname.startsWith("/admin/client-tasks") || pathname.startsWith("/admin/calendar") || pathname.startsWith("/admin/feed")}
                 collapsed={isCollapsed}
               />
 
               {/* ========================================= */}
-              {/* TEAM & OPERATIONS - Internal coordination */}
+              {/* PIPELINE & GROWTH - Lead to Revenue */}
               {/* ========================================= */}
               <CollapsibleNavGroup
-                title="Team & Ops"
+                title="Pipeline"
+                icon={FiTrendingUp}
+                items={pipelineItems}
+                isActive={isActive}
+                onNavigate={handleNavigate}
+                defaultOpen={pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
+                collapsed={isCollapsed}
+              />
+
+              {/* ========================================= */}
+              {/* FINANCE - Money management + maintenance */}
+              {/* ========================================= */}
+              <CollapsibleNavGroup
+                title="Finance"
+                icon={FiDollarSign}
+                items={financeItems}
+                isActive={isActive}
+                onNavigate={handleNavigate}
+                defaultOpen={pathname.startsWith("/admin/finance") || pathname.startsWith("/admin/hours") || pathname.startsWith("/admin/maintenance")}
+                collapsed={isCollapsed}
+              />
+
+              {/* ========================================= */}
+              {/* TEAM - Internal coordination */}
+              {/* ========================================= */}
+              <CollapsibleNavGroup
+                title="Team"
                 icon={FiTeamUsers}
                 items={teamItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/feed") || pathname.startsWith("/admin/calendar") || pathname.startsWith("/admin/goals") || pathname.startsWith("/admin/client-tasks") || pathname.startsWith("/admin/leads")}
+                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/goals")}
                 collapsed={isCollapsed}
               />
 
@@ -306,7 +349,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={systemItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/database") || pathname.startsWith("/settings") || pathname.startsWith("/admin/analytics") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/learning") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/links") || pathname.startsWith("/admin/maintenance")}
+                defaultOpen={pathname.startsWith("/admin/database") || pathname.startsWith("/settings") || pathname.startsWith("/admin/analytics") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/learning") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/links")}
                 collapsed={isCollapsed}
               />
             </nav>

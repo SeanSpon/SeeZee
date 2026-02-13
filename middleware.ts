@@ -114,72 +114,18 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Define special route types
-    const isSetPasswordRoute = pathname.startsWith('/set-password');
-    
-    // Check onboarding completion flags
-    // CRITICAL FIX: Token values are booleans (true/false/undefined)
-    // Only treat as "accepted" if explicitly true, everything else is "not accepted"
+    // Check onboarding completion flags (used for onboarding route logic below)
     const tosAccepted = token.tosAccepted === true;
-    const profileDone = token.profileDone === true;    
-    // CRITICAL FIX: If user is on onboarding route, be lenient with stale tokens
-    // The JWT callback will refresh the token when the page loads and calls /api/auth/session
-    // So if they're already on onboarding, let them through even if token seems stale
-    // This prevents redirect loops when DB is updated but token hasn't refreshed yet
-    if (isOnboardingRoute) {      
-      // If token shows onboarding is complete, redirect to dashboard (handles case where token was refreshed)
+    const profileDone = token.profileDone === true;
+
+    // If user voluntarily visits onboarding and has already completed it, redirect to dashboard
+    if (isOnboardingRoute) {
       if (tosAccepted && profileDone) {
         const role = token.role as string;
         const dashboardUrl = role === 'CLIENT' ? '/client' : '/admin';
         return NextResponse.redirect(new URL(dashboardUrl, req.url));
       }
-      
-      // Otherwise, allow access - the page will call /api/auth/session which triggers JWT callback to refresh token
       return NextResponse.next();
-    }
-    
-    // CRITICAL FIX: If logged in BUT not onboarded, redirect DIRECTLY to onboarding (NOT via login)
-    // This prevents the redirect loop where logged-in users get sent to login with returnUrl=/onboarding/tos
-    // Only check this for protected routes that require onboarding (client routes, not onboarding routes themselves)
-    if (!isOnboardingRoute && !isSetPasswordRoute) {      if (!tosAccepted) {        // User is logged in but hasn't accepted TOS - redirect DIRECTLY to onboarding
-        return NextResponse.redirect(new URL('/onboarding/tos', req.url));
-      }
-      
-      // Profile completion is now OPTIONAL - only required for specific actions
-      // Users can access their dashboard and browse without completing profile
-      // Profile will be required when they try to create a project request
-    }    
-    // NOTE: Onboarding route check moved above to handle stale tokens
-    // This section is now unreachable for onboarding routes, but kept for safety
-    if (false && isOnboardingRoute) {      // If user is on /onboarding/tos and has already accepted TOS, redirect to next step
-      if (pathname.startsWith('/onboarding/tos') && tosAccepted) {        if (profileDone) {
-          // Onboarding complete - redirect to dashboard
-          const role = token.role as string;
-          const dashboardUrl = role === 'CEO' || role === 'ADMIN' ? '/admin' : '/client';          return NextResponse.redirect(new URL(dashboardUrl, req.url));
-        } else {
-          // TOS done but profile not done - redirect to profile          return NextResponse.redirect(new URL('/onboarding/profile', req.url));
-        }
-      }
-      
-      // If user is on /onboarding/profile and hasn't accepted TOS, redirect to TOS
-      if (pathname.startsWith('/onboarding/profile') && !tosAccepted) {        return NextResponse.redirect(new URL('/onboarding/tos', req.url));
-      }
-      
-      // If user is on /onboarding/profile and has completed profile, redirect to dashboard
-      if (pathname.startsWith('/onboarding/profile') && tosAccepted && profileDone) {
-        const role = token.role as string;
-        const dashboardUrl = role === 'CEO' || role === 'ADMIN' ? '/admin' : '/client';        return NextResponse.redirect(new URL(dashboardUrl, req.url));
-      }
-      
-      // Otherwise, allow access to onboarding routes      return NextResponse.next();
-    }
-    
-    // Email verification has been removed - all users are auto-verified on signup
-
-    // Check if user needs to set a password (OAuth-only users)
-    // Skip this check for set-password route and onboarding (password is optional for OAuth)
-    if (!isSetPasswordRoute && !isOnboardingRoute && token.needsPassword === true) {      const setPasswordUrl = new URL('/set-password', req.url);
-      return NextResponse.redirect(setPasswordUrl);
     }
     
     // Role-based route protection
@@ -213,7 +159,6 @@ export const config = {
     '/ceo/:path*',
     '/portal/:path*',
     '/onboarding/:path*',
-    '/set-password',  // Allow access to set password page
     '/api/((?!auth).*)',  // All API routes except auth
     // NOTE: /clear-cookies is explicitly excluded in the middleware code above
   ],

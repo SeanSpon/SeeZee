@@ -2,6 +2,7 @@ import "@/styles/admin.css";
 import { redirect } from "next/navigation";
 import ClientShell from "@/components/client/ClientShell";
 import { ClientErrorBoundary } from "@/components/client/ClientErrorBoundary";
+import { OnboardingNudgeBanner } from "@/components/client/OnboardingNudgeBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastContainer } from "@/components/ui/Toast";
 import { getCurrentUser } from "@/lib/auth/requireRole";
@@ -27,7 +28,10 @@ export default async function ClientDashboardLayout({
     return (
       <ClientErrorBoundary>
         <div className="min-h-screen" style={{ paddingTop: 'var(--h-nav)' }}>
-          <ClientShell>{children}</ClientShell>
+          <ClientShell>
+            <OnboardingNudgeBanner />
+            {children}
+          </ClientShell>
           <Toaster />
           <ToastContainer />
         </div>
@@ -62,7 +66,10 @@ export default async function ClientDashboardLayout({
   return (
     <ClientErrorBoundary>
       <div className="min-h-screen" style={{ paddingTop: 'var(--h-nav)' }}>
-        <ClientShell>{children}</ClientShell>
+        <ClientShell>
+          <OnboardingNudgeBanner />
+          {children}
+        </ClientShell>
         <Toaster />
         <ToastContainer />
       </div>

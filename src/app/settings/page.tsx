@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   User, Bell, Lock, Sliders, Plug, CreditCard, Shield,
-  Save, CheckCircle, AlertTriangle, Trash2,
+  Save, CheckCircle, AlertTriangle, Trash2, ExternalLink,
   Mail, MapPin, Globe, LogOut, Key, Smartphone, Monitor,
   Languages, Clock, LayoutGrid, Pencil, X, Github
 } from "lucide-react";
@@ -451,6 +451,39 @@ function SettingsContent() {
     }
   };
 
+  const setPassword = async () => {
+    if (passwords.new !== passwords.confirm) {
+      showToast("Passwords don't match", "error");
+      return;
+    }
+    if (passwords.new.length < 8) {
+      showToast("Password must be at least 8 characters", "error");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/set-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPassword: passwords.new }),
+      });
+
+      if (!res.ok) throw new Error("Failed to set password");
+
+      // Update session to clear needsPassword flag
+      await update({ needsPassword: false });
+
+      showToast("Password set successfully!", "success");
+      setPasswords({ current: "", new: "", confirm: "" });
+      setShowPasswordChange(false);
+    } catch (error: any) {
+      showToast(error.message || "Failed to set password", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const revokeSession = async (sessionId: string) => {
     try {
       const res = await fetch(`/api/settings/sessions/${sessionId}`, {
@@ -786,7 +819,7 @@ function SettingsContent() {
                 <GlassCardHeader
                   icon={<Key className="w-5 h-5" />}
                   title="Password"
-                  description="Change your account password"
+                  description={(session?.user as any)?.needsPassword ? "Set a password for email login" : "Change your account password"}
                 />
                 <GlassCardContent>
                   {!showPasswordChange ? (
@@ -795,18 +828,20 @@ function SettingsContent() {
                       onClick={() => setShowPasswordChange(true)}
                       icon={Key}
                     >
-                      Change Password
+                      {(session?.user as any)?.needsPassword ? "Set Password" : "Change Password"}
                     </GlassButton>
                   ) : (
                     <div className="space-y-4">
-                      <GlassInput
-                        type="password"
-                        label="Current Password"
-                        value={passwords.current}
-                        onChange={(e) =>
-                          setPasswords({ ...passwords, current: e.target.value })
-                        }
-                      />
+                      {!(session?.user as any)?.needsPassword && (
+                        <GlassInput
+                          type="password"
+                          label="Current Password"
+                          value={passwords.current}
+                          onChange={(e) =>
+                            setPasswords({ ...passwords, current: e.target.value })
+                          }
+                        />
+                      )}
                       <GlassInput
                         type="password"
                         label="New Password"
@@ -831,11 +866,11 @@ function SettingsContent() {
                       />
                       <div className="flex gap-3 pt-2">
                         <GlassButton
-                          onClick={changePassword}
+                          onClick={(session?.user as any)?.needsPassword ? setPassword : changePassword}
                           loading={loading}
                           variant="primary"
                         >
-                          Update Password
+                          {(session?.user as any)?.needsPassword ? "Set Password" : "Update Password"}
                         </GlassButton>
                         <GlassButton
                           onClick={() => setShowPasswordChange(false)}
@@ -1179,9 +1214,15 @@ function SettingsContent() {
                           <p className="text-sm text-slate-400">Deployments & hosting</p>
                         </div>
                       </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        Connected
-                      </span>
+                      <a
+                        href="https://vercel.com/dashboard"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+                      >
+                        Manage on Vercel
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
                     </div>
 
                     {/* Stripe Integration Card */}
@@ -1195,9 +1236,15 @@ function SettingsContent() {
                           <p className="text-sm text-slate-400">Payments & billing</p>
                         </div>
                       </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        Connected
-                      </span>
+                      <a
+                        href="https://dashboard.stripe.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+                      >
+                        Manage on Stripe
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
                     </div>
 
                     {/* Resend Integration Card */}
@@ -1211,9 +1258,15 @@ function SettingsContent() {
                           <p className="text-sm text-slate-400">Email delivery</p>
                         </div>
                       </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        Connected
-                      </span>
+                      <a
+                        href="https://resend.com/overview"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+                      >
+                        Manage on Resend
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
                     </div>
                   </div>
                 </GlassCardContent>

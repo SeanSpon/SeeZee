@@ -38,16 +38,6 @@ export default async function ClientDashboard() {
     );
   }
 
-  // Check onboarding status - session has fresh data from JWT callback
-  // If onboarding not complete, redirect to appropriate step
-  if (!session.user.tosAcceptedAt) {
-    redirect("/onboarding/tos");
-  }
-  
-  if (!session.user.profileDoneAt) {
-    redirect("/onboarding/profile");
-  }
-  
   // CRITICAL: First check if user has projects or project requests
   // Users must create a project before accessing the client dashboard
   const { prisma } = await import('@/lib/prisma');
