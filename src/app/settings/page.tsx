@@ -84,7 +84,7 @@ function AnimatedMeshBackground() {
 }
 
 function SettingsContent() {
-  const { data: session, update } = useSession();
+  const { data: session, update, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showToast } = useToast();
@@ -181,6 +181,7 @@ function SettingsContent() {
 
   // Fetch user data
   useEffect(() => {
+    if (status === "loading") return; // Wait for session to load
     if (!session?.user) {
       router.push("/login");
       return;
@@ -194,7 +195,7 @@ function SettingsContent() {
     if (isClient) {
       fetchBillingData();
     }
-  }, [session, isClient]);
+  }, [session, status, isClient]);
 
   // Sync tab with URL
   useEffect(() => {
