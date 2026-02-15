@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { updateBlogPost } from "@/server/actions/blog";
 import { BlogStatus } from "@prisma/client";
@@ -21,7 +21,8 @@ interface BlogPost {
   publishedAt?: Date | string | null;
 }
 
-export default function EditBlogPostPage({ params }: { params: { id: string } }) {
+export default function EditBlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +31,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
   useEffect(() => {
     async function fetchPost() {
       try {
-        const response = await fetch(`/api/blog/${params.id}`);
+        const response = await fetch(`/api/blog/${id}`);
         if (!response.ok) throw new Error("Failed to fetch post");
         const data = await response.json();
         setPost(data.post);
@@ -43,7 +44,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
       }
     }
     fetchPost();
-  }, [params.id, router]);
+  }, [id, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +55,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
     const status = formData.get("status")?.toString() as BlogStatus;
 
     try {
-      const result = await updateBlogPost(params.id, {
+      const result = await updateBlogPost(id, {
         title: formData.get("title")?.toString() || "",
         slug: formData.get("slug")?.toString() || "",
         excerpt: formData.get("excerpt")?.toString() || undefined,

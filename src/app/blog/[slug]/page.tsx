@@ -7,10 +7,11 @@ import ReactMarkdown from "react-markdown";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const post = await prisma.blogPost.findUnique({
     where: {
-      slug: params.slug,
+      slug,
       status: "PUBLISHED",
     },
   });
@@ -27,10 +28,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const post = await prisma.blogPost.findUnique({
     where: {
-      slug: params.slug,
+      slug,
     },
     include: {
       author: {

@@ -6,7 +6,8 @@ import { TemplateEditorClient } from "@/components/admin/marketing/TemplateEdito
 
 export const dynamic = "force-dynamic";
 
-export default async function EditTemplatePage({ params }: { params: { id: string } }) {
+export default async function EditTemplatePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getCurrentUser();
 
   if (!user) {
@@ -19,7 +20,7 @@ export default async function EditTemplatePage({ params }: { params: { id: strin
   }
 
   const template = await prisma.emailTemplate.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       campaigns: {
         select: {
