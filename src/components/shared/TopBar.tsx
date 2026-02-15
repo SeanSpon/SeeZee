@@ -139,22 +139,20 @@ export default function TopBar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-0.5">
               {navLinks.map((link) => {
-                const Icon = link.icon
                 const active = isActive(link.path)
                 return (
                   <Link
                     key={link.path}
                     href={link.path}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
                       active
                         ? 'bg-trinity-red/15 text-white border-b-2 border-trinity-red'
                         : 'text-gray-300 hover:text-white hover:bg-gray-800'
                     }`}
                     aria-current={active ? 'page' : undefined}
                   >
-                    <Icon className="w-4 h-4" />
                     {link.label}
                   </Link>
                 )
@@ -168,7 +166,7 @@ export default function TopBar() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="hidden md:block"
+                  className="hidden lg:block"
                 >
                   <Link
                     href="/start"
@@ -185,7 +183,7 @@ export default function TopBar() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="hidden md:block"
+                  className="hidden lg:block"
                 >
                   <Link
                     href="/login"
@@ -195,7 +193,7 @@ export default function TopBar() {
                   </Link>
                 </motion.div>
               ) : (
-                <div className="hidden md:flex items-center gap-3">
+                <div className="hidden lg:flex items-center gap-3">
                   {/* Quick links for authenticated users */}
                   <Link
                     href={isAdmin ? '/admin' : '/client'}
@@ -286,7 +284,7 @@ export default function TopBar() {
               {/* Mobile menu button */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150"
+                className="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
@@ -308,7 +306,7 @@ export default function TopBar() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="md:hidden border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm"
+                className="lg:hidden border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm"
               >
                 <div className="px-4 py-4 space-y-2">
                   {navLinks.map((link) => {

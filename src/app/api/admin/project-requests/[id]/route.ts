@@ -117,15 +117,9 @@ export async function PATCH(
     // Update actual hours if provided
     if (actualHours !== undefined) {
       updateData.actualHours = actualHours ? parseFloat(actualHours) : null;
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'project-requests/[id]/route.ts:119',message:'actualHours set',data:{actualHours:updateData.actualHours,status,currentHoursDeducted:projectRequest.hoursDeducted},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
     }
 
     // If status is being set to APPROVED or COMPLETED, and hours haven't been deducted yet, deduct them
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'project-requests/[id]/route.ts:123',message:'Checking if should deduct',data:{status,currentStatus:projectRequest.status,hoursDeducted:projectRequest.hoursDeducted,willDeduct:(status === 'APPROVED' || status === 'COMPLETED') && !projectRequest.hoursDeducted},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-    // #endregion
     if ((status === 'APPROVED' || status === 'COMPLETED') && !projectRequest.hoursDeducted) {
       // Find the user's maintenance plan
       const user = projectRequest.user;
@@ -158,9 +152,6 @@ export async function PATCH(
         if (orgMember?.organization?.projects?.[0]?.maintenancePlanRel) {
           const plan = orgMember.organization.projects[0].maintenancePlanRel;
           const hoursToDeduct = actualHours || projectRequest.estimatedHours || 0;
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'project-requests/[id]/route.ts:154',message:'Before deductHours',data:{planId:plan.id,hoursToDeduct,actualHours,estimatedHours:projectRequest.estimatedHours,status},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-          // #endregion
           if (hoursToDeduct > 0) {
             try {
               const deductionResult = await deductHours(
@@ -169,9 +160,6 @@ export async function PATCH(
                 `Project request: ${projectRequest.title}`,
                 session.user.id
               );
-              // #region agent log
-              fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'project-requests/[id]/route.ts:163',message:'deductHours result',data:{success:deductionResult.success,hoursDeducted:deductionResult.hoursDeducted,source:deductionResult.source,error:deductionResult.error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-              // #endregion
               if (deductionResult.success) {
                 updateData.hoursDeducted = deductionResult.hoursDeducted;
                 updateData.hoursSource = deductionResult.source;
@@ -181,9 +169,6 @@ export async function PATCH(
                 // Continue with status update even if deduction fails
               }
             } catch (deductError) {
-              // #region agent log
-              fetch('http://127.0.0.1:7243/ingest/44a284b2-eeef-4d7c-adae-bec1bc572ac3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'project-requests/[id]/route.ts:174',message:'deductHours error',data:{error:String(deductError)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-              // #endregion
               console.error('Error deducting hours:', deductError);
               // Continue with status update even if deduction fails
             }
