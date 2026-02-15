@@ -41,7 +41,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-sm text-cyan-400 font-mono mt-4"
               >
-                Updated December 2024
+                Updated February 2026
               </motion.p>
             </div>
           </ScrollAnimation>
@@ -74,7 +74,7 @@ export default function ProjectsPage() {
                 
                 {/* Status Badge */}
                 <div className="inline-block px-4 py-2 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-sm font-medium mt-2 mb-6">
-                  🚀 Launching December 20, 2024
+                  🚀 Live &mdash; Launched 2024
                 </div>
                 
                 {/* Title */}

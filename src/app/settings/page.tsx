@@ -24,6 +24,7 @@ import { Switch } from "@/components/ui/Switch";
 import { ImageUpload } from "@/components/profile/ImageUpload";
 import { OAuthConnectionCard } from "@/components/profile/OAuthConnectionCard";
 import { GitConfigPanel } from "@/components/admin/git/GitConfigPanel";
+import { useTheme } from "@/providers/ThemeProvider";
 import { useToast } from "@/stores/useToast";
 import { useDialogContext } from "@/lib/dialog";
 
@@ -89,6 +90,11 @@ function SettingsContent() {
   const searchParams = useSearchParams();
   const { showToast } = useToast();
   const dialog = useDialogContext();
+  const {
+    setThemeMode,
+    setReduceAnimations: setProviderReduceAnimations,
+    setCompactMode: setProviderCompactMode,
+  } = useTheme();
   const tabParam = searchParams.get("tab") as TabType | null;
   const [activeTab, setActiveTab] = useState<TabType>(tabParam || "profile");
   const [loading, setLoading] = useState(false);
@@ -251,6 +257,17 @@ function SettingsContent() {
       const data = await res.json();
       if (data.preferences) {
         setPreferences(prev => ({ ...prev, ...data.preferences }));
+        // Sync API preferences to ThemeProvider
+        const p = data.preferences;
+        if (p.theme) {
+          setThemeMode(p.theme as "light" | "dark" | "auto");
+        }
+        if (typeof p.reduceAnimations === "boolean") {
+          setProviderReduceAnimations(p.reduceAnimations);
+        }
+        if (typeof p.compactMode === "boolean") {
+          setProviderCompactMode(p.compactMode);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch preferences:", error);
@@ -584,7 +601,7 @@ function SettingsContent() {
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
             Settings
           </h1>
           <p className="text-slate-400 text-base sm:text-lg">
@@ -1120,9 +1137,10 @@ function SettingsContent() {
                   >
                     <Switch
                       checked={preferences.reduceAnimations}
-                      onCheckedChange={(checked) =>
-                        setPreferences({ ...preferences, reduceAnimations: checked })
-                      }
+                      onCheckedChange={(checked) => {
+                        setPreferences({ ...preferences, reduceAnimations: checked });
+                        setProviderReduceAnimations(checked);
+                      }}
                     />
                   </SettingsRow>
 
@@ -1133,9 +1151,10 @@ function SettingsContent() {
                   >
                     <Switch
                       checked={preferences.compactMode}
-                      onCheckedChange={(checked) =>
-                        setPreferences({ ...preferences, compactMode: checked })
-                      }
+                      onCheckedChange={(checked) => {
+                        setPreferences({ ...preferences, compactMode: checked });
+                        setProviderCompactMode(checked);
+                      }}
                     />
                   </SettingsRow>
                 </GlassCardContent>

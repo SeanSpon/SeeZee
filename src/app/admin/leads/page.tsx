@@ -32,9 +32,9 @@ export default async function LeadsPage() {
     redirect("/login");
   }
 
-  // Only CEO, CFO, or OUTREACH roles can access this page
-  const allowedRoles = [ROLE.CEO, ROLE.CFO, ROLE.OUTREACH];
-  if (!allowedRoles.includes(user.role as any)) {
+  // Staff roles that can access leads (CEO, CFO, OUTREACH, or legacy ADMIN)
+  const allowedRoles: string[] = [ROLE.CEO, ROLE.CFO, ROLE.OUTREACH, "ADMIN"];
+  if (!allowedRoles.includes(user.role)) {
     redirect("/admin");
   }
 

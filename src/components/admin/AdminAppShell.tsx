@@ -121,6 +121,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   // ===========================================
   const pipelineItems = useMemo<NavItem[]>(
     () => [
+      { href: "/admin/project-requests", label: "Project Requests", icon: FiInbox, description: "Incoming client requests" },
       { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
       { href: "/admin/leads", label: "Leads", icon: FiMapPin, description: "Lead management and finder" },
       { href: "/admin/marketing", label: "Email Hub", icon: FiMail, description: "Campaigns and outreach" },
@@ -291,7 +292,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={pipelineItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
+                defaultOpen={pathname.startsWith("/admin/project-requests") || pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
                 collapsed={isCollapsed}
               />
 

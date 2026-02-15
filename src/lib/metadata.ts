@@ -20,7 +20,8 @@ export function generatePageMetadata({
   type = 'website',
 }: PageMetadataProps): Metadata {
   const url = `${baseUrl}${path}`
-  const fullTitle = `${title} | SeeZee Studio`
+  // Don't append "| SeeZee Studio" here — the root layout template already does that
+  const fullTitle = title
 
   const defaultKeywords = [
     'web development',

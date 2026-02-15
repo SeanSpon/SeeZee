@@ -920,7 +920,7 @@ export default function HomePage() {
                 <div className="order-1 lg:order-2">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/15 border border-indigo-400/30 rounded-full text-indigo-300 text-sm font-semibold mb-6">
                     <FiHeart className="w-4 h-4" />
-                    <span>Launching December 20, 2024</span>
+                    <span>Live &mdash; Launched 2024</span>
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
                     A Vision For You

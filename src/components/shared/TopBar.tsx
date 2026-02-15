@@ -67,6 +67,7 @@ export default function TopBar() {
     { path: '/services', label: 'Services', icon: FiBriefcase },
     { path: '/projects', label: 'Projects', icon: FiFileText },
     { path: '/partners', label: 'Partners', icon: FiHeart },
+    { path: '/blog', label: 'Blog', icon: FiFileText },
     { path: '/philosophy', label: 'Philosophy', icon: FiBook },
     { path: '/about', label: 'About', icon: FiInfo },
   ]

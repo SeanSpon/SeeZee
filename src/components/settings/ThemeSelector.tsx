@@ -2,7 +2,6 @@
 
 import { Sun, Moon, Monitor, Check } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
-import { useEffect, useState } from "react";
 
 interface ThemeSelectorProps {
   value?: "light" | "dark" | "auto";
@@ -46,49 +45,13 @@ const themes = [
 ];
 
 export function ThemeSelector({ value: externalValue, onChange: externalOnChange }: ThemeSelectorProps) {
-  const { theme: contextTheme, setTheme: setContextTheme } = useTheme();
-  const [themeMode, setThemeMode] = useState<"light" | "dark" | "auto">("dark");
-  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("dark");
+  const { themeMode: providerThemeMode, setThemeMode: setProviderThemeMode } = useTheme();
 
-  // Load saved theme mode on mount
-  useEffect(() => {
-    const savedMode = localStorage.getItem("themeMode") as "light" | "dark" | "system" | null;
-    if (savedMode === "system") {
-      setThemeMode("auto");
-    } else if (savedMode) {
-      setThemeMode(savedMode as "light" | "dark");
-    } else {
-      setThemeMode(contextTheme === "light" ? "light" : "dark");
-    }
-
-    // Detect system preference
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemTheme(mediaQuery.matches ? "dark" : "light");
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      setSystemTheme(e.matches ? "dark" : "light");
-    };
-    
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [contextTheme]);
-
-  // Use external value if provided, otherwise use local state
-  const currentValue = externalValue ?? themeMode;
+  // Use external value if provided, otherwise use provider state
+  const currentValue = externalValue ?? providerThemeMode;
 
   const handleThemeChange = (newTheme: "light" | "dark" | "auto") => {
-    setThemeMode(newTheme);
-
-    // Apply the theme
-    if (newTheme === "auto") {
-      setContextTheme(systemTheme);
-      localStorage.setItem("themeMode", "system");
-      localStorage.setItem("theme", systemTheme);
-    } else {
-      setContextTheme(newTheme);
-      localStorage.setItem("themeMode", newTheme);
-      localStorage.setItem("theme", newTheme);
-    }
+    setProviderThemeMode(newTheme);
 
     // Call external handler if provided
     if (externalOnChange) {
@@ -97,7 +60,7 @@ export function ThemeSelector({ value: externalValue, onChange: externalOnChange
   };
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-2 sm:gap-3">
       {themes.map((theme) => {
         const Icon = theme.icon;
         const isSelected = currentValue === theme.id;
@@ -107,7 +70,7 @@ export function ThemeSelector({ value: externalValue, onChange: externalOnChange
             key={theme.id}
             onClick={() => handleThemeChange(theme.id)}
             className={`
-              relative group p-4 rounded-xl transition-all duration-300
+              relative group p-2.5 sm:p-4 rounded-xl transition-all duration-300
               border-2 overflow-hidden
               ${
                 isSelected
@@ -153,7 +116,7 @@ export function ThemeSelector({ value: externalValue, onChange: externalOnChange
                 <div className={`font-medium text-sm ${isSelected ? "text-white" : "text-slate-300"}`}>
                   {theme.label}
                 </div>
-                <div className="text-xs text-slate-500">{theme.description}</div>
+                <div className="text-xs text-slate-500 hidden sm:block">{theme.description}</div>
               </div>
             </div>
 
@@ -177,32 +140,10 @@ export function ThemeSelector({ value: externalValue, onChange: externalOnChange
 
 // Simpler inline version
 export function ThemeSelectorInline() {
-  const { theme: contextTheme, setTheme: setContextTheme } = useTheme();
-  const [themeMode, setThemeMode] = useState<"light" | "dark" | "auto">("dark");
-  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("dark");
-
-  useEffect(() => {
-    const savedMode = localStorage.getItem("themeMode") as "light" | "dark" | "system" | null;
-    if (savedMode === "system") {
-      setThemeMode("auto");
-    } else if (savedMode) {
-      setThemeMode(savedMode as "light" | "dark");
-    }
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemTheme(mediaQuery.matches ? "dark" : "light");
-  }, []);
+  const { themeMode, setThemeMode: setProviderThemeMode } = useTheme();
 
   const handleThemeChange = (newTheme: "light" | "dark" | "auto") => {
-    setThemeMode(newTheme);
-    if (newTheme === "auto") {
-      setContextTheme(systemTheme);
-      localStorage.setItem("themeMode", "system");
-    } else {
-      setContextTheme(newTheme);
-      localStorage.setItem("themeMode", newTheme);
-      localStorage.setItem("theme", newTheme);
-    }
+    setProviderThemeMode(newTheme);
   };
 
   return (

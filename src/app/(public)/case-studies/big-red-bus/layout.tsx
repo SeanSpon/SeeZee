@@ -1,7 +1,7 @@
 import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
-  title: 'Big Red Bus Case Study - Mental Health Platform | SeeZee Studio',
+  title: 'Big Red Bus Case Study - Mental Health Platform',
   description:
     'See how SeeZee built Big Red Bus, a cognitive accessibility-first mental health and neuro-inclusive community platform. Learn about our approach to inclusive design, digital accessibility, and community support.',
   path: '/case-studies/big-red-bus',

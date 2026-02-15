@@ -23,6 +23,8 @@ export function GlassTabs({ tabs, activeTab, onTabChange, className = "" }: Glas
   const containerRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const [isInitialized, setIsInitialized] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const updateIndicator = useCallback(() => {
     const activeIndex = tabs.findIndex((tab) => tab.id === activeTab);
@@ -32,26 +34,74 @@ export function GlassTabs({ tabs, activeTab, onTabChange, className = "" }: Glas
     if (activeTabEl && container) {
       const containerRect = container.getBoundingClientRect();
       const tabRect = activeTabEl.getBoundingClientRect();
-      
+
       setIndicatorStyle({
-        left: tabRect.left - containerRect.left,
+        left: tabRect.left - containerRect.left + container.scrollLeft,
         width: tabRect.width,
       });
       setIsInitialized(true);
     }
   }, [activeTab, tabs]);
 
+  const updateScrollState = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    setCanScrollLeft(container.scrollLeft > 2);
+    setCanScrollRight(
+      container.scrollLeft < container.scrollWidth - container.clientWidth - 2
+    );
+  }, []);
+
   useEffect(() => {
     updateIndicator();
+    updateScrollState();
     window.addEventListener("resize", updateIndicator);
-    return () => window.removeEventListener("resize", updateIndicator);
-  }, [updateIndicator]);
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      window.removeEventListener("resize", updateIndicator);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [updateIndicator, updateScrollState]);
+
+  // Auto-scroll active tab into view
+  useEffect(() => {
+    const activeIndex = tabs.findIndex((tab) => tab.id === activeTab);
+    const activeTabEl = tabsRef.current[activeIndex];
+    const container = containerRef.current;
+
+    if (activeTabEl && container) {
+      const containerRect = container.getBoundingClientRect();
+      const tabRect = activeTabEl.getBoundingClientRect();
+
+      if (tabRect.left < containerRect.left) {
+        container.scrollBy({ left: tabRect.left - containerRect.left - 8, behavior: "smooth" });
+      } else if (tabRect.right > containerRect.right) {
+        container.scrollBy({ left: tabRect.right - containerRect.right + 8, behavior: "smooth" });
+      }
+    }
+  }, [activeTab, tabs]);
+
+  const handleScroll = useCallback(() => {
+    updateScrollState();
+    updateIndicator();
+  }, [updateScrollState, updateIndicator]);
 
   return (
     <div className={`relative ${className}`}>
+      {/* Left fade gradient */}
+      {canScrollLeft && (
+        <div className="absolute left-0 top-0 bottom-0 w-8 z-20 pointer-events-none rounded-l-2xl bg-gradient-to-r from-slate-950/80 to-transparent" />
+      )}
+
+      {/* Right fade gradient */}
+      {canScrollRight && (
+        <div className="absolute right-0 top-0 bottom-0 w-8 z-20 pointer-events-none rounded-r-2xl bg-gradient-to-l from-slate-950/80 to-transparent" />
+      )}
+
       {/* Glass container for tabs */}
       <div
         ref={containerRef}
+        onScroll={handleScroll}
         className="
           relative flex items-center gap-1 p-1.5
           bg-white/[0.03] backdrop-blur-xl
@@ -89,8 +139,8 @@ export function GlassTabs({ tabs, activeTab, onTabChange, className = "" }: Glas
               onClick={() => !tab.disabled && onTabChange(tab.id)}
               disabled={tab.disabled}
               className={`
-                relative z-10 flex items-center gap-2 px-4 py-2.5 rounded-xl
-                font-medium text-sm whitespace-nowrap
+                relative z-10 flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl
+                font-medium text-xs sm:text-sm whitespace-nowrap
                 transition-all duration-200 ease-out
                 ${
                   isActive
@@ -261,15 +311,3 @@ export function GlassTabsUnderline({
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-

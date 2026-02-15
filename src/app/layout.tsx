@@ -239,8 +239,39 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
+    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        {/* Flash-prevention: apply theme/preferences before first paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var mode = localStorage.getItem('themeMode');
+                  var theme = localStorage.getItem('theme');
+                  var resolved = 'dark';
+                  if (mode === 'system') {
+                    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  } else if (mode === 'light' || mode === 'dark') {
+                    resolved = mode;
+                  } else if (theme === 'light' || theme === 'dark') {
+                    resolved = theme;
+                  }
+                  document.documentElement.classList.add(resolved);
+                  if (resolved === 'dark') document.documentElement.classList.remove('light');
+                  else document.documentElement.classList.remove('dark');
+
+                  if (localStorage.getItem('reduceAnimations') === 'true') {
+                    document.documentElement.setAttribute('data-reduce-motion', 'true');
+                  }
+                  if (localStorage.getItem('compactMode') === 'true') {
+                    document.documentElement.setAttribute('data-density', 'compact');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/png" href="/icon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -275,7 +306,7 @@ export default function RootLayout({
           </SidebarWrapper>
           
           <ClientAnimations />
-          <DebugHUD />
+          {process.env.NODE_ENV === 'development' && <DebugHUD />}
           <Toaster />
           <CookieConsent />
           <ChatWidget />

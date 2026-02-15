@@ -117,6 +117,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/blog"
+                  className="text-white hover:text-[#ef4444] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#ef4444] focus:ring-offset-2 focus:ring-offset-[#0a1128] rounded-md px-1 hover:underline underline-offset-4"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/case-studies"
                   className="text-white hover:text-[#ef4444] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#ef4444] focus:ring-offset-2 focus:ring-offset-[#0a1128] rounded-md px-1 hover:underline underline-offset-4"
                 >

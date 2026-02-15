@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Home, Briefcase, FolderKanban, Rocket, Users, Heart } from "lucide-react";
+import { X, Home, Briefcase, FolderKanban, Rocket, Users, Heart, BookOpen, FileText } from "lucide-react";
 
 interface MobileMenuProps {
   open: boolean;
@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { href: "/services", label: "Services", icon: Briefcase },
   { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/partners", label: "Partners", icon: Heart },
+  { href: "/blog", label: "Blog", icon: FileText },
   { href: "/about", label: "About", icon: Users },
   { href: "/start", label: "Start a Project", icon: Rocket },
 ];

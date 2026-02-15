@@ -127,6 +127,19 @@ html[data-density="spacious"] {
   font-size: 1.125rem;
 }
 
+/* Reduce Motion */
+html[data-reduce-motion="true"] {
+  scroll-behavior: auto;
+}
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
 /* Apply accent colors to components */
 @supports (color: var(--color-accent-primary)) {
   /* Buttons with accent color */
