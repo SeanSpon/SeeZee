@@ -26,21 +26,44 @@ export default function AboutPage() {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="bg-gray-900 py-24 lg:py-40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-5"></div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
+      <section className="relative bg-[#0a1128] py-20 overflow-hidden">
+        {/* Subtle tech grid background */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #22d3ee 1px, transparent 1px),
+                linear-gradient(to bottom, #22d3ee 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }}
+          />
+        </div>
+
+        {/* Subtle radial glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03]"
+            style={{
+              background: 'radial-gradient(circle, #22d3ee 0%, transparent 70%)'
+            }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center">
               <motion.h1
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-4xl md:text-5xl lg:text-[56px] font-heading font-bold text-white mb-6 leading-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
               >
                 Your community technology partner — built on trust and real support.
               </motion.h1>
               <motion.p
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed"
@@ -53,11 +76,11 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="py-20 bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#1a2332]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
                 How SeeZee Started
               </h2>
             </ScrollAnimation>
@@ -77,15 +100,15 @@ export default function AboutPage() {
                 </p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-cyan-400 mr-3">•</span>
                     <span>Big IT companies wanted enterprise contracts and didn't understand community needs.</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-cyan-400 mr-3">•</span>
                     <span>DIY solutions led to frustration and wasted time.</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-trinity-red mr-3">•</span>
+                    <span className="text-cyan-400 mr-3">•</span>
                     <span>Freelancers would fix one thing and disappear.</span>
                   </li>
                 </ul>
@@ -105,11 +128,11 @@ export default function AboutPage() {
       </section>
 
       {/* Our Roots Section - Trinity High School, FBLA, Beta Club */}
-      <section className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#0a1128]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
                 Our Roots
               </h2>
             </ScrollAnimation>
@@ -167,10 +190,10 @@ export default function AboutPage() {
       </section>
 
       {/* Sean & Zach Photo Section */}
-      <section className="py-16 bg-[#1a2332]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#1a2332]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <ScrollAnimation>
-            <h2 className="text-3xl text-white text-center mb-12 font-heading font-bold">
+            <h2 className="text-3xl md:text-4xl text-white text-center mb-12 font-bold">
               Sean & Zach
             </h2>
           </ScrollAnimation>
@@ -221,11 +244,11 @@ export default function AboutPage() {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-20 bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#0a1128]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <ScrollAnimation>
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Meet the Team
               </h2>
             </div>
@@ -236,9 +259,9 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.1}>
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
-                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-2xl hover:shadow-xl transition-all bg-gray-800 border-2 border-gray-700 hover:border-trinity-red"
+                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-xl hover:shadow-xl transition-all bg-gray-900/50 border border-gray-700 hover:border-cyan-500/40 backdrop-blur-sm"
               >
-                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-trinity-red relative group">
+                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-cyan-500 relative group">
                   <Image
                     src="/sean-profile.png"
                     alt="Sean McCulloch"
@@ -281,7 +304,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                     Sean McCulloch
                   </h3>
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Lead</p>
@@ -300,27 +323,27 @@ export default function AboutPage() {
                     <h4 className="text-white font-semibold mb-3">Sean handles:</h4>
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Technical support (on-site & remote)</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>System troubleshooting & problem-solving</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Web development & accessible design</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Automation & workflow tools</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Database & system architecture</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>AI-powered solutions</span>
                       </li>
                     </ul>
@@ -374,9 +397,9 @@ export default function AboutPage() {
             <ScrollAnimation delay={0.2}>
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
-                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-2xl hover:shadow-xl transition-all bg-gray-800 border-2 border-gray-700 hover:border-trinity-red"
+                className="flex flex-col md:flex-row gap-8 items-start p-8 md:p-10 rounded-xl hover:shadow-xl transition-all bg-gray-900/50 border border-gray-700 hover:border-cyan-500/40 backdrop-blur-sm"
               >
-                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-trinity-red relative group">
+                <div className="w-32 h-32 rounded-full mx-auto md:mx-0 flex-shrink-0 shadow-lg overflow-hidden border-4 border-cyan-500 relative group">
                   <Image
                     src="/zach-profile.png"
                     alt="Zach Robards"
@@ -419,7 +442,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                     Zach Robards
                   </h3>
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Consulting Lead</p>
@@ -438,27 +461,27 @@ export default function AboutPage() {
                     <h4 className="text-white font-semibold mb-3">Zach handles:</h4>
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Technology consulting & decision support</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Partner communication & relationship building</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Project planning & coordination</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Content & user experience</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Training & documentation</span>
                       </li>
                       <li className="flex items-start">
-                        <FiCheck className="w-5 h-5 text-trinity-red mr-2 flex-shrink-0 mt-0.5" />
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Long-term partnership management</span>
                       </li>
                     </ul>
@@ -511,11 +534,11 @@ export default function AboutPage() {
       </section>
 
       {/* Our Values Section */}
-      <section className="py-20 bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#1a2332]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
                 What We Believe
               </h2>
             </ScrollAnimation>
@@ -555,10 +578,10 @@ export default function AboutPage() {
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
                     whileHover={{ y: -4 }}
-                    className="p-6 rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 glass-effect"
+                    className="p-6 rounded-xl bg-gray-900/50 border border-gray-700 hover:border-cyan-500/40 transition-all duration-300 backdrop-blur-sm"
                   >
-                    <div className="text-trinity-red mb-4">{value.icon}</div>
-                    <h3 className="text-xl font-heading font-semibold text-white mb-3">
+                    <div className="text-cyan-400 mb-4">{value.icon}</div>
+                    <h3 className="text-xl font-semibold text-white mb-3">
                       {value.title}
                     </h3>
                     <p className="text-gray-300 leading-relaxed">
@@ -573,11 +596,11 @@ export default function AboutPage() {
       </section>
 
       {/* Who We Serve Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#0a1128]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
                 Who We Build For
               </h2>
             </ScrollAnimation>
@@ -593,12 +616,12 @@ export default function AboutPage() {
                 <ScrollAnimation key={index} delay={index * 0.1}>
                   <motion.div
                     whileHover={{ y: -4 }}
-                    className="p-6 rounded-xl border-2 border-gray-700 hover:border-trinity-red transition-all duration-300 glass-effect"
+                    className="p-6 rounded-xl bg-gray-900/50 border border-gray-700 hover:border-cyan-500/40 transition-all duration-300 backdrop-blur-sm"
                   >
                     <div className="flex items-start gap-4">
                       <div className="text-4xl flex-shrink-0">{group.emoji}</div>
                       <div>
-                        <h3 className="text-xl font-heading font-semibold text-white mb-2">
+                        <h3 className="text-xl font-semibold text-white mb-2">
                           {group.title}
                         </h3>
                         <p className="text-gray-300 leading-relaxed text-sm">
@@ -615,11 +638,11 @@ export default function AboutPage() {
       </section>
 
       {/* Our Approach Section */}
-      <section className="py-20 bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#1a2332]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
                 How We Work
               </h2>
             </ScrollAnimation>
@@ -647,11 +670,11 @@ export default function AboutPage() {
                 },
               ].map((principle, index) => (
                 <ScrollAnimation key={index} delay={index * 0.1}>
-                  <div className="p-6 rounded-xl border-2 border-gray-700 glass-effect">
+                  <div className="p-6 rounded-xl bg-gray-900/50 border border-gray-700 backdrop-blur-sm">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="text-trinity-red flex-shrink-0">{principle.icon}</div>
+                      <div className="text-cyan-400 flex-shrink-0">{principle.icon}</div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-heading font-semibold text-white mb-2">
+                        <h3 className="text-xl font-semibold text-white mb-2">
                           {principle.title}
                         </h3>
                         <p className="text-gray-300 leading-relaxed">
@@ -668,11 +691,11 @@ export default function AboutPage() {
       </section>
 
       {/* Our Mission Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section className="py-20 bg-[#0a1128]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="max-w-4xl mx-auto">
             <ScrollAnimation>
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
                 Why We Do This
               </h2>
             </ScrollAnimation>
@@ -690,26 +713,26 @@ export default function AboutPage() {
                 <p>We provide:</p>
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-0.5" />
                     <span>Hands-on technical support (on-site and remote)</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-0.5" />
                     <span>Technology consulting and decision support</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-0.5" />
                     <span>Custom web development and accessible platforms</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="w-6 h-6 text-trinity-red mr-3 flex-shrink-0 mt-0.5" />
+                    <FiCheck className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-0.5" />
                     <span>Automation and AI solutions that save time</span>
                   </li>
                 </ul>
                 <p className="text-xl text-white font-semibold pt-4">
                   We're not just a technology vendor.
                 </p>
-                <p className="text-2xl text-trinity-red font-bold">
+                <p className="text-2xl text-cyan-400 font-bold">
                   We're your community technology partner.
                 </p>
                 <p className="text-lg text-gray-300 pt-4">
@@ -722,34 +745,37 @@ export default function AboutPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-trinity-red relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
-          <ScrollAnimation>
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-[40px] font-heading font-bold text-white mb-6">
-                Ready for a Technology Partner You Can Trust?
-              </h2>
-              <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed">
-                Whether you're a school, nonprofit, community organization, or local business — we'd love to learn about your needs and show you how we can help.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/start"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-trinity-red rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
-                >
-                  Start Your Project
-                  <FiArrowRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="/philosophy"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/30 text-white rounded-xl hover:border-white hover:bg-white/10 transition-all duration-200 font-semibold text-lg"
-                >
-                  Read Our Philosophy
-                </Link>
-              </div>
+      <section className="bg-red-500 py-24">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center space-y-8"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white">
+              Ready for a Technology Partner You Can Trust?
+            </h2>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              Whether you're a school, nonprofit, community organization, or local business — we'd love to learn about your needs.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <Link
+                href="/start"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-red-500 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+              >
+                Start a Project
+              </Link>
+              <Link
+                href="/start/contact"
+                className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
+              >
+                Book a Consult
+              </Link>
             </div>
-          </ScrollAnimation>
+          </motion.div>
         </div>
       </section>
     </div>

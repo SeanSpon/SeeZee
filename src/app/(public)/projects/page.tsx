@@ -15,6 +15,30 @@ export default function ProjectsPage() {
           HERO
           ======================================== */}
       <section className="bg-[#0a1128] py-20 relative overflow-hidden">
+        {/* Subtle tech grid background */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #22d3ee 1px, transparent 1px),
+                linear-gradient(to bottom, #22d3ee 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }}
+          />
+        </div>
+
+        {/* Subtle radial glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03]"
+            style={{
+              background: 'radial-gradient(circle, #22d3ee 0%, transparent 70%)'
+            }}
+          />
+        </div>
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <ScrollAnimation>
             <div className="max-w-4xl mx-auto text-center">
@@ -22,7 +46,7 @@ export default function ProjectsPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-4xl md:text-5xl font-bold text-white mb-6"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
               >
                 Projects
               </motion.h1>
@@ -639,7 +663,7 @@ export default function ProjectsPage() {
       <section className="bg-[#0a1128] py-16">
         <div className="max-w-4xl mx-auto px-6">
           <ScrollAnimation>
-            <h2 className="text-3xl font-bold text-white text-center mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
               What We&apos;re Building Next
             </h2>
             <p className="text-gray-400 text-center mb-10 max-w-2xl mx-auto">
@@ -669,7 +693,7 @@ export default function ProjectsPage() {
       <section className="bg-[#1a2332] py-16">
         <div className="max-w-5xl mx-auto px-6">
           <ScrollAnimation>
-            <h2 className="text-3xl font-bold text-white text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-10">
               Where We Build
             </h2>
 
@@ -729,7 +753,7 @@ export default function ProjectsPage() {
       {/* ========================================
           CTA
           ======================================== */}
-      <section className="bg-red-500 py-20">
+      <section className="bg-red-500 py-24">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <ScrollAnimation>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">

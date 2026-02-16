@@ -1044,7 +1044,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-[#ef4444] via-[#dc2626] to-[#b91c1c] relative overflow-hidden">
+      <section className="py-16 sm:py-24 lg:py-32 bg-red-500 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
@@ -1060,7 +1060,7 @@ export default function HomePage() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
                     href="/start"
-                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-white text-[#ef4444] rounded-lg hover:bg-gray-100 transition-all duration-300 font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/30 min-h-[48px] w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-white text-red-500 rounded-lg hover:bg-gray-100 transition-all duration-300 font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/30 min-h-[48px] w-full sm:w-auto"
                   >
                     Start Your Project
                     <FiArrowRight className="w-5 h-5" />
