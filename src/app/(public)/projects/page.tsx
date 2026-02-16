@@ -344,7 +344,7 @@ export default function ProjectsPage() {
                       {[
                         'Client assessment & intake system',
                         'Meeting & RSVP management',
-                        'Donation processing (Stripe)',
+                        'Donation processing (Square)',
                         'Impact dashboard & reporting',
                         'Admissions pipeline',
                         'Content management system',
@@ -361,7 +361,7 @@ export default function ProjectsPage() {
 
                     <h4 className="text-base font-semibold text-white mb-3">Tech Stack</h4>
                     <div className="flex flex-wrap gap-2">
-                      {['Next.js 14', 'TypeScript', 'PostgreSQL', 'Prisma', 'NextAuth', 'Stripe'].map((tech, idx) => (
+                      {['Next.js 14', 'TypeScript', 'PostgreSQL', 'Prisma', 'NextAuth', 'Square', 'Resend'].map((tech, idx) => (
                         <span key={idx} className="px-3 py-1 text-xs border border-white/20 text-gray-300 rounded-full bg-white/5">
                           {tech}
                         </span>
