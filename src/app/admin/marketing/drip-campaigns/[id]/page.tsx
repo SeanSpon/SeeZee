@@ -6,7 +6,8 @@ import { DripCampaignBuilderClient } from "@/components/admin/marketing/DripCamp
 
 export const dynamic = "force-dynamic";
 
-export default async function EditDripCampaignPage({ params }: { params: { id: string } }) {
+export default async function EditDripCampaignPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getCurrentUser();
 
   if (!user) {
@@ -19,7 +20,7 @@ export default async function EditDripCampaignPage({ params }: { params: { id: s
   }
 
   const campaign = await prisma.dripCampaign.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       steps: {
         orderBy: { stepNumber: "asc" },
