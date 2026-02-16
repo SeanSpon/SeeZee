@@ -1,17 +1,17 @@
 import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
-  title: 'How We Build – Our Philosophy',
+  title: 'How We Build – AI Integration Done Right',
   description:
-    'Three principles that guide every project: Accessible by Design. Show the Work. Built to Last. Simple UX, clean systems, no BS.',
+    'AI is changing how organizations operate. We help teams integrate modern systems, automation, and AI without chaos or confusion. Not hype. Real implementation.',
   path: '/philosophy',
   keywords: [
-    'web development philosophy',
-    'accessible design',
-    'transparent development',
-    'prototype-first development',
-    'maintainable systems',
-    'modern web stack',
+    'AI integration',
+    'business automation',
+    'AI adoption',
+    'system integration',
+    'workflow automation',
+    'practical AI',
   ],
 })
 
