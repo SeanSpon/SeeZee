@@ -19,6 +19,16 @@ import {
   Wrench,
   AlertTriangle,
   RefreshCw,
+  Search,
+  Mail,
+  MailOpen,
+  MessageCircle,
+  Archive,
+  ArrowRightLeft,
+  StickyNote,
+  BookOpen,
+  BarChart2,
+  PlusCircle,
 } from "lucide-react";
 
 type Activity = {
@@ -46,6 +56,8 @@ const getActivityIcon = (type: string) => {
     case "PROJECT_UPDATED":
     case "STATUS_CHANGE":
       return <FileText className="w-4 h-4" />;
+    case "TASK_CREATED":
+      return <PlusCircle className="w-4 h-4" />;
     case "TASK_COMPLETED":
       return <CheckSquare className="w-4 h-4" />;
     case "INVOICE_PAID":
@@ -60,9 +72,32 @@ const getActivityIcon = (type: string) => {
     case "FILE_UPLOAD":
       return <FileText className="w-4 h-4" />;
     case "MESSAGE":
-      return <Bell className="w-4 h-4" />;
+      return <MessageCircle className="w-4 h-4" />;
     case "MILESTONE":
       return <CheckSquare className="w-4 h-4" />;
+    // Prospect / pipeline types
+    case "DISCOVERED":
+      return <Search className="w-4 h-4" />;
+    case "ANALYZED":
+      return <BarChart2 className="w-4 h-4" />;
+    case "REFRESHED_DETAILS":
+      return <RefreshCw className="w-4 h-4" />;
+    case "STATUS_CHANGED":
+      return <ArrowRightLeft className="w-4 h-4" />;
+    case "EMAIL_DRAFTED":
+      return <Mail className="w-4 h-4" />;
+    case "EMAIL_SENT":
+      return <Mail className="w-4 h-4" />;
+    case "EMAIL_OPENED":
+      return <MailOpen className="w-4 h-4" />;
+    case "EMAIL_REPLIED":
+      return <MessageCircle className="w-4 h-4" />;
+    case "NOTE_ADDED":
+      return <StickyNote className="w-4 h-4" />;
+    case "ARCHIVED":
+      return <Archive className="w-4 h-4" />;
+    case "CONVERTED":
+      return <ArrowRightLeft className="w-4 h-4" />;
     default:
       return <Bell className="w-4 h-4" />;
   }
@@ -78,6 +113,8 @@ const getActivityColor = (type: string) => {
     case "PROJECT_UPDATED":
     case "STATUS_CHANGE":
       return "text-purple-400";
+    case "TASK_CREATED":
+      return "text-blue-300";
     case "TASK_COMPLETED":
     case "MILESTONE":
       return "text-green-400";
@@ -94,6 +131,24 @@ const getActivityColor = (type: string) => {
       return "text-indigo-400";
     case "MESSAGE":
       return "text-yellow-400";
+    // Prospect / pipeline types
+    case "DISCOVERED":
+    case "ANALYZED":
+    case "REFRESHED_DETAILS":
+      return "text-sky-400";
+    case "STATUS_CHANGED":
+    case "CONVERTED":
+      return "text-purple-400";
+    case "EMAIL_DRAFTED":
+    case "EMAIL_SENT":
+      return "text-indigo-400";
+    case "EMAIL_OPENED":
+    case "EMAIL_REPLIED":
+      return "text-teal-400";
+    case "NOTE_ADDED":
+      return "text-amber-400";
+    case "ARCHIVED":
+      return "text-slate-500";
     default:
       return "text-slate-400";
   }
@@ -104,7 +159,7 @@ const getActivityColor = (type: string) => {
  */
 const getActivityRoute = (activity: Activity): string | null => {
   const { type, metadata, projectId } = activity;
-  
+
   // Check metadata first, then fall back to projectId
   const metaProjectId = metadata?.projectId || projectId;
   const leadId = metadata?.leadId;
@@ -112,18 +167,23 @@ const getActivityRoute = (activity: Activity): string | null => {
   const taskId = metadata?.taskId;
   const maintenancePlanId = metadata?.maintenancePlanId;
   const messageThreadId = metadata?.messageThreadId;
-  
+  const prospectId = metadata?.prospectId;
+  const entityType = metadata?.entityType;
+
   // Route based on activity type
   switch (type) {
     case "LEAD_CREATED":
     case "LEAD_UPDATED":
     case "LEAD_DELETED":
-      if (leadId) {
-        return `/admin/leads/${leadId}`;
+      // Learning/tool assignments use LEAD_UPDATED but should route to learning
+      if (entityType === "LearningResource" || entityType === "Tool") {
+        return `/admin/learning`;
       }
-      // Fallback to pipeline leads page
-      return `/admin/pipeline/leads`;
-      
+      if (leadId) {
+        return `/admin/pipeline/leads/${leadId}`;
+      }
+      return `/admin/pipeline`;
+
     case "PROJECT_CREATED":
     case "PROJECT_UPDATED":
     case "STATUS_CHANGE":
@@ -131,7 +191,8 @@ const getActivityRoute = (activity: Activity): string | null => {
         return `/admin/projects/${metaProjectId}`;
       }
       return `/admin/projects`;
-      
+
+    case "TASK_CREATED":
     case "TASK_COMPLETED":
       if (taskId) {
         return `/admin/tasks/${taskId}`;
@@ -140,7 +201,7 @@ const getActivityRoute = (activity: Activity): string | null => {
         return `/admin/projects/${metaProjectId}`;
       }
       return `/admin/tasks`;
-      
+
     case "INVOICE_PAID":
     case "PAYMENT":
       if (invoiceId) {
@@ -149,24 +210,19 @@ const getActivityRoute = (activity: Activity): string | null => {
       if (metaProjectId) {
         return `/admin/projects/${metaProjectId}`;
       }
-      return `/admin/pipeline/invoices`;
-      
+      return `/admin/finance/transactions`;
+
     case "MAINTENANCE_DUE":
-      if (maintenancePlanId || metaProjectId) {
-        return `/admin/maintenance`;
-      }
       return `/admin/maintenance`;
-      
+
     case "FILE_UPLOAD":
     case "MILESTONE":
-      // These are project-related, go to project page
       if (metaProjectId) {
         return `/admin/projects/${metaProjectId}`;
       }
       return `/admin/projects`;
-      
+
     case "MESSAGE":
-      // Messages might be in chat or project
       if (messageThreadId) {
         return `/admin/chat/${messageThreadId}`;
       }
@@ -174,17 +230,36 @@ const getActivityRoute = (activity: Activity): string | null => {
         return `/admin/projects/${metaProjectId}`;
       }
       return `/admin/chat`;
-      
+
     case "SYSTEM_ALERT":
-      // System alerts might not have a specific route
+      // Route to relevant page based on metadata context
+      if (taskId) return `/admin/tasks`;
+      if (metaProjectId) return `/admin/projects/${metaProjectId}`;
       return null;
-      
+
     case "USER_JOINED":
-      // User joined might go to team page
       return `/admin/team`;
-      
+
+    // Prospect / pipeline types
+    case "DISCOVERED":
+    case "ANALYZED":
+    case "REFRESHED_DETAILS":
+    case "STATUS_CHANGED":
+    case "NOTE_ADDED":
+    case "ARCHIVED":
+    case "CONVERTED":
+      if (prospectId) {
+        return `/admin/pipeline`;
+      }
+      return `/admin/pipeline`;
+
+    case "EMAIL_DRAFTED":
+    case "EMAIL_SENT":
+    case "EMAIL_OPENED":
+    case "EMAIL_REPLIED":
+      return `/admin/pipeline`;
+
     default:
-      // For activities with a project, go to that project
       if (metaProjectId) {
         return `/admin/projects/${metaProjectId}`;
       }
