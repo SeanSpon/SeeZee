@@ -9,7 +9,6 @@ import ScrollAnimation from '@/components/shared/ScrollAnimation'
 import {
   FiCheck,
   FiArrowRight,
-  FiZap,
   FiClock,
   FiDollarSign,
   FiMessageSquare,
@@ -18,10 +17,6 @@ import {
   FiAward,
   FiCode,
   FiUsers,
-  FiStar,
-  FiHeart,
-  FiCalendar,
-  FiMail,
 } from 'react-icons/fi'
 
 export default function ServicesPage() {
@@ -70,7 +65,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl md:text-2xl text-gray-300 leading-relaxed mb-8"
               >
-                From hands-on support to custom development. Clear pricing. Real partnership.
+                Every project is different. Tell us what you need and we'll build a plan that works for you.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -105,7 +100,7 @@ export default function ServicesPage() {
               What We Offer
             </h2>
             <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-[1.7]">
-              Development projects billed at $75/hour. Pick your project type and we'll estimate the hours needed.
+              From simple landing pages to full web applications, we scope every project to fit your goals and budget.
             </p>
           </div>
 
@@ -117,10 +112,10 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Marketing Website
                 </h3>
-                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
-                  $3k - $6k
+                <div className="text-lg font-semibold text-[#22d3ee] mb-2">
+                  Custom-scoped to your needs
                 </div>
-                <p className="text-white/70 mb-4 text-sm">40-80 hours</p>
+                <p className="text-white/70 mb-4 text-sm">Tailored to your goals</p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start text-white/80 text-sm">
                     <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
@@ -136,10 +131,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=new-website"
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-red-500 hover:bg-red-500 transition-all duration-200 font-semibold text-sm"
                 >
-                  Get Started
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -151,10 +146,10 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   E-commerce Store
                 </h3>
-                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
-                  $6k - $12k
+                <div className="text-lg font-semibold text-[#22d3ee] mb-2">
+                  Custom-scoped to your needs
                 </div>
-                <p className="text-white/70 mb-4 text-sm">80-150 hours</p>
+                <p className="text-white/70 mb-4 text-sm">Tailored to your goals</p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start text-white/80 text-sm">
                     <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
@@ -170,10 +165,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=new-website"
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-red-500 hover:bg-red-500 transition-all duration-200 font-semibold text-sm"
                 >
-                  Get Started
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -185,10 +180,10 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Web Application
                 </h3>
-                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
-                  $8k - $20k+
+                <div className="text-lg font-semibold text-[#22d3ee] mb-2">
+                  Custom-scoped to your needs
                 </div>
-                <p className="text-white/70 mb-4 text-sm">100-200+ hours</p>
+                <p className="text-white/70 mb-4 text-sm">Tailored to your goals</p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start text-white/80 text-sm">
                     <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
@@ -204,10 +199,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=new-website"
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-red-500 hover:bg-red-500 transition-all duration-200 font-semibold text-sm"
                 >
-                  Get Started
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -219,10 +214,10 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Landing Page
                 </h3>
-                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
-                  $1.2k - $2.4k
+                <div className="text-lg font-semibold text-[#22d3ee] mb-2">
+                  Custom-scoped to your needs
                 </div>
-                <p className="text-white/70 mb-4 text-sm">15-30 hours</p>
+                <p className="text-white/70 mb-4 text-sm">Tailored to your goals</p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start text-white/80 text-sm">
                     <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
@@ -238,10 +233,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=new-website"
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-red-500 hover:bg-red-500 transition-all duration-200 font-semibold text-sm"
                 >
-                  Get Started
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -258,10 +253,10 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-heading font-bold text-white mb-2">
                   Maintenance Plan
                 </h3>
-                <div className="text-2xl font-bold text-[#22d3ee] mb-2">
-                  $2k/quarter
+                <div className="text-lg font-semibold text-[#22d3ee] mb-2">
+                  Ongoing partnership
                 </div>
-                <p className="text-white/70 mb-4 text-sm">30 hours included per quarter</p>
+                <p className="text-white/70 mb-4 text-sm">Priority support included</p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-start text-white/80 text-sm">
                     <FiCheck className="w-4 h-4 text-[#22d3ee] mr-2 flex-shrink-0 mt-0.5" />
@@ -277,10 +272,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=existing-issue"
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-semibold text-sm"
                 >
-                  Learn More
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -363,8 +358,8 @@ export default function ServicesPage() {
             <ScrollAnimation delay={0.1}>
               <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-8 hover:border-cyan-500/40 transition-all duration-300">
                 <h3 className="text-2xl font-heading font-bold text-white mb-2">Quarterly Plan</h3>
-                <div className="text-4xl font-bold text-[#22d3ee] mb-2">$2,000</div>
-                <p className="text-white/70 mb-6">per quarter · 30 hours included</p>
+                <div className="text-2xl font-bold text-[#22d3ee] mb-2">Flexible quarterly support</div>
+                <p className="text-white/70 mb-6">Scoped to your needs each quarter</p>
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-start text-white/80">
                     <FiCheck className="w-5 h-5 text-[#22d3ee] mr-3 flex-shrink-0 mt-0.5" />
@@ -384,10 +379,10 @@ export default function ServicesPage() {
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=existing-issue"
                   className="inline-flex items-center justify-center w-full px-6 py-3 bg-transparent border-2 border-white/20 text-white rounded-lg hover:border-red-500 hover:bg-red-500 transition-all duration-200 font-semibold"
                 >
-                  Choose Quarterly
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -396,12 +391,12 @@ export default function ServicesPage() {
               <div className="bg-gray-900/50 border-2 border-[#22d3ee] rounded-xl p-8 relative overflow-hidden shadow-2xl shadow-[#22d3ee]/20">
                 <div className="absolute top-4 right-4">
                   <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full uppercase shadow-lg">
-                    Save 15%
+                    Best Value
                   </span>
                 </div>
                 <h3 className="text-2xl font-heading font-bold text-white mb-2">Annual Plan</h3>
-                <div className="text-4xl font-bold text-[#22d3ee] mb-2">$6,800</div>
-                <p className="text-white/70 mb-6">per year · 120 hours included</p>
+                <div className="text-2xl font-bold text-[#22d3ee] mb-2">Year-round partnership</div>
+                <p className="text-white/70 mb-6">Dedicated support all year long</p>
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-start text-white/80">
                     <FiCheck className="w-5 h-5 text-[#22d3ee] mr-3 flex-shrink-0 mt-0.5" />
@@ -417,14 +412,14 @@ export default function ServicesPage() {
                   </li>
                   <li className="flex items-start text-white/80">
                     <FiCheck className="w-5 h-5 text-[#22d3ee] mr-3 flex-shrink-0 mt-0.5" />
-                    <span>$57/hour effective rate</span>
+                    <span>Significant annual savings</span>
                   </li>
                 </ul>
                 <Link
-                  href="/start"
+                  href="/contact?inquiry=existing-issue"
                   className="inline-flex items-center justify-center w-full px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:scale-105 transition-all duration-200 font-semibold shadow-lg"
                 >
-                  Choose Annual
+                  Let's Talk
                 </Link>
               </div>
             </ScrollAnimation>
@@ -576,14 +571,14 @@ export default function ServicesPage() {
             <ScrollAnimation delay={0.2}>
               <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-500/40 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">What if I don't know exactly what I need?</h4>
-                <p className="text-white/70">That's okay! The project brief helps us understand your needs and recommend the right solutions. We'll guide you through the process.</p>
+                <p className="text-white/70">That's okay! Just reach out and we'll have a conversation to understand your needs and recommend the right solutions. We'll guide you through the process.</p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.3}>
               <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-500/40 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">Do you offer payment plans?</h4>
-                <p className="text-white/70">Yes! We offer flexible payment schedules for larger projects. Typically 50% upfront, 50% on delivery.</p>
+                <p className="text-white/70">Yes! We work with you to find a payment structure that fits your budget.</p>
               </div>
             </ScrollAnimation>
 
@@ -597,7 +592,7 @@ export default function ServicesPage() {
             <ScrollAnimation delay={0.5}>
               <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-500/40 transition-all duration-300">
                 <h4 className="text-xl font-semibold text-white mb-3">Can you work with my budget?</h4>
-                <p className="text-white/70">We create custom quotes based on your specific needs and budget. Let us know your constraints in the project brief and we'll work with you.</p>
+                <p className="text-white/70">Absolutely. We create custom quotes based on your specific needs and budget. Just let us know your constraints and we'll find a way to make it work.</p>
               </div>
             </ScrollAnimation>
 
@@ -645,10 +640,10 @@ export default function ServicesPage() {
                   Get in Touch
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/projects"
                   className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
                 >
-                  Ask a Question
+                  See Our Work
                 </Link>
               </div>
             </div>
