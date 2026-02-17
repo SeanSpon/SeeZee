@@ -71,7 +71,6 @@ export default function TopBar() {
     { path: '/blog', label: 'Blog', icon: FiFileText },
     { path: '/philosophy', label: 'Philosophy', icon: FiBook },
     { path: '/about', label: 'About', icon: FiInfo },
-    { path: '/contact', label: 'Contact', icon: FiMail },
   ]
 
   const isAuthenticated = !!session
@@ -163,19 +162,29 @@ export default function TopBar() {
 
             {/* Right side items */}
             <div className="flex items-center gap-3">
-              {/* Desktop: Get in Touch CTA - visible to ALL users */}
+              {/* Desktop: Primary CTA - context-aware */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="hidden lg:block"
               >
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  <FiMail className="w-4 h-4" />
-                  Get in Touch
-                </Link>
+                {isAuthenticated ? (
+                  <Link
+                    href="/start"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    <FiPlus className="w-4 h-4" />
+                    Start Project
+                  </Link>
+                ) : (
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    <FiMail className="w-4 h-4" />
+                    Get in Touch
+                  </Link>
+                )}
               </motion.div>
 
               {/* Desktop: Login or User Menu */}
@@ -330,16 +339,27 @@ export default function TopBar() {
                     )
                   })}
 
-                  {/* Mobile: Contact CTA + Login or User Menu */}
+                  {/* Mobile: Primary CTA + Login or User Menu */}
                   <div className="border-t border-gray-800 pt-4 mt-4">
-                    <Link
-                      href="/contact"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
-                    >
-                      <FiMail className="w-4 h-4" />
-                      Get in Touch
-                    </Link>
+                    {isAuthenticated ? (
+                      <Link
+                        href="/start"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
+                      >
+                        <FiPlus className="w-4 h-4" />
+                        Start Project
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/contact"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
+                      >
+                        <FiMail className="w-4 h-4" />
+                        Get in Touch
+                      </Link>
+                    )}
                     {!isAuthenticated ? (
                       <Link
                         href="/login"

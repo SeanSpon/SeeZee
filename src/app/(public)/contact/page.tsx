@@ -8,11 +8,10 @@ import { motion } from "framer-motion";
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 const INQUIRY_TYPES = [
-  { value: 'general', label: 'General Inquiry' },
-  { value: 'support', label: 'Support Request' },
-  { value: 'partnership', label: 'Partnership Opportunity' },
-  { value: 'media', label: 'Media & Press' },
-  { value: 'other', label: 'Other' },
+  { value: 'need-help', label: 'I need help with technology' },
+  { value: 'new-website', label: 'I need a website or app' },
+  { value: 'existing-issue', label: 'I have an existing system that needs work' },
+  { value: 'just-exploring', label: 'Just exploring — not sure yet' },
 ];
 
 function ContactForm() {
@@ -262,7 +261,7 @@ function ContactForm() {
             {/* Inquiry Type */}
             <label htmlFor="inquiryType" className="mt-6 block">
               <span className="block text-sm font-medium text-white mb-2">
-                Inquiry Type
+                What brings you here?
               </span>
               <select
                 id="inquiryType"
@@ -270,7 +269,7 @@ function ContactForm() {
                 value={state.inquiryType}
                 onChange={(e) => setState({ ...state, inquiryType: e.target.value })}
               >
-                <option value="" className="bg-[#1a2332]">Select an inquiry type...</option>
+                <option value="" className="bg-[#1a2332]">What brings you here?</option>
                 {INQUIRY_TYPES.map((type) => (
                   <option key={type.value} value={type.value} className="bg-[#1a2332]">
                     {type.label}
