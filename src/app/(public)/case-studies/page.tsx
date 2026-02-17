@@ -234,10 +234,10 @@ export default function CaseStudiesPage() {
                 business — let's create something meaningful together.
               </p>
               <Link
-                href="/start"
+                href="/contact"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-blue-600/40 transform hover:scale-105"
               >
-                Start Your Project
+                Get in Touch
                 <FiArrowRight className="w-5 h-5" />
               </Link>
             </div>

@@ -659,10 +659,10 @@ export default function BigRedBusCaseStudyPage() {
                   and support organizations.
                 </p>
                 <Link
-                  href="/start"
+                  href="/contact"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-trinity-red text-white rounded-lg hover:bg-trinity-maroon transition-all duration-200 font-semibold text-lg shadow-lg transform hover:-translate-y-1"
                 >
-                  Start Your Project
+                  Get in Touch
                   <FiArrowRight className="w-5 h-5" />
                 </Link>
               </div>

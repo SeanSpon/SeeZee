@@ -390,16 +390,16 @@ export default function PhilosophyPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link
-                href="/start"
+                href="/contact"
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-red-500 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
               >
-                Start a Project
+                Get in Touch
               </Link>
               <Link
-                href="/start/contact"
+                href="/contact"
                 className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
               >
-                Book a Consult
+                Ask a Question
               </Link>
             </div>
           </motion.div>

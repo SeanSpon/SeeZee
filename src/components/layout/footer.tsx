@@ -8,7 +8,7 @@ export function Footer() {
   const navigation = {
     main: [
       { name: 'Services', href: '/services' },
-      { name: 'Work', href: '/work' },
+      { name: 'Projects', href: '/projects' },
       { name: 'About', href: '/about' },
       { name: 'Contact', href: '/contact' },
     ],
@@ -39,7 +39,7 @@ export function Footer() {
               </Link>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm mb-6">
-              Professional websites built in 48 hours. Fully managed, beautifully designed, and maintained for life through your SeeZee Dashboard.
+              Your community technology partner. Technical support, consulting, web development, and automation solutions for businesses, schools, and community organizations in Louisville and beyond.
             </p>
             
             {/* Social links */}
@@ -110,13 +110,21 @@ export function Footer() {
 
             {/* Contact CTA */}
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Get Started</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Reach Out</h4>
               <Link
-                href="/start"
-                className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white text-sm font-semibold hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                href="/contact"
+                className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white text-sm font-semibold hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transition-all duration-300 hover:from-red-700 hover:to-red-800 mb-4"
               >
-                Start Project
+                Get in Touch
               </Link>
+              <div className="mt-4 space-y-2">
+                <a href="mailto:contact@seezeestudios.com" className="block text-gray-400 text-sm hover:text-red-400 transition-colors">
+                  contact@seezeestudios.com
+                </a>
+                <a href="tel:+15024352986" className="block text-gray-400 text-sm hover:text-red-400 transition-colors">
+                  (502) 435-2986
+                </a>
+              </div>
             </div>
           </div>
         </div>

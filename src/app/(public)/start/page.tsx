@@ -214,7 +214,14 @@ export default function StartProjectPage() {
               <h2 className="text-3xl font-bold text-white mb-2">
                 Choose Your Project Type
               </h2>
-              <p className="text-gray-400">Select what best fits your needs</p>
+              <p className="text-gray-400 mb-4">Select what best fits your needs</p>
+              <p className="text-gray-500 text-sm">
+                Not sure what you need?{' '}
+                <Link href="/contact" className="text-red-400 hover:text-red-300 underline underline-offset-2 transition-colors">
+                  Just send us a message
+                </Link>{' '}
+                or call <a href="tel:+15024352986" className="text-red-400 hover:text-red-300 underline underline-offset-2 transition-colors">(502) 435-2986</a> and we'll figure it out together.
+              </p>
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

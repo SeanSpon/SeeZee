@@ -649,10 +649,10 @@ export default function AVisionForYouCaseStudyPage() {
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
-                  href="/start"
+                  href="/contact"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#ef4444] rounded-lg hover:bg-gray-100 transition-all duration-300 font-semibold text-lg shadow-lg transform hover:scale-105"
                 >
-                  Start Your Project
+                  Get in Touch
                   <FiArrowRight className="w-5 h-5" />
                 </Link>
                 <Link

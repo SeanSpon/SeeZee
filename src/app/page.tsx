@@ -9,18 +9,19 @@ import { useState, useEffect } from 'react'
 import ScrollAnimation from '@/components/shared/ScrollAnimation'
 import StickyCTA from '@/components/shared/StickyCTA'
 import ImageLightbox from '@/components/shared/ImageLightbox'
-import { TechStrip } from '@/components/sections/tech-strip'
-import { 
-  FiArrowRight, 
-  FiCheck, 
-  FiBook, 
-  FiHeart, 
-  FiUsers, 
+import {
+  FiArrowRight,
+  FiCheck,
+  FiBook,
+  FiHeart,
+  FiUsers,
   FiShield,
   FiEye,
   FiTool,
   FiCalendar,
-  FiMapPin
+  FiMapPin,
+  FiMail,
+  FiPhone
 } from 'react-icons/fi'
 
 export default function HomePage() {
@@ -480,10 +481,10 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/start"
+                  href="/contact"
                   className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-[#ef4444] text-white rounded-lg font-bold text-base sm:text-lg shadow-2xl hover:shadow-[#ef4444]/50 transition-all duration-300 group relative overflow-hidden min-h-[48px] w-full sm:w-auto"
                 >
-                  <span className="relative z-10">Start Your Project</span>
+                  <span className="relative z-10">Talk to Us</span>
                   <FiArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-[#ef4444] to-[#dc2626]"
@@ -812,8 +813,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <TechStrip />
+      {/* Contact CTA - Simple path to reach us */}
+      <section className="py-12 sm:py-20 bg-gradient-to-b from-[#0a1128] to-[#1a2332] relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center">
+          <ScrollAnimation>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold mb-4 text-white">
+              Not sure where to start?
+            </h2>
+            <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl mx-auto">
+              That's completely fine. Send us a message, give us a call, or just say hi. We'll figure out the best way to help together — no commitment, no pressure.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-trinity-red text-white rounded-lg hover:bg-red-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <FiMail className="w-5 h-5" />
+                Send Us a Message
+              </Link>
+              <a
+                href="tel:+15024352986"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/20 text-white rounded-lg hover:bg-white/10 transition-all duration-300 font-semibold text-lg"
+              >
+                <FiPhone className="w-5 h-5" />
+                (502) 435-2986
+              </a>
+            </div>
+          </ScrollAnimation>
+        </div>
+      </section>
 
       {/* Featured Project - Big Red Bus */}
       <section className="py-12 sm:py-20 bg-[#0a1128] relative overflow-hidden">
@@ -1059,10 +1087,10 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
-                    href="/start"
+                    href="/contact"
                     className="inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 sm:py-5 bg-white text-red-500 rounded-lg hover:bg-gray-100 transition-all duration-300 font-bold text-base sm:text-lg shadow-2xl hover:shadow-white/30 min-h-[48px] w-full sm:w-auto"
                   >
-                    Start Your Project
+                    Get in Touch
                     <FiArrowRight className="w-5 h-5" />
                   </Link>
                 </motion.div>

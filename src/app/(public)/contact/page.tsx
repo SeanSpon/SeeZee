@@ -131,11 +131,11 @@ function ContactForm() {
             className="text-center space-y-6"
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
-              Get In Touch
+              Let's Talk
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              We'd love to hear from you. Reach out and let's start building something amazing together.
+              Have a question? Need tech help? Just want to chat about what's possible? We're here and we'd love to hear from you.
             </p>
           </motion.div>
         </div>
@@ -341,24 +341,24 @@ function ContactForm() {
             className="text-center space-y-8"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white">
-              Ready to start a project?
+              Want to see what we've built?
             </h2>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Let's build something that works.
+              Check out our work with local schools, nonprofits, and community organizations.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link
-                href="/start"
+                href="/projects"
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-red-500 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
               >
-                Start a Project
+                View Our Work
               </Link>
               <Link
-                href="/start/contact"
+                href="/services"
                 className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
               >
-                Book a Consult
+                See Our Services
               </Link>
             </div>
           </motion.div>

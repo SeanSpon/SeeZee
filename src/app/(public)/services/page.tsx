@@ -79,17 +79,17 @@ export default function ServicesPage() {
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <Link
-                  href="/start"
+                  href="/contact"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-semibold text-lg shadow-lg"
                 >
-                  Start Your Project
+                  Talk to Us
                   <FiArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="/start/contact"
+                  href="/contact"
                   className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
                 >
-                  Book a Consult
+                  Ask a Question
                 </Link>
               </motion.div>
             </div>
@@ -639,16 +639,16 @@ export default function ServicesPage() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link
-                  href="/start"
+                  href="/contact"
                   className="inline-flex items-center justify-center px-8 py-4 bg-white text-red-500 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
                 >
-                  Start Your Project
+                  Get in Touch
                 </Link>
                 <Link
-                  href="/start/contact"
+                  href="/contact"
                   className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-[1.03] hover:bg-white/10"
                 >
-                  Book a Consult
+                  Ask a Question
                 </Link>
               </div>
             </div>

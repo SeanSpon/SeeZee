@@ -764,16 +764,16 @@ export default function ProjectsPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/start"
+                href="/contact"
                 className="inline-block px-8 py-4 bg-white text-red-500 rounded-lg hover:scale-105 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl"
               >
-                Start a Project
+                Get in Touch
               </Link>
               <Link
-                href="/start/contact"
+                href="/contact"
                 className="inline-block px-8 py-4 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white/10 transition-all duration-300 font-semibold text-lg"
               >
-                Book a Consult
+                Ask a Question
               </Link>
             </div>
           </ScrollAnimation>

@@ -29,10 +29,10 @@ export default function StickyCTA() {
           className="fixed bottom-6 right-6 z-50"
         >
           <Link
-            href="/services"
+            href="/contact"
             className="inline-flex items-center gap-2 px-6 py-3 bg-trinity-red text-white rounded-full hover:bg-trinity-maroon transition-all duration-200 font-semibold shadow-large glow-on-hover transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900"
           >
-            Get Started
+            Get in Touch
             <FiArrowRight className="w-4 h-4" />
           </Link>
         </motion.div>
