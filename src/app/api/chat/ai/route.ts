@@ -31,16 +31,18 @@ interface PageContext {
 }
 
 export async function POST(req: NextRequest) {
+  let parsedBody: {
+    message?: string;
+    conversationId?: string;
+    leadInfo?: { name?: string; email?: string };
+    pageContext?: PageContext;
+    pageContextText?: string;
+    history?: ChatHistory[];
+  } = {};
+
   try {
-    const body = await req.json();
-    const { message, conversationId, leadInfo, pageContext, pageContextText, history } = body as {
-      message: string;
-      conversationId?: string;
-      leadInfo?: { name?: string; email?: string };
-      pageContext?: PageContext;
-      pageContextText?: string;
-      history?: ChatHistory[];
-    };
+    parsedBody = await req.json();
+    const { message, conversationId, leadInfo, pageContext, pageContextText, history } = parsedBody;
 
     if (!message?.trim()) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
@@ -169,12 +171,11 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error("AI Chat error:", error);
-    
+
     // Return fallback response on error
-    const body = await req.clone().json().catch(() => ({}));
     return NextResponse.json({
-      content: getFallbackResponse(body.message || ""),
-      conversationId: body.conversationId || `error-${Date.now()}`,
+      content: getFallbackResponse(parsedBody.message || ""),
+      conversationId: parsedBody.conversationId || `error-${Date.now()}`,
       quickActions: ["Pricing", "Services", "Contact"],
     });
   }

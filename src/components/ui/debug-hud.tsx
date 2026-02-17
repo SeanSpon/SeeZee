@@ -115,7 +115,7 @@ export default function DebugHUD() {
   return (
     <>
       {/* Debug Toggle Button */}
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-4 left-4 z-50">
         <button
           onClick={() => setIsVisible(!isVisible)}
           className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-xs font-mono transition-colors"
@@ -127,7 +127,7 @@ export default function DebugHUD() {
 
       {/* Debug Panel */}
       {isVisible && (
-        <div className="fixed bottom-20 right-4 w-96 max-h-96 overflow-y-auto bg-black/95 border border-red-500/50 rounded-lg p-4 z-50 font-mono text-xs">
+        <div className="fixed bottom-20 left-4 w-96 max-h-96 overflow-y-auto bg-black/95 border border-red-500/50 rounded-lg p-4 z-50 font-mono text-xs">
           <div className="space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between">

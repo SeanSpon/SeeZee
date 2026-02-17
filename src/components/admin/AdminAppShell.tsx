@@ -31,8 +31,7 @@ import {
   FiBookOpen,
   FiChevronLeft,
   FiChevronRight,
-  FiMail,
-  FiMapPin,
+  FiGitBranch,
   FiMic,
   FiPieChart,
   FiSettings,
@@ -123,8 +122,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin/project-requests", label: "Project Requests", icon: FiInbox, description: "Incoming client requests" },
       { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
-      { href: "/admin/leads", label: "Leads", icon: FiMapPin, description: "Lead management and finder" },
-      { href: "/admin/marketing", label: "Email Hub", icon: FiMail, description: "Campaigns and outreach" },
       { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
     ],
     []
@@ -151,6 +148,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin/team", label: "Team", icon: FiTeamUsers, description: "Team members" },
       { href: "/admin/goals", label: "Goals", icon: FiTarget, description: "OKRs and targets" },
+      { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
     ],
     []
   );
@@ -182,9 +180,9 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
       { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
       { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
       { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
-      { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
       { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
       { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
+      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
     ],
     []
   );
@@ -292,7 +290,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={pipelineItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/project-requests") || pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/leads") || pathname.startsWith("/admin/marketing") || pathname.startsWith("/admin/blog")}
+                defaultOpen={pathname.startsWith("/admin/project-requests") || pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/blog")}
                 collapsed={isCollapsed}
               />
 
@@ -318,7 +316,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={teamItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/goals")}
+                defaultOpen={pathname.startsWith("/admin/team") || pathname.startsWith("/admin/goals") || pathname.startsWith("/admin/learning")}
                 collapsed={isCollapsed}
               />
 
@@ -350,7 +348,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={systemItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/database") || pathname.startsWith("/settings") || pathname.startsWith("/admin/analytics") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/learning") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/links")}
+                defaultOpen={pathname.startsWith("/admin/database") || pathname.startsWith("/settings") || pathname.startsWith("/admin/analytics") || pathname.startsWith("/admin/recordings") || pathname.startsWith("/admin/chat") || pathname.startsWith("/admin/links") || pathname.startsWith("/admin/git")}
                 collapsed={isCollapsed}
               />
             </nav>
