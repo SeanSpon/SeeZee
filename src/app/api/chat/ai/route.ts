@@ -1,21 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import Anthropic from "@anthropic-ai/sdk";
-
-// Simple system prompt for chatbot
-function buildSystemPrompt() {
-  return `You are a friendly AI assistant for SeeZee Studios, a web development company specializing in affordable websites for nonprofits and small businesses. 
-
-Company info:
-- Name: SeeZee Studios  
-- Founders: Sean and Zach
-- Specialty: Nonprofit web development with 40% discount
-- Pricing: Starter ($599), Growth ($1,499), Pro ($2,999)
-- Nonprofit pricing: 40% off all packages
-- Contact: sean@seezeestudios.com
-
-Be helpful, concise, and guide users toward scheduling a consultation or starting a project.`;
-}
+import { getMCPSystemPrompt } from "@/lib/mcp-context";
 
 interface ChatHistory {
   role: "user" | "assistant";
@@ -91,11 +77,14 @@ export async function POST(req: NextRequest) {
       content: userMessage,
     });
 
+    // Fetch MCP-powered system prompt (cached for 1 hour)
+    const systemPrompt = await getMCPSystemPrompt();
+
     // Call Claude API
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
-      system: buildSystemPrompt(),
+      system: systemPrompt,
       messages,
     });
 
