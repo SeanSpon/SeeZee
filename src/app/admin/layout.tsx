@@ -33,13 +33,19 @@ export default async function AdminLayout({
     redirect("/no-access");
   }
 
-  // Read user's nav preference from DB
-  const prefs = await prisma.userPreferences.findUnique({
-    where: { userId: user.id },
-    select: { adminNavMode: true, folderClickMode: true },
-  });
-  const navMode = (prefs?.adminNavMode as "sidebar" | "explorer" | "dashboard") ?? "sidebar";
-  const clickMode = (prefs?.folderClickMode as "zoom" | "list" | "tabs") ?? "zoom";
+  // Read user's nav preference from DB (gracefully fallback if table doesn't exist)
+  let navMode: "sidebar" | "explorer" | "dashboard" = "sidebar";
+  let clickMode: "zoom" | "list" | "tabs" = "zoom";
+  try {
+    const prefs = await prisma.userPreferences.findUnique({
+      where: { userId: user.id },
+      select: { adminNavMode: true, folderClickMode: true },
+    });
+    navMode = (prefs?.adminNavMode as typeof navMode) ?? "sidebar";
+    clickMode = (prefs?.folderClickMode as typeof clickMode) ?? "zoom";
+  } catch (e) {
+    console.error("[AdminLayout] Failed to read user preferences:", e);
+  }
 
   // Choose shell based on nav mode
   const shell =
