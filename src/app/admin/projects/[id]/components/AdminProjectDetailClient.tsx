@@ -24,7 +24,6 @@ import {
   Activity,
   Users,
   DollarSign,
-  TrendingUp,
   ChevronRight,
   MoreHorizontal,
 } from "lucide-react";
@@ -35,6 +34,7 @@ import { SettingsTab } from "@/app/(client)/client/components/SettingsTab";
 import { AdminChangeRequestsSection } from "./AdminChangeRequestsSection";
 import { GitIntegrationPanel } from "@/components/admin/projects/GitIntegrationPanel";
 import { VercelDeploymentsPanel } from "@/components/admin/projects/VercelDeploymentsPanel";
+import { DriveDocumentsPanel } from "@/components/admin/projects/DriveDocumentsPanel";
 
 interface AdminProjectDetailClientProps {
   project: {
@@ -43,7 +43,12 @@ interface AdminProjectDetailClientProps {
     description: string | null;
     status: string;
     budget: number | null;
-    monthlyRecurringRevenue: number | null;
+    maintenancePlan: {
+      id: string;
+      monthlyPrice: number;
+      tier: string;
+      status: string;
+    } | null;
     startDate: Date | null;
     endDate: Date | null;
     createdAt: Date;
@@ -78,6 +83,7 @@ interface AdminProjectDetailClientProps {
     clientTasks: Array<any>;
     adminTasks: Array<any>;
     files: Array<any>;
+    driveDocuments: Array<any>;
     requests: Array<any>;
     messageThreads: Array<any>;
     invoices: Array<any>;
@@ -91,53 +97,6 @@ type TabType = "overview" | "tasks" | "activity" | "client" | "financials" | "mo
 export function AdminProjectDetailClient({ project }: AdminProjectDetailClientProps) {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [showAddTask, setShowAddTask] = useState(false);
-  const [mrrValue, setMrrValue] = useState<string>(
-    project.monthlyRecurringRevenue ? String(project.monthlyRecurringRevenue) : ""
-  );
-  const [mrrLoading, setMrrLoading] = useState(false);
-  const [mrrError, setMrrError] = useState<string>("");
-
-  // =============================================
-  // MRR MANAGEMENT
-  // =============================================
-  const handleUpdateMrr = async () => {
-    setMrrError("");
-    setMrrLoading(true);
-
-    try {
-      const mrrNum = mrrValue ? parseFloat(mrrValue) : null;
-
-      if (mrrNum !== null && (isNaN(mrrNum) || mrrNum < 0)) {
-        setMrrError("Please enter a valid positive number");
-        setMrrLoading(false);
-        return;
-      }
-
-      const response = await fetch(`/api/admin/projects/${project.id}/mrr`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ monthlyRecurringRevenue: mrrNum }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setMrrError(data.error || "Failed to update MRR");
-        setMrrLoading(false);
-        return;
-      }
-
-      // Success - update local state to reflect the change
-      setMrrValue(mrrNum ? String(mrrNum) : "");
-      setMrrError("");
-      // In a real app, you might refetch the project data or update context
-    } catch (error) {
-      setMrrError("An error occurred while updating MRR");
-      console.error("MRR update error:", error);
-    } finally {
-      setMrrLoading(false);
-    }
-  };
 
   // =============================================
   // STATUS & RISK HELPERS
@@ -546,33 +505,30 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
 
   const renderFinancialsTab = () => (
     <div className="space-y-6">
-      {/* MRR Input Section */}
+      {/* MRR from Maintenance Plan */}
       <div className="p-4 bg-white/5 rounded-lg border border-white/10">
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide mb-3">Monthly Recurring Revenue (MRR)</h3>
-        <div className="flex gap-2">
-          <div className="flex-1">
-            <label className="text-xs text-white/60 mb-1 block">Custom MRR Amount</label>
-            <input
-              type="number"
-              placeholder="0.00"
-              value={mrrValue}
-              onChange={(e) => setMrrValue(e.target.value)}
-              className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-[#ef4444]/50"
-              step="0.01"
-              min="0"
-            />
+        {project.maintenancePlan ? (
+          <div className="space-y-3">
+            <p className="text-2xl font-bold text-emerald-400">
+              ${project.maintenancePlan.monthlyPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                {project.maintenancePlan.tier}
+              </span>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
+                project.maintenancePlan.status === "ACTIVE"
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-white/10 text-white/50"
+              }`}>
+                {project.maintenancePlan.status}
+              </span>
+            </div>
+            <p className="text-xs text-white/40">Sourced from maintenance plan</p>
           </div>
-          <button
-            onClick={handleUpdateMrr}
-            disabled={mrrLoading}
-            className="mt-5 px-4 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dd3333] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-          >
-            {mrrLoading ? "Saving..." : "Save MRR"}
-          </button>
-        </div>
-        {mrrError && <p className="text-xs text-red-400 mt-2">{mrrError}</p>}
-        {project.monthlyRecurringRevenue && (
-          <p className="text-xs text-white/60 mt-2">Current MRR: ${Number(project.monthlyRecurringRevenue).toFixed(2)}</p>
+        ) : (
+          <p className="text-white/40 text-sm">No maintenance plan attached</p>
         )}
       </div>
 
@@ -683,6 +639,12 @@ export function AdminProjectDetailClient({ project }: AdminProjectDetailClientPr
           />
         </div>
       </div>
+
+      {/* Drive Documents */}
+      <DriveDocumentsPanel
+        projectId={project.id}
+        documents={project.driveDocuments}
+      />
 
       {/* Milestones */}
       <div>

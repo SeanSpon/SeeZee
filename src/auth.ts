@@ -244,12 +244,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         clientId: GOOGLE_ID,
         clientSecret: GOOGLE_SECRET,
         allowDangerousEmailAccountLinking: true,
-        authorization: { 
-          params: { 
-            prompt: "consent", 
-            access_type: "offline", 
-            response_type: "code" 
-          } 
+        authorization: {
+          params: {
+            prompt: "consent",
+            access_type: "offline",
+            response_type: "code",
+            scope: "openid email profile https://www.googleapis.com/auth/drive.readonly",
+          }
         },
         // Token endpoint handled by NextAuth (logging removed to prevent spam)
       }),

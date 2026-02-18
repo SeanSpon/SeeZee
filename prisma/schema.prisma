@@ -425,6 +425,7 @@ model Project {
   financeTransactions FinanceTransaction[]
   recordings          Recording[]
   calendarEvents      CalendarEvent[]
+  driveDocuments      DriveDocument[]
 
   @@index([organizationId, leadId])
   @@map("projects")
@@ -1348,8 +1349,36 @@ model Tool {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  onboardingPath OnboardingPath?
+
   @@index([category])
   @@map("tools")
+}
+
+model OnboardingPath {
+  id          String           @id @default(cuid())
+  toolId      String           @unique
+  tool        Tool             @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  steps       OnboardingStep[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("onboarding_paths")
+}
+
+model OnboardingStep {
+  id               String         @id @default(cuid())
+  onboardingPathId String
+  onboardingPath   OnboardingPath @relation(fields: [onboardingPathId], references: [id], onDelete: Cascade)
+  trainingId       String
+  training         Training       @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  order            Int            @default(0)
+  isRequired       Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+
+  @@map("onboarding_steps")
 }
 
 model Link {
@@ -1403,8 +1432,9 @@ model Training {
   createdById String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  assignments Assignment[]
-  createdBy   User         @relation("TrainingCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  assignments    Assignment[]
+  onboardingSteps OnboardingStep[]
+  createdBy      User         @relation("TrainingCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
 
   @@index([visibility])
   @@index([type])
@@ -2797,4 +2827,36 @@ enum RequestPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+enum DriveDocCategory {
+  CONTRACT
+  PROPOSAL
+  DESIGN
+  INVOICE
+  LEGAL
+  MEETING_NOTES
+  CLIENT_ASSETS
+  OTHER
+}
+
+model DriveDocument {
+  id            String           @id @default(cuid())
+  projectId     String?
+  project       Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  driveFileId   String           @unique
+  name          String
+  mimeType      String
+  webViewLink   String
+  iconLink      String?
+  thumbnailLink String?
+  category      DriveDocCategory @default(OTHER)
+  tags          String[]
+  notes         String?
+  addedById     String
+  lastSyncedAt  DateTime         @default(now())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@map("drive_documents")
 }

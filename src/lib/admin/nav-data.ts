@@ -27,12 +27,12 @@ import {
   FiSend,
   FiGlobe,
   FiMessageSquare,
-  FiClock,
   FiBookmark,
   FiCpu,
   FiInbox,
   FiShield,
   FiMap,
+  FiHardDrive,
 } from "react-icons/fi";
 
 export interface NavItem {
@@ -96,8 +96,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/admin/finance", label: "Overview", icon: FiDollarSign, description: "Revenue and profit metrics" },
       { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices and payments" },
       { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Cost tracking" },
-      { href: "/admin/hours", label: "Hours", icon: FiClock, description: "Time and packages" },
-      { href: "/admin/maintenance", label: "Maintenance Plans", icon: FiServer, description: "Maintenance plans" },
+      { href: "/admin/service-plans", label: "Service Plans", icon: FiServer, description: "Plans, hours, and requests" },
     ],
   },
   {
@@ -125,7 +124,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/admin/ceo/tasks", label: "Tasks", icon: FiCheckSquare, description: "Task management" },
       { href: "/admin/ceo/team-management", label: "Team Mgmt", icon: FiTeamUsers, description: "Team oversight" },
       { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
-      { href: "/admin/ceo/learning-hub", label: "Learning", icon: FiBookOpen, description: "Resources & tools" },
+      { href: "/admin/learning", label: "Learning Hub", icon: FiBookOpen, description: "Unified training & tools" },
       { href: "/admin/ceo/vault", label: "Armory", icon: FiShield, description: "API keys & secrets" },
     ],
   },
@@ -141,6 +140,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
       { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
       { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
+      { href: "/admin/resources", label: "Resources", icon: FiHardDrive, description: "Google Drive documents" },
       { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
     ],
   },
