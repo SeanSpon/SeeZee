@@ -205,23 +205,23 @@ function getFallbackResponse(message: string): string {
   const intent = detectIntent(message);
   
   const responses: Record<string, string> = {
-    pricing: `Great question about pricing! Here's what SeeZee offers:
+    pricing: `Great question about pricing! SeeZee prices by project type:
 
-• **Starter Package**: $599 (3-5 pages)
-• **Growth Package**: $1,499 (7-10 pages)
-• **Pro Package**: $2,999 (unlimited pages, custom features)
+• **Landing Page**: $1,200 – $2,400
+• **Marketing Website**: $3,000 – $6,000
+• **E-commerce Store**: $6,000 – $12,000
+• **Web Application**: $8,000 – $20,000
+• **Minimum build**: $1,000
 
-**Nonprofits get 40% off!**
-
-Would you like to schedule a free consultation to discuss your specific needs?`,
+Exact pricing depends on scope and complexity. Want to schedule a free consultation to discuss your project?`,
 
     portfolio: `SeeZee has worked with some amazing clients! Some recent projects include:
 
-• **A Vision For You (AVFY)** - Recovery community platform
-• **Big Red Bus** - Mental health resource directory
-• Various nonprofit and small business websites
+• **A Vision For You (AVFY)** – Recovery community platform
+• **Big Red Bus** – Mental health resource directory
+• Various nonprofit and community organization websites
 
-Check out our full portfolio at **/portfolio**, or let me know what kind of project you're thinking about!`,
+Check out our full portfolio at **/projects**, or let me know what kind of project you're thinking about!`,
 
     contact: `I'd love to connect you with our team! Here are your options:
 
@@ -239,36 +239,37 @@ The team typically responds within 24 hours. Is there anything else I can help w
 
 The whole process takes about 15 minutes. Ready to begin?`,
 
-    nonprofit: `SeeZee loves working with nonprofits!
+    nonprofit: `SeeZee loves working with nonprofits and community organizations!
 
-We offer a **40% discount** on all packages for 501(c)(3) organizations. That means:
-• Starter: **$359** (instead of $599)
-• Growth: **$899** (instead of $1,499)
-• Pro: **$1,799** (instead of $2,999)
+We specialize in technology support for schools, nonprofits, and community groups. Pricing is based on project scope:
 
-What kind of nonprofit work does your organization do?`,
+• **Landing Page**: Starting at $1,200
+• **Marketing Website**: Starting at $3,000
+• **Ongoing Support**: Quarterly or annual maintenance plans available
+
+Tell us about your organization and we'll put together a custom proposal at /start!`,
 
     timeline: `Here are typical project timelines:
 
-• **Starter sites**: 1-2 weeks
-• **Growth sites**: 2-3 weeks
-• **Pro/custom sites**: 4-6 weeks
+• **Landing pages**: 1–2 weeks
+• **Marketing websites**: 2–4 weeks
+• **E-commerce / web apps**: 4–8 weeks
 
-Need it faster? We offer rush delivery for an additional fee. When are you hoping to launch?`,
+Timelines depend on scope and complexity. When are you hoping to launch?`,
 
-    maintenance: `SeeZee offers ongoing maintenance plans starting at **$150/month**:
+    maintenance: `SeeZee offers ongoing maintenance and support plans:
 
-• Regular security updates
-• Content changes (2-5 per month depending on plan)
-• Uptime monitoring
-• Priority support
+• **Quarterly Plan**: $2,000/quarter (~$667/mo) – includes support hours, change requests, rollover
+• **Annual Plan**: $6,800/year (~$567/mo) – best value, includes all quarterly benefits
+• **Hour Packs**: Quick Boost (5hrs/$350), Power Pack (10hrs/$650), Mega Pack (20hrs/$1,200)
+• **On-Demand**: $75/hour for ad-hoc support
 
-Already have a website that needs care? Let me know more about it!`,
+All plans include security updates, content changes, and priority support. Want to learn more?`,
 
     general: `Hey there! I'm SeeZee's AI assistant. I can help you with:
 
 • **Pricing** for websites and apps
-• **Portfolio** examples of our work
+• **Our work** and portfolio
 • **Getting started** on your project
 
 What would you like to know more about?`,
