@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
         defaultView: "kanban",
         sidebarCollapsed: false,
         compactMode: false,
+        adminNavMode: "sidebar",
+        folderClickMode: "zoom",
       },
     });
   } catch (error) {

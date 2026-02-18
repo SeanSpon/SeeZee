@@ -7,7 +7,9 @@ import {
   User, Bell, Lock, Sliders, Plug, CreditCard, Shield,
   Save, CheckCircle, AlertTriangle, Trash2, ExternalLink,
   Mail, MapPin, Globe, LogOut, Key, Smartphone, Monitor,
-  Languages, Clock, LayoutGrid, Pencil, X, Github
+  Languages, Clock, LayoutGrid, Pencil, X, Github,
+  PanelLeft, Grid3X3, LayoutDashboard, MousePointerClick,
+  List, Columns, Navigation
 } from "lucide-react";
 
 // Glass components
@@ -161,6 +163,8 @@ function SettingsContent() {
     defaultView: "kanban",
     sidebarCollapsed: false,
     compactMode: false,
+    adminNavMode: "sidebar" as "sidebar" | "explorer" | "dashboard",
+    folderClickMode: "zoom" as "zoom" | "list" | "tabs",
   });
 
   // Billing state
@@ -1159,6 +1163,122 @@ function SettingsContent() {
                   </SettingsRow>
                 </GlassCardContent>
               </GlassCard>
+
+              {/* Navigation Preferences — only for admin users */}
+              {!isClient && (
+                <GlassCard variant="elevated" padding="lg">
+                  <GlassCardHeader
+                    icon={<Navigation className="w-5 h-5" />}
+                    title="Navigation"
+                    description="Choose your admin dashboard layout and navigation style"
+                  />
+                  <GlassCardContent className="space-y-6">
+                    {/* Layout Mode */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-3">
+                        Layout Mode
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {([
+                          {
+                            mode: "sidebar" as const,
+                            icon: PanelLeft,
+                            label: "Sidebar",
+                            desc: "Classic sidebar navigation",
+                          },
+                          {
+                            mode: "explorer" as const,
+                            icon: Grid3X3,
+                            label: "Explorer",
+                            desc: "Folder-based navigation",
+                          },
+                          {
+                            mode: "dashboard" as const,
+                            icon: LayoutDashboard,
+                            label: "Dashboard",
+                            desc: "Widget overview (coming soon)",
+                          },
+                        ]).map(({ mode, icon: Icon, label, desc }) => (
+                          <button
+                            key={mode}
+                            onClick={() =>
+                              setPreferences({ ...preferences, adminNavMode: mode })
+                            }
+                            className={`flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
+                              preferences.adminNavMode === mode
+                                ? "border-[#ef4444]/50 bg-[#ef4444]/10 text-white"
+                                : "border-white/[0.06] bg-white/[0.02] text-slate-400 hover:border-white/[0.12] hover:text-slate-200"
+                            }`}
+                          >
+                            <Icon
+                              className={`w-6 h-6 ${
+                                preferences.adminNavMode === mode
+                                  ? "text-[#ef4444]"
+                                  : "text-slate-500"
+                              }`}
+                            />
+                            <span className="text-sm font-medium">{label}</span>
+                            <span className="text-xs text-slate-500 text-center">{desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Folder Click Behavior — only shown when explorer mode */}
+                    {preferences.adminNavMode === "explorer" && (
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-3">
+                          Folder Click Behavior
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          {([
+                            {
+                              mode: "zoom" as const,
+                              icon: MousePointerClick,
+                              label: "Zoom",
+                              desc: "Open folder inline",
+                            },
+                            {
+                              mode: "list" as const,
+                              icon: List,
+                              label: "List",
+                              desc: "File manager sidebar",
+                            },
+                            {
+                              mode: "tabs" as const,
+                              icon: Columns,
+                              label: "Tabs",
+                              desc: "Horizontal tab bar",
+                            },
+                          ]).map(({ mode, icon: Icon, label, desc }) => (
+                            <button
+                              key={mode}
+                              onClick={() =>
+                                setPreferences({ ...preferences, folderClickMode: mode })
+                              }
+                              className={`flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
+                                preferences.folderClickMode === mode
+                                  ? "border-[#ef4444]/50 bg-[#ef4444]/10 text-white"
+                                  : "border-white/[0.06] bg-white/[0.02] text-slate-400 hover:border-white/[0.12] hover:text-slate-200"
+                              }`}
+                            >
+                              <Icon
+                                className={`w-6 h-6 ${
+                                  preferences.folderClickMode === mode
+                                    ? "text-[#ef4444]"
+                                    : "text-slate-500"
+                                }`}
+                              />
+                              <span className="text-sm font-medium">{label}</span>
+                              <span className="text-xs text-slate-500 text-center">{desc}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </GlassCardContent>
+                </GlassCard>
+              )}
 
               <GlassCard variant="elevated" padding="lg">
                 <GlassCardHeader
