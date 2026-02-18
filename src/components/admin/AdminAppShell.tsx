@@ -42,13 +42,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   const isUserCEO = isCEO(user.role);
   const [userImage, setUserImage] = useState<string | undefined>(user.image ?? undefined);
 
-  let setAdminNavMode: ((mode: "explorer") => void) | null = null;
-  try {
-    const nav = useNavigation();
-    setAdminNavMode = nav.setAdminNavMode;
-  } catch {
-    // NavigationProvider may not be available in all contexts
-  }
+  const { setAdminNavMode } = useNavigation();
 
   const groups = getVisibleGroups(isUserCEO);
 

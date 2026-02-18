@@ -81,10 +81,6 @@ export function NavigationProvider({
     setOpenFolderIdState(id);
   }, []);
 
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
   return (
     <NavigationContext.Provider
       value={{
