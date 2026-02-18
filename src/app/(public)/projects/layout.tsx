@@ -33,9 +33,9 @@ export default function ProjectsLayout({
         {
           '@type': 'CreativeWork',
           position: 1,
-          name: 'Red Head Printing E-Commerce Platform',
+          name: 'ClipBot - AI Video Director',
           description:
-            'A high-performance e-commerce platform built with Next.js and Express featuring product catalog, shopping cart, custom file uploads, and Stripe payments',
+            'An AI-powered system that analyzes long-form video, detects the strongest moments, generates scene-by-scene editing directions, and scores clips for virality automatically.',
           creator: {
             '@type': 'Organization',
             name: 'SeeZee Studio',
@@ -44,9 +44,31 @@ export default function ProjectsLayout({
         {
           '@type': 'CreativeWork',
           position: 2,
-          name: 'Big Red Bus Nonprofit Directory',
+          name: 'SeeZee Studios Platform',
           description:
-            'Partner nonprofit project — a shared brand for community work and experiments in how small orgs can look professional online. A nonprofit directory platform for mental health and autism support organizations with filtering and search functionality',
+            'Internal operations system managing client projects, workflows, financial tracking, and team operations with 40+ admin modules and role-based portals.',
+          creator: {
+            '@type': 'Organization',
+            name: 'SeeZee Studio',
+          },
+        },
+        {
+          '@type': 'CreativeWork',
+          position: 3,
+          name: 'A Vision For You - Nonprofit Operations Dashboard',
+          description:
+            'Operations dashboard and data platform for a 501(c)(3) nonprofit in Louisville, Kentucky, featuring donation processing, member management, and program coordination.',
+          creator: {
+            '@type': 'Organization',
+            name: 'SeeZee Studio',
+          },
+        },
+        {
+          '@type': 'CreativeWork',
+          position: 4,
+          name: 'Big Red Bus Community Platform',
+          description:
+            'Community resource and accessibility platform for a Louisville-based nonprofit initiative, featuring organization directory, event discovery, and cognitive-friendly design.',
           creator: {
             '@type': 'Organization',
             name: 'SeeZee Studio',

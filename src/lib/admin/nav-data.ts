@@ -29,7 +29,6 @@ import {
   FiMessageSquare,
   FiBookmark,
   FiCpu,
-  FiInbox,
   FiShield,
   FiMap,
   FiHardDrive,
@@ -82,7 +81,6 @@ export const NAV_GROUPS: NavGroup[] = [
     icon: FiTrendingUp,
     folderColor: "#8b5cf6",
     items: [
-      { href: "/admin/project-requests", label: "Project Requests", icon: FiInbox, description: "Incoming client requests" },
       { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
       { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
     ],
