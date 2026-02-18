@@ -122,7 +122,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin/project-requests", label: "Project Requests", icon: FiInbox, description: "Incoming client requests" },
       { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
-      { href: "/admin/pipeline?tab=leads", label: "Leads", icon: FiUsers, description: "Contact form submissions" },
       { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
     ],
     []
