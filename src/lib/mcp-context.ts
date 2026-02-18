@@ -36,15 +36,26 @@ interface MCPService {
   order: number;
   description: string;
   details: string[];
-  pricing: string[];
   differentiator: string;
   techStack?: string[];
+  // Pricing varies per service type — use any for flexibility
+  projectTypes?: Record<string, { name: string; description: string; priceRange: string; timeline: string }>;
+  pricingApproach?: string;
+  minimums?: Record<string, string>;
+  rushDelivery?: string;
+  plans?: Record<string, { name: string; price: string; includes: string[] }>;
+  hourPacks?: { packs: Array<{ name: string; hours: number; price: string; perHour: string }> };
+  onDemandRate?: string;
+  aiPricing?: Record<string, { name: string; price: string; includes: string[] }>;
+  [key: string]: any;
 }
 
 interface MCPServices {
   overview: string;
   services: MCPService[];
   audiences: Array<{ id: string; name: string; description: string }>;
+  paymentInfo?: Record<string, any>;
+  timeline?: Record<string, any>;
 }
 
 interface MCPTone {
@@ -117,8 +128,32 @@ function buildPromptFromData(data: MCPData): string {
     .sort((a, b) => a.order - b.order)
     .map((s) => {
       let line = `- **${s.name}** (${s.priority}): ${s.description}`;
-      if (s.pricing.length) {
-        line += `\n  Pricing: ${s.pricing.join("; ")}`;
+      // Extract pricing from the actual nested structure
+      const pricingParts: string[] = [];
+      if (s.projectTypes) {
+        Object.values(s.projectTypes).forEach((pt) => {
+          if (pt.name && pt.priceRange) pricingParts.push(`${pt.name}: ${pt.priceRange}`);
+        });
+      }
+      if (s.pricingApproach) pricingParts.push(s.pricingApproach);
+      if (s.plans) {
+        Object.values(s.plans).forEach((plan) => {
+          if (plan.name && plan.price) pricingParts.push(`${plan.name}: ${plan.price}`);
+        });
+      }
+      if (s.hourPacks?.packs) {
+        s.hourPacks.packs.forEach((pack) => {
+          pricingParts.push(`${pack.name}: ${pack.price} (${pack.hours}hrs)`);
+        });
+      }
+      if (s.onDemandRate) pricingParts.push(`On-demand: ${s.onDemandRate}`);
+      if (s.aiPricing) {
+        Object.values(s.aiPricing).forEach((tier) => {
+          if (tier.name && tier.price) pricingParts.push(`${tier.name}: ${tier.price}`);
+        });
+      }
+      if (pricingParts.length > 0) {
+        line += `\n  Pricing: ${pricingParts.join("; ")}`;
       }
       return line;
     })
@@ -194,7 +229,7 @@ ${constraints}
 RESPONSE GUIDELINES:
 - Be concise and helpful. Keep responses under 150 words when possible.
 - Use markdown formatting for lists and emphasis.
-- When discussing services, lead with support and consulting, not web development or AI.
+- When discussing services, lead with web development and systems first, ongoing partnership second, consulting third.
 - If the visitor seems interested, guide them to /contact or /start.
 - If asked about pricing, be transparent but note that exact pricing depends on scope.
 - Never invent information not covered here. If unsure, suggest they reach out directly.
