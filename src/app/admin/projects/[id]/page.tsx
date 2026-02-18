@@ -21,9 +21,10 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     redirect("/client");
   }
 
+  let project;
+  try {
   // Fetch project with all related data
-  // Use explicit select to avoid issues with columns that may not exist in production
-  const project = await prisma.project.findUnique({
+  project = await prisma.project.findUnique({
     where: { id },
     select: {
       id: true,
@@ -211,6 +212,23 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
       questionnaire: true,
     },
   });
+
+  } catch (error) {
+    console.error("[AdminProjectDetail] Failed to load project:", error);
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="max-w-md space-y-4 rounded-lg border border-red-500/20 bg-red-500/5 p-8 text-center">
+          <h2 className="text-xl font-bold text-white">Project Error</h2>
+          <p className="text-sm text-white/60">
+            Something went wrong loading this project. Check the server logs for details.
+          </p>
+          <p className="font-mono text-xs text-red-400">
+            {error instanceof Error ? error.message : "Unknown error"}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!project) {
     notFound();
