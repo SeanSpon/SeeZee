@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { AdminAppShell } from "@/components/admin/AdminAppShell";
 import { AdminExplorerShell } from "@/components/admin/explorer/AdminExplorerShell";
+import { AdminDashboardShell } from "@/components/admin/super/AdminDashboardShell";
 import { NavigationProvider } from "@/providers/NavigationProvider";
 import { NotificationsProvider } from "@/providers/NotificationsProvider";
 import { GitProvider } from "@/lib/git/git-context";
@@ -51,6 +52,8 @@ export default async function AdminLayout({
   const shell =
     navMode === "sidebar" ? (
       <AdminAppShell user={user}>{children}</AdminAppShell>
+    ) : navMode === "dashboard" ? (
+      <AdminDashboardShell user={user}>{children}</AdminDashboardShell>
     ) : (
       <AdminExplorerShell user={user}>{children}</AdminExplorerShell>
     );
