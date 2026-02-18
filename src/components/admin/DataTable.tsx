@@ -13,6 +13,8 @@ export interface Column<T> {
   label: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
   sortable?: boolean;
+  className?: string;       // Extra classes on <td>
+  headerClassName?: string;  // Extra classes on <th>
 }
 
 export interface DataTableProps<T> {
@@ -110,16 +112,17 @@ export function DataTable<T extends { id: string }>({
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#1e293b]/40 backdrop-blur-xl max-w-full -mx-4 sm:-mx-6 px-4 sm:px-6" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <table className="w-full" style={{ minWidth: 'max-content' }}>
+      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#1e293b]/40 backdrop-blur-xl" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <table className="w-full">
           <thead className="bg-[#0f172a]/60 border-b border-white/5">
             <tr>
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
                   className={`
-                    px-2 sm:px-4 lg:px-5 py-2 sm:py-3 lg:py-4 text-left text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap
+                    px-3 sm:px-4 py-3 text-left text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap
                     ${col.sortable ? "cursor-pointer hover:text-white select-none transition-colors" : ""}
+                    ${col.headerClassName || ""}
                   `}
                   onClick={() => col.sortable && handleSort(String(col.key))}
                 >
@@ -154,7 +157,7 @@ export function DataTable<T extends { id: string }>({
                 {columns.map((col) => (
                   <td
                     key={String(col.key)}
-                    className="px-2 sm:px-4 lg:px-5 py-3 sm:py-4 text-xs sm:text-sm text-slate-300 whitespace-nowrap"
+                    className={`px-3 sm:px-4 py-3 text-xs sm:text-sm text-slate-300 ${col.className || "whitespace-nowrap"}`}
                   >
                     {col.render
                       ? col.render(item)
