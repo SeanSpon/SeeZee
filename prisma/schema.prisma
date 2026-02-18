@@ -519,7 +519,7 @@ model Payment {
 model MaintenancePlan {
   id                      String                @id @default(cuid())
   projectId               String                @unique
-  tier                    String // Plan type: QUARTERLY or ANNUAL (legacy: ESSENTIALS, DIRECTOR, COO)
+  tier                    String // Plan type: QUARTERLY or ANNUAL
   monthlyPrice            Decimal
   features                Json?
   billingDay              Int                   @default(1)

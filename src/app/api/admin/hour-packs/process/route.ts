@@ -220,8 +220,8 @@ export async function POST(req: NextRequest) {
         existingPlan = await prisma.maintenancePlan.create({
           data: {
             projectId: project.id,
-            tier: 'ESSENTIALS',
-            monthlyPrice: new Prisma.Decimal(50000),
+            tier: 'QUARTERLY',
+            monthlyPrice: new Prisma.Decimal(66667),
             status: 'ACTIVE',
             billingDay: 1,
           },

@@ -73,77 +73,8 @@ export const MAINTENANCE_PLANS = {
   },
 } as const;
 
-// Export NONPROFIT_TIERS with full backwards compatibility
-// All legacy tiers (ESSENTIALS, DIRECTOR, COO) map to QUARTERLY plan
-export const NONPROFIT_TIERS = {
-  ...MAINTENANCE_PLANS,
-  ESSENTIALS: {
-    id: 'QUARTERLY',
-    name: 'Quarterly Maintenance',
-    shortName: 'Quarterly',
-    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
-    price: 200000,
-    monthlyPrice: 66667,
-    billingPeriod: 'quarterly' as const,
-    effectiveMonthlyPrice: 66667,
-    effectiveHourlyRate: 6667,
-    hoursIncluded: 30,
-    hoursPerMonth: 10,
-    supportHoursIncluded: 10,
-    changeRequestsIncluded: -1,
-    features: [
-      'Priority 24hr response time',
-      'Security updates & backups',
-      'Unlimited change requests',
-      'Emergency same-day fixes',
-    ],
-    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
-  },
-  DIRECTOR: {
-    id: 'QUARTERLY',
-    name: 'Quarterly Maintenance',
-    shortName: 'Quarterly',
-    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
-    price: 200000,
-    monthlyPrice: 66667,
-    billingPeriod: 'quarterly' as const,
-    effectiveMonthlyPrice: 66667,
-    effectiveHourlyRate: 6667,
-    hoursIncluded: 30,
-    hoursPerMonth: 10,
-    supportHoursIncluded: 10,
-    changeRequestsIncluded: -1,
-    features: [
-      'Priority 24hr response time',
-      'Security updates & backups',
-      'Unlimited change requests',
-      'Emergency same-day fixes',
-    ],
-    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
-  },
-  COO: {
-    id: 'QUARTERLY',
-    name: 'Quarterly Maintenance',
-    shortName: 'Quarterly',
-    description: 'Keep your website running smoothly with priority support, security updates, and unlimited change requests.',
-    price: 200000,
-    monthlyPrice: 66667,
-    billingPeriod: 'quarterly' as const,
-    effectiveMonthlyPrice: 66667,
-    effectiveHourlyRate: 6667,
-    hoursIncluded: 30,
-    hoursPerMonth: 10,
-    supportHoursIncluded: 10,
-    changeRequestsIncluded: -1,
-    features: [
-      'Priority 24hr response time',
-      'Security updates & backups',
-      'Unlimited change requests',
-      'Emergency same-day fixes',
-    ],
-    stripePriceId: process.env.STRIPE_PRICE_QUARTERLY,
-  },
-} as const;
+// Re-export as NONPROFIT_TIERS for backwards compatibility in imports
+export const NONPROFIT_TIERS = MAINTENANCE_PLANS;
 
 export type MaintenancePlanId = keyof typeof MAINTENANCE_PLANS;
 export type MaintenancePlanConfig = typeof MAINTENANCE_PLANS[MaintenancePlanId];
@@ -156,11 +87,6 @@ export type MaintenancePlanConfig = typeof MAINTENANCE_PLANS[MaintenancePlanId];
 // =============================================================================
 
 export const LEGACY_TIER_MAP: Record<string, { monthlyPrice: number; hoursIncluded: number; name: string }> = {
-  // Legacy nonprofit tiers - map to QUARTERLY plan
-  ESSENTIALS: { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
-  DIRECTOR:   { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
-  COO:        { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly Plan' },
-  // Current plans
   QUARTERLY:  { monthlyPrice: 66667, hoursIncluded: 10, name: 'Quarterly' },
   ANNUAL:     { monthlyPrice: 56667, hoursIncluded: 10, name: 'Annual' },
 };

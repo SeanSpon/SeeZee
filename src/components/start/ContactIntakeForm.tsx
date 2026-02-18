@@ -55,22 +55,17 @@ interface FormData {
   additionalNotes: string;
 }
 
-// Tier information mapping
+// Plan information mapping
 const TIER_INFO: Record<string, { name: string; buildPrice: string; monthlyPrice: string }> = {
-  essentials: {
-    name: 'Tier 1 - Nonprofit Essentials',
-    buildPrice: '$6,000',
-    monthlyPrice: '$500/month',
+  quarterly: {
+    name: 'Quarterly Maintenance',
+    buildPrice: '$2,000/quarter',
+    monthlyPrice: '~$667/month',
   },
-  director: {
-    name: 'Tier 2 - Digital Director Platform',
-    buildPrice: '$7,500',
-    monthlyPrice: '$750/month',
-  },
-  coo: {
-    name: 'Tier 3 - Digital COO System',
-    buildPrice: '$12,500',
-    monthlyPrice: '$2,000/month',
+  annual: {
+    name: 'Annual Maintenance',
+    buildPrice: '$6,800/year',
+    monthlyPrice: '~$567/month (save 15%)',
   },
 };
 
@@ -107,47 +102,32 @@ const IMPORTANT_FEATURES = [
   'Member portal',
 ];
 
-// Maintenance Plan Options - matches NONPROFIT_TIERS config
+// Maintenance Plan Options - matches MAINTENANCE_PLANS config
 const MAINTENANCE_TIERS = [
   {
-    id: 'essentials',
-    name: 'Nonprofit Essentials',
-    price: '$500/month',
-    hours: '8 hours/month',
+    id: 'quarterly',
+    name: 'Quarterly Maintenance',
+    price: '$2,000/quarter',
+    hours: '30 hours/quarter',
     features: [
-      'Managed hosting & SSL certificate',
-      'Security & plugin updates',
-      'Daily automated backups',
-      'Email support',
-      'Performance monitoring',
-      '8 hours of support work per month',
-    ],
-  },
-  {
-    id: 'director',
-    name: 'Digital Director Platform',
-    price: '$750/month',
-    hours: '16 hours/month',
-    features: [
-      'Everything in Essentials',
-      'Priority support',
-      'Extended content updates',
-      'Monthly analytics & SEO reports',
-      'Up to 16 hours of support work per month',
-    ],
-  },
-  {
-    id: 'coo',
-    name: 'Digital COO System',
-    price: '$2,000/month',
-    hours: 'Unlimited hours/month',
-    features: [
-      'Everything in Director',
-      'Unlimited support hours',
-      '24/7 emergency support',
-      'Strategy consultation calls',
-      'Dedicated support team',
+      'Priority 24hr response time',
+      'Security updates & backups',
       'Unlimited change requests',
+      'Emergency same-day fixes',
+      '30 hours of support per quarter',
+    ],
+  },
+  {
+    id: 'annual',
+    name: 'Annual Maintenance',
+    price: '$6,800/year (save 15%)',
+    hours: '120 hours/year',
+    features: [
+      'Everything in Quarterly',
+      'Quarterly strategy reviews',
+      'Performance monitoring',
+      '$57/hour effective rate',
+      '120 hours of support per year',
     ],
   },
 ];

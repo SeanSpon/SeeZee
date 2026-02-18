@@ -666,8 +666,8 @@ async function handleHourPackPurchase(session: Stripe.Checkout.Session) {
         existingPlan = await prisma.maintenancePlan.create({
           data: {
             projectId: project.id,
-            tier: 'ESSENTIALS', // Default tier
-            monthlyPrice: new Prisma.Decimal(50000), // $500 default
+            tier: 'QUARTERLY',
+            monthlyPrice: new Prisma.Decimal(66667), // ~$667/month ($2,000/quarter)
             status: 'ACTIVE',
             billingDay: 1,
           },

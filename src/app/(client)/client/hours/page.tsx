@@ -670,7 +670,7 @@ export default function HourPacksPage() {
                     <CheckCircle className="w-5 h-5 text-cyan-400" />
                     <div>
                       <div className="text-white font-medium text-lg">
-                        {currentPlan.tierName || (currentPlan.tier ? NONPROFIT_TIERS[currentPlan.tier.toUpperCase() as keyof typeof NONPROFIT_TIERS]?.name : 'Essentials')}
+                        {currentPlan.tierName || (currentPlan.tier ? NONPROFIT_TIERS[currentPlan.tier.toUpperCase() as keyof typeof NONPROFIT_TIERS]?.name : 'Quarterly')}
                       </div>
                       {currentPlan.paymentRequired && (
                         <div className="text-xs text-yellow-400 mt-1">

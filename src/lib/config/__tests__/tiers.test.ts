@@ -93,26 +93,16 @@ test('Both plans have supportHoursIncluded for compatibility', () => {
 });
 
 // ============================================================================
-// BACKWARDS COMPATIBILITY TESTS
+// NONPROFIT_TIERS ALIAS TESTS
 // ============================================================================
 
-console.log('\n=== Backwards Compatibility Tests ===\n');
+console.log('\n=== NONPROFIT_TIERS Alias Tests ===\n');
 
-test('NONPROFIT_TIERS includes legacy tier names', () => {
-  assertExists(NONPROFIT_TIERS.ESSENTIALS, 'ESSENTIALS should exist for backwards compatibility');
-  assertExists(NONPROFIT_TIERS.DIRECTOR, 'DIRECTOR should exist for backwards compatibility');
-  assertExists(NONPROFIT_TIERS.COO, 'COO should exist for backwards compatibility');
-});
-
-test('Legacy tiers map to QUARTERLY plan values', () => {
-  assertEqual(NONPROFIT_TIERS.ESSENTIALS.id, 'QUARTERLY', 'ESSENTIALS should map to QUARTERLY');
-  assertEqual(NONPROFIT_TIERS.DIRECTOR.id, 'QUARTERLY', 'DIRECTOR should map to QUARTERLY');
-  assertEqual(NONPROFIT_TIERS.COO.id, 'QUARTERLY', 'COO should map to QUARTERLY');
-});
-
-test('NONPROFIT_TIERS includes current plans', () => {
+test('NONPROFIT_TIERS is an alias for MAINTENANCE_PLANS', () => {
   assertExists(NONPROFIT_TIERS.QUARTERLY, 'QUARTERLY should exist in NONPROFIT_TIERS');
   assertExists(NONPROFIT_TIERS.ANNUAL, 'ANNUAL should exist in NONPROFIT_TIERS');
+  assertEqual(NONPROFIT_TIERS.QUARTERLY.id, MAINTENANCE_PLANS.QUARTERLY.id, 'Should reference same QUARTERLY plan');
+  assertEqual(NONPROFIT_TIERS.ANNUAL.id, MAINTENANCE_PLANS.ANNUAL.id, 'Should reference same ANNUAL plan');
 });
 
 test('getTier() returns config for QUARTERLY', () => {
@@ -132,12 +122,10 @@ test('getTier() returns config for ANNUAL', () => {
   assertEqual(tier!.hoursIncluded, 10, 'Hours should be correct');
 });
 
-test('getTier() returns config for legacy ESSENTIALS', () => {
-  const tier = getTier('ESSENTIALS');
-  assertExists(tier, 'getTier should return config for ESSENTIALS');
-  assertEqual(tier!.id, 'ESSENTIALS', 'Tier ID should match');
-  assertEqual(tier!.monthlyPrice, 66667, 'Should map to QUARTERLY pricing');
-  assertEqual(tier!.hoursIncluded, 10, 'Should have 10 hours');
+test('getTier() returns null for removed legacy tiers', () => {
+  assertEqual(getTier('ESSENTIALS'), null, 'ESSENTIALS should no longer resolve');
+  assertEqual(getTier('DIRECTOR'), null, 'DIRECTOR should no longer resolve');
+  assertEqual(getTier('COO'), null, 'COO should no longer resolve');
 });
 
 test('getTier() returns null for invalid tier', () => {
@@ -148,7 +136,6 @@ test('getTier() returns null for invalid tier', () => {
 test('hasUnlimitedHours() returns false for standard tiers', () => {
   assertEqual(hasUnlimitedHours('QUARTERLY'), false, 'QUARTERLY should not have unlimited hours');
   assertEqual(hasUnlimitedHours('ANNUAL'), false, 'ANNUAL should not have unlimited hours');
-  assertEqual(hasUnlimitedHours('ESSENTIALS'), false, 'ESSENTIALS should not have unlimited hours');
 });
 
 // ============================================================================
@@ -243,7 +230,6 @@ test('formatHours() formats hour values', () => {
 test('getTierMonthlyPrice() returns correct prices', () => {
   assertEqual(getTierMonthlyPrice('QUARTERLY'), 66667, 'QUARTERLY monthly price');
   assertEqual(getTierMonthlyPrice('ANNUAL'), 56667, 'ANNUAL monthly price');
-  assertEqual(getTierMonthlyPrice('ESSENTIALS'), 66667, 'ESSENTIALS monthly price');
   
   // With override
   assertEqual(getTierMonthlyPrice('QUARTERLY', 100000), 100000, 'Should use DB override');
@@ -282,6 +268,6 @@ test('All hour pack rates are at or below dev rate', () => {
 
 console.log('\n=== All Tier Configuration Tests Passed ===\n');
 console.log('✅ MAINTENANCE_PLANS configured correctly');
-console.log('✅ Backwards compatibility maintained for legacy tiers');
+console.log('✅ NONPROFIT_TIERS alias works correctly');
 console.log('✅ Hour packs pricing is consistent');
 console.log('✅ Dev rate and pricing align with services page\n');

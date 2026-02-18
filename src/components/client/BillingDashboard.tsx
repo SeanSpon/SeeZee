@@ -129,8 +129,8 @@ export function BillingDashboard({ projects }: BillingDashboardProps) {
               <div className="space-y-4">
                 {(() => {
                   const plan = selectedProject.maintenancePlan;
-                  const tierKey = (plan.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
-                  const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
+                  const tierKey = (plan.tier || 'QUARTERLY').toUpperCase() as keyof typeof NONPROFIT_TIERS;
+                  const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.QUARTERLY;
                   const monthlyPrice = Number(plan.monthlyPrice) / 100; // Convert cents to dollars
                   
                   return (

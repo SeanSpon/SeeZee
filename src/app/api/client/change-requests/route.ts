@@ -176,8 +176,8 @@ export async function POST(req: NextRequest) {
     
     if (maintenancePlan) {
       // Get tier config for proper hours calculation
-      const tierKey = (maintenancePlan.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
-      const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
+      const tierKey = (maintenancePlan.tier || 'QUARTERLY').toUpperCase() as keyof typeof NONPROFIT_TIERS;
+      const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.QUARTERLY;
       
       // Always use tier config values as source of truth
       const includedHours = tierConfig.supportHoursIncluded;

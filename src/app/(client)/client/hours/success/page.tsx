@@ -338,7 +338,7 @@ export default function HourPackSuccessPage() {
                 <div>
                   <p className="text-sm text-gray-400 mb-1">Plan Tier</p>
                   <p className="text-xl font-bold text-white">
-                    {currentPlan.tierName || currentPlan.tier || 'Essentials'}
+                    {currentPlan.tierName || currentPlan.tier || 'Quarterly'}
                   </p>
                 </div>
                 <div>

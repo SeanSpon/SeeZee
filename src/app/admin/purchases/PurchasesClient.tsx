@@ -106,9 +106,8 @@ const packNames: Record<string, string> = {
 };
 
 const tierNames: Record<string, string> = {
-  ESSENTIALS: 'Nonprofit Essentials',
-  DIRECTOR: 'Digital Director Platform',
-  COO: 'Digital COO System',
+  QUARTERLY: 'Quarterly Maintenance',
+  ANNUAL: 'Annual Maintenance',
 };
 
 export default function PurchasesClient({

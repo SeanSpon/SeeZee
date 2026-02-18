@@ -61,20 +61,15 @@ import { NONPROFIT_TIERS } from '@/lib/config/tiers';
 // Tier configuration - hours and features per tier
 // Use centralized config for consistency
 const TIER_CONFIG: Record<string, { hours: number; requests: number; name: string }> = {
-  ESSENTIALS: { 
-    hours: NONPROFIT_TIERS.ESSENTIALS.supportHoursIncluded, 
-    requests: NONPROFIT_TIERS.ESSENTIALS.changeRequestsIncluded, 
-    name: NONPROFIT_TIERS.ESSENTIALS.name 
+  QUARTERLY: {
+    hours: NONPROFIT_TIERS.QUARTERLY.supportHoursIncluded,
+    requests: NONPROFIT_TIERS.QUARTERLY.changeRequestsIncluded,
+    name: NONPROFIT_TIERS.QUARTERLY.name
   },
-  DIRECTOR: { 
-    hours: NONPROFIT_TIERS.DIRECTOR.supportHoursIncluded, 
-    requests: NONPROFIT_TIERS.DIRECTOR.changeRequestsIncluded, 
-    name: NONPROFIT_TIERS.DIRECTOR.name 
-  },
-  COO: { 
-    hours: NONPROFIT_TIERS.COO.supportHoursIncluded, 
-    requests: NONPROFIT_TIERS.COO.changeRequestsIncluded, 
-    name: NONPROFIT_TIERS.COO.name 
+  ANNUAL: {
+    hours: NONPROFIT_TIERS.ANNUAL.supportHoursIncluded,
+    requests: NONPROFIT_TIERS.ANNUAL.changeRequestsIncluded,
+    name: NONPROFIT_TIERS.ANNUAL.name
   },
 };
 
@@ -161,9 +156,9 @@ export async function getHoursBalanceAction(projectId?: string): Promise<HoursBa
     
     const plan = projects[0].maintenancePlanRel;
     
-    // Get tier config, defaulting to ESSENTIALS
-    const tierKey = (plan.tier || 'ESSENTIALS').toUpperCase();
-    const tierConfig = TIER_CONFIG[tierKey] || TIER_CONFIG.ESSENTIALS;
+    // Get tier config, defaulting to QUARTERLY
+    const tierKey = (plan.tier || 'QUARTERLY').toUpperCase();
+    const tierConfig = TIER_CONFIG[tierKey] || TIER_CONFIG.QUARTERLY;
     
     // Always use tier config values as source of truth
     // Database values may be incorrect if plans were created before tier values were set
@@ -241,7 +236,7 @@ export async function getHoursBalanceAction(projectId?: string): Promise<HoursBa
       });
     } else if (rolloverTotal > 0) {
       // Fallback: estimate expiry if no records
-      const expiryDays = tierKey === 'ESSENTIALS' ? 60 : 90;
+      const expiryDays = 90;
       const expiresAt = new Date(now.getTime() + expiryDays * 24 * 60 * 60 * 1000);
       
       rolloverExpiringSoon.push({

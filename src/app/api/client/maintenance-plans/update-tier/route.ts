@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
 
     const { tier } = body;
 
-    if (!tier || !['ESSENTIALS', 'DIRECTOR', 'COO'].includes(tier)) {
+    if (!tier || !['QUARTERLY', 'ANNUAL'].includes(tier)) {
       return NextResponse.json(
-        { error: "Invalid tier. Must be ESSENTIALS, DIRECTOR, or COO" },
+        { error: "Invalid tier. Must be QUARTERLY or ANNUAL" },
         { status: 400 }
       );
     }

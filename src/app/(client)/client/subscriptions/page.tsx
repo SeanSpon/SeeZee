@@ -134,16 +134,16 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
     if (!project.maintenancePlanRel) return;
     
     const plan = project.maintenancePlanRel;
-    const tierKey = (plan.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
-    const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
-    
+    const tierKey = (plan.tier || 'QUARTERLY').toUpperCase() as keyof typeof NONPROFIT_TIERS;
+    const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.QUARTERLY;
+
     // Get change requests from project (they're related to project, not MaintenancePlan)
     const changeRequests = project.changeRequests || [];
-    
+
     // Change requests are tied to hours - no separate limit
     // If hours are unlimited, change requests are unlimited
     const isUnlimitedHours = tierConfig.supportHoursIncluded === -1;
-    
+
     subscriptionsData.push({
       id: plan.id,
       projectId: project.id,
@@ -151,9 +151,9 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
       stripeId: plan.stripeSubscriptionId || '',
       priceId: '',
       status: plan.status === 'ACTIVE' ? 'active' : plan.status.toLowerCase(),
-      planName: tierConfig.name, // Use proper tier name
-      tier: tierConfig.id, // ESSENTIALS, DIRECTOR, COO
-      tierName: tierConfig.name, // Full name like "Digital COO System"
+      planName: tierConfig.name,
+      tier: tierConfig.id,
+      tierName: tierConfig.name,
       currentPeriodEnd: plan.currentPeriodEnd ? new Date(plan.currentPeriodEnd).toISOString() : null,
       changeRequestsAllowed: isUnlimitedHours ? -1 : -1, // Always unlimited - tied to hours
       changeRequestsUsed: 0, // Not tracked separately
@@ -184,8 +184,8 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
   const totalMonthlyCost = subscriptionsData
     .filter((s) => s.status === 'active')
     .reduce((sum, sub) => {
-      const tierKey = (sub.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
-      const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
+      const tierKey = (sub.tier || 'QUARTERLY').toUpperCase() as keyof typeof NONPROFIT_TIERS;
+      const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.QUARTERLY;
       return sum + tierConfig.monthlyPrice / 100; // Convert cents to dollars
     }, 0);
 

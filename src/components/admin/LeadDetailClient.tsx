@@ -66,16 +66,13 @@ function suggestMaintenancePlan(data: ReturnType<typeof parseMaintenanceData>) {
   const isUrgent = urgency?.toLowerCase().includes('immediate') || urgency?.toLowerCase().includes('urgent');
   
   // Rules-based suggestion
-  if (isUrgent && needsCount >= 3) {
-    return { tier: 'COO', confidence: 'High', reason: 'Urgent + multiple services' };
+  if (isUrgent || needsCount >= 3) {
+    return { tier: 'Annual', confidence: 'High', reason: 'Urgent or multiple services — annual saves 15%' };
   }
-  if (needsCount >= 2 || isUrgent) {
-    return { tier: 'Director', confidence: 'High', reason: 'Multiple services or urgent' };
+  if (needsCount >= 2) {
+    return { tier: 'Annual', confidence: 'Medium', reason: 'Multiple services benefit from annual plan' };
   }
-  if (needsCount === 1 && !isUrgent) {
-    return { tier: 'Essentials', confidence: 'Medium', reason: 'Single service, not urgent' };
-  }
-  return { tier: 'Essentials', confidence: 'Low', reason: 'Default recommendation' };
+  return { tier: 'Quarterly', confidence: 'Medium', reason: 'Standard quarterly maintenance' };
 }
 
 // Helper: Determine urgency level
@@ -211,7 +208,7 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
   };
 
   const currentStatusIndex = statusOptions.findIndex(s => s.value === status);
-  const suggestedTier = planSuggestion?.tier || 'essentials';
+  const suggestedTier = planSuggestion?.tier || 'QUARTERLY';
 
   return (
     <div className="space-y-6">
@@ -728,9 +725,8 @@ export function LeadDetailClient({ lead, questionnaire }: LeadDetailClientProps)
                   onChange={(e) => setSelectedTier(e.target.value)}
                   className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white"
                 >
-                  <option value="essentials">Essentials ($500/mo)</option>
-                  <option value="director">Director ($750/mo)</option>
-                  <option value="coo">COO ($2,000/mo)</option>
+                  <option value="QUARTERLY">Quarterly ($2,000/quarter)</option>
+                  <option value="ANNUAL">Annual ($6,800/year — save 15%)</option>
                 </select>
                 {planSuggestion && (
                   <p className="text-xs text-slate-400 mt-1">

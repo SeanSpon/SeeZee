@@ -86,8 +86,8 @@ export async function GET(req: NextRequest) {  try {
     const plan = project.maintenancePlanRel;
 
     // Get tier config for proper names and defaults (even if not paid)
-    const tierKey = (plan.tier || 'ESSENTIALS').toUpperCase() as keyof typeof NONPROFIT_TIERS;
-    const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.ESSENTIALS;
+    const tierKey = (plan.tier || 'QUARTERLY').toUpperCase() as keyof typeof NONPROFIT_TIERS;
+    const tierConfig = getTier(tierKey) || NONPROFIT_TIERS.QUARTERLY;
 
     // Calculate hour packs - users can purchase these without a subscription
     const packHoursTotal = plan.hourPacks?.reduce((sum, pack) => sum + pack.hoursRemaining, 0) || 0;
