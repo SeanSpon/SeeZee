@@ -434,6 +434,14 @@ function SettingsContent() {
 
       if (!res.ok) throw new Error("Failed to update preferences");
 
+      // Sync nav preferences to localStorage so NavigationProvider picks them up
+      if (preferences.adminNavMode) {
+        localStorage.setItem("adminNavMode", preferences.adminNavMode);
+      }
+      if (preferences.folderClickMode) {
+        localStorage.setItem("folderClickMode", preferences.folderClickMode);
+      }
+
       showToast("Preferences updated!", "success");
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
@@ -1277,6 +1285,16 @@ function SettingsContent() {
                       </div>
                     )}
                   </GlassCardContent>
+                  <GlassCardFooter>
+                    <GlassButton
+                      onClick={saveUserPreferences}
+                      loading={loading}
+                      icon={saveSuccess ? CheckCircle : Save}
+                      variant={saveSuccess ? "success" : "primary"}
+                    >
+                      {saveSuccess ? "Saved!" : "Save Preferences"}
+                    </GlassButton>
+                  </GlassCardFooter>
                 </GlassCard>
               )}
 
