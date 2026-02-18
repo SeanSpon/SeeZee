@@ -342,6 +342,97 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Client Projects Showcase */}
+      <section className="py-20 bg-[#1a2332]">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+              Projects We&apos;ve Delivered
+            </h2>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              Real systems built for real clients. See what we can do for you.
+            </p>
+          </div>
+
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <ScrollAnimation delay={0.1}>
+              <a
+                href="https://avisionforyou-57fekftr7-zach-robards-projects.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-gray-900/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-500/40 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+                  <span className="text-xs text-blue-400 font-mono">Preview</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                  A Vision For You
+                </h3>
+                <p className="text-sm text-white/70 mb-4">
+                  501(c)(3) nonprofit operations dashboard with donation processing, member management, and program coordination.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Next.js', 'Square', 'Prisma'].map(tech => (
+                    <span key={tech} className="px-2 py-0.5 text-[11px] bg-white/[0.06] border border-white/10 text-gray-400 rounded-md font-mono">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm text-cyan-400 mt-4 group-hover:underline">
+                  View live preview &rarr;
+                </p>
+              </a>
+            </ScrollAnimation>
+
+            <ScrollAnimation delay={0.2}>
+              <a
+                href="https://nextjs-boilerplate-six-amber-27.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-gray-900/50 border border-gray-700 rounded-xl p-6 hover:border-cyan-500/40 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 block"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs text-emerald-400 font-mono">Live</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                  TaxFeeder Software
+                </h3>
+                <p className="text-sm text-white/70 mb-4">
+                  Professional tax preparation software for preparers, office owners, and service bureaus. IRS-authorized e-filing across all 50 states.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Next.js', 'TypeScript', 'Stripe'].map(tech => (
+                    <span key={tech} className="px-2 py-0.5 text-[11px] bg-white/[0.06] border border-white/10 text-gray-400 rounded-md font-mono">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm text-cyan-400 mt-4 group-hover:underline">
+                  Visit TaxFeeder &rarr;
+                </p>
+              </a>
+            </ScrollAnimation>
+
+            <ScrollAnimation delay={0.3}>
+              <Link
+                href="/projects"
+                className="group bg-gray-900/50 border border-dashed border-gray-600 rounded-xl p-6 hover:border-cyan-500/40 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center text-center"
+              >
+                <div className="w-16 h-16 bg-white/[0.04] border border-white/10 rounded-full flex items-center justify-center mb-4 group-hover:border-cyan-400/40 transition-colors">
+                  <FiArrowRight className="w-6 h-6 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">See All Projects</h3>
+                <p className="text-sm text-white/60">
+                  View our full project directory with case studies and live demos.
+                </p>
+              </Link>
+            </ScrollAnimation>
+          </div>
+        </div>
+      </section>
+
       {/* Maintenance Plans Section */}
       <section className="py-20 bg-[#1a2332]">
         <div className="container mx-auto px-6 max-w-6xl">

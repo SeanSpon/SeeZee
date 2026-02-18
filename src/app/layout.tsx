@@ -9,7 +9,6 @@ import SidebarWrapper from '../components/shared/SidebarWrapper'
 import { Toaster } from '../components/ui/toaster'
 import { PasswordSetupPrompt } from '../components/PasswordSetupPrompt'
 import { CookieConsent } from '../components/shared/CookieConsent'
-import { ChatWidget } from '../components/shared/ChatWidget'
 import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -309,7 +308,6 @@ export default function RootLayout({
           {process.env.NODE_ENV === 'development' && <DebugHUD />}
           <Toaster />
           <CookieConsent />
-          <ChatWidget />
           <Analytics />
         </Providers>
       </body>
