@@ -67,7 +67,7 @@ function ContactForm() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mx-auto max-w-xl text-center bg-gray-900/50 backdrop-blur-sm rounded-xl p-12 border border-gray-700"
+              className="mx-auto max-w-2xl text-center bg-gray-900/50 backdrop-blur-sm rounded-xl p-12 border border-gray-700"
             >
               <motion.div
                 initial={{ scale: 0 }}
@@ -80,13 +80,44 @@ function ContactForm() {
                 </svg>
               </motion.div>
               <h3 className="text-3xl font-heading font-bold mb-3 text-white">Message Sent!</h3>
-              <p className="text-gray-400 mb-8 text-lg">We'll get back to you within 24 hours.</p>
-              <button
-                onClick={() => setStatus('idle')}
-                className="px-8 py-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors duration-200"
-              >
-                Send Another Message
-              </button>
+              <p className="text-gray-400 mb-2 text-lg">Thanks for reaching out. Check your inbox for a confirmation.</p>
+
+              <div className="mt-8 text-left space-y-4">
+                <h4 className="text-lg font-semibold text-white text-center">What happens next?</h4>
+                <div className="flex items-start gap-4">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">1</span>
+                  <p className="text-gray-300 pt-1">We review your message and match you with the right person on our team.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">2</span>
+                  <p className="text-gray-300 pt-1">We&apos;ll reach out within 24 hours to discuss your project.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">3</span>
+                  <p className="text-gray-300 pt-1">Track everything — messages, progress, invoices — in your client dashboard.</p>
+                </div>
+              </div>
+
+              <div className="mt-10 space-y-3">
+                <Link
+                  href="/signup"
+                  className="block w-full px-8 py-4 bg-red-500 text-white rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors duration-200"
+                >
+                  Create Your Free Account
+                </Link>
+                <Link
+                  href="/login?returnUrl=/client"
+                  className="block w-full px-8 py-3 bg-transparent text-gray-300 border border-gray-600 rounded-lg font-medium hover:border-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  Already have an account? Log in
+                </Link>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="text-sm text-gray-500 hover:text-gray-300 transition-colors mt-2"
+                >
+                  Send Another Message
+                </button>
+              </div>
             </motion.div>
           </div>
         </section>

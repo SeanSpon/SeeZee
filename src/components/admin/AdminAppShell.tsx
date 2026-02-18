@@ -122,6 +122,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     () => [
       { href: "/admin/project-requests", label: "Project Requests", icon: FiInbox, description: "Incoming client requests" },
       { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
+      { href: "/admin/pipeline?tab=leads", label: "Leads", icon: FiUsers, description: "Contact form submissions" },
       { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
     ],
     []
@@ -290,7 +291,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 items={pipelineItems}
                 isActive={isActive}
                 onNavigate={handleNavigate}
-                defaultOpen={pathname.startsWith("/admin/project-requests") || pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/blog")}
+                defaultOpen={pathname.startsWith("/admin/project-requests") || pathname.startsWith("/admin/pipeline") || pathname.startsWith("/admin/blog") || pathname.startsWith("/admin/leads")}
                 collapsed={isCollapsed}
               />
 

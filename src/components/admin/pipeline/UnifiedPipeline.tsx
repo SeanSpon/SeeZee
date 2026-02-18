@@ -388,32 +388,6 @@ export function UnifiedPipeline({ leads: initialLeads, projects = [], invoices =
               </div>
               <div className="p-4 space-y-2">
                 <Link
-                  href="/admin/leads"
-                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                    <Users className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Lead Finder</p>
-                    <p className="text-xs text-white/50">Find new prospects</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-white/30" />
-                </Link>
-                <Link
-                  href="/admin/marketing"
-                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                    <Send className="w-4 h-4 text-purple-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Email Campaign</p>
-                    <p className="text-xs text-white/50">Reach out to leads</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-white/30" />
-                </Link>
-                <Link
                   href="/admin/projects/create"
                   className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all group"
                 >
@@ -681,13 +655,6 @@ function LeadCard({
             >
               <Eye className="w-4 h-4" />
               View Details
-            </Link>
-            <Link
-              href={`/admin/marketing?email=${encodeURIComponent(lead.email || "")}&name=${encodeURIComponent(lead.name)}`}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-sm font-medium text-white/70 hover:text-white transition-all"
-            >
-              <Send className="w-4 h-4" />
-              Add to Campaign
             </Link>
             <button
               onClick={() => onDelete(lead.id)}

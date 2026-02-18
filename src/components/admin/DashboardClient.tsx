@@ -95,23 +95,6 @@ const coreActions = [
   },
 ];
 
-// Marketing & Growth Actions
-const marketingActions = [
-  {
-    href: "/admin/leads",
-    label: "Leads & Finder",
-    description: "Discover prospects",
-    icon: FiMapPin,
-    accent: "bg-amber-500/10 text-amber-400",
-  },
-  {
-    href: "/admin/marketing",
-    label: "Email Hub",
-    description: "Campaigns & templates",
-    icon: FiMail,
-    accent: "bg-violet-500/10 text-violet-400",
-  },
-];
 
 // Team Tools
 const teamTools = [
@@ -240,13 +223,6 @@ export function DashboardClient({
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3"
           >
-            <Link
-              href="/admin/leads"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.08] hover:border-white/[0.12]"
-            >
-              <FiMapPin className="h-4 w-4" />
-              Find Leads
-            </Link>
             <Link
               href="/admin/projects"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-sky-400"
@@ -377,37 +353,6 @@ export function DashboardClient({
             </div>
           </section>
 
-          {/* Marketing & Growth Section */}
-          <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
-            <div className="mb-4">
-              <h2 className="text-base font-semibold text-white">Marketing & Growth</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Lead generation & campaigns</p>
-            </div>
-            <div className="space-y-2">
-              {marketingActions.map((action) => {
-                const Icon = action.icon;
-                return (
-                  <Link
-                    key={action.href}
-                    href={action.href}
-                    className="group flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]"
-                  >
-                    <span className={`grid h-9 w-9 place-items-center rounded-lg ${action.accent}`}>
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-white">
-                        {action.label}
-                      </p>
-                      <p className="text-[11px] text-slate-500">{action.description}</p>
-                    </div>
-                    <FiArrowRight className="h-4 w-4 text-slate-600 transition group-hover:text-slate-400 group-hover:translate-x-0.5" />
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-
           {/* Team Tools Grid */}
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="mb-4">
@@ -472,7 +417,7 @@ export function DashboardClient({
                   Recent Leads
                 </p>
                 <Link
-                  href="/admin/leads"
+                  href="/admin/pipeline"
                   className="text-[10px] text-sky-400 hover:text-sky-300 transition uppercase tracking-wider font-medium"
                 >
                   View All
@@ -483,7 +428,7 @@ export function DashboardClient({
                   recentLeads.map((lead) => (
                     <Link
                       key={lead.id}
-                      href={`/admin/leads/${lead.id}`}
+                      href={`/admin/pipeline/leads/${lead.id}`}
                       className="flex items-center justify-between gap-2 rounded-md border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-xs hover:bg-white/[0.04] hover:border-white/[0.08] transition-colors group"
                     >
                       <div className="flex-1 min-w-0">
@@ -511,7 +456,7 @@ export function DashboardClient({
                   <div className="text-center py-6">
                     <p className="text-xs text-slate-500">No recent leads</p>
                     <Link
-                      href="/admin/leads"
+                      href="/admin/pipeline"
                       className="inline-block mt-2 text-xs text-sky-400 hover:text-sky-300 transition font-medium"
                     >
                       Add your first lead →

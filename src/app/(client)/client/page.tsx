@@ -10,16 +10,17 @@ import { getHoursBalanceAction } from "./actions/hours";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-import { 
-  FiArrowRight, 
-  FiFolder, 
-  FiFileText, 
-  FiMessageSquare, 
+import {
+  FiArrowRight,
+  FiFolder,
+  FiFileText,
+  FiMessageSquare,
   FiCheckCircle,
   FiPlus,
 } from "react-icons/fi";
 import ComprehensiveDashboardClient from "./components/ComprehensiveDashboardClient";
 import DashboardClient from "./components/DashboardClient";
+import LeadTracker from "@/components/client/LeadTracker";
 
 export default async function ClientDashboard() {
   const session = await auth();
@@ -69,11 +70,23 @@ export default async function ClientDashboard() {
     },
     select: { id: true },
   });
-  
-  // CRITICAL: If no projects and no project requests, redirect to getting-started page
+
+  // Check for leads by user email (contact form submissions)
+  const userLeads = await prisma.lead.findMany({
+    where: { email: email.toLowerCase(), status: { not: 'LOST' } },
+    select: { id: true, name: true, status: true, createdAt: true, message: true, source: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // CRITICAL: If no projects, no project requests, AND no leads → redirect to getting-started
   // This must happen BEFORE any subscription checks to prevent redirect loops
-  if (!hasProjects && !hasProjectRequests) {
+  if (!hasProjects && !hasProjectRequests && userLeads.length === 0) {
     redirect("/client/getting-started");
+  }
+
+  // If has leads but no projects or active requests → show lead tracker
+  if (!hasProjects && !hasProjectRequests && userLeads.length > 0) {
+    return <LeadTracker leads={userLeads} userName={session.user.name} />;
   }
   
   // Only check subscriptions if user has projects or project requests

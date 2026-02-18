@@ -4,6 +4,37 @@ import { prisma } from "@/lib/prisma";
 import { LeadStatus } from "@prisma/client";
 
 /**
+ * GET /api/leads
+ * Fetch all leads (admin only)
+ */
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const allowedRoles = ["CEO", "CFO", "FRONTEND", "BACKEND", "OUTREACH", "STAFF"];
+    if (!allowedRoles.includes(session.user.role || "")) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const leads = await prisma.lead.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { organization: true },
+    });
+
+    return NextResponse.json({ leads });
+  } catch (error: any) {
+    console.error("[GET /api/leads]", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch leads" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
  * POST /api/leads
  * Create a new lead manually (admin/prospect creation)
  */

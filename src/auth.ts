@@ -300,6 +300,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           });
         });
+
+        // Auto-link any existing leads to this new user
+        await prisma.lead.updateMany({
+          where: { email: user.email!.toLowerCase(), userId: null },
+          data: { userId: user.id },
+        }).catch(err => console.error("Failed to auto-link leads:", err));
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(`❌ [OAuth] Error creating user account for ${user.email}:`, errorMessage);

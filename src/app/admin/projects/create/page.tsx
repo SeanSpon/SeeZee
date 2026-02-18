@@ -83,7 +83,7 @@ export default function CreateProjectPage() {
   useEffect(() => {
     async function fetchLeads() {
       try {
-        const res = await fetch("/api/admin/leads");
+        const res = await fetch("/api/leads");
         if (res.ok) {
           const data = await res.json();
           // Filter out already converted leads
@@ -234,7 +234,7 @@ export default function CreateProjectPage() {
               : "All leads have been converted to projects or there are no leads yet."}
           </p>
           <Link
-            href="/admin/leads"
+            href="/admin/pipeline"
             className="inline-flex items-center gap-2 mt-6 px-6 py-2.5 bg-[#ef4444] hover:bg-[#dc2626] text-white text-sm font-semibold rounded-xl transition-all"
           >
             View All Leads

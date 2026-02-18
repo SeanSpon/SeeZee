@@ -42,8 +42,6 @@ const adminPages: SearchResult[] = [
   { id: "page-finance", title: "Finance", subtitle: "Financial overview & metrics", type: "page", href: "/admin/finance", icon: FiDollarSign },
   { id: "page-transactions", title: "Transactions", subtitle: "Invoices, payments & subscriptions", type: "page", href: "/admin/finance/transactions", icon: FiFileText },
   { id: "page-team", title: "Team", subtitle: "Team management", type: "page", href: "/admin/team", icon: FiUsers },
-  { id: "page-leads", title: "Leads & Finder", subtitle: "View leads and find new prospects", type: "page", href: "/admin/leads", icon: FiUsers },
-  { id: "page-marketing", title: "Email Marketing", subtitle: "Campaigns & templates", type: "page", href: "/admin/marketing", icon: FiMail },
   { id: "page-calendar", title: "Calendar", subtitle: "Schedule & meetings", type: "page", href: "/admin/calendar", icon: FiCalendar },
   { id: "page-analytics", title: "Analytics", subtitle: "Business analytics", type: "page", href: "/admin/analytics", icon: FiTrendingUp },
   { id: "page-maintenance", title: "Maintenance", subtitle: "Maintenance plans", type: "page", href: "/admin/maintenance", icon: FiClock },

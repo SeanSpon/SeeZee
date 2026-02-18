@@ -540,7 +540,7 @@ async function RecentLeads() {
     return leads.map((lead) => (
       <Link
         key={lead.id}
-        href={`/admin/leads/${lead.id}`}
+        href={`/admin/pipeline/leads/${lead.id}`}
         className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
       >
         <div>

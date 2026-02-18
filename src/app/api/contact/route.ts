@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail, renderEmailLayout } from '@/lib/email/send';
 
 // Simple in-memory rate limiting (for production, use Redis/Upstash)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -88,11 +89,38 @@ export async function POST(request: Request) {
       "Contact Form"
     ).catch(err => console.error("Failed to create lead notification:", err));
 
-    // Email notification to team - to be implemented
-    // To enable: integrate with Resend (already in dependencies) or SendGrid
-    // Example: await resend.emails.send({ to: 'team@seezee.com', subject: 'New Contact Form', html: ... })
+    // Log LEAD_CREATED activity (direct prisma call — no auth in public route)
+    prisma.activity.create({
+      data: {
+        type: 'LEAD_CREATED',
+        title: `New lead from contact form`,
+        description: `${sanitizedName} (${sanitizedEmail}) submitted the contact form.`,
+        entityType: 'Lead',
+        entityId: lead.id,
+        createdBy: 'SYSTEM',
+      },
+    }).catch(err => console.error("Failed to log lead activity:", err));
 
-    return NextResponse.json({ 
+    // Send confirmation email to the client (non-blocking)
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seezeestudios.com';
+    const emailHtml = renderEmailLayout(`
+      <h2 style="margin: 0 0 16px; font-size: 24px; color: #111;">We got your message!</h2>
+      <p>Hi ${sanitizedName},</p>
+      <p>Thanks for reaching out to SeeZee Studio. We&rsquo;ve received your message and a member of our team will get back to you within 24 hours.</p>
+      <p>In the meantime, you can create a free account to track your project, view updates, and communicate with our team — all in one place.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${appUrl}/signup" class="button">Create Your Account</a>
+      </div>
+      <p style="font-size: 14px; color: #6b7280;">Already have an account? <a href="${appUrl}/login?returnUrl=/client" style="color: #dc2626; text-decoration: none;">Log in to your dashboard</a></p>
+    `);
+
+    sendEmail({
+      to: sanitizedEmail,
+      subject: "We got your message — SeeZee Studios",
+      html: emailHtml,
+    }).catch(err => console.error("Failed to send contact confirmation email:", err));
+
+    return NextResponse.json({
       success: true,
       message: 'Thank you for contacting us! We\'ll get back to you soon.'
     });
