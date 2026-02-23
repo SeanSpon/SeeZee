@@ -11,7 +11,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiGrid,
-  FiDollarSign,
+  FiGitBranch,
   FiSettings,
 } from "react-icons/fi";
 import { signOut } from "next-auth/react";
@@ -40,10 +40,8 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
 
   const groups = getVisibleGroups();
 
-  const commandGroup = groups.find(g => g.id === "command");
-  const projectsGroup = groups.find(g => g.id === "projects");
-  const clientsGroup = groups.find(g => g.id === "clients");
-  const financeGroup = groups.find(g => g.id === "finance");
+  const flatGroups = ["command", "projects", "clients", "finance", "blog"];
+  const devtoolsGroup = groups.find(g => g.id === "devtools");
   const systemGroup = groups.find(g => g.id === "system");
 
   // Fetch user image (since it's removed from session to prevent cookie bloat)
@@ -83,8 +81,9 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     router.push("/login");
   }, [router]);
 
-  // Flat nav items: Command, Projects, Clients
-  const flatItems = [commandGroup, projectsGroup, clientsGroup]
+  // Flat nav items: Command, Projects, Clients, Finance, Blog
+  const flatItems = flatGroups
+    .map(id => groups.find(g => g.id === id))
     .filter(Boolean)
     .map(g => g!.items[0]);
 
@@ -146,15 +145,15 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               {/* Divider */}
               <div className="my-4 border-t border-slate-800" />
 
-              {/* FINANCE */}
-              {financeGroup && (
+              {/* DEV TOOLS */}
+              {devtoolsGroup && (
                 <CollapsibleNavGroup
-                  title="Finance"
-                  icon={FiDollarSign}
-                  items={financeGroup.items}
+                  title="Dev Tools"
+                  icon={FiGitBranch}
+                  items={devtoolsGroup.items}
                   isActive={isActive}
                   onNavigate={handleNavigate}
-                  defaultOpen={financeGroup.items.some(item => pathname.startsWith(item.href))}
+                  defaultOpen={devtoolsGroup.items.some(item => pathname.startsWith(item.href))}
                   collapsed={isCollapsed}
                 />
               )}
@@ -162,7 +161,7 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               {/* Divider before System */}
               <div className="my-4 border-t border-slate-800" />
 
-              {/* SYSTEM & TOOLS */}
+              {/* SYSTEM */}
               {systemGroup && (
                 <CollapsibleNavGroup
                   title="System"

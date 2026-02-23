@@ -3,16 +3,15 @@ import {
   FiUsers,
   FiFolder,
   FiDollarSign,
-  FiDatabase,
-  FiCreditCard,
-  FiServer,
+  FiEdit,
   FiGitBranch,
-  FiMic,
+  FiDatabase,
+  FiMessageSquare,
   FiPieChart,
   FiSettings,
-  FiMessageSquare,
-  FiLink,
+  FiMic,
   FiHardDrive,
+  FiLink,
 } from "react-icons/fi";
 
 export interface NavItem {
@@ -64,10 +63,28 @@ export const NAV_GROUPS: NavGroup[] = [
     icon: FiDollarSign,
     folderColor: "#10b981",
     items: [
-      { href: "/admin/finance", label: "Overview", icon: FiDollarSign, description: "Revenue and profit metrics" },
-      { href: "/admin/finance/transactions", label: "Transactions", icon: FiCreditCard, description: "Invoices and payments" },
-      { href: "/admin/finance/expenses", label: "Expenses", icon: FiPieChart, description: "Cost tracking" },
-      { href: "/admin/service-plans", label: "Service Plans", icon: FiServer, description: "Plans, hours, and requests" },
+      { href: "/admin/finance", label: "Finance", icon: FiDollarSign, description: "Revenue, invoices, and expenses" },
+    ],
+  },
+  {
+    id: "blog",
+    title: "Blog",
+    icon: FiEdit,
+    folderColor: "#f59e0b",
+    items: [
+      { href: "/admin/blog", label: "Blog", icon: FiEdit, description: "Manage blog posts" },
+    ],
+  },
+  {
+    id: "devtools",
+    title: "Dev Tools",
+    icon: FiGitBranch,
+    folderColor: "#06b6d4",
+    items: [
+      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
+      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
+      { href: "/admin/chat", label: "AI Chat", icon: FiMessageSquare, description: "Conversation history" },
+      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
     ],
   },
   {
@@ -76,14 +93,10 @@ export const NAV_GROUPS: NavGroup[] = [
     icon: FiSettings,
     folderColor: "#64748b",
     items: [
-      { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
-      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
-      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
-      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
       { href: "/settings", label: "Settings", icon: FiSettings, description: "App configuration" },
-      { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
-      { href: "/admin/resources", label: "Resources", icon: FiHardDrive, description: "Google Drive documents" },
       { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
+      { href: "/admin/resources", label: "Resources", icon: FiHardDrive, description: "Google Drive documents" },
+      { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
     ],
   },
 ];
