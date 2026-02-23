@@ -1,36 +1,17 @@
 import {
   FiHome,
-  FiTrendingUp,
   FiUsers,
   FiFolder,
-  FiCheckSquare,
-  FiFileText,
-  FiBook,
-  FiLink,
-  FiLayers,
-  FiActivity,
   FiDollarSign,
-  FiCalendar,
-  FiStar,
-  FiTool,
   FiDatabase,
-  FiBarChart2,
   FiCreditCard,
   FiServer,
-  FiUsers as FiTeamUsers,
-  FiBookOpen,
   FiGitBranch,
   FiMic,
   FiPieChart,
   FiSettings,
-  FiTarget,
-  FiSend,
-  FiGlobe,
   FiMessageSquare,
-  FiBookmark,
-  FiCpu,
-  FiShield,
-  FiMap,
+  FiLink,
   FiHardDrive,
 } from "react-icons/fi";
 
@@ -46,43 +27,35 @@ export interface NavGroup {
   title: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   items: NavItem[];
-  ceoOnly?: boolean;
   folderColor: string;
 }
 
 export const NAV_GROUPS: NavGroup[] = [
   {
-    id: "core",
-    title: "Core",
+    id: "command",
+    title: "Command",
     icon: FiHome,
     folderColor: "#ef4444",
     items: [
-      { href: "/admin", label: "Dashboard", icon: FiHome, description: "Overview and quick stats" },
-      { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
-      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
+      { href: "/admin", label: "Command", icon: FiHome, description: "Overview and quick stats" },
     ],
   },
   {
-    id: "work",
-    title: "Work",
-    icon: FiCheckSquare,
+    id: "projects",
+    title: "Projects",
+    icon: FiFolder,
     folderColor: "#3b82f6",
     items: [
-      { href: "/admin/todos", label: "My Todos", icon: FiTarget, description: "Personal task queue" },
-      { href: "/admin/tasks", label: "Tasks", icon: FiCheckSquare, description: "Work items and assignments" },
-      { href: "/admin/client-tasks", label: "Client Tasks", icon: FiTarget, description: "Client deliverables" },
-      { href: "/admin/calendar", label: "Calendar", icon: FiCalendar, description: "Schedule overview" },
-      { href: "/admin/feed", label: "Activity Feed", icon: FiActivity, description: "Recent activity" },
+      { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
     ],
   },
   {
-    id: "pipeline",
-    title: "Pipeline",
-    icon: FiTrendingUp,
+    id: "clients",
+    title: "Clients",
+    icon: FiUsers,
     folderColor: "#8b5cf6",
     items: [
-      { href: "/admin/pipeline", label: "Pipeline Board", icon: FiTrendingUp, description: "Visual deal flow" },
-      { href: "/admin/blog", label: "Blog", icon: FiBookmark, description: "Content management" },
+      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
     ],
   },
   {
@@ -98,54 +71,25 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    id: "team",
-    title: "Team",
-    icon: FiTeamUsers,
-    folderColor: "#f59e0b",
-    items: [
-      { href: "/admin/team", label: "Team", icon: FiTeamUsers, description: "Team members" },
-      { href: "/admin/goals", label: "Goals", icon: FiTarget, description: "OKRs and targets" },
-      { href: "/admin/learning", label: "Learning", icon: FiBookOpen, description: "Training resources" },
-    ],
-  },
-  {
-    id: "ceo",
-    title: "CEO",
-    icon: FiStar,
-    folderColor: "#eab308",
-    ceoOnly: true,
-    items: [
-      { href: "/admin/command-center", label: "Hub", icon: FiLayers, description: "All-in-one access hub" },
-      { href: "/admin/ceo", label: "Overview", icon: FiStar, description: "Executive overview" },
-      { href: "/admin/ceo/analytics", label: "Analytics", icon: FiBarChart2, description: "Deep metrics" },
-      { href: "/admin/ceo/finances", label: "Finances", icon: FiDollarSign, description: "Financial deep dive" },
-      { href: "/admin/ceo/tasks", label: "Tasks", icon: FiCheckSquare, description: "Task management" },
-      { href: "/admin/ceo/team-management", label: "Team Mgmt", icon: FiTeamUsers, description: "Team oversight" },
-      { href: "/admin/ceo/systems", label: "Systems", icon: FiServer, description: "System health" },
-      { href: "/admin/learning", label: "Learning Hub", icon: FiBookOpen, description: "Unified training & tools" },
-      { href: "/admin/ceo/vault", label: "Armory", icon: FiShield, description: "API keys & secrets" },
-    ],
-  },
-  {
     id: "system",
     title: "System",
     icon: FiSettings,
     folderColor: "#64748b",
     items: [
-      { href: "/settings", label: "Settings", icon: FiSettings, description: "App configuration" },
-      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
-      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
-      { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
       { href: "/admin/chat", label: "AI Chat Log", icon: FiMessageSquare, description: "Conversation history" },
+      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
+      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
+      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
+      { href: "/settings", label: "Settings", icon: FiSettings, description: "App configuration" },
       { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
       { href: "/admin/resources", label: "Resources", icon: FiHardDrive, description: "Google Drive documents" },
-      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
+      { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
     ],
   },
 ];
 
-export function getVisibleGroups(isCEO: boolean): NavGroup[] {
-  return NAV_GROUPS.filter((group) => !group.ceoOnly || isCEO);
+export function getVisibleGroups(): NavGroup[] {
+  return NAV_GROUPS;
 }
 
 export function findGroupForPath(pathname: string): NavGroup | undefined {
