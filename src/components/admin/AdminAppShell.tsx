@@ -11,18 +11,13 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiGrid,
-  FiCheckSquare,
-  FiTrendingUp,
   FiDollarSign,
-  FiUsers as FiTeamUsers,
-  FiStar,
   FiSettings,
 } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import Avatar from "@/components/ui/Avatar";
 import LogoHeader from "@/components/brand/LogoHeader";
 import { CollapsibleNavGroup } from "@/components/admin/CollapsibleNavGroup";
-import { isCEO } from "@/lib/role";
 import type { CurrentUser } from "@/lib/auth/requireRole";
 import GlobalSearch from "@/components/ui/GlobalSearch";
 import { AdminNotificationBanner } from "@/components/admin/AdminNotificationBanner";
@@ -39,12 +34,17 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const isUserCEO = isCEO(user.role);
   const [userImage, setUserImage] = useState<string | undefined>(user.image ?? undefined);
 
   const { setAdminNavMode } = useNavigation();
 
-  const groups = getVisibleGroups(isUserCEO);
+  const groups = getVisibleGroups();
+
+  const commandGroup = groups.find(g => g.id === "command");
+  const projectsGroup = groups.find(g => g.id === "projects");
+  const clientsGroup = groups.find(g => g.id === "clients");
+  const financeGroup = groups.find(g => g.id === "finance");
+  const systemGroup = groups.find(g => g.id === "system");
 
   // Fetch user image (since it's removed from session to prevent cookie bloat)
   useEffect(() => {
@@ -59,14 +59,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
         console.error('Failed to fetch user image:', err);
       });
   }, []);
-
-  const coreGroup = groups.find(g => g.id === "core");
-  const workGroup = groups.find(g => g.id === "work");
-  const pipelineGroup = groups.find(g => g.id === "pipeline");
-  const financeGroup = groups.find(g => g.id === "finance");
-  const teamGroup = groups.find(g => g.id === "team");
-  const ceoGroup = groups.find(g => g.id === "ceo");
-  const systemGroup = groups.find(g => g.id === "system");
 
   const isActive = useCallback(
     (href: string) => {
@@ -90,6 +82,11 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
     await signOut({ redirect: false });
     router.push("/login");
   }, [router]);
+
+  // Flat nav items: Command, Projects, Clients
+  const flatItems = [commandGroup, projectsGroup, clientsGroup]
+    .filter(Boolean)
+    .map(g => g!.items[0]);
 
   return (
     <div className="min-h-screen bg-[#0a1128] text-white">
@@ -119,13 +116,15 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               </button>
             </div>
             <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-6">
-              {/* CORE PAGES - Always visible, prominent */}
+              {/* Navigation label */}
               {!isCollapsed && (
                 <div className="mb-4 px-3">
-                  <p className="text-[9px] uppercase tracking-widest text-slate-600 font-bold">Core Rooms</p>
+                  <p className="text-[9px] uppercase tracking-widest text-slate-600 font-bold">Navigation</p>
                 </div>
               )}
-              {coreGroup?.items.map(({ href, label, icon: Icon }) => (
+
+              {/* Command, Projects, Clients — flat buttons */}
+              {flatItems.map(({ href, label, icon: Icon }) => (
                 <motion.button
                   key={href}
                   whileTap={{ scale: 0.97 }}
@@ -147,32 +146,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
               {/* Divider */}
               <div className="my-4 border-t border-slate-800" />
 
-              {/* WORK */}
-              {workGroup && (
-                <CollapsibleNavGroup
-                  title="Work"
-                  icon={FiCheckSquare}
-                  items={workGroup.items}
-                  isActive={isActive}
-                  onNavigate={handleNavigate}
-                  defaultOpen={workGroup.items.some(item => pathname.startsWith(item.href))}
-                  collapsed={isCollapsed}
-                />
-              )}
-
-              {/* PIPELINE */}
-              {pipelineGroup && (
-                <CollapsibleNavGroup
-                  title="Pipeline"
-                  icon={FiTrendingUp}
-                  items={pipelineGroup.items}
-                  isActive={isActive}
-                  onNavigate={handleNavigate}
-                  defaultOpen={pipelineGroup.items.some(item => pathname.startsWith(item.href))}
-                  collapsed={isCollapsed}
-                />
-              )}
-
               {/* FINANCE */}
               {financeGroup && (
                 <CollapsibleNavGroup
@@ -182,33 +155,6 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                   isActive={isActive}
                   onNavigate={handleNavigate}
                   defaultOpen={financeGroup.items.some(item => pathname.startsWith(item.href))}
-                  collapsed={isCollapsed}
-                />
-              )}
-
-              {/* TEAM */}
-              {teamGroup && (
-                <CollapsibleNavGroup
-                  title="Team"
-                  icon={FiTeamUsers}
-                  items={teamGroup.items}
-                  isActive={isActive}
-                  onNavigate={handleNavigate}
-                  defaultOpen={teamGroup.items.some(item => pathname.startsWith(item.href))}
-                  collapsed={isCollapsed}
-                />
-              )}
-
-              {/* CEO (CEO only) */}
-              {ceoGroup && (
-                <CollapsibleNavGroup
-                  title="CEO"
-                  icon={FiStar}
-                  items={ceoGroup.items}
-                  isActive={isActive}
-                  onNavigate={handleNavigate}
-                  defaultOpen={ceoGroup.items.some(item => pathname.startsWith(item.href))}
-                  badge="CEO"
                   collapsed={isCollapsed}
                 />
               )}
