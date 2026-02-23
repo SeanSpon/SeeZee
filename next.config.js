@@ -105,7 +105,7 @@ const nextConfig = {
               "frame-ancestors 'none'",
               "object-src 'none'",
               "img-src 'self' data: https:",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.vercel.app",
+              "style-src 'self' 'unsafe-inline' https:",
               "font-src 'self' https://fonts.gstatic.com",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: https://www.googletagmanager.com",
               "connect-src 'self' https: https://www.google-analytics.com https://analytics.google.com",
