@@ -9,7 +9,6 @@ import { FolderOpenView } from "./FolderOpenView";
 import { AdminNotificationBanner } from "@/components/admin/AdminNotificationBanner";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { getVisibleGroups, findGroupForPath, type NavGroup } from "@/lib/admin/nav-data";
-import { isCEO } from "@/lib/role";
 import type { CurrentUser } from "@/lib/auth/requireRole";
 
 interface AdminExplorerShellProps {
@@ -20,8 +19,7 @@ interface AdminExplorerShellProps {
 export function AdminExplorerShell({ user, children }: AdminExplorerShellProps) {
   const pathname = usePathname();
   const { openFolderId, setOpenFolderId } = useNavigation();
-  const isUserCEO = isCEO(user.role);
-  const groups = getVisibleGroups(isUserCEO);
+  const groups = getVisibleGroups();
 
   const [userImage, setUserImage] = useState<string | undefined>(user.image ?? undefined);
 
