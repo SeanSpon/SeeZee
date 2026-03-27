@@ -112,12 +112,13 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   // Serialize data to ensure all fields are JSON-safe (Dates, Decimals, BigInts)
   const serializedTask = toPlain(task);
   const serializedActivities = toPlain(activities);
+  const serializedTeamMembers = toPlain(teamMembers);
 
   return (
     <TaskDetailClient
       task={serializedTask}
       activities={serializedActivities}
-      teamMembers={teamMembers}
+      teamMembers={serializedTeamMembers}
       currentUser={{
         id: user.id,
         name: user.name,

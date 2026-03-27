@@ -8,6 +8,7 @@ import { KanbanBoardClient } from "@/components/admin/kanban/KanbanBoardClient";
 import { db } from "@/server/db";
 import { isStaffRole } from "@/lib/role";
 import { redirect, notFound } from "next/navigation";
+import { toPlain } from "@/lib/serialize";
 
 export const dynamic = "force-dynamic";
 
@@ -84,7 +85,7 @@ export default async function ProjectBoardPage({ params }: PageProps) {
         organization: project.organization,
       }}
       initialTasks={tasks}
-      teamMembers={teamMembers}
+      teamMembers={toPlain(teamMembers)}
     />
   );
 }

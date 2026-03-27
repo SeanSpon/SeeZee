@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/requireRole';
 import { prisma } from '@/lib/prisma';
 import { RevenueCalculator } from '@/components/admin/RevenueCalculator';
+import { toPlain } from '@/lib/serialize';
 
 export const metadata = {
   title: 'Revenue Calculator | Admin Tools',
@@ -79,7 +80,7 @@ export default async function RevenueCalculatorPage() {
               }
             : null,
         }))}
-        teamMembers={teamMembers}
+        teamMembers={toPlain(teamMembers)}
       />
     </div>
   );
