@@ -11,6 +11,25 @@ const commandSchema = z.object({
   })).min(1).max(10),
 });
 
+async function ownerUserId() {
+  const email = process.env.KROGER_OWNER_EMAIL?.trim();
+  if (email) {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("KROGER_OWNER_NOT_FOUND");
+    return user.id;
+  }
+
+  const accounts = await prisma.account.findMany({
+    where: { provider: "kroger" },
+    select: { userId: true },
+    take: 2,
+  });
+
+  if (accounts.length === 1) return accounts[0].userId;
+  if (accounts.length === 0) throw new Error("KROGER_NOT_CONNECTED");
+  throw new Error("KROGER_OWNER_AMBIGUOUS");
+}
+
 async function resolveProduct(userId: string, query: string) {
   const params = new URLSearchParams({
     "filter.term": query,
@@ -36,15 +55,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const ownerEmail = process.env.KROGER_OWNER_EMAIL?.trim();
-    if (!ownerEmail) {
-      return NextResponse.json({ error: "KROGER_OWNER_EMAIL_NOT_CONFIGURED" }, { status: 500 });
-    }
-
-    const owner = await prisma.user.findUnique({ where: { email: ownerEmail } });
-    if (!owner) {
-      return NextResponse.json({ error: "KROGER_OWNER_NOT_FOUND" }, { status: 500 });
-    }
+    const ownerId = await ownerUserId();
 
     const delegated = await prisma.account.findUnique({
       where: {
@@ -58,7 +69,7 @@ export async function GET(request: NextRequest) {
     const nowSeconds = Math.floor(Date.now() / 1000);
     if (
       !delegated ||
-      delegated.userId !== owner.id ||
+      delegated.userId !== ownerId ||
       !delegated.session_state ||
       !delegated.expires_at ||
       delegated.expires_at < nowSeconds
@@ -85,7 +96,7 @@ export async function GET(request: NextRequest) {
     }>;
 
     for (const item of parsed.data.items) {
-      const product = await resolveProduct(owner.id, item.query);
+      const product = await resolveProduct(ownerId, item.query);
       if (!product?.upc) throw new Error(`Resolved product for ${item.query} had no UPC`);
       resolved.push({
         query: item.query,
@@ -98,7 +109,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const response = await krogerFetchForUser(owner.id, "/cart/add", {
+    const response = await krogerFetchForUser(ownerId, "/cart/add", {
       method: "PUT",
       body: JSON.stringify({
         items: resolved.map((item) => ({
