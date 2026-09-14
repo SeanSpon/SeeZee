@@ -59,20 +59,19 @@ export async function GET(request: NextRequest) {
     if (
       !delegated ||
       delegated.userId !== owner.id ||
-      !delegated.access_token ||
+      !delegated.session_state ||
       !delegated.expires_at ||
       delegated.expires_at < nowSeconds
     ) {
       return NextResponse.json({ error: "Command token is invalid or expired" }, { status: 401 });
     }
 
-    const parsed = commandSchema.safeParse(JSON.parse(delegated.access_token));
+    const parsed = commandSchema.safeParse(JSON.parse(delegated.session_state));
     if (!parsed.success) {
       await prisma.account.delete({ where: { id: delegated.id } });
       return NextResponse.json({ error: "Stored command is invalid" }, { status: 400 });
     }
 
-    // Consume before executing so the token can never be replayed.
     await prisma.account.delete({ where: { id: delegated.id } });
 
     const resolved = [] as Array<{
