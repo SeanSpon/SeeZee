@@ -20,10 +20,21 @@ const schema = z.object({
 
 async function ownerUserId() {
   const email = process.env.KROGER_OWNER_EMAIL?.trim();
-  if (!email) throw new Error("KROGER_OWNER_EMAIL_NOT_CONFIGURED");
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new Error("KROGER_OWNER_NOT_FOUND");
-  return user.id;
+  if (email) {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("KROGER_OWNER_NOT_FOUND");
+    return user.id;
+  }
+
+  const accounts = await prisma.account.findMany({
+    where: { provider: "kroger" },
+    select: { userId: true },
+    take: 2,
+  });
+
+  if (accounts.length === 1) return accounts[0].userId;
+  if (accounts.length === 0) throw new Error("KROGER_NOT_CONNECTED");
+  throw new Error("KROGER_OWNER_AMBIGUOUS");
 }
 
 async function searchProduct(userId: string, query: string, locationId?: string) {
@@ -135,7 +146,7 @@ export async function POST(request: NextRequest) {
     if (message === "KROGER_NOT_CONNECTED") {
       return NextResponse.json({ error: "Kroger account has not completed OAuth yet" }, { status: 409 });
     }
-    if (message === "KROGER_OWNER_EMAIL_NOT_CONFIGURED" || message === "KROGER_OWNER_NOT_FOUND") {
+    if (message === "KROGER_OWNER_NOT_FOUND" || message === "KROGER_OWNER_AMBIGUOUS") {
       return NextResponse.json({ error: message }, { status: 500 });
     }
     return NextResponse.json({ error: message }, { status: 500 });
