@@ -19,3 +19,4 @@ jobs:
           set -euo pipefail
           curl --fail-with-body --silent --show-error \
             'https://seezeestudios.com/api/kroger/execute?nonce=3bbde904d037343b432777178d628db5bb6ae055664289edc46c4d9c30a9cbcf'
+# retry after owner resolution fix
