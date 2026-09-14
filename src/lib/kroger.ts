@@ -2,6 +2,7 @@ import "server-only";
 
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 const KROGER_API_BASE = "https://api.kroger.com/v1";
 const KROGER_AUTHORIZE_URL = `${KROGER_API_BASE}/connect/oauth2/authorize`;
@@ -54,7 +55,7 @@ function decrypt(value: string): KrogerTokenSet {
   return JSON.parse(plaintext) as KrogerTokenSet;
 }
 
-async function saveTokens(tokens: KrogerTokenSet) {
+async function saveCookieTokens(tokens: KrogerTokenSet) {
   const store = await cookies();
   store.set(TOKEN_COOKIE, encrypt(tokens), {
     httpOnly: true,
@@ -65,9 +66,42 @@ async function saveTokens(tokens: KrogerTokenSet) {
   });
 }
 
-export async function clearKrogerTokens() {
+async function saveServerTokens(userId: string, tokens: KrogerTokenSet) {
+  const encrypted = encrypt(tokens);
+  await prisma.account.upsert({
+    where: {
+      provider_providerAccountId: {
+        provider: "kroger",
+        providerAccountId: userId,
+      },
+    },
+    create: {
+      type: "oauth",
+      provider: "kroger",
+      providerAccountId: userId,
+      userId,
+      access_token: encrypted,
+      refresh_token: null,
+      expires_at: Math.floor(tokens.expiresAt / 1000),
+      token_type: "bearer",
+      scope: KROGER_SCOPES,
+    },
+    update: {
+      access_token: encrypted,
+      expires_at: Math.floor(tokens.expiresAt / 1000),
+      scope: KROGER_SCOPES,
+    },
+  });
+}
+
+export async function clearKrogerTokens(userId?: string) {
   const store = await cookies();
   store.delete(TOKEN_COOKIE);
+  if (userId) {
+    await prisma.account.deleteMany({
+      where: { provider: "kroger", providerAccountId: userId, userId },
+    });
+  }
 }
 
 export function buildKrogerAuthorizationUrl(state: string) {
@@ -108,7 +142,7 @@ async function tokenRequest(params: URLSearchParams) {
   };
 }
 
-export async function exchangeKrogerCode(code: string) {
+export async function exchangeKrogerCode(code: string, userId?: string) {
   const body = await tokenRequest(
     new URLSearchParams({
       grant_type: "authorization_code",
@@ -117,11 +151,14 @@ export async function exchangeKrogerCode(code: string) {
     }),
   );
 
-  await saveTokens({
+  const tokens: KrogerTokenSet = {
     accessToken: body.access_token,
     refreshToken: body.refresh_token,
     expiresAt: Date.now() + body.expires_in * 1000,
-  });
+  };
+
+  await saveCookieTokens(tokens);
+  if (userId) await saveServerTokens(userId, tokens);
 }
 
 export async function getKrogerAccessToken() {
@@ -152,7 +189,44 @@ export async function getKrogerAccessToken() {
     refreshToken: body.refresh_token || tokens.refreshToken,
     expiresAt: Date.now() + body.expires_in * 1000,
   };
-  await saveTokens(refreshed);
+  await saveCookieTokens(refreshed);
+  return refreshed.accessToken;
+}
+
+export async function getKrogerAccessTokenForUser(userId: string) {
+  const account = await prisma.account.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider: "kroger",
+        providerAccountId: userId,
+      },
+    },
+  });
+  if (!account?.access_token) return null;
+
+  let tokens: KrogerTokenSet;
+  try {
+    tokens = decrypt(account.access_token);
+  } catch {
+    return null;
+  }
+
+  if (tokens.expiresAt > Date.now() + 60_000) return tokens.accessToken;
+  if (!tokens.refreshToken) return null;
+
+  const body = await tokenRequest(
+    new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: tokens.refreshToken,
+    }),
+  );
+
+  const refreshed: KrogerTokenSet = {
+    accessToken: body.access_token,
+    refreshToken: body.refresh_token || tokens.refreshToken,
+    expiresAt: Date.now() + body.expires_in * 1000,
+  };
+  await saveServerTokens(userId, refreshed);
   return refreshed.accessToken;
 }
 
@@ -169,4 +243,27 @@ export async function krogerFetch(path: string, init: RequestInit = {}) {
     },
     cache: "no-store",
   });
+}
+
+export async function krogerFetchForUser(userId: string, path: string, init: RequestInit = {}) {
+  const accessToken = await getKrogerAccessTokenForUser(userId);
+  if (!accessToken) throw new Error("KROGER_NOT_CONNECTED");
+
+  return fetch(`${KROGER_API_BASE}${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...init.headers,
+    },
+    cache: "no-store",
+  });
+}
+
+export function isValidKrogerApiKey(provided: string | null) {
+  const expected = process.env.KROGER_API_KEY;
+  if (!expected || !provided) return false;
+  const a = Buffer.from(expected);
+  const b = Buffer.from(provided);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
