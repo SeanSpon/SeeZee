@@ -108,7 +108,11 @@ export async function POST(request: Request) {
     // Email the actual message to the team. The database lead remains available
     // in the CRM even if the mail provider is temporarily unavailable.
     const teamEmail = process.env.CONTACT_NOTIFICATION_EMAIL || 'contact@seezeestudios.com';
+    // The default seezeestudios.com sender is not verified in Resend yet.
+    // Use the existing sender domain documented in the project environment.
+    const from = `SeeZee Studio <${process.env.RESEND_FROM_EMAIL || 'sean@see-zee.com'}>`;
     const teamResult = await sendEmail({
+      from,
       to: teamEmail,
       replyTo: sanitizedEmail,
       subject: `New website inquiry from ${sanitizedName}`,
@@ -140,6 +144,7 @@ export async function POST(request: Request) {
     `);
 
     const confirmationResult = await sendEmail({
+      from,
       to: sanitizedEmail,
       subject: "We got your message — SeeZee Studios",
       html: emailHtml,

@@ -310,13 +310,13 @@ export default function AboutPage() {
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Technical Lead</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Sean leads technical support and system development for SeeZee — solving real-world problems and building solutions that actually work.
+                      Sean is an Information Technology student at the University of Cincinnati studying Software Application Development and Co-Founder of SeeZee Studios.
                     </p>
                     <p>
-                      He provides hands-on support (on-site and remote), builds accessible web platforms, and creates automation tools that save time and reduce frustration.
+                      At SeeZee, Sean leads technical support and system development. He works hands-on with organizations to troubleshoot their existing technology, then builds websites, client platforms, and automation tools around the problems they actually need solved. His goal is to make those systems reliable, accessible, and straightforward for the people using them every day.
                     </p>
-                    <p className="text-white font-semibold">
-                      His approach: understand the real problem first, then build the right solution.
+                    <p>
+                      Sean contributes to the full process, from planning and design to development, deployment, and ongoing support. His experience through FBLA and client projects taught him to explain technical decisions clearly and keep improving a solution after it launches. Whether he&apos;s helping on-site or working remotely, he wants clients to understand what was built and feel confident using it.
                     </p>
                   </div>
                   <div className="mb-6">
@@ -349,7 +349,7 @@ export default function AboutPage() {
                     </ul>
                   </div>
                   <p className="text-gray-300 italic mb-4">
-                    Sean builds technology that helps people — not confuses them.
+                    Sean&apos;s goal is to solve the real problem first, then build technology that people can rely on.
                   </p>
                   <div className="flex flex-wrap gap-3">
                     <motion.a
