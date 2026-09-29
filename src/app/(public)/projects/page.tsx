@@ -52,7 +52,7 @@ interface ProjectData {
   screenshotsLabel?: string
   liveUrl?: string
   liveLabel?: string
-  githubUrl: string
+  githubUrl?: string
   caseStudyUrl?: string
   socialLinks?: { platform: string; handle: string }[]
 }
@@ -631,6 +631,111 @@ const projects: ProjectData[] = [
     "liveUrl": "https://cram-master-one.vercel.app/",
     "liveLabel": "Open Website",
     "githubUrl": "https://github.com/zrobards/CramMaster"
+  },
+  {
+      "id": "legacy-by-arisyn",
+      "name": "Legacy by Arisyn",
+      "oneliner": "Corporate Housing Website",
+      "tags": [
+          "UI Demo"
+      ],
+      "status": "demo",
+      "statusLabel": "Public UI Demo",
+      "accentColor": "purple",
+      "accentBorder": "border-purple-500/30",
+      "accentBg": "bg-purple-500/10",
+      "accentText": "text-purple-300",
+      "pillTechs": [
+          "Next.js",
+          "TypeScript",
+          "Tailwind CSS"
+      ],
+      "description": [
+          "A furnished housing website with property listings, a company story, FAQs, and housing inquiry pages."
+      ],
+      "features": [
+          "Property showcase",
+          "Housing inquiry pages",
+          "Responsive business website"
+      ],
+      "techStack": [
+          "Next.js",
+          "TypeScript",
+          "Tailwind CSS"
+      ],
+      "liveUrl": "https://legacybyarisyn.vercel.app/",
+      "liveLabel": "Open Website",
+      "githubUrl": "https://github.com/SeanSpon/stoner-stays"
+  },
+  {
+      "id": "robards-performance",
+      "name": "RoBards Performance",
+      "oneliner": "Workout Planning & Training Interface",
+      "tags": [
+          "UI Demo"
+      ],
+      "status": "demo",
+      "statusLabel": "Public UI Demo",
+      "accentColor": "purple",
+      "accentBorder": "border-purple-500/30",
+      "accentBg": "bg-purple-500/10",
+      "accentText": "text-purple-300",
+      "pillTechs": [
+          "React",
+          "Vite",
+          "TypeScript"
+      ],
+      "description": [
+          "An interactive training app with selectable workout splits, exercise templates, a calendar, and progress views."
+      ],
+      "features": [
+          "Selectable training splits",
+          "Workout templates and planned sets",
+          "Calendar and progress views"
+      ],
+      "techStack": [
+          "React",
+          "Vite",
+          "TypeScript"
+      ],
+      "liveUrl": "https://robards-performance.vercel.app/",
+      "liveLabel": "Open Website",
+
+  },
+  {
+      "id": "neurodiversity-school-project",
+      "name": "Neurodiversity & Mental Health",
+      "oneliner": "Accessible Educational Website",
+      "tags": [
+          "UI Demo"
+      ],
+      "status": "demo",
+      "statusLabel": "Public UI Demo",
+      "accentColor": "purple",
+      "accentBorder": "border-purple-500/30",
+      "accentBg": "bg-purple-500/10",
+      "accentText": "text-purple-300",
+      "pillTechs": [
+          "HTML",
+          "CSS",
+          "JavaScript"
+      ],
+      "description": [
+          "An educational website with calm layouts, accessible navigation, read-aloud controls, and resources for students and communities."
+      ],
+      "features": [
+          "Read-aloud controls",
+          "Accessible multi-page navigation",
+          "Educational resource directory"
+      ],
+      "techStack": [
+          "HTML",
+          "CSS",
+          "JavaScript"
+      ],
+      "liveUrl": "https://roxierobards-neurodivergent-schoolp.vercel.app/",
+      "liveLabel": "Open Website",
+
   },
 ]
 
@@ -1248,7 +1353,7 @@ export default function ProjectsPage() {
                           {expandedProject.liveLabel || 'View Live'}
                         </a>
                       )}
-                      <a
+                      {expandedProject.githubUrl && <a
                         href={expandedProject.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1256,7 +1361,7 @@ export default function ProjectsPage() {
                       >
                         <FiGithub className="w-4 h-4" />
                         {expandedProject.id === 'clipbot' ? 'View Source' : 'GitHub'}
-                      </a>
+                      </a>}
                       {expandedProject.caseStudyUrl && (
                         <Link
                           href={expandedProject.caseStudyUrl}
@@ -1333,7 +1438,7 @@ export default function ProjectsPage() {
                   version-controlled and reviewable.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {projects.slice(0, 6).map((project) => project.githubUrl.split('/').pop()).map((repo) => (
+                  {projects.filter((project) => project.githubUrl).slice(0, 6).map((project) => project.githubUrl!.split('/').pop()).map((repo) => (
                     <span
                       key={repo}
                       className="text-xs px-2 py-1 bg-white/5 border border-white/10 rounded text-gray-400 font-mono"
