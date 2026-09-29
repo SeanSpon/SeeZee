@@ -30,7 +30,7 @@ interface ProjectData {
   name: string
   oneliner: string
   tags: string[]
-  status: 'live' | 'deployed' | 'offline'
+  status: 'live' | 'deployed' | 'demo' | 'offline'
   statusLabel: string
   featured?: boolean
   accentColor: string
@@ -58,53 +58,6 @@ interface ProjectData {
 }
 
 const projects: ProjectData[] = [
-  {
-    id: 'clipbot',
-    name: 'ClipBot',
-    oneliner: 'AI Video Director -- Automated Multi-Camera Editing System',
-    tags: ['Featured', 'AI System', 'Open Source'],
-    status: 'live',
-    statusLabel: 'Live -- Active Development',
-    featured: true,
-    accentColor: 'purple',
-    accentBorder: 'border-purple-500/30',
-    accentBg: 'bg-purple-500/10',
-    accentText: 'text-purple-300',
-    pillTechs: ['Next.js', 'AI', 'Python'],
-    description: [
-      'An AI-powered system that analyzes long-form video, detects the strongest moments, generates scene-by-scene editing directions, and scores clips for virality -- automatically.',
-    ],
-    problemText:
-      'Video and podcast content takes hours to review manually. Finding strong clips is slow and inconsistent. Editing multi-camera footage requires expensive software and expertise.',
-    solutionText:
-      'An AI-powered system that analyzes long-form video, detects the strongest moments, generates scene-by-scene editing directions, and scores clips for virality -- automatically.',
-    whyMatters:
-      'This project demonstrates our ability to build real AI-assisted tools, design automation pipelines, and integrate multiple AI providers into a production system.',
-    features: [
-      'Multi-provider AI Director (Anthropic, OpenAI, Gemini)',
-      'Automated transcript analysis & speaker diarization',
-      'Scene-by-scene shot list generation',
-      'AI virality scoring (0-100)',
-      'Multi-camera footage support',
-      'Real-time job processing with SSE',
-      'Video rendering pipeline',
-      'Project management dashboard',
-    ],
-    techStack: [
-      'Next.js',
-      'Python / FastAPI',
-      'Prisma',
-      'Turborepo',
-      'Anthropic API',
-      'OpenAI API',
-      'Gemini API',
-      'Docker',
-      'SSE Streaming',
-    ],
-    liveUrl: 'https://clipbot-neon.vercel.app',
-    liveLabel: 'Try ClipBot',
-    githubUrl: 'https://github.com/SeanSpon/clipbot',
-  },
   {
     id: 'seezee',
     name: 'SeeZee Studios Platform',
@@ -160,7 +113,7 @@ const projects: ProjectData[] = [
     oneliner: 'Operations Dashboard & Data Platform for 501(c)(3) Nonprofit',
     tags: ['Client System', '501(c)(3) Nonprofit'],
     status: 'deployed',
-    statusLabel: 'Vercel Preview',
+    statusLabel: 'Completed & Deployed',
     accentColor: 'blue',
     accentBorder: 'border-blue-500/30',
     accentBg: 'bg-blue-500/10',
@@ -203,51 +156,10 @@ const projects: ProjectData[] = [
       { src: '/avfy-donate.png', label: 'Donations', alt: 'Donation System' },
     ],
     screenshotsLabel: 'Platform Preview',
-    liveUrl: 'https://avisionforyou-57fekftr7-zach-robards-projects.vercel.app/',
-    liveLabel: 'View Preview',
+    liveUrl: 'https://www.avisionforyourecovery.org',
+    liveLabel: 'Visit A Vision For You',
     githubUrl: 'https://github.com/SeanSpon/avisionforyou',
     caseStudyUrl: '/case-studies/a-vision-for-you',
-  },
-  {
-    id: 'bigredbus',
-    name: 'Big Red Bus',
-    oneliner: 'Community Resource & Accessibility Platform',
-    tags: ['Community Platform', 'Nonprofit Initiative'],
-    status: 'live',
-    statusLabel: 'Live',
-    accentColor: 'blue',
-    accentBorder: 'border-blue-500/30',
-    accentBg: 'bg-blue-500/10',
-    accentText: 'text-blue-300',
-    pillTechs: ['React', 'TypeScript', 'Vite'],
-    description: [
-      'Big Red Bus is a Louisville-based nonprofit initiative using a physical bus to bring community resources, accessibility support, and connection directly to those who need it.',
-      'We built a digital platform to help organizations like Big Red Bus connect with their communities -- organization search, event discovery, and accessible design throughout.',
-    ],
-    features: [
-      'Organization directory and search',
-      'Event discovery and community resources',
-      'Support group information',
-      'Review and engagement system',
-      'Accessible, cognitive-friendly design',
-      'Mobile-first responsive layout',
-    ],
-    featuresLabel: 'Platform Features',
-    techStack: ['React', 'TypeScript', 'Vite', 'Accessible UI'],
-    screenshots: [
-      { src: '/big-red-bus-1.png', label: 'Homepage', alt: 'Homepage' },
-      { src: '/big-red-bus-2.png', label: 'Directory', alt: 'Organization Directory' },
-      { src: '/big-red-bus-3.png', label: 'About', alt: 'About Page' },
-    ],
-    screenshotsLabel: 'Platform Interface',
-    liveUrl: 'https://fbla-coding-and-programming-web.vercel.app/',
-    liveLabel: 'View Live Platform',
-    githubUrl: 'https://github.com/SeanSpon/FBLA-Coding-And-Programming',
-    caseStudyUrl: '/case-studies/big-red-bus',
-    socialLinks: [
-      { platform: 'Instagram', handle: '@brb.bigredbus' },
-      { platform: 'TikTok', handle: '@bigredbus' },
-    ],
   },
   {
     id: 'taxfeeder',
@@ -284,9 +196,420 @@ const projects: ProjectData[] = [
       { number: '50', label: 'States Supported', sublabel: 'Full federal & state coverage' },
       { number: '3', label: 'User Tiers', sublabel: 'Preparer / Owner / Reseller' },
     ],
-    liveUrl: 'https://nextjs-boilerplate-six-amber-27.vercel.app/',
+    liveUrl: 'https://www.taxfeedersoftware.com',
     liveLabel: 'Visit TaxFeeder',
-    githubUrl: 'https://github.com/SeanSpon/SeeZee',
+    githubUrl: 'https://github.com/SeanSpon/TFS_App',
+  },
+  {
+    id: 'frosty-snoballs',
+    name: 'Frosty Sno-Balls',
+    oneliner: 'Mobile Shaved Ice Business Website & Event Booking',
+    tags: ['Completed Project', 'Local Business'],
+    status: 'deployed',
+    statusLabel: 'Completed & Deployed',
+    accentColor: 'cyan',
+    accentBorder: 'border-cyan-500/30',
+    accentBg: 'bg-cyan-500/10',
+    accentText: 'text-cyan-300',
+    pillTechs: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+    description: [
+      'A completed website for a mobile shaved ice business serving Louisville and Shelbyville. Visitors can browse flavors, explore event services, and request a booking from any device.',
+    ],
+    features: [
+      'Filterable flavor menu with sugar-free options',
+      'Event services and booking inquiry form',
+      'Business story and photo gallery',
+      'Mobile-friendly responsive design',
+    ],
+    techStack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+    liveUrl: 'https://frostysnoballs.com',
+    liveLabel: 'Visit Frosty Sno-Balls',
+    githubUrl: 'https://github.com/SeanSpon/frosty-snoballs',
+  },
+  {
+    "id": "clipbot",
+    "name": "ClipBot",
+    "oneliner": "AI Video Editing Interface",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "Next.js",
+      "AI",
+      "Python"
+    ],
+    "description": [
+      "An interactive video editing prototype with file selection, camera setup, style references, and AI model controls. The public portfolio shows the interface; the processing backend is not presented as a public service."
+    ],
+    "features": [
+      "Video upload interface",
+      "Camera labeling workflow",
+      "Style reference and prompt controls",
+      "AI provider and model selector"
+    ],
+    "techStack": [
+      "Next.js",
+      "AI",
+      "Python"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/clipbot",
+    "screenshots": [
+      {
+        "src": "/project-previews/clipbot-upload.png",
+        "label": "Upload",
+        "alt": "ClipBot video upload interface"
+      },
+      {
+        "src": "/project-previews/clipbot-style.png",
+        "label": "Style Reference",
+        "alt": "ClipBot style reference interface"
+      },
+      {
+        "src": "/project-previews/clipbot-cameras.png",
+        "label": "Camera Setup",
+        "alt": "ClipBot camera labeling interface"
+      }
+    ]
+  },
+  {
+    "id": "bigredbus",
+    "name": "Big Red Bus",
+    "oneliner": "Community Directory & FBLA Application",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "React",
+      "TypeScript",
+      "Vite"
+    ],
+    "description": [
+      "A client-side application for discovering local businesses and community organizations, built for the FBLA Coding & Programming competition."
+    ],
+    "features": [
+      "Organization search and category filters",
+      "Ratings and reviews interface",
+      "Saved favorites",
+      "Community organization detail pages"
+    ],
+    "techStack": [
+      "React",
+      "TypeScript",
+      "Vite"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/FBLA-Coding-And-Programming",
+    "screenshots": [
+      {
+        "src": "/big-red-bus-1.png",
+        "label": "Homepage",
+        "alt": "Big Red Bus Homepage"
+      },
+      {
+        "src": "/big-red-bus-2.png",
+        "label": "Directory",
+        "alt": "Big Red Bus Directory"
+      },
+      {
+        "src": "/big-red-bus-3.png",
+        "label": "About",
+        "alt": "Big Red Bus About"
+      }
+    ],
+    "caseStudyUrl": "/case-studies/big-red-bus"
+  },
+  {
+    "id": "hvacmockup",
+    "name": "HVAC Business Platform",
+    "oneliner": "Service Website, Customer Portal & Dispatch UI",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "Next.js",
+      "TypeScript",
+      "Prisma"
+    ],
+    "description": [
+      "A detailed HVAC business prototype combining a service website with customer and technician interfaces. Demo screens use sample service and invoice data."
+    ],
+    "features": [
+      "Service and emergency pages",
+      "Customer portal and service history",
+      "Technician and dispatch interfaces",
+      "Analytics and membership screens"
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Prisma"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/hvacmockup"
+  },
+  {
+    "id": "roofing-website",
+    "name": "Liberty Roofing",
+    "oneliner": "Retro Roofing Business Website",
+    "tags": [
+      "UI Demo",
+      "Website Design"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "description": [
+      "A roofing website concept with a red, white, and blue visual style, service pages, an interactive roof diagram, and a quote request interface."
+    ],
+    "features": [
+      "Roofing service pages",
+      "Interactive roof diagram",
+      "Service area and financing sections",
+      "Responsive quote request interface"
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/roofing-website"
+  },
+  {
+    "id": "seanos-lite-mvp",
+    "name": "SeanOS",
+    "oneliner": "Personal Productivity Dashboard",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "Next.js",
+      "TypeScript",
+      "Zustand"
+    ],
+    "description": [
+      "A personal dashboard prototype for organizing tasks, habits, goals, workouts, and daily planning in one interface."
+    ],
+    "features": [
+      "Task creation and filtering",
+      "Habit and goal tracking screens",
+      "Focus timer and calendar",
+      "Workout and nutrition interfaces"
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Zustand"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/seanos-lite-mvp"
+  },
+  {
+    "id": "honors-portfolio",
+    "name": "Sean’s Honors Portfolio",
+    "oneliner": "University of Cincinnati Learning Portfolio",
+    "tags": [
+      "UI Demo",
+      "Website Design"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "Next.js",
+      "React",
+      "CSS"
+    ],
+    "description": [
+      "A minimal learning portfolio for the University of Cincinnati Honors Program, with personal reflections and space for future experiences."
+    ],
+    "features": [
+      "About and involvement pages",
+      "Honors experiences section",
+      "Year-in-review pages",
+      "Responsive personal portfolio layout"
+    ],
+    "techStack": [
+      "Next.js",
+      "React",
+      "CSS"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/seans-honors-portfolio"
+  },
+  {
+    "id": "roomie",
+    "name": "Roomie",
+    "oneliner": "Roommate Coordination App",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "React",
+      "TypeScript",
+      "Neon"
+    ],
+    "description": [
+      "A semester-project roommate app built around a fictional shared household. Its interface brings chores, shared expenses, reservations, and house rules together."
+    ],
+    "features": [
+      "Chore assignment and rotation",
+      "Shared expense and settlement ledger",
+      "Space reservation interface",
+      "House rules and usage guide"
+    ],
+    "techStack": [
+      "React",
+      "TypeScript",
+      "Neon"
+    ],
+    "githubUrl": "https://github.com/SeanSpon/projectforit"
+  },
+  {
+    "id": "sunshine-work-board",
+    "name": "Sunshine Work Board",
+    "oneliner": "Work Scheduling & Crew Dashboard",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "React",
+      "Vite",
+      "Firebase"
+    ],
+    "description": [
+      "A mobile-first work board for a remodeling crew, with daily job planning, worker responses, hours, and pay tracking. The repository includes a local demo mode."
+    ],
+    "features": [
+      "Daily work plans and calendar",
+      "Worker responses and hours",
+      "Paid and unpaid totals",
+      "Payment-status audit log"
+    ],
+    "techStack": [
+      "React",
+      "Vite",
+      "Firebase"
+    ],
+    "githubUrl": "https://github.com/zrobards/sunshine-work-board"
+  },
+  {
+    "id": "robards-training-log",
+    "name": "RoBards Training Log",
+    "oneliner": "Workout Tracking PWA",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "React",
+      "Vite",
+      "Recharts"
+    ],
+    "description": [
+      "A mobile workout tracker with quick set logging, rest timers, exercise history, and progress charts. Workout data can be stored locally and exported."
+    ],
+    "features": [
+      "Workout and set logging",
+      "Rest timer and session progress",
+      "Exercise and bodyweight charts",
+      "Local data export and import"
+    ],
+    "techStack": [
+      "React",
+      "Vite",
+      "Recharts"
+    ],
+    "githubUrl": "https://github.com/zrobards/RoBardsfitnesstracker"
+  },
+  {
+    "id": "studyforge",
+    "name": "StudyForge / CramMaster",
+    "oneliner": "Adaptive Flashcard Study App",
+    "tags": [
+      "UI Demo",
+      "App Prototype"
+    ],
+    "status": "demo",
+    "statusLabel": "UI Demo — Source Available",
+    "accentColor": "purple",
+    "accentBorder": "border-purple-500/30",
+    "accentBg": "bg-purple-500/10",
+    "accentText": "text-purple-300",
+    "pillTechs": [
+      "JavaScript",
+      "Express",
+      "CSS"
+    ],
+    "description": [
+      "A study interface for importing or pasting flashcard terms and practicing with adaptive learning. Manual term entry provides a study flow without relying on an external import service."
+    ],
+    "features": [
+      "Manual term entry and Quizlet import interface",
+      "Adaptive practice sessions",
+      "Written-answer feedback",
+      "Theme and audio controls"
+    ],
+    "techStack": [
+      "JavaScript",
+      "Express",
+      "CSS"
+    ],
+    "githubUrl": "https://github.com/zrobards/CramMaster"
   },
 ]
 
@@ -300,6 +623,8 @@ function statusDotColor(status: ProjectData['status']) {
       return 'bg-emerald-400'
     case 'deployed':
       return 'bg-blue-400'
+    case 'demo':
+      return 'bg-purple-400'
     case 'offline':
       return 'bg-amber-400'
   }
@@ -318,6 +643,13 @@ function statusBadge(project: ProjectData) {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/20 border border-blue-400/40 text-blue-300 rounded-full text-xs font-medium">
           <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+          {project.statusLabel}
+        </span>
+      )
+    case 'demo':
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/20 border border-purple-400/40 text-purple-300 rounded-full text-xs font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
           {project.statusLabel}
         </span>
       )
@@ -418,7 +750,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mt-6 text-sm text-gray-500 font-mono"
               >
-                {projects.length} projects &middot; {projects.filter((p) => p.status === 'live').length} live
+                {projects.length} projects &middot; {projects.filter((p) => p.status === 'live').length} live &middot; {projects.filter((p) => p.status === 'deployed').length} completed &middot; {projects.filter((p) => p.status === 'demo').length} demos
               </motion.div>
             </div>
           </ScrollAnimation>
@@ -528,14 +860,18 @@ export default function ProjectsPage() {
                                         ? 'text-emerald-400'
                                         : project.status === 'offline'
                                           ? 'text-amber-400'
-                                          : 'text-blue-400'
+                                          : project.status === 'demo'
+                                            ? 'text-purple-400'
+                                            : 'text-blue-400'
                                     }`}
                                   >
                                     {project.status === 'live'
                                       ? 'Live'
                                       : project.status === 'offline'
                                         ? 'Offline'
-                                        : 'Deployed'}
+                                        : project.status === 'demo'
+                                          ? 'UI Demo'
+                                          : 'Completed & Deployed'}
                                   </span>
                                 </div>
 
@@ -861,6 +1197,11 @@ export default function ProjectsPage() {
                     <h4 className="text-xs uppercase tracking-widest text-gray-500 font-mono mb-4">
                       Access Points
                     </h4>
+                    {expandedProject.status === 'demo' && (
+                      <p className="text-sm text-gray-400 mb-4">
+                        Interface demo with source code available. A public website link will be added when a public domain is available.
+                      </p>
+                    )}
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                       {expandedProject.liveUrl && (
                         <a
@@ -962,7 +1303,7 @@ export default function ProjectsPage() {
                   version-controlled and reviewable.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {['clipbot', 'SeeZee', 'avisionforyou', 'seezeestudios-mcp'].map((repo) => (
+                  {projects.slice(0, 6).map((project) => project.githubUrl.split('/').pop()).map((repo) => (
                     <span
                       key={repo}
                       className="text-xs px-2 py-1 bg-white/5 border border-white/10 rounded text-gray-400 font-mono"
@@ -985,45 +1326,28 @@ export default function ProjectsPage() {
                   >
                     <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
                   </svg>
-                  <h3 className="text-xl font-bold text-white">Vercel</h3>
+                  <h3 className="text-xl font-bold text-white">Public Websites</h3>
                 </div>
                 <p className="text-gray-400 mb-4">
-                  All projects deployed on Vercel with automatic CI/CD from GitHub. Production,
-                  preview, and staging environments.
+                  Explore the finished websites on their public domains. Completed projects remain
+                  available to view even when active development has ended.
                 </p>
                 <div className="space-y-2">
-                  {[
-                    { name: 'seezeestudios.com', status: 'Production', online: true },
-                    { name: 'clipbot-neon.vercel.app', status: 'Production', online: true },
-                    {
-                      name: 'avisionforyou (Vercel Preview)',
-                      status: 'Preview',
-                      online: true,
-                    },
-                    {
-                      name: 'softwaretfs (TaxFeeder)',
-                      status: 'Production',
-                      online: true,
-                    },
-                    {
-                      name: 'fbla-coding-and-programming-web.vercel.app',
-                      status: 'Production',
-                      online: true,
-                    },
-                  ].map((deploy) => (
-                    <div
-                      key={deploy.name}
-                      className="flex items-center justify-between text-sm"
+                  {projects.filter((project) => project.liveUrl).map((project) => (
+                    <a
+                      key={project.id}
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex flex-wrap items-center justify-between gap-2 text-sm hover:underline"
                     >
-                      <span className="text-gray-300 font-mono text-xs">{deploy.name}</span>
-                      <span
-                        className={`text-xs ${
-                          deploy.online ? 'text-emerald-400' : 'text-amber-400'
-                        }`}
-                      >
-                        {deploy.status}
+                      <span className="text-gray-300 font-mono text-xs break-all">
+                        {new URL(project.liveUrl!).hostname}
                       </span>
-                    </div>
+                      <span className={`text-xs ${project.status === 'live' ? 'text-emerald-400' : 'text-blue-400'}`}>
+                        {project.status === 'live' ? 'Live' : 'Completed & Deployed'}
+                      </span>
+                    </a>
                   ))}
                 </div>
               </div>
