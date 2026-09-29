@@ -26,6 +26,7 @@ function ContactForm() {
   });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [receipt, setReceipt] = useState<{ referenceId: string; teamNotified: boolean; confirmationSent: boolean } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +47,8 @@ function ContactForm() {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        setReceipt(data);
         setStatus('success');
         setState({ name: "", email: "", message: "", inquiryType: inquiryParam || "" });
       } else {
@@ -79,8 +82,14 @@ function ContactForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </motion.div>
-              <h3 className="text-3xl font-heading font-bold mb-3 text-white">Message Sent!</h3>
-              <p className="text-gray-400 mb-2 text-lg">Thanks for reaching out. Check your inbox for a confirmation.</p>
+              <h3 className="text-3xl font-heading font-bold mb-3 text-white">Message Received</h3>
+              <p className="text-gray-400 mb-2 text-lg">
+                {receipt?.teamNotified
+                  ? 'Thanks for reaching out. Our team has been notified.'
+                  : 'Your message was saved, but our email notification is delayed. For urgent help, please call us.'}
+              </p>
+              {receipt?.confirmationSent && <p className="text-gray-400">Check your inbox for a confirmation.</p>}
+              {receipt?.referenceId && <p className="text-gray-500 text-sm mt-3">Reference: {receipt.referenceId}</p>}
 
               <div className="mt-8 text-left space-y-4">
                 <h4 className="text-lg font-semibold text-white text-center">What happens next?</h4>
@@ -90,7 +99,7 @@ function ContactForm() {
                 </div>
                 <div className="flex items-start gap-4">
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">2</span>
-                  <p className="text-gray-300 pt-1">We&apos;ll reach out within 24 hours to discuss your project.</p>
+                  <p className="text-gray-300 pt-1">We&apos;ll reach out to discuss your project.</p>
                 </div>
                 <div className="flex items-start gap-4">
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">3</span>

@@ -448,13 +448,13 @@ export default function AboutPage() {
                   <p className="text-trinity-red font-semibold mb-4 text-lg">Co-Founder & Consulting Lead</p>
                   <div className="space-y-4 text-base md:text-lg text-gray-300 leading-relaxed mb-6">
                     <p>
-                      Zach handles consulting and partner relationships.
+                      Zach is a Computer Science student in the University Honors Program at the University of Louisville and Co-Founder of SeeZee Studios.
                     </p>
                     <p>
-                      He works directly with organizations to understand their needs, explain options clearly, and help them make smart technology decisions that fit their budget and goals.
+                      At SeeZee, Zach leads consulting and client relationships, working directly with organizations to understand their needs, goals, and challenges before recommending a solution. He focuses on making technology approachable—helping clients understand their options, make informed decisions, and choose solutions that make sense for their budget and long-term goals.
                     </p>
                     <p>
-                      He also contributes to development — ensuring every solution is practical, user-friendly, and actually serves the people who will use it.
+                      Zach also contributes to project planning, development, content, and user experience, helping bridge the gap between an organization’s ideas and the technology used to bring them to life. His focus is simple: build practical solutions that are easy to use and genuinely useful to the people they’re designed for.
                     </p>
                   </div>
                   <div className="mb-6">
@@ -466,7 +466,7 @@ export default function AboutPage() {
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Partner communication & relationship building</span>
+                        <span>Client and partner relationships</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
@@ -478,16 +478,20 @@ export default function AboutPage() {
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
+                        <span>Development support</span>
+                      </li>
+                      <li className="flex items-start">
+                        <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
                         <span>Training & documentation</span>
                       </li>
                       <li className="flex items-start">
                         <FiCheck className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
-                        <span>Long-term partnership management</span>
+                        <span>Long-term client support</span>
                       </li>
                     </ul>
                   </div>
                   <p className="text-gray-300 italic mb-4">
-                    Zach ensures every organization gets solutions that actually fit their needs and budget.
+                    Zach’s goal is to make sure every SeeZee project starts with understanding the client—not the technology.
                   </p>
                   <div className="flex flex-wrap gap-3">
                     <motion.a

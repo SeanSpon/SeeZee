@@ -19,11 +19,11 @@ export function About() {
     },
     {
       name: 'Zach',
-      role: 'Product Designer & Frontend Lead',
+      role: 'Co-Founder & Consulting Lead',
       initial: 'Z',
       gradient: 'from-green-500 to-blue-600',
       textColor: 'text-green-400',
-      description: 'Product Designer and Frontend Lead specializing in user experience and interface design. Focuses on client experience, presentation polish, and ensuring every project not only works perfectly but looks amazing. Trinity High School graduate with strong FBLA background.',
+      description: 'Computer Science student in the University Honors Program at the University of Louisville. Zach leads consulting and client relationships, helping organizations choose practical technology that fits their goals, budget, and long-term needs. He also supports planning, development, content, and user experience.',
       instagram: 'https://www.instagram.com/zachrobards/?hl=en'
     }
   ]

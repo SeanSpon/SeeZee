@@ -226,391 +226,7 @@ const projects: ProjectData[] = [
     liveLabel: 'Visit Frosty Sno-Balls',
     githubUrl: 'https://github.com/SeanSpon/frosty-snoballs',
   },
-  {
-    "id": "clipbot",
-    "name": "ClipBot",
-    "oneliner": "AI Video Editing Interface",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "Next.js",
-      "AI",
-      "Python"
-    ],
-    "description": [
-      "An interactive video editing prototype with file selection, camera setup, style references, and AI model controls. The public portfolio shows the interface; the processing backend is not presented as a public service."
-    ],
-    "features": [
-      "Video upload interface",
-      "Camera labeling workflow",
-      "Style reference and prompt controls",
-      "AI provider and model selector"
-    ],
-    "techStack": [
-      "Next.js",
-      "AI",
-      "Python"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/clipbot",
-    "screenshots": [
-      {
-        "src": "/project-previews/clipbot-upload.png",
-        "label": "Upload",
-        "alt": "ClipBot video upload interface"
-      },
-      {
-        "src": "/project-previews/clipbot-style.png",
-        "label": "Style Reference",
-        "alt": "ClipBot style reference interface"
-      },
-      {
-        "src": "/project-previews/clipbot-cameras.png",
-        "label": "Camera Setup",
-        "alt": "ClipBot camera labeling interface"
-      }
-    ]
-  },
-  {
-    "id": "bigredbus",
-    "name": "Big Red Bus",
-    "oneliner": "Community Directory & FBLA Application",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "React",
-      "TypeScript",
-      "Vite"
-    ],
-    "description": [
-      "A client-side application for discovering local businesses and community organizations, built for the FBLA Coding & Programming competition."
-    ],
-    "features": [
-      "Organization search and category filters",
-      "Ratings and reviews interface",
-      "Saved favorites",
-      "Community organization detail pages"
-    ],
-    "techStack": [
-      "React",
-      "TypeScript",
-      "Vite"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/FBLA-Coding-And-Programming",
-    "screenshots": [
-      {
-        "src": "/big-red-bus-1.png",
-        "label": "Homepage",
-        "alt": "Big Red Bus Homepage"
-      },
-      {
-        "src": "/big-red-bus-2.png",
-        "label": "Directory",
-        "alt": "Big Red Bus Directory"
-      },
-      {
-        "src": "/big-red-bus-3.png",
-        "label": "About",
-        "alt": "Big Red Bus About"
-      }
-    ],
-    "caseStudyUrl": "/case-studies/big-red-bus"
-  },
-  {
-    "id": "hvacmockup",
-    "name": "HVAC Business Platform",
-    "oneliner": "Service Website, Customer Portal & Dispatch UI",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "Next.js",
-      "TypeScript",
-      "Prisma"
-    ],
-    "description": [
-      "A detailed HVAC business prototype combining a service website with customer and technician interfaces. Demo screens use sample service and invoice data."
-    ],
-    "features": [
-      "Service and emergency pages",
-      "Customer portal and service history",
-      "Technician and dispatch interfaces",
-      "Analytics and membership screens"
-    ],
-    "techStack": [
-      "Next.js",
-      "TypeScript",
-      "Prisma"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/hvacmockup"
-  },
-  {
-    "id": "roofing-website",
-    "name": "Liberty Roofing",
-    "oneliner": "Retro Roofing Business Website",
-    "tags": [
-      "UI Demo",
-      "Website Design"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS"
-    ],
-    "description": [
-      "A roofing website concept with a red, white, and blue visual style, service pages, an interactive roof diagram, and a quote request interface."
-    ],
-    "features": [
-      "Roofing service pages",
-      "Interactive roof diagram",
-      "Service area and financing sections",
-      "Responsive quote request interface"
-    ],
-    "techStack": [
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/roofing-website"
-  },
-  {
-    "id": "seanos-lite-mvp",
-    "name": "SeanOS",
-    "oneliner": "Personal Productivity Dashboard",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "Next.js",
-      "TypeScript",
-      "Zustand"
-    ],
-    "description": [
-      "A personal dashboard prototype for organizing tasks, habits, goals, workouts, and daily planning in one interface."
-    ],
-    "features": [
-      "Task creation and filtering",
-      "Habit and goal tracking screens",
-      "Focus timer and calendar",
-      "Workout and nutrition interfaces"
-    ],
-    "techStack": [
-      "Next.js",
-      "TypeScript",
-      "Zustand"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/seanos-lite-mvp"
-  },
-  {
-    "id": "honors-portfolio",
-    "name": "Sean’s Honors Portfolio",
-    "oneliner": "University of Cincinnati Learning Portfolio",
-    "tags": [
-      "UI Demo",
-      "Website Design"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "Next.js",
-      "React",
-      "CSS"
-    ],
-    "description": [
-      "A minimal learning portfolio for the University of Cincinnati Honors Program, with personal reflections and space for future experiences."
-    ],
-    "features": [
-      "About and involvement pages",
-      "Honors experiences section",
-      "Year-in-review pages",
-      "Responsive personal portfolio layout"
-    ],
-    "techStack": [
-      "Next.js",
-      "React",
-      "CSS"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/seans-honors-portfolio"
-  },
-  {
-    "id": "roomie",
-    "name": "Roomie",
-    "oneliner": "Roommate Coordination App",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "React",
-      "TypeScript",
-      "Neon"
-    ],
-    "description": [
-      "A semester-project roommate app built around a fictional shared household. Its interface brings chores, shared expenses, reservations, and house rules together."
-    ],
-    "features": [
-      "Chore assignment and rotation",
-      "Shared expense and settlement ledger",
-      "Space reservation interface",
-      "House rules and usage guide"
-    ],
-    "techStack": [
-      "React",
-      "TypeScript",
-      "Neon"
-    ],
-    "githubUrl": "https://github.com/SeanSpon/projectforit"
-  },
-  {
-    "id": "sunshine-work-board",
-    "name": "Sunshine Work Board",
-    "oneliner": "Work Scheduling & Crew Dashboard",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "React",
-      "Vite",
-      "Firebase"
-    ],
-    "description": [
-      "A mobile-first work board for a remodeling crew, with daily job planning, worker responses, hours, and pay tracking. The repository includes a local demo mode."
-    ],
-    "features": [
-      "Daily work plans and calendar",
-      "Worker responses and hours",
-      "Paid and unpaid totals",
-      "Payment-status audit log"
-    ],
-    "techStack": [
-      "React",
-      "Vite",
-      "Firebase"
-    ],
-    "githubUrl": "https://github.com/zrobards/sunshine-work-board"
-  },
-  {
-    "id": "robards-training-log",
-    "name": "RoBards Training Log",
-    "oneliner": "Workout Tracking PWA",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "React",
-      "Vite",
-      "Recharts"
-    ],
-    "description": [
-      "A mobile workout tracker with quick set logging, rest timers, exercise history, and progress charts. Workout data can be stored locally and exported."
-    ],
-    "features": [
-      "Workout and set logging",
-      "Rest timer and session progress",
-      "Exercise and bodyweight charts",
-      "Local data export and import"
-    ],
-    "techStack": [
-      "React",
-      "Vite",
-      "Recharts"
-    ],
-    "githubUrl": "https://github.com/zrobards/RoBardsfitnesstracker"
-  },
-  {
-    "id": "studyforge",
-    "name": "StudyForge / CramMaster",
-    "oneliner": "Adaptive Flashcard Study App",
-    "tags": [
-      "UI Demo",
-      "App Prototype"
-    ],
-    "status": "demo",
-    "statusLabel": "UI Demo — Source Available",
-    "accentColor": "purple",
-    "accentBorder": "border-purple-500/30",
-    "accentBg": "bg-purple-500/10",
-    "accentText": "text-purple-300",
-    "pillTechs": [
-      "JavaScript",
-      "Express",
-      "CSS"
-    ],
-    "description": [
-      "A study interface for importing or pasting flashcard terms and practicing with adaptive learning. Manual term entry provides a study flow without relying on an external import service."
-    ],
-    "features": [
-      "Manual term entry and Quizlet import interface",
-      "Adaptive practice sessions",
-      "Written-answer feedback",
-      "Theme and audio controls"
-    ],
-    "techStack": [
-      "JavaScript",
-      "Express",
-      "CSS"
-    ],
-    "githubUrl": "https://github.com/zrobards/CramMaster"
-  },
+
 ]
 
 /* ──────────────────────────────────────────────
@@ -734,7 +350,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto"
               >
-                AI systems, dashboards, and automation tools we&apos;ve built.
+                Explore finished websites and platforms we&apos;ve built.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -742,7 +358,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-base text-gray-400 max-w-2xl mx-auto mt-4"
               >
-                We design and integrate modern systems that organizations actually use &mdash; not just concepts.
+                Every project below has a public website you can open.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0 }}
@@ -750,7 +366,7 @@ export default function ProjectsPage() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mt-6 text-sm text-gray-500 font-mono"
               >
-                {projects.length} projects &middot; {projects.filter((p) => p.status === 'live').length} live &middot; {projects.filter((p) => p.status === 'deployed').length} completed &middot; {projects.filter((p) => p.status === 'demo').length} demos
+                {projects.length} websites &middot; {projects.filter((p) => p.status === 'live').length} live &middot; {projects.filter((p) => p.status === 'deployed').length} completed
               </motion.div>
             </div>
           </ScrollAnimation>
@@ -894,6 +510,15 @@ export default function ProjectsPage() {
                           </div>
                         </div>
                       </motion.button>
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2 mt-2 text-sm font-medium text-cyan-300 hover:text-white hover:underline"
+                      >
+                        <FiExternalLink className="w-4 h-4" />
+                        Visit {new URL(project.liveUrl!).hostname}
+                      </a>
                     </ScrollAnimation>
                   ))}
                 </div>
