@@ -52,21 +52,13 @@ export async function DELETE(
       return addCorsHeaders(response, req.headers.get("origin"));
     }
 
-    // Delete the project request
-    await prisma.projectRequest.delete({
-      where: { id: requestId },
-    });
-
-    // Log activity
-    await prisma.systemLog.create({
-      data: {
-        action: "CLIENT_REQUEST_DELETED",
-        entityType: "ProjectRequest",
-        entityId: requestId,
-        userId: session.user.id,
-        metadata: { status: projectRequest.status },
-      },
-    });
+    await prisma.$transaction(async tx => {
+      const current = await tx.projectRequest.findUnique({ where: { id: requestId } });
+      if (!current || !['DRAFT', 'SUBMITTED'].includes(current.status)) throw new Error('Request is already under review');
+      await tx.projectRequest.update({ where: { id: requestId }, data: { status: "ARCHIVED" } });
+      if (current.leadId) await tx.lead.updateMany({ where: { id: current.leadId, status: "NEW" }, data: { status: "LOST" } });
+      await tx.systemLog.create({ data: { action: "CLIENT_REQUEST_CANCELLED", entityType: "ProjectRequest", entityId: requestId, userId: session.user.id, metadata: { previousStatus: current.status } } });
+    }, { isolationLevel: "Serializable" });
 
     const response = NextResponse.json({ success: true });
     return addCorsHeaders(response, req.headers.get("origin"));

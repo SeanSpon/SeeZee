@@ -33,11 +33,11 @@ import { TeamGitActivity } from "@/components/admin/dashboard/TeamGitActivity";
 
 // Get current date formatted nicely
 function getCurrentDate() {
-  return new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
@@ -94,7 +94,6 @@ const coreActions = [
     accent: "bg-emerald-500/10 text-emerald-400",
   },
 ];
-
 
 // Team Tools
 const teamTools = [
@@ -187,18 +186,18 @@ export function DashboardClient({
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#ef4444]/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#22d3ee]/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-      
+
       <header className="space-y-4 relative z-10">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6">
           <div className="space-y-2 md:space-y-3">
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-xs md:text-sm text-slate-400 font-medium tracking-wide uppercase"
             >
               {getCurrentDate()}
             </motion.p>
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -208,7 +207,7 @@ export function DashboardClient({
                 Welcome back, {userName}
               </span>
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -217,14 +216,14 @@ export function DashboardClient({
               Here's what's happening with your business today.
             </motion.p>
           </div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3"
           >
             <Link
-              href="/admin/projects"
+              href="/admin/projects/create"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-sky-400"
             >
               <FiPlus className="h-4 w-4" />
@@ -234,18 +233,54 @@ export function DashboardClient({
         </div>
       </header>
 
+      <section
+        aria-label="Work needing attention"
+        className="grid gap-3 md:grid-cols-3"
+      >
+        {[
+          {
+            href: "/admin/requests",
+            label: "Review submissions",
+            value: metrics.newLeads,
+            note: "New leads waiting for a response",
+          },
+          {
+            href: "/admin/tasks",
+            label: "Move work forward",
+            value: metrics.openTasks,
+            note: "Open team tasks and assignments",
+          },
+          {
+            href: "/admin/invoices",
+            label: "Follow up on billing",
+            value: stats.unpaidInvoices,
+            note: "Draft, sent and overdue invoices",
+          },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="group rounded-xl border border-white/10 bg-slate-900 p-5 transition hover:border-red-400/40"
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-slate-300">{item.label}</p>
+              <FiArrowRight className="text-slate-500 group-hover:text-red-400" />
+            </div>
+            <p className="mt-3 text-3xl font-semibold">{item.value}</p>
+            <p className="mt-2 text-xs text-slate-400">{item.note}</p>
+          </Link>
+        ))}
+      </section>
+      <Link
+        href="/admin/workspace"
+        className="block text-sm text-slate-400 hover:text-white"
+      >
+        New to this workspace? See where everything lives →
+      </Link>
       <StatsCards stats={stats} />
-
-      {/* Revenue Chart */}
-      <RevenueChart data={revenueData} isLoading={isLoadingRevenue} />
 
       <div className="grid gap-6 md:gap-8 lg:grid-cols-3">
         <div className="space-y-6 md:space-y-8 lg:col-span-2 order-2 lg:order-1">
-          {/* Team GitHub Activity */}
-          <TeamGitActivity />
-
-          <ActivityFeed activities={activities} />
-
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -253,13 +288,15 @@ export function DashboardClient({
                   <FiClipboard className="w-4 h-4 text-sky-400" />
                   Top Tasks
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">High-priority assignments needing attention</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  High-priority assignments needing attention
+                </p>
               </div>
               <Link
                 href="/admin/tasks"
                 className="text-xs text-sky-400 transition hover:text-sky-300 font-medium flex items-center gap-1 group/link"
               >
-                View all 
+                View all
                 <FiArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -270,8 +307,8 @@ export function DashboardClient({
                     task.status === "DONE"
                       ? "Completed"
                       : task.status === "IN_PROGRESS"
-                      ? "In Progress"
-                      : "To Do";
+                        ? "In Progress"
+                        : "To Do";
 
                   return (
                     <motion.div
@@ -287,13 +324,15 @@ export function DashboardClient({
                           <FiCheckCircle className="w-3.5 h-3.5 text-slate-500 group-hover/task:text-sky-400 transition" />
                           {task.title}
                         </Link>
-                        <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                          task.priority === "HIGH" 
-                            ? "bg-rose-500/10 text-rose-400" 
-                            : task.priority === "MEDIUM"
-                            ? "bg-amber-500/10 text-amber-400"
-                            : "bg-sky-500/10 text-sky-400"
-                        }`}>
+                        <span
+                          className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                            task.priority === "HIGH"
+                              ? "bg-rose-500/10 text-rose-400"
+                              : task.priority === "MEDIUM"
+                                ? "bg-amber-500/10 text-amber-400"
+                                : "bg-sky-500/10 text-sky-400"
+                          }`}
+                        >
                           {task.priority}
                         </span>
                       </div>
@@ -325,8 +364,12 @@ export function DashboardClient({
           {/* Core Business Section */}
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="mb-4">
-              <h2 className="text-base font-semibold text-white">Core Business</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Essential workflows & operations</p>
+              <h2 className="text-base font-semibold text-white">
+                Core Business
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Essential workflows & operations
+              </p>
             </div>
             <div className="space-y-2">
               {coreActions.map((action) => {
@@ -337,14 +380,18 @@ export function DashboardClient({
                     href={action.href}
                     className="group flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04]"
                   >
-                    <span className={`grid h-9 w-9 place-items-center rounded-lg ${action.accent}`}>
+                    <span
+                      className={`grid h-9 w-9 place-items-center rounded-lg ${action.accent}`}
+                    >
                       <Icon className="h-4 w-4" />
                     </span>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-white">
                         {action.label}
                       </p>
-                      <p className="text-[11px] text-slate-500">{action.description}</p>
+                      <p className="text-[11px] text-slate-500">
+                        {action.description}
+                      </p>
                     </div>
                     <FiArrowRight className="h-4 w-4 text-slate-600 transition group-hover:text-slate-400 group-hover:translate-x-0.5" />
                   </Link>
@@ -357,7 +404,9 @@ export function DashboardClient({
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
             <div className="mb-4">
               <h2 className="text-base font-semibold text-white">Team Tools</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Collaboration & productivity</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Collaboration & productivity
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {teamTools.map((tool) => {
@@ -368,7 +417,9 @@ export function DashboardClient({
                     href={tool.href}
                     className="group flex flex-col items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:border-white/[0.1] hover:bg-white/[0.04] text-center"
                   >
-                    <span className={`grid h-8 w-8 place-items-center rounded-lg ${tool.accent}`}>
+                    <span
+                      className={`grid h-8 w-8 place-items-center rounded-lg ${tool.accent}`}
+                    >
                       <Icon className="h-4 w-4" />
                     </span>
                     <p className="text-xs font-medium text-white">
@@ -381,7 +432,9 @@ export function DashboardClient({
           </section>
 
           <section className="rounded-xl border border-white/[0.08] bg-slate-900/50 backdrop-blur-xl p-5 transition-all duration-300 hover:border-white/[0.12]">
-            <h2 className="text-base font-semibold text-white mb-4">Pipeline Snapshot</h2>
+            <h2 className="text-base font-semibold text-white mb-4">
+              Pipeline Snapshot
+            </h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
@@ -390,7 +443,9 @@ export function DashboardClient({
                   </div>
                   New Leads
                 </span>
-                <span className="font-semibold text-lg text-white">{metrics.newLeads}</span>
+                <span className="font-semibold text-lg text-white">
+                  {metrics.newLeads}
+                </span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
@@ -399,7 +454,9 @@ export function DashboardClient({
                   </div>
                   Active Tasks
                 </span>
-                <span className="font-semibold text-lg text-white">{metrics.openTasks}</span>
+                <span className="font-semibold text-lg text-white">
+                  {metrics.openTasks}
+                </span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="inline-flex items-center gap-2 text-slate-400">
@@ -408,7 +465,9 @@ export function DashboardClient({
                   </div>
                   Projects in Pipeline
                 </span>
-                <span className="font-semibold text-lg text-white">{metrics.pipelineProjects}</span>
+                <span className="font-semibold text-lg text-white">
+                  {metrics.pipelineProjects}
+                </span>
               </div>
             </div>
             <div className="mt-5 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
@@ -441,13 +500,15 @@ export function DashboardClient({
                           </p>
                         )}
                       </div>
-                      <span className={`shrink-0 ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase tracking-wide font-semibold ${
-                        lead.status === "NEW" 
-                          ? "bg-sky-500/10 text-sky-400" 
-                          : lead.status === "QUALIFIED"
-                          ? "bg-emerald-500/10 text-emerald-400"
-                          : "bg-white/[0.08] text-slate-400"
-                      }`}>
+                      <span
+                        className={`shrink-0 ml-2 rounded px-1.5 py-0.5 text-[10px] uppercase tracking-wide font-semibold ${
+                          lead.status === "NEW"
+                            ? "bg-sky-500/10 text-sky-400"
+                            : lead.status === "QUALIFIED"
+                              ? "bg-emerald-500/10 text-emerald-400"
+                              : "bg-white/[0.08] text-slate-400"
+                        }`}
+                      >
                         {lead.status ?? "NEW"}
                       </span>
                     </Link>
@@ -477,34 +538,46 @@ export function DashboardClient({
                 <FiLayers className="h-4 w-4 text-violet-400" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-white">Maintenance Business</h2>
-                <p className="text-xs text-slate-500">Recurring revenue & support</p>
+                <h2 className="text-base font-semibold text-white">
+                  Maintenance Business
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Recurring revenue & support
+                </p>
               </div>
             </div>
             <div className="space-y-3">
               <div className="p-3 rounded-lg bg-white/[0.05]">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Active Plans</p>
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">
+                  Active Plans
+                </p>
                 <p className="text-2xl font-semibold text-violet-400">
                   {stats.activePlans ?? 0}
                 </p>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.05]">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Monthly Recurring Revenue</p>
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">
+                  Monthly Recurring Revenue
+                </p>
                 <p className="text-2xl font-semibold text-emerald-400">
                   {currencyFormatter.format((stats.maintenanceMRR ?? 0) / 100)}
                 </p>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.05]">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Total Hours Available</p>
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">
+                  Total Hours Available
+                </p>
                 <p className="text-xl font-semibold text-sky-400">
                   {stats.totalHoursAvailable ?? 0}h
                 </p>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05]">
                 <span className="text-slate-400 text-sm">Pending Requests</span>
-                <span className="font-semibold text-lg text-white">{stats.pendingChangeRequests ?? 0}</span>
+                <span className="font-semibold text-lg text-white">
+                  {stats.pendingChangeRequests ?? 0}
+                </span>
               </div>
-              <Link 
+              <Link
                 href="/admin/maintenance"
                 className="block w-full text-center py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-400 hover:bg-violet-500/25 transition-colors text-sm font-medium"
               >
@@ -520,20 +593,26 @@ export function DashboardClient({
                 <FiDollarSign className="h-4 w-4 text-emerald-400" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-white">Financial Overview</h2>
+                <h2 className="text-base font-semibold text-white">
+                  Financial Overview
+                </h2>
                 <p className="text-xs text-slate-500">Invoices & expenses</p>
               </div>
             </div>
             <div className="space-y-3">
               <div className="p-3 rounded-lg bg-white/[0.03]">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Invoice Revenue (This Month)</p>
+                <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">
+                  Invoice Revenue (This Month)
+                </p>
                 <p className="text-2xl font-semibold text-emerald-400">
                   {currencyFormatter.format(stats.thisMonthRevenue ?? 0)}
                 </p>
               </div>
               {stats.thisMonthExpenses !== undefined && (
                 <div className="p-3 rounded-lg bg-white/[0.03]">
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">Expenses (This Month)</p>
+                  <p className="text-[11px] uppercase tracking-[0.15em] text-slate-500 mb-1">
+                    Expenses (This Month)
+                  </p>
                   <p className="text-xl font-semibold text-rose-400">
                     -{currencyFormatter.format(stats.thisMonthExpenses)}
                   </p>
@@ -541,17 +620,23 @@ export function DashboardClient({
               )}
               {stats.netProfit !== undefined && (
                 <div className="p-3 rounded-lg bg-sky-500/5 border border-sky-500/20">
-                  <p className="text-[11px] uppercase tracking-[0.15em] text-sky-400 mb-1 font-semibold">Net Profit (This Month)</p>
-                  <p className={`text-2xl font-semibold ${stats.netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  <p className="text-[11px] uppercase tracking-[0.15em] text-sky-400 mb-1 font-semibold">
+                    Net Profit (This Month)
+                  </p>
+                  <p
+                    className={`text-2xl font-semibold ${stats.netProfit >= 0 ? "text-emerald-400" : "text-rose-400"}`}
+                  >
                     {currencyFormatter.format(stats.netProfit)}
                   </p>
                 </div>
               )}
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03]">
                 <span className="text-slate-400 text-sm">Open Invoices</span>
-                <span className="font-semibold text-lg text-white">{stats.unpaidInvoices ?? 0}</span>
+                <span className="font-semibold text-lg text-white">
+                  {stats.unpaidInvoices ?? 0}
+                </span>
               </div>
-              <Link 
+              <Link
                 href="/admin/finance"
                 className="block w-full text-center py-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 hover:bg-sky-500/15 transition-colors text-sm font-medium"
               >
@@ -561,6 +646,16 @@ export function DashboardClient({
           </section>
         </div>
       </div>
+      <details className="rounded-xl border border-white/10 bg-slate-900/50 p-5">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-300">
+          Business trends & recent activity
+        </summary>
+        <div className="mt-5 space-y-6">
+          <RevenueChart data={revenueData} isLoading={isLoadingRevenue} />
+          <ActivityFeed activities={activities} />
+          <TeamGitActivity />
+        </div>
+      </details>
     </div>
   );
 }

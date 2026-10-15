@@ -2,32 +2,53 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { clientRequestCreate } from "@/lib/validation/client";
+import { getClientProjectOrThrow } from "@/lib/client-access";
+import { ClientAccessError } from "@/lib/client-access-types";
 import { handleCors, addCorsHeaders } from "@/lib/cors";
-
-/**
- * OPTIONS /api/client/requests
- * Handle CORS preflight
- */
 export async function OPTIONS(req: NextRequest) {
   return handleCors(req) || new NextResponse(null, { status: 200 });
 }
-
-/**
- * GET /api/client/requests
- * Returns client-submitted project requests
- */
 export async function GET(req: NextRequest) {
+  const respond = (data: unknown, status = 200) =>
+    addCorsHeaders(
+      NextResponse.json(data, { status }),
+      req.headers.get("origin"),
+    );
   try {
     const session = await auth();
-    if (!session?.user?.id) {
-      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      return addCorsHeaders(response, req.headers.get("origin"));
-    }
-
-    // Fetch ProjectRequests for this user
-    // Try by userId first, then fallback to email if no results
-    let requests = await prisma.projectRequest.findMany({
-      where: { userId: session.user.id },
+    if (!session?.user?.id) return respond({ error: "Unauthorized" }, 401);
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { email: true, emailVerified: true },
+    });
+    const requests = await prisma.projectRequest.findMany({
+      where: {
+        OR: [
+          { userId: session.user.id },
+          // Only verified owners can see anonymous/legacy submissions. Never cross another user's ownership.
+          ...(user?.emailVerified
+            ? [
+                {
+                  userId: null,
+                  OR: [
+                    {
+                      contactEmail: {
+                        equals: user.email,
+                        mode: "insensitive" as const,
+                      },
+                    },
+                    {
+                      email: {
+                        equals: user.email,
+                        mode: "insensitive" as const,
+                      },
+                    },
+                  ],
+                },
+              ]
+            : []),
+        ],
+      },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -40,161 +61,89 @@ export async function GET(req: NextRequest) {
         budget: true,
         timeline: true,
         services: true,
-        notes: true,
         createdAt: true,
         updatedAt: true,
-      },
-    });
-
-    // If no requests found by userId, try by email (for older requests that might not have userId)
-    if (requests.length === 0 && session.user.email) {
-      requests = await prisma.projectRequest.findMany({
-        where: {
-          OR: [
-            { contactEmail: session.user.email },
-            { email: session.user.email },
-          ],
+        project: {
+          select: { id: true, name: true, status: true, createdAt: true },
         },
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          status: true,
-          contactEmail: true,
-          email: true,
-          company: true,
-          budget: true,
-          timeline: true,
-          services: true,
-          notes: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-    }
-
-    // For each request, find related project by matching email with Lead email
-    const requestsWithProjects = await Promise.all(
-      requests.map(async (request) => {
-        const email = request.contactEmail || request.email;
-        if (!email) {
-          return { ...request, project: null };
-        }
-
-        // Find project via Lead email matching
-        const lead = await prisma.lead.findFirst({
-          where: { email: email },
-          include: {
+        lead: {
+          select: {
             project: {
-              select: {
-                id: true,
-                name: true,
-                status: true,
-                createdAt: true,
-              },
+              select: { id: true, name: true, status: true, createdAt: true },
             },
           },
-        });
-
-        return {
-          ...request,
-          project: lead?.project || null,
-        };
-      })
-    );
-
-    const response = NextResponse.json({ requests: requestsWithProjects });
-    return addCorsHeaders(response, req.headers.get("origin"));
-  } catch (error: any) {
-    console.error("[GET /api/client/requests]", error);
-    const response = NextResponse.json({ error: "Failed to fetch requests" }, { status: 500 });
-    return addCorsHeaders(response, req.headers.get("origin"));
+        },
+      },
+    });
+    return respond({
+      requests: requests.map(({ lead, ...request }) => ({
+        ...request,
+        project: request.project || lead?.project || null,
+      })),
+    });
+  } catch {
+    return respond({ error: "Failed to fetch requests" }, 500);
   }
 }
-
-/**
- * POST /api/client/requests
- * Create a new request (maps to Todo)
- */
 export async function POST(req: NextRequest) {
+  const respond = (data: unknown, status = 200) =>
+    addCorsHeaders(
+      NextResponse.json(data, { status }),
+      req.headers.get("origin"),
+    );
   try {
     const session = await auth();
-    if (!session?.user) {
-      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      return addCorsHeaders(response, req.headers.get("origin"));
+    if (!session?.user?.id || !session.user.email)
+      return respond({ error: "Unauthorized" }, 401);
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return respond({ error: "Invalid JSON" }, 400);
     }
-
-    const body = await req.json();
     const parsed = clientRequestCreate.safeParse(body);
-    if (!parsed.success) {
-      const response = NextResponse.json({ error: "Invalid input", details: parsed.error }, { status: 400 });
-      return addCorsHeaders(response, req.headers.get("origin"));
-    }
-
-    const { type, title, description, projectId } = parsed.data;
-
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email! },
-      select: { id: true },
+    if (!parsed.success)
+      return respond(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        400,
+      );
+    const { title, description, type, projectId } = parsed.data;
+    if (projectId)
+      await getClientProjectOrThrow(
+        { userId: session.user.id, email: session.user.email },
+        projectId,
+        { select: { id: true } },
+      );
+    // Read and write the same model. Internal Todo assignments have their own workflow.
+    const item = await prisma.$transaction(async (tx) => {
+      const request = await tx.projectRequest.create({
+        data: {
+          userId: session.user.id,
+          name: session.user.name || null,
+          contactEmail: session.user.email!,
+          title,
+          description,
+          projectType: type,
+          projectId: projectId || null,
+          status: "SUBMITTED",
+          services: [],
+        },
+      });
+      await tx.systemLog.create({
+        data: {
+          action: "CLIENT_REQUEST_CREATED",
+          entityType: "ProjectRequest",
+          entityId: request.id,
+          userId: session.user.id,
+          metadata: { type, projectId: projectId || null },
+        },
+      });
+      return request;
     });
-
-    if (!user) {
-      const response = NextResponse.json({ error: "User not found" }, { status: 404 });
-      return addCorsHeaders(response, req.headers.get("origin"));
-    }
-
-    // Map type to priority
-    const priorityMap: Record<string, "LOW" | "MEDIUM" | "HIGH"> = {
-      SUPPORT: "MEDIUM",
-      FEATURE: "HIGH",
-      CHANGE: "MEDIUM",
-    };
-
-    const todo = await prisma.todo.create({
-      data: {
-        title,
-        description,
-        status: "TODO",
-        priority: priorityMap[type] || "MEDIUM",
-        createdById: user.id,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        status: true,
-        priority: true,
-        createdAt: true,
-      },
-    });
-
-    // Log activity
-    await prisma.systemLog.create({
-      data: {
-        action: "CLIENT_REQUEST_CREATED",
-        entityType: "Todo",
-        entityId: todo.id,
-        userId: user.id,
-        metadata: { type, title },
-      },
-    });
-
-    const response = NextResponse.json({
-      item: {
-        id: todo.id,
-        type: todo.priority,
-        title: todo.title,
-        description: todo.description,
-        status: todo.status,
-        createdAt: todo.createdAt,
-      },
-    });
-    return addCorsHeaders(response, req.headers.get("origin"));
-  } catch (error: any) {
-    console.error("[POST /api/client/requests]", error);
-    const response = NextResponse.json({ error: "Failed to create request" }, { status: 500 });
-    return addCorsHeaders(response, req.headers.get("origin"));
+    return respond({ item: { ...item, type } }, 201);
+  } catch (error) {
+    if (error instanceof ClientAccessError)
+      return respond({ error: "Project not found or access denied" }, 404);
+    return respond({ error: "Failed to create request" }, 500);
   }
 }

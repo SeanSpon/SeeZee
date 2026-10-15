@@ -38,10 +38,10 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 
 export function StatsCards({ stats }: StatsCardsProps) {
   // Convert Decimal to number safely
-  const revenueValue = stats.totalRevenue 
-    ? (typeof stats.totalRevenue === 'number' 
-        ? stats.totalRevenue 
-        : Number(stats.totalRevenue) || 0)
+  const revenueValue = stats.totalRevenue
+    ? typeof stats.totalRevenue === "number"
+      ? stats.totalRevenue
+      : Number(stats.totalRevenue) || 0
     : 0;
 
   const cards = [
@@ -51,7 +51,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       Icon: FiFolder,
       iconBgClass: "bg-sky-500/10",
       iconTextClass: "text-sky-400",
-      trend: "+2",
+      trend: "Current projects",
       trendUp: true,
     },
     {
@@ -60,7 +60,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       Icon: FiDollarSign,
       iconBgClass: "bg-emerald-500/10",
       iconTextClass: "text-emerald-400",
-      trend: "+23%",
+      trend: "Paid invoices",
       trendUp: true,
     },
     {
@@ -69,7 +69,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
       Icon: FiUsers,
       iconBgClass: "bg-violet-500/10",
       iconTextClass: "text-violet-400",
-      trend: "+5",
+      trend: "Client organizations",
       trendUp: true,
     },
     {
@@ -85,14 +85,18 @@ export function StatsCards({ stats }: StatsCardsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {cards.map(({ label, value, Icon, iconBgClass, iconTextClass, trend, trendUp }, index) => (
-        <motion.div
-          key={label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
-          whileHover={{ y: -2 }}
-          className={`
+      {cards.map(
+        (
+          { label, value, Icon, iconBgClass, iconTextClass, trend, trendUp },
+          index,
+        ) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
+            whileHover={{ y: -2 }}
+            className={`
             relative overflow-hidden rounded-xl 
             border border-white/[0.08]
             bg-gradient-to-br from-slate-900/90 to-slate-950/90
@@ -103,37 +107,47 @@ export function StatsCards({ stats }: StatsCardsProps) {
             hover:shadow-lg hover:shadow-black/20
             group
           `}
-        >
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-          
-          {/* Content */}
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconBgClass} transition-all duration-300 group-hover:scale-105`}>
-                <Icon className={`h-5 w-5 ${iconTextClass}`} />
+          >
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+
+            {/* Content */}
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconBgClass} transition-all duration-300 group-hover:scale-105`}
+                >
+                  <Icon className={`h-5 w-5 ${iconTextClass}`} />
+                </div>
+                {/* Trend indicator */}
+                <div
+                  className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md ${
+                    trendUp
+                      ? "bg-emerald-500/10 text-emerald-400"
+                      : "bg-amber-500/10 text-amber-400"
+                  }`}
+                >
+                  {label === "Unpaid Invoices" &&
+                    (trendUp ? (
+                      <FiTrendingUp className="h-3 w-3" />
+                    ) : (
+                      <FiTrendingDown className="h-3 w-3" />
+                    ))}
+                  <span>{trend}</span>
+                </div>
               </div>
-              {/* Trend indicator */}
-              <div className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md ${
-                trendUp 
-                  ? "bg-emerald-500/10 text-emerald-400" 
-                  : "bg-amber-500/10 text-amber-400"
-              }`}>
-                {trendUp ? (
-                  <FiTrendingUp className="h-3 w-3" />
-                ) : (
-                  <FiTrendingDown className="h-3 w-3" />
-                )}
-                <span>{trend}</span>
+              <div className="space-y-1">
+                <p className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">
+                  {value}
+                </p>
+                <p className="text-xs text-slate-400 uppercase tracking-[0.15em] font-medium">
+                  {label}
+                </p>
               </div>
             </div>
-            <div className="space-y-1">
-              <p className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">{value}</p>
-              <p className="text-xs text-slate-400 uppercase tracking-[0.15em] font-medium">{label}</p>
-            </div>
-          </div>
-        </motion.div>
-      ))}
+          </motion.div>
+        ),
+      )}
     </div>
   );
 }

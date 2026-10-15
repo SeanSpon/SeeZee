@@ -6,6 +6,12 @@ import { prisma, retryDatabaseOperation, checkDatabaseHealth } from "@/lib/prism
 import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 
+// Keep preview authentication on its own deployment rather than the live domain.
+if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {
+  process.env.AUTH_URL = `https://${process.env.VERCEL_URL}`;
+  process.env.NEXTAUTH_URL = process.env.AUTH_URL;
+}
+
 // Validate environment variables with better error messages
 // SAFE: Don't throw at import time - only validate when actually used
 const GOOGLE_ID = (process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID)?.trim();

@@ -8,8 +8,8 @@ export const clientMessageCreate = z.object({
 
 export const clientRequestCreate = z.object({
   type: z.enum(["FEATURE", "CHANGE", "SUPPORT"]),
-  title: z.string().min(1),
-  description: z.string().min(1),
+  title: z.string().trim().min(1).max(200),
+  description: z.string().trim().min(1).max(10000),
   projectId: z.string().optional(),
 });
 

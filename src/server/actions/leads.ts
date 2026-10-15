@@ -23,27 +23,28 @@ export async function convertLeadToProject(leadId: string, projectData?: {
   }
 
   try {
+    const project = await prisma.$transaction(async tx => {
     // Get the lead with organization
-    const lead = await prisma.lead.findUnique({
+    const lead = await tx.lead.findUnique({
       where: { id: leadId },
       include: { organization: true },
     });
 
     if (!lead) {
-      return { success: false, error: "Lead not found" };
+      throw new Error("Lead not found");
     }
 
     if (lead.status === "CONVERTED") {
-      return { success: false, error: "Lead already converted to project" };
+      throw new Error("Lead already converted to project");
     }
 
     // Check if project already exists
-    const existingProject = await prisma.project.findFirst({
+    const existingProject = await tx.project.findFirst({
       where: { leadId },
     });
 
     if (existingProject) {
-      return { success: false, error: "Project already exists for this lead" };
+      throw new Error("Project already exists for this lead");
     }
 
     // Create organization if lead doesn't have one
@@ -51,13 +52,13 @@ export async function convertLeadToProject(leadId: string, projectData?: {
     if (!orgId) {
       // Validate we have an email before creating organization
       if (!lead.email) {
-        return { success: false, error: "Cannot create organization: Lead has no email address" };
+        throw new Error("Lead has no email address");
       }
 
       const orgName = lead.company || `${lead.name}'s Organization`;
       const slug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       
-      const organization = await prisma.organization.create({
+      const organization = await tx.organization.create({
         data: {
           name: orgName,
           slug: `${slug}-${Date.now()}`, // Ensure unique slug
@@ -69,7 +70,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
       orgId = organization.id;
       
       // Update lead with organizationId
-      await prisma.lead.update({
+      await tx.lead.update({
         where: { id: leadId },
         data: { organizationId: orgId },
       });
@@ -82,18 +83,18 @@ export async function convertLeadToProject(leadId: string, projectData?: {
 
     // Check if questionnaireId is already linked to another project
     if (questionnaireId) {
-      const projectWithQuestionnaire = await prisma.project.findUnique({
+      const projectWithQuestionnaire = await tx.project.findUnique({
         where: { questionnaireId },
       });
 
       if (projectWithQuestionnaire) {
-        return { success: false, error: "This questionnaire is already linked to another project" };
+        throw new Error("This questionnaire is already linked to another project");
       }
     }
 
     // Create the project with QUOTED status (V2 workflow)
     // Budget should be set manually in admin after conversion
-    const project = await prisma.project.create({
+    const project = await tx.project.create({
       data: {
         name: lead.company || `Project for ${lead.name}`,
         description: lead.message || `${lead.serviceType || "Web"} project`,
@@ -109,7 +110,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
     });
 
     // Update lead status
-    await prisma.lead.update({
+    await tx.lead.update({
       where: { id: leadId },
       data: {
         status: "CONVERTED",
@@ -120,13 +121,13 @@ export async function convertLeadToProject(leadId: string, projectData?: {
     // Link user to organization if they exist
     // Find user by email from the lead (only if valid email)
     if (lead.email) {
-      const user = await prisma.user.findUnique({
+      const user = await tx.user.findUnique({
         where: { email: lead.email },
       });
 
       if (user) {
         // Check if user is already a member of the organization
-        const existingMember = await prisma.organizationMember.findUnique({
+        const existingMember = await tx.organizationMember.findUnique({
           where: {
             organizationId_userId: {
               organizationId: orgId,
@@ -137,7 +138,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
 
         // If not a member, add them to the organization
         if (!existingMember) {
-          await prisma.organizationMember.create({
+          await tx.organizationMember.create({
             data: {
               organizationId: orgId,
               userId: user.id,
@@ -147,7 +148,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
         }
       } else {
         // User doesn't exist - create one so they can access the project
-        const newUser = await prisma.user.create({
+        const newUser = await tx.user.create({
           data: {
             email: lead.email,
             name: lead.name,
@@ -156,7 +157,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
         });
         
         // Link new user to organization
-        await prisma.organizationMember.create({
+        await tx.organizationMember.create({
           data: {
             organizationId: orgId,
             userId: newUser.id,
@@ -166,8 +167,12 @@ export async function convertLeadToProject(leadId: string, projectData?: {
       }
     }
 
+    await tx.projectRequest.updateMany({ where: { leadId, status: { notIn: ["REJECTED", "ARCHIVED"] } }, data: { projectId: project.id, status: "APPROVED" } });
+    return project;
+    }, { isolationLevel: "Serializable" });
+
     // Emit feed event
-    await feedHelpers.projectCreated(project.id, project.name);
+    await feedHelpers.projectCreated(project.id, project.name).catch(() => console.error("Project feed event failed", project.id));
 
     // Revalidate all relevant pages to show new project
     revalidatePath("/admin/pipeline/leads");
@@ -175,6 +180,7 @@ export async function convertLeadToProject(leadId: string, projectData?: {
     revalidatePath("/admin/pipeline/projects");
     revalidatePath(`/admin/projects/${project.id}`);
     revalidatePath("/admin/pipeline");
+    revalidatePath("/admin/requests");
     revalidatePath("/admin/projects");
     
     // Revalidate client pages so the new project appears

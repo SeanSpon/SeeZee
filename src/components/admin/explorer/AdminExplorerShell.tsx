@@ -67,6 +67,7 @@ export function AdminExplorerShell({ user, children }: AdminExplorerShellProps) 
                 <p className="text-slate-400 text-sm">Select a folder to get started</p>
               </div>
               <FolderGrid groups={groups} />
+              {children}
             </div>
           )}
 

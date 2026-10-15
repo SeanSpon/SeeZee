@@ -12,117 +12,290 @@ import {
   FiMic,
   FiHardDrive,
   FiLink,
+  FiInbox,
+  FiCheckSquare,
+  FiCalendar,
+  FiClock,
+  FiTool,
+  FiFileText,
+  FiCreditCard,
+  FiBookOpen,
+  FiTarget,
 } from "react-icons/fi";
 
 export interface NavItem {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  icon: React.ComponentType<{
+    className?: string;
+    style?: React.CSSProperties;
+  }>;
   description?: string;
 }
-
 export interface NavGroup {
   id: string;
   title: string;
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  icon: NavItem["icon"];
   items: NavItem[];
   folderColor: string;
 }
 
+// One directory shared by the sidebar, Explorer, page context and workspace map.
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: "command",
-    title: "Command",
+    title: "Start here",
     icon: FiHome,
     folderColor: "#ef4444",
     items: [
-      { href: "/admin", label: "Command", icon: FiHome, description: "Overview and quick stats" },
-    ],
-  },
-  {
-    id: "projects",
-    title: "Projects",
-    icon: FiFolder,
-    folderColor: "#3b82f6",
-    items: [
-      { href: "/admin/projects", label: "Projects", icon: FiFolder, description: "Active work and deliverables" },
+      {
+        href: "/admin",
+        label: "Overview",
+        icon: FiHome,
+        description: "Today's priorities and business health",
+      },
+      {
+        href: "/admin/workspace",
+        label: "Workspace guide",
+        icon: FiFolder,
+        description: "Find every tool and understand the workflow",
+      },
     ],
   },
   {
     id: "clients",
-    title: "Clients",
+    title: "Clients & intake",
     icon: FiUsers,
-    folderColor: "#8b5cf6",
+    folderColor: "#a78bfa",
     items: [
-      { href: "/admin/clients", label: "Clients", icon: FiUsers, description: "Manage client relationships" },
+      {
+        href: "/admin/requests",
+        label: "Submission inbox",
+        icon: FiInbox,
+        description: "Review client inquiries and requests in one place",
+      },
+      {
+        href: "/admin/pipeline/leads",
+        label: "Leads",
+        icon: FiTarget,
+        description: "Qualify inquiries and approve projects",
+      },
+      {
+        href: "/admin/clients",
+        label: "Clients",
+        icon: FiUsers,
+        description: "Organizations, contacts and project history",
+      },
+      {
+        href: "/admin/chat",
+        label: "Website conversations",
+        icon: FiMessageSquare,
+        description: "Review AI chat and captured inquiries",
+      },
+    ],
+  },
+  {
+    id: "projects",
+    title: "Projects & delivery",
+    icon: FiFolder,
+    folderColor: "#60a5fa",
+    items: [
+      {
+        href: "/admin/projects",
+        label: "Projects",
+        icon: FiFolder,
+        description: "Quotes, active projects and deliverables",
+      },
+      {
+        href: "/admin/tasks",
+        label: "Team tasks",
+        icon: FiCheckSquare,
+        description: "Assign work and track deadlines",
+      },
+      {
+        href: "/admin/client-tasks",
+        label: "Client deliverables",
+        icon: FiFileText,
+        description: "Content and approvals requested from clients",
+      },
+      {
+        href: "/admin/maintenance",
+        label: "Maintenance",
+        icon: FiTool,
+        description: "Ongoing support plans and requests",
+      },
+      {
+        href: "/admin/hours",
+        label: "Hours",
+        icon: FiClock,
+        description: "Log time and review support usage",
+      },
+      {
+        href: "/admin/calendar",
+        label: "Calendar",
+        icon: FiCalendar,
+        description: "Meetings and scheduled work",
+      },
     ],
   },
   {
     id: "finance",
-    title: "Finance",
+    title: "Billing & finance",
     icon: FiDollarSign,
-    folderColor: "#10b981",
+    folderColor: "#34d399",
     items: [
-      { href: "/admin/finance", label: "Finance", icon: FiDollarSign, description: "Revenue, invoices, and expenses" },
+      {
+        href: "/admin/finance",
+        label: "Finance overview",
+        icon: FiDollarSign,
+        description: "Revenue, expenses and cash flow",
+      },
+      {
+        href: "/admin/invoices",
+        label: "Invoices",
+        icon: FiFileText,
+        description: "Draft, send and track client bills",
+      },
+      {
+        href: "/admin/subscriptions",
+        label: "Subscriptions",
+        icon: FiCreditCard,
+        description: "Recurring client billing",
+      },
+      {
+        href: "/admin/finance/expenses",
+        label: "Expenses",
+        icon: FiDollarSign,
+        description: "Business costs and receipts",
+      },
+      {
+        href: "/admin/finance/transactions",
+        label: "Transactions",
+        icon: FiCreditCard,
+        description: "Review the transaction ledger",
+      },
+      {
+        href: "/admin/finance/bank",
+        label: "Bank accounts",
+        icon: FiCreditCard,
+        description: "Manage connected accounts",
+      },
     ],
   },
   {
     id: "blog",
-    title: "Blog",
-    icon: FiEdit,
-    folderColor: "#f59e0b",
+    title: "Team & resources",
+    icon: FiBookOpen,
+    folderColor: "#fbbf24",
     items: [
-      { href: "/admin/blog", label: "Blog", icon: FiEdit, description: "Manage blog posts" },
+      {
+        href: "/admin/team",
+        label: "Team",
+        icon: FiUsers,
+        description: "Members and responsibilities",
+      },
+      {
+        href: "/admin/recordings",
+        label: "Recordings",
+        icon: FiMic,
+        description: "Meetings, transcripts and decisions",
+      },
+      {
+        href: "/admin/resources",
+        label: "Documents",
+        icon: FiHardDrive,
+        description: "Shared Google Drive documents",
+      },
+      {
+        href: "/admin/links",
+        label: "Saved links",
+        icon: FiLink,
+        description: "Useful resources and references",
+      },
+      {
+        href: "/admin/learning",
+        label: "Learning",
+        icon: FiBookOpen,
+        description: "Training, resources and tools",
+      },
+      {
+        href: "/admin/blog",
+        label: "Blog",
+        icon: FiEdit,
+        description: "Publish and maintain website articles",
+      },
+      {
+        href: "/admin/templates",
+        label: "Templates",
+        icon: FiFileText,
+        description: "Reusable project templates",
+      },
     ],
   },
   {
     id: "devtools",
-    title: "Dev Tools",
+    title: "Development",
     icon: FiGitBranch,
-    folderColor: "#06b6d4",
+    folderColor: "#22d3ee",
     items: [
-      { href: "/admin/git", label: "Git", icon: FiGitBranch, description: "Git repository management" },
-      { href: "/admin/database", label: "Database", icon: FiDatabase, description: "Data management" },
-      { href: "/admin/chat", label: "AI Chat", icon: FiMessageSquare, description: "Conversation history" },
-      { href: "/admin/analytics", label: "Analytics", icon: FiPieChart, description: "Metrics dashboard" },
+      {
+        href: "/admin/git",
+        label: "Repositories",
+        icon: FiGitBranch,
+        description: "Source code and deployment activity",
+      },
+      {
+        href: "/admin/database",
+        label: "Database",
+        icon: FiDatabase,
+        description: "Inspect application data",
+      },
+      {
+        href: "/admin/analytics",
+        label: "Analytics",
+        icon: FiPieChart,
+        description: "Website and business metrics",
+      },
     ],
   },
   {
     id: "system",
-    title: "System",
+    title: "Administration",
     icon: FiSettings,
-    folderColor: "#64748b",
+    folderColor: "#94a3b8",
     items: [
-      { href: "/settings", label: "Settings", icon: FiSettings, description: "App configuration" },
-      { href: "/admin/recordings", label: "Recordings", icon: FiMic, description: "Meeting recordings" },
-      { href: "/admin/resources", label: "Resources", icon: FiHardDrive, description: "Google Drive documents" },
-      { href: "/admin/links", label: "Links", icon: FiLink, description: "Resource links" },
+      {
+        href: "/admin/settings",
+        label: "Admin settings",
+        icon: FiSettings,
+        description: "Configure the workspace",
+      },
+      {
+        href: "/settings",
+        label: "My settings",
+        icon: FiSettings,
+        description: "Account, security and preferences",
+      },
     ],
   },
 ];
-
 export function getVisibleGroups(): NavGroup[] {
   return NAV_GROUPS;
 }
-
-export function findGroupForPath(pathname: string): NavGroup | undefined {
-  return NAV_GROUPS.find((group) =>
-    group.items.some((item) => {
-      if (item.href === "/admin") return pathname === "/admin";
-      return pathname.startsWith(item.href);
-    })
+export function matchesNavPath(pathname: string, href: string): boolean {
+  return (
+    pathname === href || (href !== "/admin" && pathname.startsWith(href + "/"))
   );
 }
-
-export function findNavItemForPath(pathname: string): { group: NavGroup; item: NavItem } | undefined {
-  for (const group of NAV_GROUPS) {
-    for (const item of group.items) {
-      if (item.href === "/admin") {
-        if (pathname === "/admin") return { group, item };
-      } else if (pathname.startsWith(item.href)) {
-        return { group, item };
-      }
-    }
-  }
-  return undefined;
+export function findNavItemForPath(
+  pathname: string,
+): { group: NavGroup; item: NavItem } | undefined {
+  return NAV_GROUPS.flatMap((group) =>
+    group.items.map((item) => ({ group, item })),
+  )
+    .filter(({ item }) => matchesNavPath(pathname, item.href))
+    .sort((a, b) => b.item.href.length - a.item.href.length)[0];
+}
+export function findGroupForPath(pathname: string): NavGroup | undefined {
+  return findNavItemForPath(pathname)?.group;
 }

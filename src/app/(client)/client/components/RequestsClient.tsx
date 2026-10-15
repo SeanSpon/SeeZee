@@ -121,7 +121,7 @@ export function RequestsClient() {
   }, [editId, router]);
 
   const handleDelete = async (requestId: string) => {
-    if (!confirm('Are you sure you want to delete this project request? This action cannot be undone.')) {
+    if (!confirm('Cancel this project request? It will be archived so you can still review its history.')) {
       return;
     }
 
@@ -137,7 +137,7 @@ export function RequestsClient() {
       }
 
       // Remove from local state
-      setProjectRequests(projectRequests.filter((req) => req.id !== requestId));
+      setProjectRequests(previous => previous.map(req => req.id === requestId ? { ...req, status: "ARCHIVED" } : req));
       if (selectedRequest?.id === requestId) {
         setSelectedRequest(null);
       }
@@ -459,7 +459,7 @@ export function RequestsClient() {
                             onClick={() => handleDelete(request.id)}
                             disabled={deletingId === request.id}
                             className="p-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg border border-red-500/30 hover:border-red-400/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Delete request"
+                            title="Cancel request"
                           >
                             {deletingId === request.id ? (
                               <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
