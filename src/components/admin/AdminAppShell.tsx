@@ -286,10 +286,12 @@ export function AdminAppShell({ user, children }: AdminAppShellProps) {
                 </p>
               </div>
               <div className="flex items-center justify-end gap-3">
+                <div className="hidden sm:block">
                 <GlobalSearch
                   variant="admin"
                   placeholder="Search projects, clients, tasks..."
                 />
+                </div>
                 {/* Switch to Explorer */}
                 {setAdminNavMode && (
                   <button

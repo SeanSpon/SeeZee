@@ -4,6 +4,14 @@ Review branch: `codex/admin-workflow-cleanup`
 Base: `main` at `7d9012dc04caeaec2ceb11331b2ae00722ac8068`  
 Review date: October 15, 2026
 
+## Review access and deployment
+
+- Draft PR: https://github.com/SeanSpon/SeeZee/pull/46
+- Vercel Preview (READY, build succeeded in about 2 minutes): https://seezeestudios-3iulxrqkz-seezee-studios.vercel.app
+- Preview login fetch returned HTTP 200 and stayed on the preview hostname.
+- Deployment: `dpl_92mMF5t66to9unWvZgktmMjYWwB6`, commit `62c0fa1`.
+- Vercel database environment configuration remains blocked by 403. A deployed build is not confirmation that authentication or client submissions work end to end. Follow the setup checklist below.
+
 ## What was there
 
 The app already contained a substantial business workspace: lead qualification, project creation and boards, client organizations, internal tasks, client deliverables, maintenance and hours, invoices, recurring billing, expenses, banking, team management, learning, documents, recordings, blog, repositories, analytics, database tooling and several CEO/executive versions of screens.
@@ -83,8 +91,9 @@ The migration was applied transactionally only to the isolated review branch. No
 - TypeScript `tsc --noEmit` passes.
 - Seven focused tests pass: input validation, anonymous ownership, linked persistence and retained details, duplicate retry/distinct request handling, rollback, authenticated ownership, navigation path matching and preview guard (some assertions share a test).
 - Neon confirms the migration applied successfully on the isolated branch; all existing records were retained.
+- The workspace guide rendered HTTP 200 locally using a synthetic local-only session. Desktop/mobile screenshots were visually inspected. After waiting for hydration, sidebar collapse/expand, filtering to a single “Invoices” result, mobile menu open, and Escape close all passed browser automation. Screenshots are included in `docs/previews/`.
 - Workspace cannot open direct TCP connections to Neon, so real Prisma persistence and full browser → API → database verification remain unconfirmed here. Test transaction behavior uses an in-memory transaction harness; it is not a replacement for integration testing.
-- Default Turbopack build hit a Google Fonts network fetch failure. Webpack compilation and final build status are recorded in the PR.
+- Full Vercel build succeeded and the preview reached READY. Locally, Webpack compilation and TypeScript passed; full local page-data collection hit missing provider credentials. Default local Turbopack hit a Google Fonts network fetch restriction. Missing email configuration now initializes lazily in the outreach modules rather than crashing at import time.
 - Resend, UploadThing delivery and Google OAuth on a preview domain have not been verified with real provider credentials. Preview intake email is suppressed. Signed-in file uploads use the existing UploadThing integration.
 - Public contact form and legacy contact server action still create Lead inquiries and appear in the inbox; they are not project-request intake. The dormant package questionnaire callers still send retired payloads; the current service intake remains the supported path.
 - Inbox loads at most the newest 200 entries per source and states that limit. It is a review queue, not an unlimited export.
