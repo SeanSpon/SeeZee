@@ -7,6 +7,13 @@ const ADMIN_ROLES = ["ADMIN", "CEO", "CFO", "STAFF", "FRONTEND", "BACKEND", "OUT
 
 // File router for handling uploads
 export const ourFileRouter = {
+  intakeUploader: f({ blob: { maxFileSize: "8MB", maxFileCount: 10 } })
+    .middleware(async () => {
+      const session = await auth();
+      if (!session?.user?.id) throw new Error("Sign in to attach files");
+      return { userId: session.user.id };
+    })
+    .onUploadComplete(async ({ file }) => ({ fileUrl: file.ufsUrl })),
   // Training file uploader (PDFs, videos, etc.)
   trainingUploader: f({
     pdf: { maxFileSize: "32MB", maxFileCount: 1 },

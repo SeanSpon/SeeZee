@@ -3,7 +3,9 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
+  "regions": [
+    "iad1"
+  ],
   "outputDirectory": ".next",
   "crons": [
     {
@@ -11,25 +13,6 @@
       "schedule": "0 9 * * *"
     }
   ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "(?!seezeestudios\\.com).*"
-        }
-      ],
-      "destination": "https://seezeestudios.com/:path*",
-      "permanent": true
-    }
-  ],
-  "env": {
-    "AUTH_URL": "https://seezeestudios.com",
-    "NEXTAUTH_URL": "https://seezeestudios.com",
-    "NEXT_PUBLIC_APP_URL": "https://seezeestudios.com",
-    "NEXT_PUBLIC_DOMAIN": "seezeestudios.com"
-  },
   "functions": {
     "src/app/api/recordings/upload/route.ts": {
       "maxDuration": 300,

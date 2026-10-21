@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { previewDatabaseReady } from '@/lib/preview-database'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -11,10 +12,17 @@ export const prisma =
     errorFormat: 'pretty',
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Every entry point shares this guard, including server actions and auth adapter calls.
+if (!globalForPrisma.prisma) {
+  prisma.$use(async (params, next) => {
+    if (!previewDatabaseReady()) throw new Error('Preview database is not isolated. Configure the review branch DATABASE_URL.');
+    return next(params);
+  });
+}
+globalForPrisma.prisma = prisma
 
 // Test database connection on startup (non-blocking)
-if (typeof window === 'undefined') {
+if (typeof window === 'undefined' && previewDatabaseReady()) {
   prisma.$connect()
     .then(() => {
       console.log('✅ Database connection established');

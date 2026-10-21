@@ -42,12 +42,10 @@ export default async function AdminClientsPage() {
       return;
     }
 
-    const projectCount = org.projects?.length ?? 0;
-    const invoiceCount = org.invoices?.length ?? 0;
+    const projectCount = 0;
+    const invoiceCount = 0;
     // Invoice totals are stored in dollars
-    const revenue = (org.invoices?.reduce((sum: number, inv: any) => {
-      return inv.status === "PAID" ? sum + Number(inv.total ?? 0) : sum;
-    }, 0) ?? 0);
+    const revenue = 0;
 
     clientsMap.set(org.id, {
       id: org.id,
@@ -103,8 +101,9 @@ export default async function AdminClientsPage() {
     const existing = clientsMap.get(key);
 
     if (existing) {
-      // Update existing client - don't add revenue here, it's already counted from org.invoices
+      // Count each invoice once from the canonical invoice query.
       existing.invoices += 1;
+      if (invoice.status === "PAID") existing.revenue += Number(invoice.total ?? 0);
       if (invoice.status) {
         existing.rawStatuses.push(String(invoice.status).toLowerCase());
       }

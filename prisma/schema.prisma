@@ -164,6 +164,8 @@ model OrganizationMember {
 }
 
 model Lead {
+  submissionKey String? @unique
+  intakeRequest ProjectRequest?
   id             String           @id @default(cuid())
   name           String
   email          String
@@ -403,6 +405,7 @@ model Project {
   subscriptions        Subscription[]
   changeRequests       ChangeRequest[]
   unifiedRequests      UnifiedRequest[]
+  intakeRequests       ProjectRequest[]
   todos                Todo[]
 
   // Enhanced project tracking fields
@@ -1173,6 +1176,10 @@ model ChangeRequest {
 }
 
 model ProjectRequest {
+  projectId String?
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  leadId String? @unique
+  lead Lead? @relation(fields: [leadId], references: [id], onDelete: SetNull)
   id           String        @id @default(cuid())
   name         String?
   email        String?
@@ -1200,6 +1207,10 @@ model ProjectRequest {
   hoursSource    String? // "monthly", "rollover", "pack" - where hours were deducted from
   hourPackId     String? // If deducted from hour pack
 
+  @@index([userId, createdAt])
+  @@index([contactEmail])
+  @@index([projectId])
+  @@index([status, createdAt])
   @@map("project_requests")
 }
 

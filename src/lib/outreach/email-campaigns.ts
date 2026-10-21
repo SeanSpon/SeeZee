@@ -15,7 +15,12 @@ import { prisma } from '@/lib/prisma';
 import { Prospect } from '@prisma/client';
 import Anthropic from '@anthropic-ai/sdk';
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+let resend: Resend | undefined;
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error('Email delivery is not configured');
+  return resend ??= new Resend(key);
+}
 
 // ============================================================================
 // EMAIL TEMPLATES WITH VARIABLES
@@ -336,7 +341,7 @@ export async function sendBulkEmails(params: BulkEmailParams): Promise<BulkEmail
       );
 
       // Send via Resend
-      const emailResult = await resend.emails.send({
+      const emailResult = await getResend().emails.send({
         from: sendFrom,
         to: prospect.email,
         replyTo: replyTo,

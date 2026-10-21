@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { ProspectStatus, EmailStatus } from '@prisma/client';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * POST /api/prospects/[id]/send-email
@@ -26,6 +25,8 @@ export async function POST(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    if (!process.env.RESEND_API_KEY) return NextResponse.json({ error: 'Email delivery is not configured' }, { status: 503 });
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { id } = await params;
     const body = await req.json();
     const { subject, emailBody, fromEmail } = body;

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { FiUpload, FiX, FiAlertCircle } from 'react-icons/fi';
 import { ServiceCategory } from '@prisma/client';
 import { getServiceCategoryDisplayName } from '@/lib/service-mapping';
+import { uploadFiles } from '@/lib/uploadthing';
 import { formatPhoneNumber } from '@/lib/phone-format';
 
 interface ContactIntakeFormProps {
@@ -227,6 +228,8 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
   }, [session]);
 
   const [files, setFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [submissionId] = useState(() => crypto.randomUUID());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -254,16 +257,22 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
+      if ([...files, ...newFiles].length > 10 || newFiles.some(file => file.size > 8 * 1024 * 1024)) {
+        setError('Attach up to 10 files, each under 8MB');
+        return;
+      }
       const totalSize = [...files, ...newFiles].reduce((sum, f) => sum + f.size, 0);
       if (totalSize > 10 * 1024 * 1024) {
         setError('Total file size cannot exceed 10MB');
         return;
       }
+      setUploadedFiles([]);
       setFiles((prev) => [...prev, ...newFiles]);
     }
   };
 
   const removeFile = (index: number) => {
+    setUploadedFiles([]);
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -306,15 +315,18 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
 
     try {
       // Upload files if any
-      let fileUrls: string[] = [];
-      if (files.length > 0) {
-        // TODO: Implement file upload to Vercel Blob
-        console.log('File upload not yet implemented:', files);
+      let fileUrls = uploadedFiles;
+      if (files.length > 0 && uploadedFiles.length === 0) {
+        const uploaded = await uploadFiles('intakeUploader', { files });
+        fileUrls = uploaded.map(file => file.ufsUrl);
+        if (fileUrls.length !== files.length) throw new Error('Some attachments did not upload. Please try again.');
+        setUploadedFiles(fileUrls);
       }
 
       // Prepare submission data
       const submissionData: any = {
         serviceType,
+        submissionId,
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -1046,6 +1058,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
             </label>
             <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center">
               <input
+                disabled={!session?.user || isSubmitting}
                 type="file"
                 multiple
                 accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.zip"
@@ -1060,7 +1073,7 @@ export default function ContactIntakeForm({ serviceType, tier }: ContactIntakeFo
                 <FiUpload className="w-5 h-5" />
                 <span>Upload files (logos, assets, documents)</span>
               </label>
-              <p className="text-xs text-gray-500 mt-2">PDF, images, documents up to 10MB total</p>
+              <p className="text-xs text-gray-500 mt-2">{session?.user ? "PDF, images, documents up to 8MB each, 10MB total" : "Sign in to attach files, or submit now and share files with us later."}</p>
             </div>
 
             {files.length > 0 && (
