@@ -27,7 +27,7 @@ export function Section({
   const tones = {
     base: 'bg-[#0b0b0c] text-white',
     raised: 'bg-[#111113] text-white border-y border-white/[0.06]',
-    light: 'bg-[#f6f4f0] text-[#111113]',
+    light: 'bg-[#f6f4f0] text-[#111113] [&_.eyebrow]:text-red-700',
   }
   return (
     <section id={id} className={cx('py-20 sm:py-28', tones[tone], className)}>
@@ -38,7 +38,7 @@ export function Section({
 
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <p className={cx('mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-red-500', className)}>
+    <p className={cx('eyebrow mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-red-500', className)}>
       <span aria-hidden className="h-px w-6 bg-current" />
       {children}
     </p>
@@ -119,7 +119,7 @@ export function JsonLd({ data }: { data: unknown }) {
 export function Breadcrumbs({ items }: { items: Array<{ name: string; href: string }> }) {
   return (
     <>
-      <nav aria-label="Breadcrumb" className="mb-8 text-sm text-white/50">
+      <nav aria-label="Breadcrumb" className="mb-8 text-sm text-white/60">
         <ol className="flex flex-wrap items-center gap-2">
           {items.map((item, i) => (
             <li key={item.href} className="flex items-center gap-2">

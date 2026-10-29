@@ -22,20 +22,20 @@ export default function ContactPage() {
               steps — and a free quote if it’s a fit.
             </p>
 
-            <dl className="mt-10 space-y-6">
+            <ul className="mt-10 space-y-6">
               {[
                 { Icon: FiPhone, label: "Call or text", value: site.phone, href: site.phoneHref },
                 { Icon: FiMail, label: "Email", value: site.email, href: `mailto:${site.email}` },
                 { Icon: FiMapPin, label: "Studio", value: "Louisville, KY — serving Kentuckiana & Cincinnati" },
                 { Icon: FiClock, label: "Response time", value: "Within 1 business day" },
               ].map(({ Icon, label, value, href }) => (
-                <div key={label} className="flex items-start gap-4">
+                <li key={label} className="flex items-start gap-4">
                   <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full border border-white/10 text-red-500">
                     <Icon aria-hidden className="h-5 w-5" />
                   </span>
                   <div>
-                    <dt className="text-sm text-white/50">{label}</dt>
-                    <dd className="mt-0.5 font-medium">
+                    <p className="text-sm text-white/60">{label}</p>
+                    <p className="mt-0.5 font-medium">
                       {href ? (
                         <a href={href} className="hover:text-red-400">
                           {value}
@@ -43,11 +43,11 @@ export default function ContactPage() {
                       ) : (
                         value
                       )}
-                    </dd>
+                    </p>
                   </div>
-                </div>
+                </li>
               ))}
-            </dl>
+            </ul>
           </div>
 
           <Suspense fallback={<div className="min-h-[640px] rounded-3xl border border-white/[0.08] bg-[#111113]" />}>

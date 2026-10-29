@@ -84,13 +84,13 @@ export default function ContactFormCard() {
               ? "Thanks for reaching out — we’ll get back to you within one business day."
               : "Your message was saved, but our email notification is delayed. For anything urgent, please call us."}
           </p>
-          {receipt?.confirmationSent && <p className="mt-2 text-white/50">Check your inbox for a confirmation.</p>}
-          {receipt?.referenceId && <p className="mt-3 text-sm text-white/40">Reference: {receipt.referenceId}</p>}
+          {receipt?.confirmationSent && <p className="mt-2 text-white/60">Check your inbox for a confirmation.</p>}
+          {receipt?.referenceId && <p className="mt-3 text-sm text-white/55">Reference: {receipt.referenceId}</p>}
           <div className="mt-10 grid gap-3">
             <Link href="/signup" className="rounded-full bg-red-600 px-6 py-3.5 font-semibold hover:bg-red-500">
               Create your client account
             </Link>
-            <button onClick={() => setStatus("idle")} className="text-sm text-white/50 hover:text-white">
+            <button onClick={() => setStatus("idle")} className="text-sm text-white/60 hover:text-white">
               Send another message
             </button>
           </div>
@@ -179,7 +179,7 @@ export default function ContactFormCard() {
             {status === "loading" && <FiLoader aria-hidden className="h-4 w-4 animate-spin" />}
             {status === "loading" ? "Sending…" : "Send message"}
           </button>
-          <p className="text-center text-xs text-white/40">No spam, no pressure. We reply within one business day.</p>
+          <p className="text-center text-xs text-white/55">No spam, no pressure. We reply within one business day.</p>
         </form>
       )}
     </div>

@@ -162,7 +162,7 @@ function LoginContent() {
             Sign in to the SeeZee client portal to review progress, request changes and talk with the team.
           </p>
         </div>
-        <p className="relative text-sm text-white/40">SeeZee Studio · Louisville, KY</p>
+        <p className="relative text-sm text-white/55">SeeZee Studio · Louisville, KY</p>
       </aside>
 
       {/* Form */}
@@ -202,7 +202,7 @@ function LoginContent() {
                 <FcGoogle aria-hidden className="h-5 w-5" />
                 Continue with Google
               </button>
-              <div className="my-6 flex items-center gap-4 text-xs uppercase tracking-wider text-white/40">
+              <div className="my-6 flex items-center gap-4 text-xs uppercase tracking-wider text-white/55">
                 <span className="h-px flex-1 bg-white/10" />
                 or
                 <span className="h-px flex-1 bg-white/10" />
@@ -236,7 +236,7 @@ function LoginContent() {
                 <label htmlFor="password" className="!mb-0 !w-auto text-sm font-medium text-white/80">
                   Password
                 </label>
-                <Link href="/forgot-password" className="inline-flex items-center whitespace-nowrap text-sm text-white/50 hover:text-red-400">
+                <Link href="/forgot-password" className="inline-flex items-center whitespace-nowrap text-sm text-white/60 hover:text-red-400">
                   Forgot password?
                 </Link>
               </div>
@@ -255,7 +255,7 @@ function LoginContent() {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/40 hover:text-white"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/55 hover:text-white"
                 >
                   {showPassword ? <FiEyeOff className="h-5 w-5" /> : <FiEye className="h-5 w-5" />}
                 </button>
@@ -272,7 +272,7 @@ function LoginContent() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-white/40">
+          <p className="mt-8 text-center text-xs text-white/55">
             By signing in, you agree to our{" "}
             <Link href="/terms" className="underline hover:text-white">
               Terms

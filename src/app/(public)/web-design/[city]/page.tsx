@@ -148,7 +148,7 @@ export default async function CityPage({ params }: Props) {
       <FaqList tone="raised" items={areaFaqs(area.name, area.shortName)} title={`${area.shortName} web design FAQ`} />
 
       <Section tone="base" className="!py-16">
-        <p className="text-sm text-white/50">Also serving:</p>
+        <p className="text-sm text-white/60">Also serving:</p>
         <ul className="mt-3 flex flex-wrap gap-3">
           {others.map((o) => (
             <li key={o.slug}>

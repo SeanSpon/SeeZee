@@ -16,7 +16,7 @@ export function ServicesGrid({ tone = 'base' as 'base' | 'raised' }) {
       <div className="grid gap-px overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service, i) => (
           <div key={service.slug} className="group flex flex-col bg-[#0b0b0c] p-8 transition-colors hover:bg-[#141416]">
-            <span className="mb-6 font-mono text-xs text-white/40">{String(i + 1).padStart(2, '0')}</span>
+            <span className="mb-6 font-mono text-xs text-white/55">{String(i + 1).padStart(2, '0')}</span>
             <h3 className="font-heading text-xl font-semibold">{service.title}</h3>
             <p className="mt-3 text-[15px] leading-relaxed text-white/60">{service.short}</p>
             <ul className="mt-6 space-y-2 text-sm text-white/70">
@@ -47,7 +47,7 @@ function BrowserFrame({ item }: { item: WorkItem }) {
         <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
         <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
         <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="ml-3 truncate rounded-md bg-white/5 px-3 py-1 font-mono text-[11px] text-white/50">{host}</span>
+        <span className="ml-3 truncate rounded-md bg-white/5 px-3 py-1 font-mono text-[11px] text-white/60">{host}</span>
       </div>
       {item.image ? (
         <Image
@@ -93,7 +93,7 @@ export function FeaturedWork({ limit = 4, tone = 'raised' as 'base' | 'raised' }
             </Link>
             <div className="mt-6 flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/40">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/55">
                   {item.category} · {item.location}
                 </p>
                 <h3 className="mt-2 font-heading text-2xl font-semibold">
@@ -197,7 +197,7 @@ export function FaqList({ items = defaultFaqs, tone = 'base' as 'base' | 'raised
             <details key={faq.q} className="group py-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-heading text-lg font-semibold">
                 {faq.q}
-                <FiPlus aria-hidden className="h-5 w-5 flex-none text-white/50 transition-transform group-open:rotate-45" />
+                <FiPlus aria-hidden className="h-5 w-5 flex-none text-white/60 transition-transform group-open:rotate-45" />
               </summary>
               <p className="mt-4 max-w-2xl leading-relaxed text-white/65">{faq.a}</p>
             </details>
@@ -235,7 +235,7 @@ export function AreasServed({ tone = 'raised' as 'base' | 'raised' }) {
             className="group flex flex-col justify-between rounded-3xl border border-white/[0.08] bg-white/[0.02] p-7 transition hover:border-red-500/40 hover:bg-white/[0.04]"
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/40">{area.state}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/55">{area.state}</p>
               <h3 className="mt-2 font-heading text-xl font-semibold">Web design in {area.shortName}</h3>
               <p className="mt-3 text-sm leading-relaxed text-white/55">{area.neighborhoods.slice(0, 4).join(' · ')}</p>
             </div>

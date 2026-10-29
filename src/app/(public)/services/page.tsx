@@ -61,7 +61,7 @@ export default function ServicesPage() {
         <div className="space-y-px overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.08]">
           {services.map((service, i) => (
             <article key={service.slug} id={service.slug} className="grid scroll-mt-24 gap-6 bg-[#0b0b0c] p-8 sm:p-10 lg:grid-cols-[auto_1fr_1fr] lg:gap-12">
-              <span className="font-mono text-sm text-white/40">{String(i + 1).padStart(2, '0')}</span>
+              <span className="font-mono text-sm text-white/55">{String(i + 1).padStart(2, '0')}</span>
               <div>
                 <h2 className="font-heading text-2xl font-semibold sm:text-3xl">{service.title}</h2>
                 <p className="mt-4 leading-relaxed text-white/60">{service.description}</p>

@@ -73,7 +73,7 @@ export default function HomePage() {
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                <span className="ml-3 rounded-md bg-white/5 px-3 py-1 font-mono text-[11px] text-white/50">avisionforyourecovery.org</span>
+                <span className="ml-3 rounded-md bg-white/5 px-3 py-1 font-mono text-[11px] text-white/60">avisionforyourecovery.org</span>
               </div>
               <Image
                 src="/avfy-home.png"
@@ -172,15 +172,15 @@ export default function HomePage() {
             </p>
             <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
               <div>
-                <dt className="text-sm text-white/50">Response time</dt>
+                <dt className="text-sm text-white/60">Response time</dt>
                 <dd className="mt-1 font-heading text-2xl font-bold">&lt; 24 hrs</dd>
               </div>
               <div>
-                <dt className="text-sm text-white/50">Built on</dt>
+                <dt className="text-sm text-white/60">Built on</dt>
                 <dd className="mt-1 font-heading text-2xl font-bold">Next.js</dd>
               </div>
               <div>
-                <dt className="text-sm text-white/50">Based in</dt>
+                <dt className="text-sm text-white/60">Based in</dt>
                 <dd className="mt-1 font-heading text-2xl font-bold">Louisville</dd>
               </div>
             </dl>
