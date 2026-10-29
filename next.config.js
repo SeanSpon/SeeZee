@@ -71,6 +71,10 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/:path(admin|ceo|client|portal|api|login|signin|signup|register|forgot-password|reset-password|onboarding|questionnaire|billing|settings|verify-request|checkout|start|refresh-session|clear-cookies|auth-check|auth-test|debug-session|test-login)/:rest*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
         source: '/(.*)',
         headers: [
           {

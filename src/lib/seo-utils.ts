@@ -99,7 +99,7 @@ export function generateArticleSchema(article: {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'SeeZee Studio',
+      name: 'SeeZee Studios',
       logo: {
         '@type': 'ImageObject',
         url: 'https://seezeestudios.com/favicon.svg',

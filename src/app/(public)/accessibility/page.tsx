@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/accessibility' },
   title: 'Accessibility Statement',
-  description: 'SeeZee Studio Accessibility Statement - Our commitment to digital accessibility and inclusion.',
+  description: 'SeeZee Studios Accessibility Statement - Our commitment to digital accessibility and inclusion.',
 }
 
 export default function AccessibilityPage() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 py-20">
+    <div className="studio-document w-full min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <article className="text-white">
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">Accessibility Statement</h1>
@@ -17,7 +18,7 @@ export default function AccessibilityPage() {
           
           <div className="space-y-8">
             <p className="text-gray-300 text-lg leading-relaxed">
-              SeeZee Studio is committed to digital accessibility and inclusion. We believe technology should work for everyone.
+              SeeZee Studios is committed to digital accessibility and inclusion. We believe technology should work for everyone.
             </p>
 
             <section>

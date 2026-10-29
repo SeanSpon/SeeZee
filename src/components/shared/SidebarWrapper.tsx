@@ -1,8 +1,8 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import TopBar from './TopBar'
-import Footer from './Footer'
+import StudioHeader from '../marketing/StudioHeader'
+import StudioFooter from '../marketing/StudioFooter'
 
 export default function SidebarWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -23,11 +23,11 @@ export default function SidebarWrapper({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="studio-shell min-h-screen flex flex-col">
       <a href="#main-content" className="skip-to-content">
         Skip to content
       </a>
-      <TopBar />
+      <StudioHeader />
       <div className="flex-1 flex flex-col min-w-0">
         <main 
           id="main-content" 
@@ -35,7 +35,7 @@ export default function SidebarWrapper({ children }: { children: React.ReactNode
         >
           {children}
         </main>
-        <Footer />
+        <StudioFooter />
       </div>
     </div>
   )

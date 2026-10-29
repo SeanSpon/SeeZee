@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/terms' },
   title: 'Terms of Service',
-  description: 'SeeZee Studio Terms of Service - Terms and conditions for using our services.',
+  description: 'SeeZee Studios Terms of Service - Terms and conditions for using our services.',
 }
 
 export default function TermsPage() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 py-20">
+    <div className="studio-document w-full min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <article className="text-white">
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">Terms of Service</h1>
@@ -17,13 +18,13 @@ export default function TermsPage() {
           
           <div className="space-y-8">
             <p className="text-gray-300 text-lg leading-relaxed">
-              By accessing or using the SeeZee Studio website, you agree to these Terms of Service.
+              By accessing or using the SeeZee Studios website, you agree to these Terms of Service.
             </p>
 
             <section>
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">Services</h2>
               <p className="text-gray-300 mb-4 leading-relaxed">
-                SeeZee Studio provides web development, digital infrastructure, and consulting services, primarily for nonprofits, community organizations, and accessibility-focused initiatives.
+                SeeZee Studios provides web development, digital infrastructure, and consulting services, primarily for nonprofits, community organizations, and accessibility-focused initiatives.
               </p>
               <p className="text-gray-300 leading-relaxed">
                 Information on this website is for general informational purposes only and does not constitute professional, legal, or medical advice.
@@ -33,7 +34,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">No Medical or Mental Health Services</h2>
               <p className="text-gray-300 mb-4 font-semibold leading-relaxed">
-                SeeZee Studio is not a healthcare provider and does not provide medical, mental health, or therapeutic services.
+                SeeZee Studios is not a healthcare provider and does not provide medical, mental health, or therapeutic services.
               </p>
               <p className="text-gray-300 leading-relaxed">
                 Clients are solely responsible for ensuring compliance with any healthcare, privacy, or regulatory laws applicable to their organization, including HIPAA where applicable.
@@ -50,14 +51,14 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">Intellectual Property</h2>
               <p className="text-gray-300 leading-relaxed">
-                All content on this site, including text, design, graphics, and code, is the property of SeeZee Studio unless otherwise stated. You may not copy or reuse materials without written permission.
+                All content on this site, including text, design, graphics, and code, is the property of SeeZee Studios unless otherwise stated. You may not copy or reuse materials without written permission.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">Limitation of Liability</h2>
               <p className="text-gray-300 leading-relaxed">
-                To the fullest extent permitted by law, SeeZee Studio is not liable for any indirect, incidental, or consequential damages arising from your use of this website or services.
+                To the fullest extent permitted by law, SeeZee Studios is not liable for any indirect, incidental, or consequential damages arising from your use of this website or services.
               </p>
             </section>
 
