@@ -1,26 +1,10 @@
-import { generatePageMetadata } from '@/lib/metadata'
-
+import { generatePageMetadata } from "@/lib/metadata";
 export const metadata = generatePageMetadata({
-  title: 'How We Build – AI Integration Done Right',
+  title: "Our Approach",
   description:
-    'AI is changing how organizations operate. We help teams integrate modern systems, automation, and AI without chaos or confusion. Not hype. Real implementation.',
-  path: '/philosophy',
-  keywords: [
-    'AI integration',
-    'business automation',
-    'AI adoption',
-    'system integration',
-    'workflow automation',
-    'practical AI',
-  ],
-})
-
-export default function PhilosophyLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return <>{children}</>
+    "How SeeZee Studios approaches web design and development: clear goals, understandable experiences, and practical support after launch.",
+  path: "/philosophy",
+});
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
-
-

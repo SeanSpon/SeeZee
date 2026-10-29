@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/privacy' },
   title: 'Privacy Policy',
-  description: 'SeeZee Studio Privacy Policy - How we collect, use, and protect your information.',
+  description: 'SeeZee Studios Privacy Policy - How we collect, use, and protect your information.',
 }
 
 export default function PrivacyPage() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 py-20">
+    <div className="studio-document w-full min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <article className="text-white">
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">Privacy Policy</h1>
@@ -17,7 +18,7 @@ export default function PrivacyPage() {
           
           <div className="space-y-8">
             <p className="text-gray-300 text-lg leading-relaxed">
-              SeeZee Studio ("SeeZee," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us.
+              SeeZee Studios ("SeeZee," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us.
             </p>
 
             <section>
@@ -62,7 +63,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4 text-white">Payments & Third-Party Services</h2>
               <p className="text-gray-300 mb-4 leading-relaxed">
-                Payments referenced on this site may be processed through third-party providers (such as Stripe) and may be handled under a separate affiliated business entity. SeeZee Studio does not store full payment details.
+                Payments referenced on this site may be processed through third-party providers (such as Stripe) and may be handled under a separate affiliated business entity. SeeZee Studios does not store full payment details.
               </p>
               <p className="text-gray-300 mb-4 leading-relaxed">Third-party services we may use include:</p>
               <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4 leading-relaxed">

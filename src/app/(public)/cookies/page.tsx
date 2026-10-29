@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/cookies' },
   title: 'Cookie Policy',
-  description: 'SeeZee Studio Cookie Policy - How we use cookies and tracking technologies.',
+  description: 'SeeZee Studios Cookie Policy - How we use cookies and tracking technologies.',
 }
 
 export default function CookiesPage() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 py-20">
+    <div className="studio-document w-full min-h-screen py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <article className="text-white">
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">Cookie Policy</h1>
@@ -17,7 +18,7 @@ export default function CookiesPage() {
           
           <div className="space-y-8">
             <p className="text-gray-300 text-lg leading-relaxed">
-              SeeZee Studio uses limited cookies and similar technologies to ensure our website functions properly and to understand how it is used.
+              SeeZee Studios uses limited cookies and similar technologies to ensure our website functions properly and to understand how it is used.
             </p>
 
             <section>

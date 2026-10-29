@@ -1,71 +1,10 @@
-import { generatePageMetadata } from '@/lib/metadata'
-
+import { generatePageMetadata } from "@/lib/metadata";
 export const metadata = generatePageMetadata({
-  title: 'Contact Us',
+  title: "Start a Project",
   description:
-    'Get in touch with SeeZee Studio for your web development needs. Book a free consultation to discuss your website project. Fast, affordable, and professional web design services in Louisville, KY and nationwide.',
-  path: '/contact',
-  keywords: [
-    'contact SeeZee Studio',
-    'web development consultation',
-    'website quote',
-    'Louisville web design contact',
-    'get a website built',
-    'small business web design inquiry',
-  ],
-})
-
-export default function ContactLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  // Structured data for ContactPage
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'ContactPage',
-    mainEntity: {
-      '@type': 'Organization',
-      name: 'SeeZee Studio',
-      url: 'https://seezeestudios.com',
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'Customer Service',
-        availableLanguage: 'English',
-        areaServed: 'US',
-      },
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Louisville',
-        addressRegion: 'KY',
-        addressCountry: 'US',
-      },
-    },
-  }
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      {children}
-    </>
-  )
+    "Tell SeeZee Studios about your website, custom app, or technology project. Contact our Louisville studio to discuss your goals and next steps.",
+  path: "/contact",
+});
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
