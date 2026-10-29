@@ -1,7 +1,7 @@
 import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
-  title: 'Contact Us',
+  title: 'Contact Us — Free Website Quote',
   description:
     'Get in touch with SeeZee Studio for your web development needs. Book a free consultation to discuss your website project. Fast, affordable, and professional web design services in Louisville, KY and nationwide.',
   path: '/contact',

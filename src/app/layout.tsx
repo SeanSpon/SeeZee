@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import '../styles/globals.css'
 import { Providers } from './providers'
 import DebugHUD from '../components/ui/debug-hud'
@@ -10,8 +10,15 @@ import { Toaster } from '../components/ui/toaster'
 import { PasswordSetupPrompt } from '../components/PasswordSetupPrompt'
 import { CookieConsent } from '../components/shared/CookieConsent'
 import { Analytics } from '@vercel/analytics/next'
+import { site, serviceAreas } from '@/lib/site'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
+const heading = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-heading',
+})
 
 export const viewport = {
   width: 'device-width',
@@ -22,72 +29,36 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'SeeZee Studio | Professional Web Development Louisville KY',
+    default: 'Louisville Web Design & Development | SeeZee Studio',
     template: '%s | SeeZee Studio',
   },
   description:
-    'Professional web development in Louisville, KY. SeeZee Studio builds fast, modern websites and custom apps for businesses and community organizations. Expert website design and development services.',
-  keywords: [
-    'professional web development',
-    'professional web developer',
-    'web development Louisville',
-    'Louisville web development',
-    'Louisville KY web developer',
-    'website design Louisville',
-    'custom website development',
-    'professional website design',
-    'websites Louisville KY',
-    'web developer Louisville',
-    'Louisville website designer',
-    'app development Louisville',
-    'Next.js development',
-    'React developer Louisville',
-    'full-stack development Louisville',
-    'custom software development',
-    'business websites Louisville',
-    'business websites',
-    'e-commerce development Louisville',
-    '48 hour website',
-    'fast website development',
-  ],
-  authors: [{ name: 'Sean & Zach', url: 'https://seezeestudios.com' }],
-  creator: 'SeeZee Studio',
-  publisher: 'SeeZee Studio',
-  metadataBase: new URL('https://seezeestudios.com'),
+    'Louisville, KY web design and development studio building fast, custom websites and web apps for small businesses and nonprofits in Louisville, Southern Indiana, Northern Kentucky and Cincinnati. Free consultation.',
+  applicationName: site.name,
+  authors: [{ name: 'SeeZee Studio', url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  metadataBase: new URL(site.url),
   icons: {
     icon: [
       { url: '/favicon.ico', type: 'image/x-icon' },
-      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
       { url: '/icon.png', sizes: '512x512', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '16x16',
-        url: '/icon.png',
-      },
-    ],
-  },
-  alternates: {
-    canonical: '/',
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: 'SeeZee Studio | Professional Web Development Louisville KY',
-    description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps for businesses and community organizations.',
-    url: 'https://seezeestudios.com',
-    siteName: 'SeeZee Studio',
+    title: 'Louisville Web Design & Development | SeeZee Studio',
+    description:
+      'Fast, custom websites and web apps for Louisville and Cincinnati businesses. Design, development, local SEO, hosting and support from one local team.',
+    url: site.url,
+    siteName: site.name,
     images: [
       {
-        url: 'https://seezeestudios.com/opengraph-image.png',
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'SeeZee Studio - Professional Web Development Louisville KY',
+        alt: 'SeeZee Studio — Louisville web design and development',
       },
     ],
     locale: 'en_US',
@@ -95,10 +66,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SeeZee Studio | Professional Web Developer Louisville KY',
-    description: 'Professional websites and apps built fast in Louisville, KY. Expert web development for businesses and organizations.',
-    images: ['https://seezeestudios.com/opengraph-image.png'],
-    creator: '@seezee_studio',
+    title: 'Louisville Web Design & Development | SeeZee Studio',
+    description: 'Fast, custom websites and web apps for Louisville and Cincinnati businesses.',
+    images: ['/opengraph-image.png'],
   },
   robots: {
     index: true,
@@ -114,9 +84,9 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
-    other: {
-      'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
-    },
+    other: process.env.NEXT_PUBLIC_BING_VERIFICATION
+      ? { 'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION }
+      : undefined,
   },
   category: 'technology',
 }
@@ -126,113 +96,57 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Enhanced structured data for SEO
+  // Site-wide structured data. Page-specific schema (services, FAQ,
+  // breadcrumbs) lives on the pages themselves.
   const schemaOrg = {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Organization',
-        '@id': 'https://seezeestudios.com/#organization',
-        name: 'SeeZee Studio',
-        alternateName: 'SeeZee',
-        url: 'https://seezeestudios.com',
+        '@type': ['Organization', 'ProfessionalService'],
+        '@id': `${site.url}/#organization`,
+        name: site.name,
+        alternateName: ['SeeZee', 'SeeZee Studios'],
+        url: site.url,
         logo: {
           '@type': 'ImageObject',
-          url: 'https://seezeestudios.com/icon.png',
+          url: `${site.url}/icon.png`,
           width: 512,
           height: 512,
         },
-        description: 'Professional web development services in Louisville, KY. Fast, modern websites and custom apps for businesses and community organizations.',
+        image: `${site.url}/opengraph-image.png`,
+        description: site.description,
+        email: site.email,
+        telephone: '+1-502-435-2986',
+        priceRange: '$$',
         address: {
           '@type': 'PostalAddress',
-          addressLocality: 'Louisville',
-          addressRegion: 'KY',
-          addressCountry: 'US',
+          addressLocality: site.city,
+          addressRegion: site.region,
+          addressCountry: site.country,
         },
-        founder: [
-          {
-            '@type': 'Person',
-            name: 'Sean McCulloch',
-            jobTitle: 'Lead Developer & Designer',
-          },
-          {
-            '@type': 'Person',
-            name: 'Zach',
-            jobTitle: 'Operations & Client Experience',
-          },
-        ],
-        sameAs: [
-          'https://twitter.com/seezee_studio',
-          'https://github.com/seezee',
-        ],
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'Customer Service',
-          availableLanguage: 'English',
-          areaServed: 'US',
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: site.geo.latitude,
+          longitude: site.geo.longitude,
         },
-        priceRange: '$$',
-        areaServed: [
-          {
-            '@type': 'City',
-            name: 'Louisville',
-          },
-          {
-            '@type': 'State',
-            name: 'Kentucky',
-          },
-          {
-            '@type': 'Country',
-            name: 'United States',
-          },
-        ],
+        areaServed: serviceAreas.map((area) => ({ '@type': 'Place', name: area.name })),
+        founder: site.founders.map((f) => ({ '@type': 'Person', name: f.name, jobTitle: f.role })),
+        sameAs: Object.values(site.social),
+        knowsAbout: ['Web design', 'Web development', 'Local SEO', 'Next.js', 'E-commerce', 'Web applications'],
+        openingHoursSpecification: {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          opens: '09:00',
+          closes: '18:00',
+        },
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://seezeestudios.com/#website',
-        url: 'https://seezeestudios.com',
-        name: 'SeeZee Studio',
-        description: 'Professional web development in Louisville, KY. Fast, modern websites and custom apps.',
-        publisher: {
-          '@id': 'https://seezeestudios.com/#organization',
-        },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: {
-            '@type': 'EntryPoint',
-            urlTemplate: 'https://seezeestudios.com/?s={search_term_string}',
-          },
-          'query-input': 'required name=search_term_string',
-        },
-      },
-      {
-        '@type': 'LocalBusiness',
-        '@id': 'https://seezeestudios.com/#localbusiness',
-        name: 'SeeZee Studio',
-        image: 'https://seezeestudios.com/opengraph-image.png',
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Louisville',
-          addressRegion: 'KY',
-          addressCountry: 'US',
-        },
-        priceRange: '$$',
-        url: 'https://seezeestudios.com',
-        telephone: '',
-        openingHoursSpecification: {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: [
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday',
-          ],
-          opens: '00:00',
-          closes: '23:59',
-        },
+        '@id': `${site.url}/#website`,
+        url: site.url,
+        name: site.name,
+        inLanguage: 'en-US',
+        publisher: { '@id': `${site.url}/#organization` },
       },
     ],
   };
@@ -274,7 +188,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/png" href="/icon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#dc2626" />
+        <meta name="theme-color" content="#0b0b0c" />
         
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-0KV89H26Z9"></script>
@@ -294,7 +208,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.className} ${inter.variable} ${heading.variable}`} suppressHydrationWarning>
         <Providers>
           {/* Check if user needs to set password (OAuth-only users) */}
           <PasswordSetupPrompt />

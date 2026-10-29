@@ -1,9 +1,9 @@
 import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
-  title: 'About SeeZee - Built by Sean & Zach',
+  title: 'About SeeZee Studio — Louisville Web Designers',
   description:
-    'Meet Sean and Zach, the Louisville-based developers behind SeeZee Studio. We build fast, affordable websites for small businesses with lifetime maintenance and dashboard access. Learn about our mission to make web design simple, fast, and accessible.',
+    'Meet Sean McCulloch and Zach Robards, the Louisville-based co-founders of SeeZee Studio — a small web design and development studio serving Louisville, Southern Indiana and Cincinnati.',
   path: '/about',
   keywords: [
     'about SeeZee Studio',

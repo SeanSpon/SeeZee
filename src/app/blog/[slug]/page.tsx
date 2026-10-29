@@ -19,12 +19,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) {
     return {
       title: "Post Not Found",
+      robots: { index: false },
     };
   }
 
+  const title = post.seoTitle || post.title;
+  const description = post.seoDescription || post.excerpt || post.title;
+  const path = `/blog/${post.slug}`;
   return {
-    title: post.seoTitle || post.title,
-    description: post.seoDescription || post.excerpt || post.title,
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title,
+      description,
+      url: `https://seezeestudios.com${path}`,
+      type: "article",
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      images: ["/opengraph-image.png"],
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

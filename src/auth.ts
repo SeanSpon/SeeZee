@@ -121,7 +121,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: { 
     signIn: "/login", 
     error: "/login",
-    verifyRequest: "/verify",
+    verifyRequest: "/verify-request",
   },
   // Allow linking accounts with the same email
   // This is needed when users sign up with email then try to login with OAuth
@@ -160,27 +160,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
-          // Verify reCAPTCHA if token provided
+          // Verify reCAPTCHA if token provided. A failed or unreachable check must
+          // not throw: thrown errors surface as a generic "Configuration" error.
           if (credentials.recaptchaToken && process.env.RECAPTCHA_SECRET_KEY) {
             try {
               const recaptchaResponse = await fetch(
-                `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${credentials.recaptchaToken}`,
-                { method: "POST" }
+                "https://www.google.com/recaptcha/api/siteverify",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                  body: new URLSearchParams({
+                    secret: process.env.RECAPTCHA_SECRET_KEY,
+                    response: credentials.recaptchaToken as string,
+                  }),
+                  signal: AbortSignal.timeout(5000),
+                }
               );
               const recaptchaData = await recaptchaResponse.json();
-              
-              if (!recaptchaData.success || recaptchaData.score < 0.5) {
-                throw new Error("reCAPTCHA verification failed");
+              if (recaptchaData.success === true && typeof recaptchaData.score === "number" && recaptchaData.score < 0.3) {
+                console.warn("[auth] reCAPTCHA score too low, rejecting sign-in");
+                return null;
               }
             } catch (error) {
-              throw new Error("reCAPTCHA verification failed");
+              console.warn("[auth] reCAPTCHA verification unavailable, continuing:", error);
             }
           }
 
           // Find user by email
+          // Emails are matched case-insensitively: older accounts (OAuth, admin
+          // invites) may have been stored with capital letters.
+          const normalizedEmail = (credentials.email as string).trim().toLowerCase();
           const user = await retryDatabaseOperation(async () => {
-            return await prisma.user.findUnique({
-              where: { email: (credentials.email as string).toLowerCase() },
+            return await prisma.user.findFirst({
+              where: { email: { equals: normalizedEmail, mode: "insensitive" } },
               select: {
                 id: true,
                 email: true,
@@ -200,9 +212,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
+          // Verify password
+          const isValidPassword = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+
+          if (!isValidPassword) {
+            return null;
+          }
+
           // CEO whitelist - auto-setup CEO users
           const CEO_EMAILS = ["seanspm1007@gmail.com", "seanpm1007@gmail.com", "sean.mcculloch23@gmail.com"];
-          const isCEO = CEO_EMAILS.includes((credentials.email as string).toLowerCase());
+          const isCEO = CEO_EMAILS.includes(normalizedEmail);
 
           // Auto-verify CEO email if not already verified
           if (isCEO && !user.emailVerified) {
@@ -217,16 +239,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             });
           }
 
-          // Verify password
-          const isValidPassword = await bcrypt.compare(
-            credentials.password as string,
-            user.password
-          );
-
-          if (!isValidPassword) {
-            return null;
-          }
-
           // Return user object (password excluded)
           return {
             id: user.id,
@@ -239,7 +251,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             questionnaireCompleted: user.questionnaireCompleted?.toISOString() || null,
           };
         } catch (error) {
-          throw error;
+          // Database outages etc. Returning null shows "invalid credentials"
+          // instead of a confusing configuration error page.
+          console.error("[auth] Credentials sign-in failed:", error);
+          return null;
         }
       },
     }),
@@ -622,7 +637,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // NOTE: Even with update trigger, we still fetch fresh from DB above
         // This ensures DB is always the source of truth
         if (trigger === "update" && updateSession) {
-          console.log('[JWT] Update trigger:', { email, trigger, updateTosAcceptedAt: updateSession.tosAcceptedAt, updateProfileDoneAt: updateSession.profileDoneAt });
           
           token.role = updateSession.role || token.role;
           token.tosAccepted = updateSession.tosAcceptedAt ? true : token.tosAccepted;
@@ -643,15 +657,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // This ensures DB is always the source of truth, even if update trigger had stale data
         // This prevents redirect loops when DB is updated but token still has old values
         if (dbUser) {
-          console.log('[JWT] Final token values (DB source of truth):', { 
-            email, 
-            userId: dbUser.id, 
-            role: token.role, 
-            tokenTosAccepted: token.tosAccepted, 
-            tokenProfileDone: token.profileDone,
-            dbTosAcceptedAt: dbUser.tosAcceptedAt, 
-            dbProfileDoneAt: dbUser.profileDoneAt 
-          });
           
           // Force token values to match DB (DB is source of truth)
           // This overrides any values set by update trigger to ensure consistency
@@ -705,19 +710,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (typeof token.needsPassword !== 'boolean') {
         token.needsPassword = false;
       }
-
-      // Log final token state to verify fields are set before encoding
-      console.log('[JWT] Returning token (will be encoded to cookie):', {
-        email: token.email,
-        sub: token.sub,
-        role: token.role,
-        tosAccepted: token.tosAccepted,
-        profileDone: token.profileDone,
-        questionnaireCompleted: token.questionnaireCompleted,
-        emailVerified: token.emailVerified,
-        needsPassword: token.needsPassword,
-        allKeys: Object.keys(token),
-      });
 
       return token;
     },

@@ -1,127 +1,45 @@
 import { generatePageMetadata } from '@/lib/metadata'
+import { services, site } from '@/lib/site'
 
 export const metadata = generatePageMetadata({
-  title: 'Website Packages & Pricing',
+  title: 'Web Design, Development & SEO Services in Louisville',
   description:
-    'Choose the perfect website package for your business. Starter sites from $299 setup + $49/month, Business sites from $799 + $99/month, or E-Commerce stores from $1,999 + $149/month. All plans include hosting, security, and lifetime maintenance through your SeeZee Dashboard.',
+    'Custom website design, web apps, e-commerce, local SEO, redesigns and hosting/care plans from SeeZee Studio in Louisville, KY. Fixed quotes, one local team, support after launch.',
   path: '/services',
   keywords: [
-    'website packages',
-    'website pricing',
-    'small business website',
+    'web design services Louisville',
+    'website development Louisville KY',
+    'local SEO Louisville',
+    'website redesign',
     'e-commerce website',
-    'website design packages',
-    'affordable web development',
-    'website maintenance',
-    'Louisville web design pricing',
-    'business website cost',
+    'website maintenance plans',
+    'web app development',
   ],
 })
 
-export default function ServicesLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  // Structured data for Service offerings
+export default function ServicesLayout({ children }: { children: React.ReactNode }) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'SeeZee Studio Website Packages',
-    description: 'Professional website packages for businesses of all sizes',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        position: 1,
-        name: 'Starter Site',
-        description: 'Perfect for small businesses getting started online',
-        price: '49',
-        priceCurrency: 'USD',
-        priceSpecification: {
-          '@type': 'UnitPriceSpecification',
-          price: '49',
-          priceCurrency: 'USD',
-          referenceQuantity: {
-            '@type': 'QuantitativeValue',
-            value: '1',
-            unitText: 'MONTH',
-          },
-        },
-        seller: {
-          '@type': 'Organization',
-          name: 'SeeZee Studio',
-        },
+    name: 'SeeZee Studio services',
+    itemListElement: services.map((service, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+        url: `${site.url}/services#${service.slug}`,
+        provider: { '@id': `${site.url}/#organization` },
+        areaServed: ['Louisville, KY', 'Cincinnati, OH', 'Northern Kentucky', 'Southern Indiana'],
       },
-      {
-        '@type': 'Offer',
-        position: 2,
-        name: 'Business Site',
-        description: 'Ideal for growing businesses with more content needs',
-        price: '99',
-        priceCurrency: 'USD',
-        priceSpecification: {
-          '@type': 'UnitPriceSpecification',
-          price: '99',
-          priceCurrency: 'USD',
-          referenceQuantity: {
-            '@type': 'QuantitativeValue',
-            value: '1',
-            unitText: 'MONTH',
-          },
-        },
-        seller: {
-          '@type': 'Organization',
-          name: 'SeeZee Studio',
-        },
-      },
-      {
-        '@type': 'Offer',
-        position: 3,
-        name: 'E-Commerce Store',
-        description: 'Complete online store with payment processing',
-        price: '149',
-        priceCurrency: 'USD',
-        priceSpecification: {
-          '@type': 'UnitPriceSpecification',
-          price: '149',
-          priceCurrency: 'USD',
-          referenceQuantity: {
-            '@type': 'QuantitativeValue',
-            value: '1',
-            unitText: 'MONTH',
-          },
-        },
-        seller: {
-          '@type': 'Organization',
-          name: 'SeeZee Studio',
-        },
-      },
-    ],
+    })),
   }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       {children}
     </>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

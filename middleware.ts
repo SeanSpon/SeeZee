@@ -91,7 +91,8 @@ export async function middleware(req: NextRequest) {
       token = await getToken({
         req,
         secret: secret,
-        secureCookie: process.env.NODE_ENV === 'production',
+        // Match NextAuth's own choice: __Secure- cookies only over HTTPS.
+        secureCookie: req.nextUrl.protocol === 'https:',
       });      isLoggedIn = !!token;
     } catch (error) {
       // If we can't read the token (likely due to oversized cookies), redirect to clear cookies

@@ -3,414 +3,198 @@
 import { useState, useEffect, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
-import {
-  FiHome,
-  FiBriefcase,
-  FiFileText,
-  FiInfo,
-  FiLayout,
-  FiLogOut,
-  FiMenu,
-  FiX,
-  FiUser,
-  FiChevronDown,
-  FiSettings,
-  FiShield,
-  FiBook,
-  FiPlus,
-  FiHeart,
-  FiMail,
-} from 'react-icons/fi'
+import { FiChevronDown, FiLayout, FiLogOut, FiMenu, FiPhone, FiSettings, FiX } from 'react-icons/fi'
 import LogoHeader from './LogoHeader'
-import { fetchJson } from '@/lib/client-api'
+import { site } from '@/lib/site'
+
+const navLinks = [
+  { path: '/services', label: 'Services' },
+  { path: '/projects', label: 'Work' },
+  { path: '/about', label: 'About' },
+  { path: '/blog', label: 'Blog' },
+  { path: '/contact', label: 'Contact' },
+]
+
+const STAFF_ROLES = ['CEO', 'ADMIN', 'CFO', 'FRONTEND', 'BACKEND', 'OUTREACH', 'STAFF', 'DEV', 'DESIGNER', 'INTERN', 'PARTNER']
 
 export default function TopBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const { data: session } = useSession()
-  const profileDropdownRef = useRef<HTMLDivElement>(null)
-  const [userImage, setUserImage] = useState<string | null>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
 
-  // Close dropdown when clicking outside
+  const user = session?.user
+  const isAuthenticated = !!user
+  const isStaff = STAFF_ROLES.includes((user?.role as string) || '')
+  const dashboardHref = isStaff ? '/admin' : '/client'
+
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setProfileDropdownOpen(false)
-      }
-    }
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-    if (profileDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
+  useEffect(() => {
+    setMobileMenuOpen(false)
+    setProfileOpen(false)
+  }, [pathname])
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+  useEffect(() => {
+    if (!profileOpen) return
+    const handle = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false)
     }
-  }, [profileDropdownOpen])
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
+  }, [profileOpen])
 
   const handleLogout = async () => {
     await signOut({ redirect: false })
-    setMobileMenuOpen(false)
-    setProfileDropdownOpen(false)
     router.push('/')
     router.refresh()
   }
 
-  const isActive = (path: string) => pathname === path
-
-  // Navigation links
-  const navLinks = [
-    { path: '/', label: 'Home', icon: FiHome },
-    { path: '/services', label: 'Services', icon: FiBriefcase },
-    { path: '/projects', label: 'Projects', icon: FiFileText },
-    { path: '/partners', label: 'Partners', icon: FiHeart },
-    { path: '/blog', label: 'Blog', icon: FiFileText },
-    { path: '/philosophy', label: 'Philosophy', icon: FiBook },
-    { path: '/about', label: 'About', icon: FiInfo },
-  ]
-
-  const isAuthenticated = !!session
-  const user = session?.user
-  const userRole = user?.role as string | undefined
-  const isAdmin = userRole === 'CEO' || userRole === 'CFO' || 
-                  ['FRONTEND', 'BACKEND', 'OUTREACH', 'ADMIN'].includes(userRole || '')
-
-  // Fetch user image
-  useEffect(() => {
-    if (!isAuthenticated) return
-
-    fetchJson<any>('/api/user/me')
-      .then((data) => {
-        if (data?.image) {
-          setUserImage(data.image)
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch user image:', err)
-      })
-  }, [isAuthenticated])
-
-  // Role badge configuration
-  const getRoleBadgeConfig = (role?: string) => {
-    const roleUpper = role?.toUpperCase()
-    switch (roleUpper) {
-      case 'CEO':
-        return { color: 'bg-purple-500', label: 'CEO' }
-      case 'ADMIN':
-        return { color: 'bg-red-500', label: 'Admin' }
-      case 'CFO':
-        return { color: 'bg-blue-500', label: 'CFO' }
-      case 'FRONTEND':
-      case 'BACKEND':
-      case 'OUTREACH':
-      case 'STAFF':
-        return { color: 'bg-green-500', label: 'Staff' }
-      case 'CLIENT':
-        return { color: 'bg-trinity-red', label: 'Client' }
-      default:
-        return { color: 'bg-gray-500', label: 'User' }
-    }
-  }
-
-  const roleBadge = getRoleBadgeConfig(userRole)
+  const isActive = (path: string) => pathname === path || pathname?.startsWith(`${path}/`)
+  const initial = (user?.name || user?.email || 'U').charAt(0).toUpperCase()
 
   return (
     <>
-      {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                href="/"
-                className="flex items-center focus:outline-none focus:ring-2 focus:ring-trinity-red focus:ring-offset-2 focus:ring-offset-gray-900 rounded-md"
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="SeeZee Studio Home"
-              >
-                <LogoHeader />
-              </Link>
-            </motion.div>
+      <header
+        className={`fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
+          scrolled || mobileMenuOpen ? 'border-b border-white/[0.08] bg-[#0b0b0c]/90 backdrop-blur-md' : 'border-b border-transparent bg-[#0b0b0c]'
+        }`}
+      >
+        <nav aria-label="Main" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8 lg:h-[72px]">
+          <Link href="/" aria-label={`${site.name} home`} className="flex items-center rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+            <LogoHeader />
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-0.5">
-              {navLinks.map((link) => {
-                const active = isActive(link.path)
-                return (
+          <ul className="hidden items-center gap-1 lg:flex">
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <Link
+                  href={link.path}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
+                  className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
+                    isActive(link.path) ? 'text-white' : 'text-white/60 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-2">
+            <a href={site.phoneHref} className="hidden items-center gap-2 px-3 text-sm font-medium text-white/60 hover:text-white xl:inline-flex">
+              <FiPhone aria-hidden className="h-4 w-4" />
+              {site.phone}
+            </a>
+
+            {!isAuthenticated ? (
+              <Link href="/login" className="hidden rounded-full px-4 py-2 text-[15px] font-medium text-white/70 hover:text-white lg:inline-flex">
+                Client login
+              </Link>
+            ) : (
+              <div className="relative hidden lg:block" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen((v) => !v)}
+                  aria-expanded={profileOpen}
+                  aria-haspopup="menu"
+                  className="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-white/80 hover:bg-white/5"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">{initial}</span>
+                  <FiChevronDown aria-hidden className={`h-4 w-4 transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {profileOpen && (
+                  <div role="menu" className="absolute right-0 mt-2 min-w-[220px] overflow-hidden rounded-2xl border border-white/10 bg-[#161618] shadow-2xl">
+                    <div className="border-b border-white/10 px-4 py-3">
+                      <p className="truncate text-sm font-semibold text-white">{user?.name || 'Account'}</p>
+                      <p className="truncate text-xs text-white/50">{user?.email}</p>
+                    </div>
+                    <Link role="menuitem" href={dashboardHref} className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5">
+                      <FiLayout aria-hidden className="h-4 w-4" /> {isStaff ? 'Admin dashboard' : 'Client portal'}
+                    </Link>
+                    <Link role="menuitem" href="/settings" className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/80 hover:bg-white/5">
+                      <FiSettings aria-hidden className="h-4 w-4" /> Settings
+                    </Link>
+                    <button
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 border-t border-white/10 px-4 py-2.5 text-left text-sm text-white/80 hover:bg-red-500/10 hover:text-red-400"
+                    >
+                      <FiLogOut aria-hidden className="h-4 w-4" /> Log out
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <Link
+              href={isAuthenticated ? '/start' : '/contact'}
+              className="hidden rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 sm:inline-flex"
+            >
+              {isAuthenticated ? 'Start a project' : 'Get a quote'}
+            </Link>
+
+            <button
+              className="rounded-full p-2 text-white/80 hover:bg-white/5 hover:text-white lg:hidden"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              {mobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+            </button>
+          </div>
+        </nav>
+
+        {mobileMenuOpen && (
+          <div id="mobile-menu" className="border-t border-white/[0.08] bg-[#0b0b0c] lg:hidden">
+            <ul className="mx-auto max-w-6xl space-y-1 px-5 py-5 sm:px-8">
+              {navLinks.map((link) => (
+                <li key={link.path}>
                   <Link
-                    key={link.path}
                     href={link.path}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
-                      active
-                        ? 'bg-trinity-red/15 text-white border-b-2 border-trinity-red'
-                        : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                    }`}
-                    aria-current={active ? 'page' : undefined}
+                    aria-current={isActive(link.path) ? 'page' : undefined}
+                    className={`block rounded-xl px-4 py-3 text-lg font-medium ${isActive(link.path) ? 'bg-white/5 text-white' : 'text-white/70'}`}
                   >
                     {link.label}
                   </Link>
-                )
-              })}
-            </div>
-
-            {/* Right side items */}
-            <div className="flex items-center gap-3">
-              {/* Desktop: Primary CTA - context-aware */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden lg:block"
-              >
-                {isAuthenticated ? (
-                  <Link
-                    href="/start"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                  >
-                    <FiPlus className="w-4 h-4" />
-                    Start Project
+                </li>
+              ))}
+            </ul>
+            <div className="mx-auto grid max-w-6xl gap-3 border-t border-white/[0.08] px-5 py-5 sm:px-8">
+              <Link href={isAuthenticated ? '/start' : '/contact'} className="rounded-full bg-red-600 px-5 py-3 text-center font-semibold text-white">
+                {isAuthenticated ? 'Start a project' : 'Get a free quote'}
+              </Link>
+              <a href={site.phoneHref} className="rounded-full border border-white/15 px-5 py-3 text-center font-semibold text-white">
+                Call {site.phone}
+              </a>
+              {isAuthenticated ? (
+                <div className="flex gap-3">
+                  <Link href={dashboardHref} className="flex-1 rounded-full px-5 py-3 text-center text-white/70">
+                    {isStaff ? 'Admin' : 'Client portal'}
                   </Link>
-                ) : (
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-trinity-red hover:bg-red-700 text-white font-medium transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                  >
-                    <FiMail className="w-4 h-4" />
-                    Get in Touch
-                  </Link>
-                )}
-              </motion.div>
-
-              {/* Desktop: Login or User Menu */}
-              {!isAuthenticated ? (
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="hidden lg:block"
-                >
-                  <Link
-                    href="/login"
-                    className="px-4 py-2 rounded-lg border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white font-medium transition-all duration-150"
-                  >
-                    Login
-                  </Link>
-                </motion.div>
-              ) : (
-                <div className="hidden lg:flex items-center gap-3">
-                  {/* Quick links for authenticated users */}
-                  <Link
-                    href={isAdmin ? '/admin' : '/client'}
-                    className="px-3 py-2 text-gray-300 hover:text-white text-sm font-medium transition-colors"
-                  >
-                    {isAdmin ? 'Admin' : 'Portal'}
-                  </Link>
-
-                  {/* User Profile Dropdown */}
-                  <div className="relative" ref={profileDropdownRef}>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-800 transition-all duration-150"
-                    >
-                      <div className={`w-8 h-8 ${roleBadge.color} rounded-full flex items-center justify-center text-white font-bold text-xs overflow-hidden`}>
-                        {userImage ? (
-                          <img 
-                            src={userImage} 
-                            alt={user?.name || 'User'} 
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'
-                        )}
-                      </div>
-                      <FiChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
-                    </motion.button>
-
-                    {/* Dropdown Menu */}
-                    <AnimatePresence>
-                      {profileDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl overflow-hidden z-50 min-w-[200px]"
-                        >
-                          {/* User Info */}
-                          <div className="px-4 py-3 border-b border-gray-700 bg-gray-800/50">
-                            <p className="text-sm font-semibold text-white truncate">
-                              {user?.name || 'User'}
-                            </p>
-                            <p className="text-xs text-gray-400 truncate mt-0.5">
-                              {user?.email || ''}
-                            </p>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${roleBadge.color} text-white mt-2`}>
-                              {roleBadge.label}
-                            </span>
-                          </div>
-
-                          {/* Menu Items */}
-                          <div className="py-1">
-                            <button
-                              onClick={() => {
-                                setProfileDropdownOpen(false)
-                                router.push('/settings')
-                              }}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-700 transition-[background-color] duration-150 ease-in-out text-left group"
-                            >
-                              <FiSettings className="w-4 h-4 text-gray-400 group-hover:text-white transition-[color] duration-150 ease-in-out" />
-                              <span className="text-sm text-gray-300 group-hover:text-white transition-[color] duration-150 ease-in-out">
-                                Settings
-                              </span>
-                            </button>
-                            
-                            <div className="border-t border-gray-700 my-1"></div>
-                            
-                            <button
-                              onClick={handleLogout}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-500/10 transition-[background-color] duration-150 ease-in-out text-left group"
-                            >
-                              <FiLogOut className="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-[color] duration-150 ease-in-out" />
-                              <span className="text-sm text-gray-300 group-hover:text-red-500 transition-[color] duration-150 ease-in-out">
-                                Logout
-                              </span>
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                  <button onClick={handleLogout} className="flex-1 rounded-full px-5 py-3 text-center text-white/70">
+                    Log out
+                  </button>
                 </div>
+              ) : (
+                <Link href="/login" className="rounded-full px-5 py-3 text-center text-white/70">
+                  Client login
+                </Link>
               )}
-
-              {/* Mobile menu button */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={mobileMenuOpen}
-              >
-                {mobileMenuOpen ? (
-                  <FiX className="h-6 w-6" />
-                ) : (
-                  <FiMenu className="h-6 w-6" />
-                )}
-              </motion.button>
             </div>
           </div>
-
-          {/* Mobile Navigation Menu */}
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="lg:hidden border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm"
-              >
-                <div className="px-4 py-4 space-y-2">
-                  {navLinks.map((link) => {
-                    const Icon = link.icon
-                    const active = isActive(link.path)
-                    return (
-                      <Link
-                        key={link.path}
-                        href={link.path}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ease-in-out ${
-                          active
-                            ? 'bg-trinity-red/15 text-white'
-                            : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                        }`}
-                        aria-current={active ? 'page' : undefined}
-                      >
-                        <Icon className="w-4 h-4" />
-                        {link.label}
-                      </Link>
-                    )
-                  })}
-
-                  {/* Mobile: Primary CTA + Login or User Menu */}
-                  <div className="border-t border-gray-800 pt-4 mt-4">
-                    {isAuthenticated ? (
-                      <Link
-                        href="/start"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
-                      >
-                        <FiPlus className="w-4 h-4" />
-                        Start Project
-                      </Link>
-                    ) : (
-                      <Link
-                        href="/contact"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-trinity-red text-white font-medium transition-all duration-150 mb-3"
-                      >
-                        <FiMail className="w-4 h-4" />
-                        Get in Touch
-                      </Link>
-                    )}
-                    {!isAuthenticated ? (
-                      <Link
-                        href="/login"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-gray-600 text-gray-300 font-medium transition-all duration-150"
-                      >
-                        <FiUser className="w-4 h-4" />
-                        Login
-                      </Link>
-                    ) : (
-                      <>
-                        <Link
-                          href={isAdmin ? '/admin' : '/client'}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:text-white text-sm font-medium transition-colors"
-                        >
-                          <FiLayout className="w-4 h-4" />
-                          {isAdmin ? 'Admin' : 'Client Portal'}
-                        </Link>
-                        <button
-                          onClick={() => {
-                            setMobileMenuOpen(false)
-                            router.push('/settings')
-                          }}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:text-white text-sm font-medium transition-colors mt-2"
-                        >
-                          <FiSettings className="w-4 h-4" />
-                          Settings
-                        </button>
-                        <button
-                          onClick={() => {
-                            setMobileMenuOpen(false)
-                            handleLogout()
-                          }}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:text-red-500 text-sm font-medium transition-colors mt-2"
-                        >
-                          <FiLogOut className="w-4 h-4" />
-                          Logout
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </nav>
-
-      {/* Spacer to account for fixed top bar */}
-      <div className="h-16" />
+        )}
+      </header>
+      <div aria-hidden className="h-16 lg:h-[72px]" />
     </>
   )
 }

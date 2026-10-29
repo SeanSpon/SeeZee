@@ -95,7 +95,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        heading: ['Poppins', 'sans-serif'],
+        heading: ['var(--font-heading)', 'Poppins', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         fadeInUp: {

@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import { Cookie, X, Settings, Shield, BarChart3, Megaphone, Palette } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
+
+// The banner must never sit on top of sign-in forms or dashboards: on smaller
+// screens it covered the "Log In" button and swallowed clicks.
+const HIDDEN_ROUTE_PREFIXES = ["/login", "/signin", "/register", "/signup", "/forgot-password", "/reset-password", "/set-password", "/verify-email", "/admin", "/client", "/onboarding"];
 
 interface CookiePreferences {
   essential: boolean;
@@ -25,6 +30,8 @@ export function CookieConsent() {
   const [showCustomize, setShowCustomize] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>(defaultPreferences);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const hiddenOnRoute = HIDDEN_ROUTE_PREFIXES.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
 
   useEffect(() => {
     setMounted(true);
@@ -96,7 +103,7 @@ export function CookieConsent() {
     saveConsent(preferences);
   };
 
-  if (!mounted) return null;
+  if (!mounted || hiddenOnRoute) return null;
 
   return (
     <>
@@ -108,7 +115,7 @@ export function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-[100] p-4 md:p-6"
+            className="fixed bottom-0 left-0 right-0 z-[100] p-4 md:right-auto md:max-w-xl md:p-6"
           >
             <div className="max-w-4xl mx-auto">
               <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 p-6">

@@ -4,6 +4,13 @@ import { FiCalendar, FiUser, FiTag, FiArrowRight } from "react-icons/fi";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Blog — Web Design & SEO Tips for Local Businesses",
+  description:
+    "Practical advice on websites, local SEO and web apps for small businesses and nonprofits in Louisville, Southern Indiana and Cincinnati, from the SeeZee Studio team.",
+  alternates: { canonical: "/blog" },
+};
+
 export default async function BlogPage() {
   const posts = await prisma.blogPost.findMany({
     where: {
