@@ -14,7 +14,7 @@ function safeUrl(value){
  return u.toString();
 }
 class Monitor{
- constructor(userDataDir,emit){this.dir=path.join(userDataDir,'shopping-browser');this.emit=emit;this.context=null;this.timer=null;this.started=false;this.busy=false;this.products=[];this.previous=new Map();}
+ constructor(userDataDir,emit){this.dir=path.join(userDataDir,'shopping-browser');this.emit=emit;this.context=null;this.timer=null;this.started=false;this.busy=false;this.products=[];this.previous=new Map();this.activePages=new Set();this.generation=0;}
  async browser(){
   if(this.context)return this.context;
   const executablePath=findBrowser();
@@ -27,7 +27,7 @@ class Monitor{
  async checkOne(item){
   const ctx=await this.browser();let page;
   try{
-   page=await ctx.newPage();
+   page=await ctx.newPage();this.activePages.add(page);
    await page.goto(safeUrl(item.url),{waitUntil:'domcontentloaded',timeout:20000});
    await page.waitForTimeout(1300);
    const signal=await page.evaluate(()=>{
@@ -38,11 +38,11 @@ class Monitor{
    const status=signal.available&&!signal.unavailable?'possible':signal.unavailable&&!signal.available?'out':'unknown';
    return {id:item.id,status,detail:signal.title,checkedAt:Date.now()};
   }catch(err){return {id:item.id,status:'error',detail:String(err.message).slice(0,150),checkedAt:Date.now()};}
-  finally{if(page&&!page.isClosed())await page.close().catch(()=>{});}
+  finally{if(page){this.activePages.delete(page);if(!page.isClosed())await page.close().catch(()=>{});}}
  }
  async tick(){
-  if(!this.started||this.busy)return;this.busy=true;
-  try{for(const item of this.products){if(!this.started)break;const res=await this.checkOne(item);const prior=this.previous.get(item.id);this.previous.set(item.id,res.status);this.emit('status',res);if(res.status==='possible'&&prior!=='possible')this.emit('alert',{...res,name:item.name,url:item.url});}}
+  if(!this.started||this.busy)return;this.busy=true;const generation=this.generation;
+  try{for(const item of this.products){if(!this.started||generation!==this.generation)break;const res=await this.checkOne(item);if(!this.started||generation!==this.generation)break;const prior=this.previous.get(item.id);this.previous.set(item.id,res.status);this.emit('status',res);if(res.status==='possible'&&prior!=='possible')this.emit('alert',{...res,name:item.name,url:item.url});}}
   finally{this.busy=false;}
  }
  async start(products,minutes=3){
@@ -53,7 +53,7 @@ class Monitor{
   this.timer=setInterval(()=>this.tick().catch(e=>this.emit('error',e.message)),Math.max(1,Math.min(60,minutes))*60000);
   this.tick().catch(e=>this.emit('error',e.message));return true;
  }
- stop(){this.started=false;if(this.timer)clearInterval(this.timer);this.timer=null;}
+ stop(){this.started=false;this.generation++;if(this.timer)clearInterval(this.timer);this.timer=null;for(const page of this.activePages){page.close().catch(()=>{});}this.activePages.clear();}
  async shutdown(){this.stop();if(this.context)await this.context.close().catch(()=>{});this.context=null;}
 }
 module.exports={Monitor,safeUrl};
