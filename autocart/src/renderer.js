@@ -20,6 +20,7 @@ function render(){
  }
 }
 async function save(){pull();state=await window.autocart.save(state);message('Your settings were saved on this computer.');}
+$('practice').onclick=()=>window.autocart.practice().catch(e=>message('Could not open practice: '+e.message));
 $('add-form').addEventListener('submit',async e=>{
  e.preventDefault();try{
   const url=new URL($('url').value);if(url.protocol!=='https:')throw Error('Use a secure https:// link.');
