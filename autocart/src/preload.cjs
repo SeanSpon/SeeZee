@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('autocart',{
  start:v=>ipcRenderer.invoke('start',v),
  stop:()=>ipcRenderer.invoke('stop'),
  openProduct:url=>ipcRenderer.invoke('open-product',url),
+ practice:()=>ipcRenderer.invoke('practice'),
  onEvent:handler=>ipcRenderer.on('watch-event',(_e,data)=>handler(data))
 });
