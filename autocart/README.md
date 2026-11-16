@@ -1,53 +1,54 @@
-# AutoCart by SeeZee 🛍️
+# 🛍️ AutoCart by SeeZee — START HERE
 
-**Prototype v0.1: multi-store restock monitoring and assisted checkout. It does NOT purchase items automatically.**
+**No coding. No terminal. No credit-card information needed.**
 
-## Chase: easy instructions
-1. Download the Windows installer from the developer.
-2. Double-click the setup EXE and follow the screens.
-3. Open AutoCart from the desktop.
-4. Copy the link to a NeeDoh product from any store.
-5. Paste the link, name the product, and press **Add product**.
-6. Repeat for as many stores and products as you'd like.
-7. Set your planned item price, total budget, and quantity.
-8. Press **Start watching**. Leave the PC awake and connected.
-9. When an item looks available, click **Open store**.
-10. Verify quantity, price and shipping, and **complete checkout yourself**.
-11. Press **Stop** when finished.
+## Chase: the 5 steps
 
-## Important
-- Install Google Chrome or Microsoft Edge first.
-- Stores may block automated browsing. Some stores won't display availability correctly. “Possibly available” does NOT guarantee stock.
-- Purchasing limits are planning fields only, not enforced at a retailer.
-- Do not enter credit card information into AutoCart. Checkout happens at the store itself.
-- AutoCart uses a separate browser profile kept locally on your Windows user account.
-- The installer is unsigned. Test it on Windows before sharing; Windows may warn about an unrecognized publisher.
+1. **Download the Windows installer** from the **AutoCart Windows installer** build on GitHub, or from the installer link Sean sends you. The file ends in `.exe`. Don't download the green **Code → ZIP**: that's source code, not an app.
+2. **Double-click the installer**, follow the setup prompts, and open **AutoCart by SeeZee** from your desktop.
+3. **Click “Open Practice Mode” first.** It's fake shopping with pretend cards and pretend restocks. Nothing gets charged.
+4. When you're ready, **paste a product link**, give it a name, and click **Add product**. Add more links from other stores as needed.
+5. Click **▶ Start watching**. Keep your PC awake. When an item says “Possibly available,” click **Open store** and complete checkout yourself. Click the big **■ STOP** button to stop monitoring at any time.
 
-## Developer: run
-Requires Node.js 22 or later.
+![AutoCart dashboard example](docs/dashboard-guide.svg)
 
-```bash
+![Practice Mode walkthrough](docs/practice-guide.svg)
+
+## Important things to know
+- **This is a prototype. It does not make purchases automatically.** You must finish orders on the retailer's checkout page.
+- The budget and quantity controls are **planning settings**, not a restriction on the store checkout.
+- Status is **best effort**: retailer pages vary and may block bots or report availability unclearly.
+- The app only accepts HTTPS product links, uses a separate Chrome/Edge browser profile, and doesn't request payment details.
+- Practice Mode is offline and uses pretend cards only. No real payments or order submissions.
+- The installer is currently **unsigned**. Windows might warn about an unknown publisher. Do not ignore security warnings blindly; verify the download comes from Sean's GitHub project.
+- A Windows PC with Google Chrome or Microsoft Edge is required for live monitoring.
+
+## Feature checklist
+| Feature | What it does |
+| --- | --- |
+| Add multiple stores | Paste as many as 100 HTTPS product links |
+| Start | Begin checking each page every 1–60 minutes |
+| Stop | Cancel future checks and close active check pages |
+| Possible restock alert | Shows a message when a product *might* be available |
+| Open store | Opens the product page in a browser for manual checkout |
+| Save settings | Keeps the watch list and preferences locally |
+| Practice Mode | Simulated restocks, approved/declined test payments, and spending limits |
+| Purchasing | **Not yet supported in real stores** |
+
+## For Sean — building an EXE
+The source code is in `autocart/`. On a Windows PC:
+
+```powershell
 cd autocart
 npm install
 npm run check
-npm start
-```
-
-## Build .exe
-On a Windows development machine, run:
-
-```bash
-cd autocart
-npm install
+npm test
 npm run dist:win
 ```
 
-Or use the GitHub Actions Windows installer workflow (once available on the default branch). The resulting installer appears as a workflow artifact. Extract it first.
+The result is in `autocart/dist/`.
 
-## Architecture
-Electron UI, Playwright-core with installed Chrome/Edge, dedicated local browser profile, local JSON configuration. Product status checks are sequential and conservative. No payment data collection, no automatic purchase submission, no CAPTCHA bypass.
+The **AutoCart Windows installer** GitHub Actions workflow also builds on Windows. On PRs it uploads an installer as a workflow artifact. Artifacts generally require GitHub login and downloading/extracting a ZIP first; they are **not** the final one-click release. A GitHub Release with a direct EXE asset is the best delivery option for Chase, once tested and signed.
 
-## Before automatic purchasing could be supported
-Get real product URLs; verify retailer terms; write per-store availability checks; use supported checkout methods; add receipts, budget enforcement, order locking, deduplication, and failure recovery; code-sign the installer.
-
-This is a prototype, not a guaranteed restock detector or shopping bot.
+## Security and current limitations
+Read `SECURITY.md` for a threat model and what's implemented versus outstanding. No site restrictions, CAPTCHAs or anti-bot challenges should be bypassed. Do not use the app to put real card information into custom forms.
