@@ -34,5 +34,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: AutoCart-Windows-Installer
-          path: autocart/dist/*.exe
+          path: |
+            autocart/dist/*.exe
+            autocart/CHASE-START-HERE.txt
+            autocart/docs/dashboard-guide.svg
+            autocart/docs/practice-guide.svg
           if-no-files-found: error
