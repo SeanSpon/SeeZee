@@ -1,0 +1,17 @@
+AUTOCART BY SEEZEE — START HERE!
+================================
+1. Download the AutoCart-Windows-Installer ZIP file from the GitHub Actions run.
+2. Right-click the ZIP. Choose "Extract All" and click Extract.
+3. Double-click "AutoCart by SeeZee Setup" (the file ending in .exe).
+4. Follow the setup windows, then open AutoCart from your desktop.
+5. Click OPEN PRACTICE MODE to try fake shopping safely. No money is used.
+6. Paste NeeDoh product links, set your preferences, and click START WATCHING.
+7. Click STOP whenever you want to stop checking.
+
+IMPORTANT: The current prototype DOES NOT AUTO-BUY. When stock might be available,
+click OPEN STORE and check out on that retailer's website yourself.
+Do not enter any credit cards into AutoCart. Only enter them at stores you trust.
+
+For picture instructions, open dashboard-guide.svg and practice-guide.svg.
+If Windows warns about the unknown publisher, ask Sean to verify the installer
+source. This development build is not yet code signed.

@@ -1,0 +1,48 @@
+{
+  "name": "seezee-autocart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local multi-store restock watcher with assisted checkout",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.cjs && node --check src/monitor.cjs && node --check src/preload.cjs && node --check src/renderer.js",
+    "dist:win": "electron-builder --win nsis",
+    "test": "node --test tests/*.test.cjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.58.0"
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "studio.seezee.autocart",
+    "productName": "AutoCart by SeeZee",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "asar": true
+  }
+}
