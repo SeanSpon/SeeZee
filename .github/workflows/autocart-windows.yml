@@ -1,6 +1,10 @@
 name: AutoCart Windows installer
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'autocart/**'
+      - '.github/workflows/autocart-windows.yml'
   push:
     tags:
       - 'autocart-v*'
