@@ -19,6 +19,7 @@ app.whenReady().then(()=>{
  ipcMain.handle('save-settings',(_e,v)=>{const s=validate(v);fs.writeFileSync(settingsPath(),JSON.stringify(s,null,2),{mode:0o600});return s;});
  ipcMain.handle('start',async(_e,v)=>{const s=validate(v);await monitor.start(s.products,s.interval);return true;});
  ipcMain.handle('stop',()=>{monitor.stop();return true;});
+ ipcMain.handle('practice',()=>{const demo=new BrowserWindow({width:1150,height:860,minWidth:800,minHeight:650,title:'AutoCart — Practice Mode',webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});demo.loadFile(path.join(__dirname,'practice.html'));demo.webContents.setWindowOpenHandler(()=>({action:'deny'}));demo.webContents.on('will-navigate',e=>e.preventDefault());return true;});
  ipcMain.handle('open-product',async(_e,url)=>monitor.open(url));
  win=new BrowserWindow({width:1100,height:790,minWidth:770,minHeight:600,backgroundColor:'#0e1422',title:'AutoCart by SeeZee',webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
  win.loadFile(path.join(__dirname,'index.html'));
